@@ -1,0 +1,40 @@
+package com.sellphones.entity.product;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sellphones.entity.BaseEntity;
+import com.sellphones.entity.user.User;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "comment")
+public class Comment extends BaseEntity<Long> {
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(columnDefinition = "TEXT")
+    @NotBlank
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+//    @JsonBackReference
+    private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+    private List<Comment> childComments;
+}
