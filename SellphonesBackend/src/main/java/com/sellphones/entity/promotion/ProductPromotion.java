@@ -1,6 +1,6 @@
-package com.sellphones.entity.product;
+package com.sellphones.entity.promotion;
 
-import com.sellphones.entity.BaseEntity;
+import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,14 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "variant_value")
-public class VariantValue extends BaseEntity<Long> {
-
-    private String value;
+@Table(name = "product_promotion")
+public class ProductPromotion extends Promotion{
 
     @ManyToOne
-    @JoinColumn(name = "variant_id")
-    private Variant variant;
-
-
+    @JoinColumn(name = "product_variant_id")
+    private ProductVariant productVariant;
 }

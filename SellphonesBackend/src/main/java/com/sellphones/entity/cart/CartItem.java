@@ -23,12 +23,11 @@ public class CartItem extends BaseEntity<Long> {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
     @Column(nullable = false)
-    @Min(0L )
     private Long quantity;
 
     @Column(nullable = false)

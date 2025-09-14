@@ -22,41 +22,32 @@ import java.time.LocalDateTime;
 @Table(name = "supplier")
 public class Supplier extends BaseEntity<Long> {
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotBlank
     @Column(nullable = false, name = "contact_name")
     private String contactName;
 
-    @NotBlank
     @Column(nullable = false, name = "phone_number")
     @ValidPhoneNumber
     private String phoneNumber;
 
-    @Email
-    @NotBlank
     private String email;
 
     @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @NotBlank
     @Column(name = "tax_code", nullable = false)
     private String taxCode;
 
-    @NotNull
     @Column(name = "supplier_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SupplierStatus supplierStatus;
 
-    @NotNull
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @NotNull
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }

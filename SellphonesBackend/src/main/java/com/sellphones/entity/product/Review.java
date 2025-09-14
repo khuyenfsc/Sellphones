@@ -27,14 +27,10 @@ public class Review extends BaseEntity<Long> {
     private User user;
 
     @Column(columnDefinition = "TEXT")
-    @NotBlank
     private String content;
 
-    @Min(1)
+    @Column(name = "rating_score")
     private int ratingScore;
-
-    @NotNull
-    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "product_variant_id")
@@ -44,6 +40,4 @@ public class Review extends BaseEntity<Long> {
     @CollectionTable(name = "review_images", joinColumns = @JoinColumn(name = "review_id"))
     @Column(name = "image_url")
     private List<String> imageUrls;
-
-    private String videoUrl;
 }

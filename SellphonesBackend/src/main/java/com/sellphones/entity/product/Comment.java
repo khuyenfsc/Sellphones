@@ -26,8 +26,11 @@ public class Comment extends BaseEntity<Long> {
     private User user;
 
     @Column(columnDefinition = "TEXT")
-    @NotBlank
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

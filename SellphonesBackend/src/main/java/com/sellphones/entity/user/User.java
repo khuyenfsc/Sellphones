@@ -22,30 +22,32 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 public class User extends BaseEntity<Long> {
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "email", unique = true)
-    @Email
     private String email;
 
     @Column(name = "password")
-    @NotBlank
-    @StrongPassword
     private String password;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Column(name = "phone_number", unique = true)
-    @ValidPhoneNumber
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "default_address_id", referencedColumnName = "id")
-    private Address defaultAddress;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "default_address_id")
+//    private Address defaultAddress;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Address> shippingAddresses;
 
     @Enumerated(EnumType.STRING)
@@ -54,7 +56,6 @@ public class User extends BaseEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    @NotNull
     private Gender gender;
 
 }
