@@ -2,6 +2,7 @@ package com.sellphones.entity.product;
 
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.inventory.Inventory;
+import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,8 +37,18 @@ public class ProductVariant extends BaseEntity<Long> {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productVariant")
+    @ManyToMany
+    @JoinTable(name = "product_variant_promotion",
+            joinColumns = @JoinColumn(name = "product_variant_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_promotion_id"))
     private List<ProductPromotion> promotions;
+
+    @ManyToMany
+    @JoinTable(name = "product_variant_gift",
+            joinColumns = @JoinColumn(name = "product_variant_id"),
+            inverseJoinColumns = @JoinColumn(name = "gift_product_id")
+    )
+    private List<GiftProduct> giftProducts;
 
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
     private List<ProductAttributeValue> attributeValues;

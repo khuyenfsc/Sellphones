@@ -1,4 +1,4 @@
-package com.sellphones.dto.authentication.response;
+package com.sellphones.entity.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponse {
-
+public class AuthenticationToken {
     private String accessToken;
+
+    private String refreshToken;
 }

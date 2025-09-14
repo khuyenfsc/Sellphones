@@ -13,7 +13,7 @@ public class AppConstants {
     };
 
     public final static String[] CUSTOMER_ENDPOINTS = {
-            "/api/v1/test/customer/**",
+            "/api/v1/test/users/**",
     };
 
     public final static String[] ADMIN_ENDPOINTS = {
