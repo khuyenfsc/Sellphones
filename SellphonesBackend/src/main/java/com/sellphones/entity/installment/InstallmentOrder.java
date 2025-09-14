@@ -38,19 +38,13 @@ public class InstallmentOrder extends BaseEntity<Long> {
     @JoinColumn(name = "installment_plan_id")
     private InstallmentPlan installmentPlan;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
-
     @Column(name = "total_amount", nullable = false, precision = 19, scale = 0)
-    @Min(0)
     private BigDecimal totalAmount;
 
     @Column(name = "down_payment", nullable = false, precision = 19, scale = 0)
-    @Min(0)
     private BigDecimal downPayment;
 
     @Column(name = "monthly_payment", nullable = false, precision = 19, scale = 0)
-    @Min(0)
     private BigDecimal monthlyPayment;
 
     @Column(name = "installment_status", nullable = false)

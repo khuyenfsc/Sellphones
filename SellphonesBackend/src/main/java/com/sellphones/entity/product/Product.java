@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,35 +23,32 @@ import java.util.List;
 public class Product extends BaseEntity<Long> {
 
     @Column(nullable = false, length = 255)
-    @NotBlank
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    @NotNull
-    private Category category;
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    @Column(name = "min_price", precision = 19, scale = 0)
+    private BigDecimal minPrice;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
-    @NotNull
+    @JoinColumn(name = "brand_id", nullable = true)
     private Brand brand;
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
-    private List<String> imageUrls = new ArrayList<>();
+    private List<String> imageUrls;
 
     @ManyToMany
     @JoinTable(name = "product_gift",
@@ -58,4 +56,20 @@ public class Product extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "gift_product_id")
     )
     private List<GiftProduct> giftProducts;
+
+    @ManyToMany
+    @JoinTable(name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_option_value_id")
+    )
+    private List<CategoryOptionValue> categoryOptionValues;
+
+    @Column(name = "is_featured", nullable = false)
+    private Boolean isFeatured = false;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductAttributeValue> attributeValues;
+
+//    @OneToMany(mappedBy = "product")
+//    private List<ProductAttribute> productAttributes;
 }

@@ -26,4 +26,5 @@ public class Brand extends BaseEntity<Long> {
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     private List<Product> products;
+
 }

@@ -26,6 +26,5 @@ public class Inventory extends BaseEntity<Long> {
     private Warehouse warehouse;
 
     @Column(nullable = false)
-    @Min(0L)
     private Long quantity;
 }

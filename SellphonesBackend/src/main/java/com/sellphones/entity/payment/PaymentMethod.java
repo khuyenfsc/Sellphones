@@ -20,13 +20,12 @@ import java.util.List;
 @Table(name = "payment_method")
 public class PaymentMethod extends BaseEntity<Long> {
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethodType paymentMethodType;
 
-    @OneToMany(mappedBy = "payment_method_id")
+    @OneToMany(mappedBy = "paymentMethod")
     private List<Order> orders;
 }

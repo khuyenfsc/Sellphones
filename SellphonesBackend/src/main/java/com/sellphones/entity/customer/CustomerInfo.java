@@ -36,5 +36,6 @@ public class CustomerInfo extends BaseEntity<Long> {
     @Nullable
     private LocalDate dateOfBirth;
 
+    @OneToOne(mappedBy = "customerInfo")
     private InstallmentOrder installmentOrder;
 }

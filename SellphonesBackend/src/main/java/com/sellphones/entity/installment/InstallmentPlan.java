@@ -23,11 +23,9 @@ public class InstallmentPlan extends BaseEntity<Long> {
     @Column(nullable = false)
     private String name;
 
-    @Min(1)
     @Column(name = "duration_month", nullable = false)
     private int durationMonths;
 
-    @Min(0)
     @Column(name = "interest_rate", precision = 3, scale = 1)
     private BigDecimal interestRate;
 

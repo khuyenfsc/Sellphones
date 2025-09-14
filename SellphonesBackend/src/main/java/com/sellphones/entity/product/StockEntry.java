@@ -24,17 +24,12 @@ public class StockEntry extends BaseEntity<Long> {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-    @Min(1)
     @Column(nullable = false)
-    @NotNull
     private Long quantity;
 
     @Column(name = "purchase_price", nullable = false, precision = 19, scale = 0)
-    @Min(0)
-    @NotNull
     private BigDecimal purchasePrice;
 
-    @NotNull
     @Column(name = "import_date")
     private LocalDate importDate;
 

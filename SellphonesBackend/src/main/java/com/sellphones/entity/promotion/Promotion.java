@@ -1,9 +1,8 @@
 package com.sellphones.entity.promotion;
 
 import com.sellphones.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.sellphones.entity.order.OrderVariant;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,21 +12,23 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "promotion")
+@MappedSuperclass
 public class Promotion extends BaseEntity<Long> {
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotBlank
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "promotion_type")
+    private PromotionType type;
+
+    private String config;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -35,9 +36,4 @@ public class Promotion extends BaseEntity<Long> {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Column(name = "is_applied")
-    private Boolean  isApplied;
-
-    @Column(precision = 19, scale = 0)
-    private BigDecimal price;
 }

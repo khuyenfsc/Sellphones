@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -20,22 +21,25 @@ import java.util.List;
 @Table(name = "gift_product")
 public class GiftProduct extends BaseEntity<Long> {
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @Min(0)
     @Column(nullable = false)
     private Long stock;
 
-    @NotBlank
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
+    @Column(precision = 19, scale = 0)
+    private BigDecimal price;
 
     @ManyToMany
     @JoinTable(name = "product_gift",
             joinColumns = @JoinColumn(name = "gift_product_id"),
-            inverseJoinColumns = @JoinColumn(name = "product")
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
 }

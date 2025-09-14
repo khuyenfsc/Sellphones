@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity<E extends Serializable> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

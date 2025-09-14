@@ -1,0 +1,8 @@
+app:
+  jwt:
+    secret: "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4"
+    access-expiration: 900000                        # 15p
+    refresh-expiration: 1209600000             # 14 ngày
+  redis:
+    host: "localhost"
+    port: 6379

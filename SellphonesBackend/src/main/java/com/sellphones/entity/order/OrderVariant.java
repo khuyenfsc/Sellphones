@@ -2,15 +2,15 @@ package com.sellphones.entity.order;
 
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.ProductVariant;
-import com.sellphones.entity.product.WarrantyValue;
-import com.sellphones.entity.promotion.Promotion;
+import com.sellphones.entity.product.Warranty;
+import com.sellphones.entity.promotion.OrderVariantPromotion;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,17 +30,21 @@ public class OrderVariant extends BaseEntity<Long> {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-    @Min(0)
     @Column(nullable = false)
     private Long quantity;
 
     @Column(nullable = false)
     private LocalDateTime addedAt;
 
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+
     @ManyToOne
-    @JoinColumn(name = "warranty_value_id")
-    private WarrantyValue warrantyValue;
+    @JoinColumn(name = "warranty_id")
+    private Warranty warranty;
 
     @OneToMany(mappedBy = "orderVariant")
-    private List<Promotion> promotions;
+    private List<OrderVariantPromotion> promotions;
+
+
 }
