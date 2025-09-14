@@ -9,6 +9,7 @@ import com.sellphones.dto.authentication.request.LogoutRequest;
 import com.sellphones.dto.authentication.request.RefreshTokenRequest;
 import com.sellphones.dto.authentication.response.AuthenticationResponse;
 import com.sellphones.dto.user.UserRequest;
+import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.authentication.TokenType;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -49,29 +50,27 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private Long refresh_expiration;
 
     @Override
-    public AuthenticationResponse authenticate(UserRequest userRequest) {
+    public AuthenticationToken authenticate(UserRequest userRequest) {
         Authentication unauthentication = UsernamePasswordAuthenticationToken.unauthenticated(userRequest.getEmail(), userRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(unauthentication);
         String accessToken = generateToken(authentication, TokenType.ACCESS);
         String refreshToken = generateToken(authentication, TokenType.REFRESH);
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return new AuthenticationToken(accessToken, refreshToken);
     }
 
     @Override
-    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
-        String token = refreshTokenRequest.getToken();
-        JWTClaimsSet jwtClaimsSet = validateToken(token);
-        invalidateToken(token);
+    public AuthenticationToken refreshToken(String refreshToken){
+        JWTClaimsSet jwtClaimsSet = validateToken(refreshToken);
+        invalidateToken(refreshToken);
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(jwtClaimsSet.getClaim("email"), null, AuthorityUtils.commaSeparatedStringToAuthorityList(jwtClaimsSet.getClaim("authorities").toString()));
         String newAccessToken = generateToken(authentication, TokenType.ACCESS);
         String newRefreshToken = generateToken(authentication, TokenType.REFRESH);
-        return new AuthenticationResponse(newAccessToken, newRefreshToken);
+        return new AuthenticationToken(newAccessToken, newRefreshToken);
     }
 
     @Override
-    public void logout(LogoutRequest logoutRequest) {
+    public void logout(LogoutRequest logoutRequest, String refreshToken) {
         String accessToken = logoutRequest.getAccessToken();
-        String refreshToken = logoutRequest.getRefreshToken();
         invalidateToken(accessToken);
         invalidateToken(refreshToken);
     }

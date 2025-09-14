@@ -7,22 +7,22 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 public enum ErrorCode {
 
-    PRODUCT_NOT_FOUND(404, "Product not found", HttpStatus.NOT_FOUND),
-    PRODUCT_VARIANT_NOT_FOUND(404, "Product variant not found", HttpStatus.NOT_FOUND),
-    PRODUCT_VARIANT_ID_NULL_EXCEPTION(400, "Product variant ID Null", HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND(404, "User not found", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(403, "Invalid password", HttpStatus.UNAUTHORIZED),
-    TOKEN_EXPIRED(403, "Token expired", HttpStatus.UNAUTHORIZED),
-    TOKEN_PARSE_ERROR(403, "Token parse error", HttpStatus.UNAUTHORIZED),
-    TOKEN_GENERATION_FAILED(500, "Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR),
-    INVALID_TOKEN(403, "Invalid token", HttpStatus.UNAUTHORIZED);
+    PRODUCT_NOT_FOUND( "Product not found", HttpStatus.NOT_FOUND),
+    PRODUCT_VARIANT_NOT_FOUND("Product variant not found", HttpStatus.NOT_FOUND),
+    PRODUCT_VARIANT_ID_NULL_EXCEPTION("Product variant ID Null", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND("User not found", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD("Invalid password", HttpStatus.UNAUTHORIZED),
+    TOKEN_EXPIRED("Token expired", HttpStatus.UNAUTHORIZED),
+    TOKEN_PARSE_ERROR("Token parse error", HttpStatus.UNAUTHORIZED),
+    TOKEN_GENERATION_FAILED("Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_AUTHORIZATION_HEADER("Invalid authorization header", HttpStatus.UNAUTHORIZED),
+    CART_NOT_FOUND("Cart not found", HttpStatus.NOT_FOUND),
+    INVALID_TOKEN("Invalid token", HttpStatus.UNAUTHORIZED);
 
-    private int code;
     private String message;
     private HttpStatusCode statusCode;
 
-    ErrorCode(int code, String message, HttpStatusCode statusCode){
-        this.code = code;
+    ErrorCode(String message, HttpStatusCode statusCode){
         this.message = message;
         this.statusCode = statusCode;
     }

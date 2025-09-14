@@ -51,13 +51,6 @@ public class Product extends BaseEntity<Long> {
     private List<String> imageUrls;
 
     @ManyToMany
-    @JoinTable(name = "product_gift",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "gift_product_id")
-    )
-    private List<GiftProduct> giftProducts;
-
-    @ManyToMany
     @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_option_value_id")

@@ -2,6 +2,7 @@ package com.sellphones.entity.promotion;
 
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.Product;
+import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -39,7 +40,7 @@ public class GiftProduct extends BaseEntity<Long> {
     @ManyToMany
     @JoinTable(name = "product_gift",
             joinColumns = @JoinColumn(name = "gift_product_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
+            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
     )
-    private List<Product> products;
+    private List<ProductVariant> productVariants;
 }

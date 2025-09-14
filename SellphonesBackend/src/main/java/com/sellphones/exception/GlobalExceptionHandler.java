@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonErrorResponse> handleAppException(Exception e){
         CommonErrorResponse errorResponse = CommonErrorResponse.builder()
-                .message("Bad request")
+                .message(e.getMessage())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonErrorResponse> handleAppException(AppException aex){
         CommonErrorResponse errorResponse = CommonErrorResponse.builder()
                 .message(aex.getErrorCode().getMessage())
-                .statusCode(aex.getErrorCode().getCode())
+                .statusCode(aex.getErrorCode().getStatusCode().value())
                 .build();
         return new ResponseEntity<>(errorResponse, aex.getErrorCode().getStatusCode());
     }
