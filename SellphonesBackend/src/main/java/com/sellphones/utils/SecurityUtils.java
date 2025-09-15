@@ -3,6 +3,8 @@ package com.sellphones.utils;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
@@ -18,6 +20,11 @@ public class SecurityUtils {
         }
 
         throw new AppException(ErrorCode.INVALID_AUTHORIZATION_HEADER);
+    }
+
+    public static String extractNameFromAuthentication(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 }

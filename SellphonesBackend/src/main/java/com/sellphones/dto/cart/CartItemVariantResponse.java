@@ -15,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CartItemVariantResponse {
 
+    private Long id;
+
     private String productVariantName;
 
     private BigDecimal price;
