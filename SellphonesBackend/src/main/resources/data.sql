@@ -176,26 +176,26 @@ INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, s
 VALUES (11, 'OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
 
 -- iPhone 15 128GB (id=1) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, start_date, end_date) VALUES
-(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT', '{"amount":1000000}', '2025-09-01', '2025-09-30'),
-(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', '2025-09-05', '2025-09-25');
+INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT', '{"amount":1000000}', NULL, '2025-09-01', '2025-09-30'),
+(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', NULL, '2025-09-05', '2025-09-25');
 
 -- iPhone 15 256GB (id=2) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, start_date, end_date) VALUES
-(3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết', 'DISCOUNT_PERCENT', '{"percent":10}', '2025-09-05', '2025-09-20'),
-(4, 'Voucher 500k iPhone 256GB', 'Nhập mã IP256-500 giảm 500,000đ', 'VOUCHER', '{"voucherCode":"IP256-500","amount":500000}', '2025-09-01', '2025-09-15'),
-(5, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí', 'SERVICE', '{"service":"Extended Warranty","duration":"12 months"}', '2025-09-01', '2025-12-31');
+INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+(3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết', 'DISCOUNT_PERCENT', '{"percent":10}', NULL, '2025-09-05', '2025-09-20'),
+(4, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí', 'SERVICE', '{"service":"Extended Warranty","duration":"12 months"}', NULL, '2025-09-01', '2025-12-31'),
+(5, 'Voucher IP256-7%', 'Nhập mã IP256 giảm thêm 7%', 'DISCOUNT_PERCENT', '{"percent":7}', '{"paymentMethods":["VISA"]}', '2025-09-10', '2025-09-25');
 
 -- Galaxy S24 (id=3) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, start_date, end_date) VALUES
-(6, 'Voucher 500k cho Galaxy S24', 'Nhập mã GALAXY500 giảm 500,000đ', 'VOUCHER', '{"voucherCode":"GALAXY500","amount":500000}', '2025-09-01', '2025-09-15'),
-(7, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24', 'DISCOUNT_AMOUNT', '{"amount":2000000}', '2025-09-10', '2025-09-30');
+INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+(6, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24', 'DISCOUNT_AMOUNT', '{"amount":2000000}', NULL, '2025-09-10', '2025-09-30'),
+(7, 'Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%', 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["VISA","MASTERCARD"]}', '2025-09-15', '2025-09-30');
 
 -- MacBook Air M3 (id=4) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, start_date, end_date) VALUES
-(8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng', 'SERVICE', '{"service":"Office 365","duration":"12 months"}', '2025-09-01', '2025-12-31'),
-(9, 'Giảm 5% khi thanh toán qua thẻ Visa', 'Thanh toán qua Visa giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5,"condition":"paymentMethod=VISA"}', '2025-09-01', '2025-09-30'),
-(10, 'Voucher MacBook 1 triệu', 'Nhập mã MAC1M giảm 1,000,000đ', 'VOUCHER', '{"voucherCode":"MAC1M","amount":1000000}', '2025-09-01', '2025-09-15');
+INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+(8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng', 'SERVICE', '{"service":"Office 365","duration":"12 months"}', NULL, '2025-09-01', '2025-12-31'),
+(9, 'Giảm 5% khi thanh toán qua thẻ Visa', 'Thanh toán qua Visa giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["VISA"]}', '2025-09-01', '2025-09-30'),
+(10, 'Voucher MBA-3%', 'Nhập mã MBA3 giảm thêm 3%', 'DISCOUNT_PERCENT', '{"percent":3}', '{"paymentMethods":["VISA","MASTERCARD"]}', '2025-09-10', '2025-09-30');
 
 -- iPhone 15 128GB (id=1) liên kết với promotions 1, 2
 INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id) VALUES
@@ -218,6 +218,7 @@ INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id)
 (4, 8),
 (4, 9),
 (4, 10);
+
 
 
 
@@ -337,22 +338,22 @@ WHERE EXISTS (
 );
 
 -- User 1: có 2 sản phẩm trong giỏ (iPhone 15 128GB và MacBook Pro 14 - 16GB/512GB)
-INSERT INTO cart_item (id, cart_id, product_variant_id, quantity, added_at, created_at)
+INSERT INTO cart_item (cart_id, product_variant_id, quantity, added_at, created_at)
 VALUES
-(1, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- iPhone 15 128GB
-(2, 1, 6, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); -- MacBook Pro 14 16GB/512GB
+(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- iPhone 15 128GB
+(1, 6, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); -- MacBook Pro 14 16GB/512GB
 
 -- User 2: có 3 sản phẩm (Galaxy S24, Pixel 8 Pro, OnePlus 12 16GB/512GB)
-INSERT INTO cart_item (id, cart_id, product_variant_id, quantity, added_at, created_at)
+INSERT INTO cart_item (cart_id, product_variant_id, quantity, added_at, created_at)
 VALUES
-(3, 2, 3, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- Galaxy S24 128GB
-(4, 2, 5, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- Pixel 8 Pro 128GB
-(5, 2, 11, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); -- OnePlus 12 16GB/512GB
+(2, 3, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- Galaxy S24 128GB
+(2, 5, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), -- Pixel 8 Pro 128GB
+(2, 11, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); -- OnePlus 12 16GB/512GB
 
 -- User 3: có 1 sản phẩm (Dell XPS 13 Core i7)
-INSERT INTO cart_item (id, cart_id, product_variant_id, quantity, added_at, created_at)
+INSERT INTO cart_item (cart_id, product_variant_id, quantity, added_at, created_at)
 VALUES
-(6, 3, 8, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(3, 8, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 INSERT INTO review (id, user_id, content, rating_score, product_variant_id, created_at)

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +30,8 @@ public class Promotion extends BaseEntity<Long> {
     private PromotionType type;
 
     private String config;
+
+    private String condition;
 
     @Column(name = "start_date")
     private LocalDate startDate;

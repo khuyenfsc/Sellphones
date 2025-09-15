@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .csrf(csrfConfig -> csrfConfig.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .addFilterBefore(jwtValidatorFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

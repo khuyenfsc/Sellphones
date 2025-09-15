@@ -16,7 +16,11 @@ public enum ErrorCode {
     TOKEN_PARSE_ERROR("Token parse error", HttpStatus.UNAUTHORIZED),
     TOKEN_GENERATION_FAILED("Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_AUTHORIZATION_HEADER("Invalid authorization header", HttpStatus.UNAUTHORIZED),
+    CART_ITEM_ALREADY_EXISTS("Cart item already exists in the cart", HttpStatus.CONFLICT),
+    CART_ITEM_NOT_FOUND("Cart item not found", HttpStatus.NOT_FOUND),
+    PRODUCT_VARIANT_OUT_OF_STOCK("Product variant is out of stock", HttpStatus.BAD_REQUEST),
     CART_NOT_FOUND("Cart not found", HttpStatus.NOT_FOUND),
+
     INVALID_TOKEN("Invalid token", HttpStatus.UNAUTHORIZED);
 
     private String message;

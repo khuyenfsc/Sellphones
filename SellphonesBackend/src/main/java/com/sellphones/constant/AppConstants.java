@@ -9,7 +9,8 @@ public class AppConstants {
             "/api/v1/reviews/**",
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
-            "/api/v1/auth/logout"
+            "/api/v1/auth/logout",
+            "/h2-console/**"
     };
 
     public final static String[] CUSTOMER_ENDPOINTS = {

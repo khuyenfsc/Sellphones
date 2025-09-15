@@ -5,6 +5,7 @@ import com.sellphones.dto.user.BasicUserResponse;
 import com.sellphones.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/basic-user")
+    @GetMapping("/user-profile-basic")
     public ResponseEntity<CommonResponse> getUserProfileBasic(HttpServletRequest request){
         BasicUserResponse userResponse = userService.getUserProfileBasic();
         Map<String, Object> map = new HashMap<>();
