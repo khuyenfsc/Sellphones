@@ -21,7 +21,7 @@ public class ProductPromotion extends Promotion{
     @JoinTable(name = "product_variant_promotion",
             joinColumns = @JoinColumn(name = "product_promotion_id"),
             inverseJoinColumns = @JoinColumn(name = "product_variant_id"))
-    private List<ProductVariant> productVariant;
+    private List<ProductVariant> productVariants;
 
 
 }

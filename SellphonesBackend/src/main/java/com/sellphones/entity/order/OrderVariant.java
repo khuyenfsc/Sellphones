@@ -4,11 +4,9 @@ import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
 import com.sellphones.entity.promotion.OrderVariantPromotion;
+import com.sellphones.entity.promotion.Promotion;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "order_variant")
 public class OrderVariant extends BaseEntity<Long> {
 
@@ -45,6 +44,5 @@ public class OrderVariant extends BaseEntity<Long> {
 
     @OneToMany(mappedBy = "orderVariant")
     private List<OrderVariantPromotion> promotions;
-
 
 }

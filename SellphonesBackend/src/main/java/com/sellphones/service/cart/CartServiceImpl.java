@@ -2,6 +2,7 @@ package com.sellphones.service.cart;
 
 import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartResponse;
+import com.sellphones.dto.cart.DeletedItemRequest;
 import com.sellphones.dto.cart.ItemQuantityRequest;
 import com.sellphones.entity.cart.Cart;
 import com.sellphones.entity.cart.CartItem;
@@ -69,6 +70,13 @@ public class CartServiceImpl implements CartService{
         CartItem cartItem = cartItemRepository.findByIdAndCart_User_Email(itemQuantityRequest.getCartItemId(), SecurityUtils.extractNameFromAuthentication())
                         .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND));
         cartItem.setQuantity(itemQuantityRequest.getQuantity());
+    }
+
+    @Override
+    public void deleteCartItem(DeletedItemRequest deletedItemRequest) {
+        CartItem cartItem = cartItemRepository.findByIdAndCart_User_Email(deletedItemRequest.getCartItemId(), SecurityUtils.extractNameFromAuthentication())
+                .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND));
+        cartItemRepository.delete(cartItem);
     }
 
     private Cart getCurrentUserCart(){
