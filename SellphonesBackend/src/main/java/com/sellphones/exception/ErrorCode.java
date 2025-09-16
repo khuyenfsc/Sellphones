@@ -18,6 +18,10 @@ public enum ErrorCode {
     INVALID_AUTHORIZATION_HEADER("Invalid authorization header", HttpStatus.UNAUTHORIZED),
     CART_ITEM_ALREADY_EXISTS("Cart item already exists in the cart", HttpStatus.CONFLICT),
     CART_ITEM_NOT_FOUND("Cart item not found", HttpStatus.NOT_FOUND),
+    PAYMENT_METHOD_TYPE_NOT_FOUND("Payment method type not found", HttpStatus.NOT_FOUND),
+    PAYMENT_METHOD_NOT_FOUND("Payment method not found", HttpStatus.NOT_FOUND),
+    PRODUCT_PROMOTION_NOT_FOUND_IN_PRODUCT("Product promotion not found in product", HttpStatus.NOT_FOUND),
+    WARRANTY_NOT_FOUND_IN_PRODUCT("Warranty not found in product", HttpStatus.NOT_FOUND),
     PRODUCT_VARIANT_OUT_OF_STOCK("Product variant is out of stock", HttpStatus.BAD_REQUEST),
     CART_NOT_FOUND("Cart not found", HttpStatus.NOT_FOUND),
 

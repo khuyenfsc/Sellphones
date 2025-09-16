@@ -3,6 +3,7 @@ package com.sellphones.controller.cart;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartResponse;
+import com.sellphones.dto.cart.DeletedItemRequest;
 import com.sellphones.dto.cart.ItemQuantityRequest;
 import com.sellphones.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +37,19 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(map));
     }
 
-    @PostMapping("/update-quantity")
+    @PutMapping("/update-quantity")
     public ResponseEntity<CommonResponse> updateItemQuantity(@RequestBody ItemQuantityRequest itemQuantityRequest){
         cartService.updateItemQuantity(itemQuantityRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Updated quantity successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @DeleteMapping("/delete-cart-item")
+    public ResponseEntity<CommonResponse> deleteCartItem(@RequestBody DeletedItemRequest deletedItemRequest){
+        cartService.deleteCartItem(deletedItemRequest);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Deleted cart item successfully");
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 

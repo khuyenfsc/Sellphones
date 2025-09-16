@@ -37,7 +37,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_variant_promotion",
             joinColumns = @JoinColumn(name = "product_variant_id"),
             inverseJoinColumns = @JoinColumn(name = "product_promotion_id"))
@@ -56,7 +56,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column(nullable = false)
     private Long stock;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "variant_warranty",
             joinColumns = @JoinColumn(name = "product_variant_id"),

@@ -8,10 +8,7 @@ import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "order")
 public class Order extends BaseEntity<Long> {
 
@@ -37,8 +35,9 @@ public class Order extends BaseEntity<Long> {
     @Column(precision = 19, scale = 0)
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
-    private int orderStatus;
+    private OrderStatus orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
