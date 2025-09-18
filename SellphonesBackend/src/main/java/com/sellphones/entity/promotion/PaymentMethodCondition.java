@@ -10,7 +10,7 @@ import java.util.List;
 public class PaymentMethodCondition implements PromotionCondition{
     @Override
     public boolean isEligible(Order order, PromotionConditionDto cond) {
-        if(cond.getPaymentMethods() == null) return true;
-        return cond.getPaymentMethods().contains(order.getPaymentMethod());
+        if(cond.getPaymentMethodTypes() == null) return true;
+        return cond.getPaymentMethodTypes().contains(order.getPaymentMethod().getPaymentMethodType());
     }
 }

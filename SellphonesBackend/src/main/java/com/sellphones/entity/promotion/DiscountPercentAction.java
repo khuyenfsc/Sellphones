@@ -7,11 +7,12 @@ import com.sellphones.entity.order.OrderVariant;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
-@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@Component
 public class DiscountPercentAction implements PromotionAction{
 
     private final ObjectMapper objectMapper;

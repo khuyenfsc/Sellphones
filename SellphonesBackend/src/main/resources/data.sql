@@ -34,6 +34,30 @@ VALUES
 (7, 'Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
 (8, 'Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP);
 
+INSERT INTO address (id, street, ward, district, province)
+VALUES
+(1, '123 Le Loi', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh'),
+(2, '45 Tran Hung Dao', 'An Hai Bac', 'Son Tra', 'Da Nang'),
+(3, '67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi'),
+(4, '89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue'),
+(5, '12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa'),
+(6, '34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang'),
+(7, '56 Ly Thuong Kiet', 'Tan Binh', 'Hai Ba Trung', 'Ha Noi'),
+(8, '78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh');
+
+INSERT INTO customer_info (id, full_name, phone_number, address_id, cccd, date_of_birth)
+VALUES
+(1, 'Nguyen Van A', '0901000001', 1, '012345678901', '1995-01-15'),
+(2, 'Tran Thi B', '0902000002', 2, '012345678902', '1992-05-20'),
+(3, 'Le Van C', '0903000003', 3, '012345678903', '1998-07-12'),
+(4, 'Pham Thi D', '0904000004', 4, NULL, '1990-03-05'),
+(5, 'Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22'),
+(6, 'Do Thi F', '0906000006', 6, NULL, '1997-09-10'),
+(7, 'Phan Van G', '0907000007', 7, '012345678907', '1999-12-30'),
+(8, 'Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14');
+
+
+
 -- Giỏ hàng của User 1
 INSERT INTO cart (id, user_id, created_at, updated_at)
 VALUES (1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -177,25 +201,35 @@ VALUES (11, 'OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CUR
 
 -- iPhone 15 128GB (id=1) có 2 khuyến mãi
 INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
-(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT', '{"amount":1000000}', NULL, '2025-09-01', '2025-09-30'),
-(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', NULL, '2025-09-05', '2025-09-25');
+(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ',
+ 'DISCOUNT_AMOUNT', '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
+(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%',
+ 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
 
 -- iPhone 15 256GB (id=2) có 3 khuyến mãi
 INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
-(3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết', 'DISCOUNT_PERCENT', '{"percent":10}', NULL, '2025-09-05', '2025-09-20'),
-(4, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí', 'SERVICE', '{"service":"Extended Warranty","duration":"12 months"}', NULL, '2025-09-01', '2025-12-31'),
-(5, 'Voucher IP256-7%', 'Nhập mã IP256 giảm thêm 7%', 'DISCOUNT_PERCENT', '{"percent":7}', '{"paymentMethods":["VISA"]}', '2025-09-10', '2025-09-25');
+(3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết',
+ 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-20'),
+(4, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí',
+ 'SERVICE', '{"service":"Extended Warranty","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
+(5, 'Voucher IP256-7%', 'Nhập mã IP256 giảm thêm 7%',
+ 'DISCOUNT_PERCENT', '{"percent":7}', '{"paymentMethods":["VNPAY"]}', '2025-09-10', '2025-09-25');
 
 -- Galaxy S24 (id=3) có 2 khuyến mãi
 INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
-(6, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24', 'DISCOUNT_AMOUNT', '{"amount":2000000}', NULL, '2025-09-10', '2025-09-30'),
-(7, 'Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%', 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["VISA","MASTERCARD"]}', '2025-09-15', '2025-09-30');
+(6, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24',
+ 'DISCOUNT_AMOUNT', '{"amount":2000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30'),
+(7, 'Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%',
+ 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-15', '2025-09-30');
 
 -- MacBook Air M3 (id=4) có 3 khuyến mãi
 INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
-(8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng', 'SERVICE', '{"service":"Office 365","duration":"12 months"}', NULL, '2025-09-01', '2025-12-31'),
-(9, 'Giảm 5% khi thanh toán qua thẻ Visa', 'Thanh toán qua Visa giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["VISA"]}', '2025-09-01', '2025-09-30'),
-(10, 'Voucher MBA-3%', 'Nhập mã MBA3 giảm thêm 3%', 'DISCOUNT_PERCENT', '{"percent":3}', '{"paymentMethods":["VISA","MASTERCARD"]}', '2025-09-10', '2025-09-30');
+(8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng',
+ 'SERVICE', '{"service":"Office 365","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
+(9, 'Giảm 5% khi thanh toán qua VNPAY', 'Thanh toán qua VNPAY giảm thêm 5%',
+ 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["VNPAY"]}', '2025-09-01', '2025-09-30'),
+(10, 'Voucher MBA-3%', 'Nhập mã MBA3 giảm thêm 3%',
+ 'DISCOUNT_PERCENT', '{"percent":3}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30');
 
 -- iPhone 15 128GB (id=1) liên kết với promotions 1, 2
 INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id) VALUES
@@ -354,6 +388,44 @@ VALUES
 INSERT INTO cart_item (cart_id, product_variant_id, quantity, added_at, created_at)
 VALUES
 (3, 8, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO payment_method (id, name, description, payment_method_type)
+VALUES (1, 'Cash Payment', 'Thanh toán tiền mặt tại cửa hàng hoặc khi nhận hàng', 'CASH');
+
+INSERT INTO payment_method (id, name, description, payment_method_type)
+VALUES (2, 'VNPay', 'Thanh toán trực tuyến thông qua cổng VNPay', 'VNPAY');
+
+INSERT INTO customer_order (id, code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
+VALUES
+(1, 'SPS1', 1, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
+(2, 'SPS2', 1, '2025-09-02 11:30:00', 3200000, 'ACCEPTED',  2, 'COMPLETED', 2),
+(3, 'SPS3', 1, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
+(4, 'SPS4', 1, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
+(5, 'SPS5', 1, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'FAILED',    5),
+(6, 'SPS6', 1, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
+(7, 'SPS7', 1, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
+(8, 'SPS8', 1, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
+
+INSERT INTO order_variant (id, order_id, product_variant_id, quantity, added_at, total_price, warranty_id)
+VALUES
+(1, 1, 1, 2, '2025-09-01 10:05:00', 1000000, 1),
+(2, 1, 2, 1, '2025-09-01 10:07:00', 500000, 2),
+(3, 2, 3, 3, '2025-09-02 11:35:00', 1200000, 3),
+(4, 3, 4, 5, '2025-09-03 14:20:00', 450000, 1),
+(5, 4, 5, 2, '2025-09-04 09:50:00', 7800000, 4),
+(6, 5, 6, 1, '2025-09-05 16:10:00', 2300000, 5),
+(7, 6, 7, 2, '2025-09-06 19:25:00', 990000, 2),
+(8, 7, 8, 10, '2025-09-07 12:50:00', 11000000, 3),
+(9, 8, 9, 1, '2025-09-08 08:35:00', 560000, 4);
+
+INSERT INTO order_variant_promotion
+(id, name, description, promotion_type, config, condition, start_date, end_date, order_variant_id)
+VALUES
+(1, 'Giảm 10%', 'Giảm 10% cho sản phẩm', 'DISCOUNT_PERCENT', '{"value":10}', NULL, '2025-09-01', '2025-09-30', 1),
+(2, 'Giảm 200k', 'Giảm 200,000 VND cho đơn hàng trên 1 triệu', 'DISCOUNT_AMOUNT', '{"value":200000}', 'totalPrice > 1000000', '2025-09-01', '2025-09-30', 2),
+(3, 'Bảo hành thêm 6 tháng', 'Tặng thêm 6 tháng bảo hành', 'SERVICE', '{"months":6}', NULL, '2025-09-05', '2025-12-31', 3),
+(4, 'Freeship', 'Miễn phí vận chuyển toàn quốc', 'SERVICE', '{"shipping":"free"}', NULL, '2025-09-01', '2025-09-30', 5),
+(5, 'Giảm 5%', 'Giảm 5% cho khách hàng mới', 'DISCOUNT_PERCENT', '{"value":5}', 'isNewCustomer = true', '2025-09-01', '2025-10-15', 7);
 
 
 INSERT INTO review (id, user_id, content, rating_score, product_variant_id, created_at)

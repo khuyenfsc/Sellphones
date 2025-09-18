@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonErrorResponse> handleAppException(Exception e){
-        CommonErrorResponse errorResponse = CommonErrorResponse.builder()
-                .message(e.getMessage())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<CommonErrorResponse> handleAppException(Exception e){
+//        CommonErrorResponse errorResponse = CommonErrorResponse.builder()
+//                .message(e.getMessage())
+//                .statusCode(HttpStatus.BAD_REQUEST.value())
+//                .build();
+//        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+//    }
 
     @ExceptionHandler(AppException.class)
     public ResponseEntity<CommonErrorResponse> handleAppException(AppException aex){

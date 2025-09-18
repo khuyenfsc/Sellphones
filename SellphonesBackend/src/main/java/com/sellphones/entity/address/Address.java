@@ -4,16 +4,14 @@ import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "address")
 public class Address extends BaseEntity<Long> {
 
@@ -25,9 +23,9 @@ public class Address extends BaseEntity<Long> {
 
     private String province;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
 }
 

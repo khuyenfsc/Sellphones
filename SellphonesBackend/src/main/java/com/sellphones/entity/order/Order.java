@@ -4,10 +4,8 @@ import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.entity.payment.PaymentMethod;
 import com.sellphones.entity.payment.PaymentStatus;
-import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,20 +18,22 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "order")
+@Table(name = "customer_order")
 public class Order extends BaseEntity<Long> {
+
+    private String code;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderVariant> orderVariants;
 
     private LocalDateTime orderedAt;
 
     @Column(precision = 19, scale = 0)
-    private BigDecimal price;
+    private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
@@ -47,8 +47,15 @@ public class Order extends BaseEntity<Long> {
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
-    @OneToOne
+    private String note;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_info_id")
     private CustomerInfo customerInfo;
+
+    @PostPersist
+    public void generateCode(){
+        this.code = "SPS" + this.getId();
+    }
 
 }

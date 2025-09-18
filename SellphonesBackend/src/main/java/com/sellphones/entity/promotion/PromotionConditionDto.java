@@ -2,6 +2,7 @@ package com.sellphones.entity.promotion;
 
 
 import com.sellphones.entity.payment.PaymentMethod;
+import com.sellphones.entity.payment.PaymentMethodType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,6 @@ import java.util.List;
 @Data
 public class PromotionConditionDto {
 
-    private List<PaymentMethod> paymentMethods;
+    private List<PaymentMethodType> paymentMethodTypes;
 
 }
