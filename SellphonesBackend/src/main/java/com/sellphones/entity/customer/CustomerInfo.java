@@ -5,10 +5,7 @@ import com.sellphones.entity.address.Address;
 import com.sellphones.entity.installment.InstallmentOrder;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "customer_info")
 public class CustomerInfo extends BaseEntity<Long> {
 
@@ -26,8 +24,8 @@ public class CustomerInfo extends BaseEntity<Long> {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_info_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @Nullable
@@ -35,7 +33,7 @@ public class CustomerInfo extends BaseEntity<Long> {
 
     @Nullable
     private LocalDate dateOfBirth;
-
-    @OneToOne(mappedBy = "customerInfo")
-    private InstallmentOrder installmentOrder;
+//
+//    @OneToOne(mappedBy = "customerInfo")
+//    private InstallmentOrder installmentOrder;
 }

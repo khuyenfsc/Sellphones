@@ -1,12 +1,21 @@
 package com.sellphones.entity.promotion;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
 public class PromotionActionFactory {
 
-    public static PromotionAction getAction(PromotionType type){
+    private final DiscountValueAction discountValueAction;
+    private final DiscountPercentAction discountPercentAction;
+    private final ServiceAction serviceAction;
+
+    public PromotionAction getAction(PromotionType type){
         return switch (type){
-            case DISCOUNT_AMOUNT -> new DiscountValueAction();
-            case DISCOUNT_PERCENT -> new DiscountPercentAction();
-            case SERVICE -> new ServiceAction();
+            case DISCOUNT_AMOUNT -> discountValueAction;
+            case DISCOUNT_PERCENT -> discountPercentAction;
+            case SERVICE -> serviceAction;
         };
     }
 

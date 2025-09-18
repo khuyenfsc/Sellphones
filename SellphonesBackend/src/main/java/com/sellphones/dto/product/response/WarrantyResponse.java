@@ -13,6 +13,8 @@ public class WarrantyResponse {
 
     private String name;
 
+    private int numberOfMonths;
+
     private BigDecimal val;
 
     private String description;

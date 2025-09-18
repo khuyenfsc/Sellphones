@@ -46,9 +46,9 @@ public class User extends BaseEntity<Long> {
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "default_address_id")
 //    private Address defaultAddress;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<Address> shippingAddresses;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+//    private List<Address> shippingAddresses;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
