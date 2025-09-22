@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data
 @NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class OrderVariantListResponse {
 

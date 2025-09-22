@@ -1,5 +1,5 @@
 package com.sellphones.entity.order;
 
 public enum OrderStatus {
-    PENDING, ACCEPTED, SHIPPING, DELIVERED, CANCELED
+    PENDING, ACCEPTED, SHIPPING, DELIVERED, CANCELED, WAIT_FOR_CANCELLING
 }

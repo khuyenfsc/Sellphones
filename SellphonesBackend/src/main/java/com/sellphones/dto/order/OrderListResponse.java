@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderListResponse {
 
+    private Long id;
+
     private String code;
 
     private List<OrderVariantListResponse> orderVariants;

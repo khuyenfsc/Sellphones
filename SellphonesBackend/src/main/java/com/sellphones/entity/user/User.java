@@ -1,5 +1,9 @@
 package com.sellphones.entity.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.sellphones.annotation.StrongPassword;
 import com.sellphones.annotation.ValidPhoneNumber;
 import com.sellphones.entity.BaseEntity;
@@ -13,6 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "app_user")
 public class User extends BaseEntity<Long> {
 
@@ -38,6 +45,8 @@ public class User extends BaseEntity<Long> {
     private String password;
 
     @Column(name = "date_of_birth")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateOfBirth;
 
     @Column(name = "phone_number", unique = true)
@@ -50,12 +59,19 @@ public class User extends BaseEntity<Long> {
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
 //    private List<Address> shippingAddresses;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "role")
+//    private Role role;
+
+    @ManyToOne
+    @Column(name = "role_id")
     private Role role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
 }

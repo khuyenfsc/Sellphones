@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "review")
 public class Review extends BaseEntity<Long> {
 
@@ -38,6 +40,6 @@ public class Review extends BaseEntity<Long> {
 
     @ElementCollection
     @CollectionTable(name = "review_images", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls;
+    @Column(name = "image_name")
+    private List<String> imageNames;
 }

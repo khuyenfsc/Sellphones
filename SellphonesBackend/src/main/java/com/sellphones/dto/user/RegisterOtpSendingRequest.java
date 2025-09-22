@@ -1,0 +1,20 @@
+package com.sellphones.dto.user;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RegisterOtpSendingRequest {
+
+    @NotBlank
+    private String activeToken;
+
+    @Email
+    private String email;
+
+}

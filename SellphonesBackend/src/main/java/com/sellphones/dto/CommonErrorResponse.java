@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -13,6 +15,6 @@ public class CommonErrorResponse {
 
     private int statusCode;
 
-    private String message;
+    private Map<String, Object> errors;
 
 }

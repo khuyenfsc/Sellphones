@@ -20,7 +20,7 @@ public class OrderDetailResponse {
 
     private String code;
 
-    private List<OrderProductVariantDetailsResponse> orderVariants;
+    private List<OrderVariantDetailsResponse> orderVariants;
 
     private LocalDateTime orderedAt;
 

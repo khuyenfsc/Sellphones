@@ -17,4 +17,6 @@ public interface OrderService {
     PageResponse<OrderListResponse> getOrders(LocalDate startDate, LocalDate endDate, Integer page, Integer size, OrderStatus orderStatus);
 
     OrderDetailResponse getOrderDetailsById(Long id);
+
+    void cancelOrder(Long id);
 }

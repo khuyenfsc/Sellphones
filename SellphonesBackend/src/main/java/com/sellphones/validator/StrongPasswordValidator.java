@@ -7,8 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class StrongPasswordValidator implements ConstraintValidator<StrongPassword, String> {
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        String regex = "^(?=.*[a=z])(?=.*[A-Z])(?=.*\\d+).{8,}$";
-
+        String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-={}\\[\\]:;\"'<>,.?/`~\\\\]).{8,}$";
         return s.matches(regex);
     }
 }

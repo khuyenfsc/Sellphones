@@ -6,11 +6,10 @@ import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "comment")
 public class Comment extends BaseEntity<Long> {
 
@@ -39,5 +39,5 @@ public class Comment extends BaseEntity<Long> {
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
 //    @JsonManagedReference
-    private List<Comment> childComments;
+    private List<Comment> childComments = new ArrayList<>();
 }
