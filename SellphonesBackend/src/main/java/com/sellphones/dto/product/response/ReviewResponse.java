@@ -18,6 +18,6 @@ public class ReviewResponse {
 
     private int ratingScore;
 
-    private List<String> imageUrls;
+    private List<String> imageNames;
 
 }

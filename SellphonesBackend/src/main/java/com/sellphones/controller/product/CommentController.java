@@ -2,6 +2,8 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.request.NewCommentRequest;
+import com.sellphones.dto.product.request.ReplyCommentRequest;
 import com.sellphones.dto.product.response.CommentResponse;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.service.product.CommentService;
@@ -21,15 +23,33 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/product/{productId}")
+    @GetMapping
     public ResponseEntity<CommonResponse> getCommentByProduct(
-            @PathVariable Long productId,
+            @RequestParam("productId") Long productId,
             @RequestParam("page") Integer page,
             @RequestParam("size") Integer size
     ){
         PageResponse<CommentResponse> responses = commentService.getCommentByProduct(productId, page, size);
         Map<String, Object> map = new HashMap<>();
         map.put("comments", responses);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @PostMapping("/product/add-comment")
+    public ResponseEntity<CommonResponse> addComment(@RequestBody NewCommentRequest newCommentRequest){
+        commentService.addNewComment(newCommentRequest);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Added new comment successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @PostMapping("/product/reply-comment")
+    public ResponseEntity<CommonResponse> replyComment(@RequestBody ReplyCommentRequest replyCommentRequest){
+        commentService.replyComment(replyCommentRequest);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Replied comment successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

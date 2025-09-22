@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.request.filter;
+package com.sellphones.dto.product.request;
 
 import com.sellphones.entity.product.Category;
 import lombok.AllArgsConstructor;

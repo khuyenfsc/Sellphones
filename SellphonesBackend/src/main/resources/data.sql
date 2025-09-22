@@ -23,16 +23,16 @@ INSERT INTO brand (id, name, brand_icon) VALUES (17, 'Acer', 'https://example.co
 INSERT INTO brand (id, name, brand_icon) VALUES (18, 'Razer', 'https://example.com/icons/razer.png');
 INSERT INTO brand (id, name, brand_icon) VALUES (19, 'Microsoft', 'https://example.com/icons/microsoft.png');
 
-INSERT INTO app_user (id, full_name, avatar_url, email, password, date_of_birth, phone_number, role, gender, created_at)
+INSERT INTO app_user (full_name, avatar_url, email, password, date_of_birth, phone_number, role, gender, created_at)
 VALUES
-(1, 'Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'ADMIN', 'MALE', CURRENT_TIMESTAMP),
-(2, 'Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-(3, 'Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-(4, 'Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-(5, 'Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-(6, 'Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-(7, 'Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-(8, 'Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP);
+('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'ADMIN', 'MALE', CURRENT_TIMESTAMP),
+('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
+('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
+('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
+('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
+('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
+('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
+('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP);
 
 INSERT INTO address (id, street, ward, district, province)
 VALUES
@@ -428,42 +428,50 @@ VALUES
 (5, 'Giảm 5%', 'Giảm 5% cho khách hàng mới', 'DISCOUNT_PERCENT', '{"value":5}', 'isNewCustomer = true', '2025-09-01', '2025-10-15', 7);
 
 
-INSERT INTO review (id, user_id, content, rating_score, product_variant_id, created_at)
-VALUES
 -- Reviews for variant 1
-(1, 1, 'Sản phẩm rất tốt, pin khỏe.', 5, 1, CURRENT_TIMESTAMP),
-(2, 2, 'Máy chạy mượt, đáng tiền.', 4, 1, CURRENT_TIMESTAMP),
-(3, 3, 'Hơi nóng khi chơi game.', 3, 1, CURRENT_TIMESTAMP),
-(4, 4, 'Thiết kế đẹp, cầm chắc tay.', 5, 1, CURRENT_TIMESTAMP),
-(5, 5, 'Camera ổn nhưng pin hơi yếu.', 3, 1, CURRENT_TIMESTAMP),
+INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+VALUES
+(1, 'Sản phẩm rất tốt, pin khỏe.', 5, 1, CURRENT_TIMESTAMP),
+(2, 'Máy chạy mượt, đáng tiền.', 4, 1, CURRENT_TIMESTAMP),
+(3, 'Hơi nóng khi chơi game.', 3, 1, CURRENT_TIMESTAMP),
+(4, 'Thiết kế đẹp, cầm chắc tay.', 5, 1, CURRENT_TIMESTAMP),
+(5, 'Camera ổn nhưng pin hơi yếu.', 3, 1, CURRENT_TIMESTAMP);
+
 
 -- Reviews for variant 2
-(6, 2, 'Màu sắc đẹp, giao hàng nhanh.', 4, 2, CURRENT_TIMESTAMP),
-(7, 3, 'Màn hình sáng, hiển thị tốt.', 5, 2, CURRENT_TIMESTAMP),
-(8, 6, 'Loa ngoài hơi nhỏ.', 3, 2, CURRENT_TIMESTAMP),
-(9, 7, 'Pin trâu, sạc nhanh.', 5, 2, CURRENT_TIMESTAMP),
-(10, 8, 'Máy hơi nặng, không thoải mái.', 2, 2, CURRENT_TIMESTAMP),
+INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+VALUES
+(2, 'Màu sắc đẹp, giao hàng nhanh.', 4, 2, CURRENT_TIMESTAMP),
+(3, 'Màn hình sáng, hiển thị tốt.', 5, 2, CURRENT_TIMESTAMP),
+(6, 'Loa ngoài hơi nhỏ.', 3, 2, CURRENT_TIMESTAMP),
+(7, 'Pin trâu, sạc nhanh.', 5, 2, CURRENT_TIMESTAMP),
+(8, 'Máy hơi nặng, không thoải mái.', 2, 2, CURRENT_TIMESTAMP);
 
 -- Reviews for variant 3
-(11, 1, 'Giá hợp lý, cấu hình mạnh.', 4, 3, CURRENT_TIMESTAMP),
-(12, 4, 'Cảm ứng mượt, không bị lag.', 5, 3, CURRENT_TIMESTAMP),
-(13, 5, 'Pin xuống khá nhanh.', 3, 3, CURRENT_TIMESTAMP),
-(14, 6, 'Thiết kế tinh tế, sang trọng.', 5, 3, CURRENT_TIMESTAMP),
+INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+VALUES
+(1, 'Giá hợp lý, cấu hình mạnh.', 4, 3, CURRENT_TIMESTAMP),
+(4, 'Cảm ứng mượt, không bị lag.', 5, 3, CURRENT_TIMESTAMP),
+(5, 'Pin xuống khá nhanh.', 3, 3, CURRENT_TIMESTAMP),
+(6, 'Thiết kế tinh tế, sang trọng.', 5, 3, CURRENT_TIMESTAMP);
 
 -- Reviews for variant 4
-(15, 2, 'Chụp ảnh đẹp, nhiều tính năng.', 5, 4, CURRENT_TIMESTAMP),
-(16, 7, 'Tốc độ xử lý tốt.', 4, 4, CURRENT_TIMESTAMP),
-(17, 8, 'Khá nóng khi chơi game nặng.', 3, 4, CURRENT_TIMESTAMP),
-(18, 3, 'Màn hình lớn, dễ xem phim.', 5, 4, CURRENT_TIMESTAMP),
+INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+VALUES
+(2, 'Chụp ảnh đẹp, nhiều tính năng.', 5, 4, CURRENT_TIMESTAMP),
+(7, 'Tốc độ xử lý tốt.', 4, 4, CURRENT_TIMESTAMP),
+(8, 'Khá nóng khi chơi game nặng.', 3, 4, CURRENT_TIMESTAMP),
+(3, 'Màn hình lớn, dễ xem phim.', 5, 4, CURRENT_TIMESTAMP);
 
 -- Reviews for variant 5
-(19, 1, 'Sản phẩm mới, đóng gói cẩn thận.', 5, 5, CURRENT_TIMESTAMP),
-(20, 4, 'Dung lượng pin chưa như kỳ vọng.', 3, 5, CURRENT_TIMESTAMP),
-(21, 5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 5, CURRENT_TIMESTAMP),
-(22, 6, 'Thiết kế đẹp, nhẹ.', 5, 5, CURRENT_TIMESTAMP);
+INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+VALUES
+(1, 'Sản phẩm mới, đóng gói cẩn thận.', 5, 5, CURRENT_TIMESTAMP),
+(4, 'Dung lượng pin chưa như kỳ vọng.', 3, 5, CURRENT_TIMESTAMP),
+(5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 5, CURRENT_TIMESTAMP),
+(6, 'Thiết kế đẹp, nhẹ.', 5, 5, CURRENT_TIMESTAMP);
 
-
-INSERT INTO review_images (review_id, image_url)
+INSERT INTO review_images (review_id, image_name)
 VALUES
 (1, 'https://example.com/review1-img1.jpg'),
 (1, 'https://example.com/review1-img2.jpg'),
@@ -472,39 +480,38 @@ VALUES
 (3, 'https://example.com/review3-img2.jpg');
 
 -- Bình luận gốc (parent_comment_id = NULL)
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(1, 1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, CURRENT_TIMESTAMP),
-(2, 2, 1, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, CURRENT_TIMESTAMP),
-(3, 3, 1, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, CURRENT_TIMESTAMP);
+(1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, CURRENT_TIMESTAMP),
+(2, 2, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, CURRENT_TIMESTAMP),
+(3, 3, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, CURRENT_TIMESTAMP);
 
 -- Bình luận trả lời (child comment cho id = 1)
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(4, 4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, CURRENT_TIMESTAMP),
-(5, 5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, CURRENT_TIMESTAMP);
+(4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, CURRENT_TIMESTAMP),
+(5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, CURRENT_TIMESTAMP);
 
--- Trả lời vào comment id = 4 (tức là reply lồng 2 cấp)
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+-- Trả lời vào comment id = 4 (reply lồng 2 cấp)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(6, 1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 4, CURRENT_TIMESTAMP);
+(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 4, CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 2
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(7, 6, 1, 'Theo mình thì so với tính năng thì giá hợp lý.', 2, CURRENT_TIMESTAMP),
-(8, 7, 1, 'Có shop nào bán rẻ hơn không?', 2, CURRENT_TIMESTAMP);
+(6, 1, 'Theo mình thì so với tính năng thì giá hợp lý.', 2, CURRENT_TIMESTAMP),
+(7, 1, 'Có shop nào bán rẻ hơn không?', 2, CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 7
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(9, 2, 1, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 7, CURRENT_TIMESTAMP);
+(2, 1, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 7, CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 3
-INSERT INTO comment (id, user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(10, 8, 1, 'Chuẩn, shipper cũng thân thiện nữa.', 3, CURRENT_TIMESTAMP);
-
+(8, 1, 'Chuẩn, shipper cũng thân thiện nữa.', 3, CURRENT_TIMESTAMP);
 
 
 INSERT INTO attribute (name, created_at) VALUES ('RAM', CURRENT_TIMESTAMP);

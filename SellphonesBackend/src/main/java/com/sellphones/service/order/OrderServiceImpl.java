@@ -35,7 +35,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -112,6 +111,24 @@ public class OrderServiceImpl implements OrderService{
     public OrderDetailResponse getOrderDetailsById(Long id) {
         Order order = orderRepository.findByUser_EmailAndId(SecurityUtils.extractNameFromAuthentication(), id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return modelMapper.map(order, OrderDetailResponse.class);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Long id) {
+        Order order = orderRepository.findByUser_EmailAndId(SecurityUtils.extractNameFromAuthentication(), id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        if (order.getOrderStatus() == OrderStatus.PENDING) {
+            order.setOrderStatus(OrderStatus.CANCELED);
+        } else if (order.getOrderStatus() == OrderStatus.ACCEPTED) {
+            order.setOrderStatus(OrderStatus.WAIT_FOR_CANCELLING);
+        } else {
+            throw new AppException(ErrorCode.CANCEL_ORDER_FAILED);
+        }
+
+        if(order.getPaymentStatus() == PaymentStatus.COMPLETED){
+            paymentService.refund(order);
+            order.setPaymentStatus(PaymentStatus.REFUNDED);
+        }
     }
 
     private List<OrderVariant> makeOrderVariants(List<OrderProductRequest> orderProducts, Order order) {

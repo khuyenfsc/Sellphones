@@ -54,4 +54,13 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
+
+    @PostMapping("/cancel/{id}")
+    public ResponseEntity<CommonResponse> cancelOrder(@PathVariable Long id){
+        orderService.cancelOrder(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Canceled order failed");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
 }

@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.request.filter;
+package com.sellphones.dto.user.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TotalRequest {
-    private FilterWrapper filter;
+public class AdminPermissionResponse {
+
 }

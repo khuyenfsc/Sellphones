@@ -6,6 +6,7 @@ import com.sellphones.constant.AppConstants;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.service.authentication.AuthenticationService;
+import com.sellphones.service.authentication.JwtService;
 import com.sellphones.utils.SecurityUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -33,9 +34,10 @@ import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
+@Component
 public class JwtValidatorFilter extends OncePerRequestFilter { ;
 
-    private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -45,7 +47,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = SecurityUtils.extractTokenFromRequest(request);
-            JWTClaimsSet jwtClaimsSet = authenticationService.validateToken(jwt);
+            JWTClaimsSet jwtClaimsSet = jwtService.validateToken(jwt);
 
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                     jwtClaimsSet.getClaim("email").toString(),

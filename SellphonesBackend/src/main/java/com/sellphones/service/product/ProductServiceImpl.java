@@ -1,6 +1,6 @@
 package com.sellphones.service.product;
 
-import com.sellphones.dto.product.request.filter.FilterRequest;
+import com.sellphones.dto.product.request.FilterRequest;
 import com.sellphones.dto.product.response.ProductDetailsResponse;
 import com.sellphones.dto.product.response.ProductListResponse;
 import com.sellphones.dto.product.response.ProductVariantResponse;

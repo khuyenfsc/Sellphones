@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.request.filter;
+package com.sellphones.dto.product.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -9,15 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FilterRequest {
-    private QueryRequest query;
+public class ReviewRequest {
 
-    @Min(0)
-    private Integer page;
+    private Long productVariantId;
 
+    @Max(5)
     @Min(1)
-    @Max(100)
-    private Integer size;
+    private Integer ratingScore;
 
-    private String sort;
+    private String content;
+
 }

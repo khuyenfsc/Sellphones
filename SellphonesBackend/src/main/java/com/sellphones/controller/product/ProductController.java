@@ -2,8 +2,8 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.request.filter.FilterRequest;
-import com.sellphones.dto.product.request.filter.FilterWrapper;
+import com.sellphones.dto.product.request.FilterRequest;
+import com.sellphones.dto.product.request.FilterWrapper;
 import com.sellphones.dto.product.response.ProductDetailsResponse;
 import com.sellphones.dto.product.response.ProductDocumentResponse;
 import com.sellphones.dto.product.response.ProductListResponse;
