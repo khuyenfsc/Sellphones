@@ -59,10 +59,8 @@ public class ProductSpecificationBuilder {
 
                 spec = spec.and(parseDynamicFilter(id, condition));
             } catch (NumberFormatException e) {
-                // log và bỏ qua filter không hợp lệ
                 System.err.println("Invalid key (not a number): " + entry.getKey());
             } catch (Exception e) {
-                // log các lỗi khác trong parseDynamicFilter
                 System.err.println("Error parsing filter: key=" + entry.getKey() + ", value=" + entry.getValue());
             }
         }

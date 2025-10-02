@@ -302,11 +302,11 @@ public class UserServiceImpl implements UserService{
                 .build();
         userRepository.save(user);
         redisAuthService.deleteRegisterEmail(email);
-        return authenticationService.authenticate(googleAuthenticationAction, new UserRequest(email, null));
+        return authenticationService.authenticate(googleAuthenticationAction, new UserRequest(email, null), RoleName.CUSTOMER);
     }
 
     private Role getCustomerRole(){
-        return roleRepository.findBYRoleName(RoleName.CUSTOMER).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        return roleRepository.findByRoleName(RoleName.CUSTOMER).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
     }
 
     private String generateOtp(){

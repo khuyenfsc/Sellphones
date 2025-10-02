@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AppConstants.ADMIN_ENDPOINTS).hasAuthority("ADMIN")
-                        .requestMatchers(AppConstants.CUSTOMER_ENDPOINTS).hasAnyAuthority("CUSTOMER", "ADMIN")
+                        .requestMatchers(AppConstants.CUSTOMER_ENDPOINTS).hasAuthority("CUSTOMER")
                         .requestMatchers(AppConstants.PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -45,7 +45,11 @@ public class SecurityConfiguration {
                         .userInfoEndpoint(u -> u.userService(oAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
                 )
-                .addFilterBefore(jwtValidatorFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtValidatorFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                );
 
         return http.build();
     }

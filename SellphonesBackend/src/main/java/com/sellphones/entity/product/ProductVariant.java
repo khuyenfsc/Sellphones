@@ -27,6 +27,9 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column(nullable = false,precision = 19, scale = 0)
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
+    private ProductVariantStatus status;
+
     @Column(nullable = false, unique = true)
     private String sku;
 

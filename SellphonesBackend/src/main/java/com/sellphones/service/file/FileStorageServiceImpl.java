@@ -76,7 +76,6 @@ public class FileStorageServiceImpl implements FileStorageService{
     public void delete(String fileName, String folderName) {
         Path folder = root.resolve(Paths.get(folderName)).normalize().toAbsolutePath();
         Path file = folder.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
-
         try {
             Files.deleteIfExists(file);
         } catch (IOException e) {

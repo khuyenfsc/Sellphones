@@ -3,36 +3,347 @@ INSERT INTO category (name, created_at) VALUES ('Điện thoại', CURRENT_TIMES
 INSERT INTO category (name, created_at) VALUES ('Tablet', CURRENT_TIMESTAMP);
 INSERT INTO category (name, created_at) VALUES ('Laptop', CURRENT_TIMESTAMP);
 
-INSERT INTO brand (id, name, brand_icon) VALUES (1, 'Apple', 'https://example.com/icons/apple.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (2, 'Samsung', 'https://example.com/icons/samsung.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (3, 'Google', 'https://example.com/icons/google.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (4, 'OnePlus', 'https://example.com/icons/oneplus.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (5, 'Xiaomi', 'https://example.com/icons/xiaomi.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (6, 'Oppo', 'https://example.com/icons/oppo.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (7, 'Vivo', 'https://example.com/icons/vivo.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (8, 'Sony', 'https://example.com/icons/sony.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (9, 'Asus', 'https://example.com/icons/asus.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (10, 'Realme', 'https://example.com/icons/realme.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (11, 'Huawei', 'https://example.com/icons/huawei.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (12, 'Nothing', 'https://example.com/icons/nothing.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (13, 'Dell', 'https://example.com/icons/dell.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (14, 'HP', 'https://example.com/icons/hp.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (15, 'Lenovo', 'https://example.com/icons/lenovo.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (16, 'MSI', 'https://example.com/icons/msi.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (17, 'Acer', 'https://example.com/icons/acer.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (18, 'Razer', 'https://example.com/icons/razer.png');
-INSERT INTO brand (id, name, brand_icon) VALUES (19, 'Microsoft', 'https://example.com/icons/microsoft.png');
+ALTER TABLE filter_option ALTER COLUMN category_id DROP NOT NULL;
 
-INSERT INTO app_user (full_name, avatar_url, email, password, date_of_birth, phone_number, role, gender, created_at)
+
+ALTER TABLE product
+  ADD CONSTRAINT fk_product_category
+  FOREIGN KEY (category_id) REFERENCES category(id)
+  ON DELETE SET NULL;
+
+ALTER TABLE filter_option
+  ADD CONSTRAINT fk_filter_option_category
+  FOREIGN KEY (category_id) REFERENCES category(id)
+  ON DELETE SET NULL;
+
+ALTER TABLE product_filter
+  ADD CONSTRAINT fk_product_filter_category
+  FOREIGN KEY (attribute_id) REFERENCES attribute(id)
+  ON DELETE SET NULL;
+
+INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'apple.png');
+INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'samsung.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Google', 'google.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'OnePlus', 'oneplus.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Xiaomi', 'xiaomi.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Oppo', 'oppo.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Vivo', 'vivo.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Sony', 'sony.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Asus', 'asus.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Realme', 'realme.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Huawei', 'huawei.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Nothing', 'nothing.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Dell', 'dell.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'HP', 'hp.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Lenovo', 'lenovo.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'MSI', 'msi.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Acer', 'acer.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Razer', 'razer.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Microsoft', 'microsoft.png');
+
+
+INSERT INTO role (id, name, description, role_name, created_at)
 VALUES
-('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'ADMIN', 'MALE', CURRENT_TIMESTAMP),
-('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP),
-('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'MALE', CURRENT_TIMESTAMP),
-('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'CUSTOMER', 'FEMALE', CURRENT_TIMESTAMP);
+(1, 'Super Admin', 'Full access to the entire system', 'ADMIN', CURRENT_TIMESTAMP),
+(2, 'Sales Manager', 'Manage orders and shipments', 'ADMIN', CURRENT_TIMESTAMP),
+(3, 'Order Admin', 'Specialized in managing orders', 'ADMIN', CURRENT_TIMESTAMP),
+(4, 'Shipment Admin', 'Specialized in managing shipments', 'ADMIN', CURRENT_TIMESTAMP),
+(5, 'Customer', 'Regular customer with limited access', 'CUSTOMER', CURRENT_TIMESTAMP);
+
+INSERT INTO app_user (full_name, avatar_url, email, password, date_of_birth, phone_number, gender, role_id, created_at)
+VALUES
+('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'MALE', 1, CURRENT_TIMESTAMP), -- Super Admin
+('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
+('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'MALE', 3, CURRENT_TIMESTAMP), -- Order Admin
+('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 4, CURRENT_TIMESTAMP), -- Shipment Admin
+('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'MALE', 5, CURRENT_TIMESTAMP), -- Customer
+('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 5, CURRENT_TIMESTAMP), -- Customer
+('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'MALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
+('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 3, CURRENT_TIMESTAMP); -- Order Admin
+
+---- Root: Sales
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Sales', 'SALES', NULL, CURRENT_TIMESTAMP);
+--
+---- Orders
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Orders', 'SALES.ORDERS', 1, CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'SALES.ORDERS.CREATE', CURRENT_TIMESTAMP),
+('View',   'SALES.ORDERS.VIEW', CURRENT_TIMESTAMP),
+('Cancel', 'SALES.ORDERS.CANCEL',  CURRENT_TIMESTAMP);
+
+---- Invoices
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Invoices', 'SALES.INVOICES', 1, CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('View',   'SALES.INVOICES.VIEW',    CURRENT_TIMESTAMP),
+('Create', 'SALES.INVOICES.CREATE',  CURRENT_TIMESTAMP);
+
+---- Shipments
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Shipments', 'SALES.SHIPMENTS', 1, CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('View',   'SALES.SHIPMENTS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'SALES.SHIPMENTS.CREATE', CURRENT_TIMESTAMP);
+
+---- Refunds
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Refunds', 'SALES.REFUNDS', 1, CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('View',   'SALES.REFUNDS.VIEW',   CURRENT_TIMESTAMP),
+('Create', 'SALES.REFUNDS.CREATE',  CURRENT_TIMESTAMP);
+
+-- Transactions
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Transactions', 'SALES.TRANSACTIONS', 1, CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'SALES.TRANSACTIONS.VIEW',  CURRENT_TIMESTAMP);
+
+--
+---- Root: Catalog
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Catalog', 'CATALOG', NULL, CURRENT_TIMESTAMP);
+
+-- Products
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Products', 'CATALOG.PRODUCTS',
+--        (SELECT id FROM permission WHERE code='CATALOG'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'CATALOG.PRODUCTS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CATALOG.PRODUCTS.CREATE', CURRENT_TIMESTAMP),
+('Copy',   'CATALOG.PRODUCTS.COPY', CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.PRODUCTS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.PRODUCTS.DELETE', CURRENT_TIMESTAMP);
+
+-- Categories
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Categories', 'CATALOG.CATEGORIES',
+--        (SELECT id FROM permission WHERE code='CATALOG'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('Create', 'CATALOG.CATEGORIES.CREATE',  CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.CATEGORIES.EDIT',    CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.CATEGORIES.DELETE',  CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'CATALOG.ATTRIBUTES.VIEW',  CURRENT_TIMESTAMP),
+('Create', 'CATALOG.ATTRIBUTES.CREATE',  CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.ATTRIBUTES.EDIT',    CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.ATTRIBUTES.DELETE',  CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'CATALOG.BRANDS.VIEW',  CURRENT_TIMESTAMP),
+('Create', 'CATALOG.BRANDS.CREATE',  CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.BRANDS.EDIT',    CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.BRANDS.DELETE',  CURRENT_TIMESTAMP);
+
+-- Root: Customers
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Customers', 'CUSTOMERS', NULL, CURRENT_TIMESTAMP);
+--
+---- Customers (submodule)
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Customers', 'CUSTOMERS.CUSTOMERS',
+--        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('Create', 'CLIENTS.CUSTOMERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CLIENTS.CUSTOMERS.EDIT',   CURRENT_TIMESTAMP),
+('Delete', 'CLIENTS.CUSTOMERS.DELETE',CURRENT_TIMESTAMP);
+
+-- Addresses
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Addresses', 'CUSTOMERS.ADDRESSES',
+--        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'CLIENTS.ADDRESSES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CLIENTS.ADDRESSES.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'CLIENTS.ADDRESSES.DELETE', CURRENT_TIMESTAMP);
+
+-- Reviews
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Reviews', 'CUSTOMERS.REVIEWS',
+--        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('Edit',   'CLIENTS.REVIEWS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CLIENTS.REVIEWS.DELETE', CURRENT_TIMESTAMP);
+
+
+---- Root: Marketing
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Marketing', 'MARKETING', NULL, CURRENT_TIMESTAMP);
+
+-- Promotions
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Promotions', 'MARKETING.PROMOTIONS',
+--        (SELECT id FROM permission WHERE code='MARKETING'), CURRENT_TIMESTAMP);
+--
+---- Payment Rules
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Payment Rules', 'MARKETING.PROMOTIONS.PAYMENT_RULES',
+--        (SELECT id FROM permission WHERE code='MARKETING.PROMOTIONS'), CURRENT_TIMESTAMP);
+
+-- Actions for Payment Rules
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('Create', 'MARKETING.PROMOTIONS.PAYMENT_RULES.CREATE', CURRENT_TIMESTAMP),
+('Copy',   'MARKETING.PROMOTIONS.PAYMENT_RULES.COPY',   CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.PROMOTIONS.PAYMENT_RULES.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.PROMOTIONS.PAYMENT_RULES.DELETE', CURRENT_TIMESTAMP);
+
+---- Communications
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Communications', 'MARKETING.COMMUNICATIONS',
+--        (SELECT id FROM permission WHERE code='MARKETING'), CURRENT_TIMESTAMP);
+
+---- Email Templates
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Email Templates', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES',
+--        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.EDIT',   CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.DELETE', CURRENT_TIMESTAMP);
+
+---- Events
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Events', 'MARKETING.COMMUNICATIONS.EVENTS',
+--        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'MARKETING.COMMUNICATIONS.EVENTS.CREATE',CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.COMMUNICATIONS.EVENTS.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.COMMUNICATIONS.EVENTS.DELETE',  CURRENT_TIMESTAMP);
+
+-- Newsletter Subscribers
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Newsletter Subscribers', 'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS',
+--        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Edit',   'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS.EDIT',CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS.DELETE', CURRENT_TIMESTAMP);
+
+-- Root: Reporting
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Reporting', 'REPORTING', NULL, CURRENT_TIMESTAMP);
+
+-- Sales Report
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Sales', 'REPORTING.SALES',
+--        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
+--
+---- Customers Report
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Customers', 'REPORTING.CUSTOMERS',
+--        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
+--
+---- Products Report
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Products', 'REPORTING.PRODUCTS',
+--        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
+--
+--
+---- Root: Settings
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Settings', 'SETTINGS', NULL, CURRENT_TIMESTAMP);
+--
+---- Inventory Sources
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Inventory Sources', 'SETTINGS.INVENTORY_SOURCES',
+--        (SELECT id FROM permission WHERE code='SETTINGS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'SETTINGS.INVENTORY_SOURCES.CREATE',  CURRENT_TIMESTAMP),
+('Edit',   'SETTINGS.INVENTORY_SOURCES.EDIT',    CURRENT_TIMESTAMP),
+('Delete', 'SETTINGS.INVENTORY_SOURCES.DELETE',  CURRENT_TIMESTAMP);
+
+
+-- Users
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Users', 'SETTINGS.USERS',
+--        (SELECT id FROM permission WHERE code='SETTINGS'), CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('Create', 'SETTINGS.USERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'SETTINGS.USERS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'SETTINGS.USERS.DELETE',  CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
+('View', 'SETTINGS.ROLES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'SETTINGS.ROLES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'SETTINGS.ROLES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'SETTINGS.ROLES.DELETE',  CURRENT_TIMESTAMP);
+
+
+-- ADMIN -> all permissions
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'SALES%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'CATALOG%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'CUSTOMERS%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'MARKETING%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'REPORTING%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'SETTINGS%';
+
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 4, id FROM permission WHERE code like '%SHIPMENTS%';
+
+
+
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Sales', 'SALES', NULL, CURRENT_TIMESTAMP);
+--
+---- Shipments
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES ('Shipments', 'SALES.SHIPMENTS', 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO permission (name, code, parent_permission_id, created_at)
+--VALUES
+--('View',   'SALES.SHIPMENTS.VIEW',   9, CURRENT_TIMESTAMP),
+--('Create', 'SALES.SHIPMENTS.CREATE', 9, CURRENT_TIMESTAMP);
+
+--INSERT INTO role_permission (role_id, permission_id)
+--VALUES
+--(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,8);
+--
+--INSERT INTO role_permission (role_id, permission_id)
+--VALUES
+--(3,2),(3,3),(3,4),(3,5);
+
+
 
 INSERT INTO address (id, street, ward, district, province)
 VALUES

@@ -31,7 +31,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
             throw new AppException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 
     @Override

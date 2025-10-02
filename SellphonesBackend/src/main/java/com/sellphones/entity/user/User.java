@@ -64,7 +64,7 @@ public class User extends BaseEntity<Long> {
 //    private Role role;
 
     @ManyToOne
-    @Column(name = "role_id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Enumerated(EnumType.STRING)

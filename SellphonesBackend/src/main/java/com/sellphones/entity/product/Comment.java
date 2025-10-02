@@ -37,7 +37,7 @@ public class Comment extends BaseEntity<Long> {
 //    @JsonBackReference
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentComment")
 //    @JsonManagedReference
     private List<Comment> childComments = new ArrayList<>();
 }

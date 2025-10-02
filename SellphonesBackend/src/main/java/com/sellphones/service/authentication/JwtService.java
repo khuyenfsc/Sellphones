@@ -9,14 +9,18 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.sellphones.entity.authentication.TokenType;
+import com.sellphones.entity.user.RoleName;
+import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.redis.RedisAuthService;
+import com.sellphones.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -35,6 +39,8 @@ public class JwtService {
 
     private final RedisAuthService redisAuthService;
 
+    private final UserRepository userRepository;
+
     private String secret;
 
     private Long access_expiration;
@@ -42,15 +48,18 @@ public class JwtService {
     private Long refresh_expiration;
 
 
-    public String generateToken(Authentication authentication, TokenType tokenType) {
+    public String generateToken(Authentication authentication, TokenType tokenType, String roleName) {
         try {
             SecretKey secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 
             long expiration = tokenType.equals(TokenType.ACCESS) ? access_expiration : refresh_expiration;
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .issuer("khuyen")
-                    .subject(authentication.getName()) // nên để userId/email
+                    .subject(userDetails.getUsername())
+                    .claim("role", roleName)
                     .claim("authorities", authentication.getAuthorities().stream()
                             .map(GrantedAuthority::getAuthority)
                             .toList())

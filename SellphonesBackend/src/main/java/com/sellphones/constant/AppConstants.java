@@ -8,6 +8,7 @@ public class AppConstants {
             "/api/v1/comments",
             "/api/v1/reviews",
             "/api/v1/auth/login",
+            "/api/v1/auth/admin-login",
             "/api/v1/auth/refresh",
             "/api/v1/auth/logout",
             "/h2-console/**",
@@ -28,7 +29,7 @@ public class AppConstants {
     };
 
     public final static String[] ADMIN_ENDPOINTS = {
-            "/api/v1/test/admin/**",
+            "/api/v1/admin/**",
     };
 
     public final static String BASE_URL = "http://localhost:8080/";

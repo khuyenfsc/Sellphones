@@ -19,9 +19,6 @@ import java.util.Set;
 @Table(name = "role")
 public class Role extends BaseEntity<Long> {
 
-    @OneToMany
-    private User user;
-
     private String name;
 
     private String description;

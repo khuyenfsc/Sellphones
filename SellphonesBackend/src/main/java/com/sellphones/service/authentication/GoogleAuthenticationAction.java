@@ -22,8 +22,8 @@ public class GoogleAuthenticationAction implements AuthenticationAction{
     public AuthenticationToken authenticate(UserRequest userRequest, RoleName roleName) {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userRequest.getEmail(), userRequest.getPassword(), List.of(new SimpleGrantedAuthority("CUSTOMER")));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String accessToken = jwtService.generateToken(authentication, TokenType.ACCESS);
-        String refreshToken = jwtService.generateToken(authentication, TokenType.REFRESH);
+        String accessToken = jwtService.generateToken(authentication, TokenType.ACCESS, roleName.toString());
+        String refreshToken = jwtService.generateToken(authentication, TokenType.REFRESH, roleName.toString());
         return new AuthenticationToken(accessToken, refreshToken);
     }
 }

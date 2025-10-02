@@ -2,36 +2,33 @@ package com.sellphones.filter;
 
 
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.sellphones.configuration.CustomUserDetails;
 import com.sellphones.constant.AppConstants;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
-import com.sellphones.service.authentication.AuthenticationService;
 import com.sellphones.service.authentication.JwtService;
 import com.sellphones.utils.SecurityUtils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Arrays;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -48,15 +45,31 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
         try {
             String jwt = SecurityUtils.extractTokenFromRequest(request);
             JWTClaimsSet jwtClaimsSet = jwtService.validateToken(jwt);
+            String role = Optional.ofNullable(jwtClaimsSet.getClaimAsString("role"))
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+            String username = jwtClaimsSet.getSubject();
+            Object authClaim = jwtClaimsSet.getClaim("authorities");
+            List<GrantedAuthority> authorities = authClaim != null
+                    ? AuthorityUtils.commaSeparatedStringToAuthorityList(authClaim.toString())
+                    : Collections.emptyList();
 
-            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
-                    jwtClaimsSet.getClaim("email").toString(),
-                    null,
-                    AuthorityUtils.commaSeparatedStringToAuthorityList(
-                            jwtClaimsSet.getClaim("authorities").toString())
-            );
+
+            if(role == null){
+                throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+            }
+
+            boolean isAdminRequest = request.getRequestURI().startsWith("/api/v1/admin");
+            if (isAdminRequest && !"ADMIN".equals(role)) {
+                throw new AppException(ErrorCode.UNAUTHORIZED_ADMIN_ACCESS);
+            }
+
+            if (!isAdminRequest && !"CUSTOMER".equals(role)) {
+                throw new AppException(ErrorCode.UNAUTHORIZED_CUSTOMER_ACCESS);
+            }
+
+            UserDetails userDetails = new CustomUserDetails(role, username, null, authorities);
+            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         } catch (AppException ex) {
             writeErrorResponse(response,
                     ex.getErrorCode().getStatusCode().value(),

@@ -16,10 +16,14 @@ import java.util.List;
 @Builder
 public class PageResponse<T> {
     @Builder.Default
-    List<T> result = Collections.emptyList();
+    private List<T> result = Collections.emptyList();
 
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    Long total;
+    private Long total;
+
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer totalPages;
 
 }

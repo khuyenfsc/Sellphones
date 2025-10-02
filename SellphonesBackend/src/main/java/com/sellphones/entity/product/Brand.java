@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -15,13 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "brand")
 public class Brand extends BaseEntity<Long> {
 
     @Column(nullable = false)
-    @NotNull
     private String name;
 
+    @Column(name = "brand_icon")
     private String brandIcon;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)

@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductListResponse {
 
+    private Long id;
+
     private String name;
 
     private String thumbnailUrl;

@@ -1,10 +1,7 @@
 package com.sellphones.entity.product;
 
 import com.sellphones.entity.BaseEntity;
-import com.sellphones.entity.promotion.GiftProduct;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,27 +20,27 @@ import java.util.List;
 public class Product extends BaseEntity<Long> {
 
     @Column(nullable = false, length = 255)
-    private String name;
+    private String name; //
 
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private Category category;//
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "min_price", precision = 19, scale = 0)
-    private BigDecimal minPrice;
+    private BigDecimal minPrice; //
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = true)
-    private Brand brand;
+    private Brand brand; //
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
@@ -59,6 +56,9 @@ public class Product extends BaseEntity<Long> {
 
     @Column(name = "is_featured", nullable = false)
     private Boolean isFeatured = false;
+
+    @Column(name = "is_new")
+    private Boolean isNew = true;
 
     @OneToMany(mappedBy = "product")
     private List<ProductAttributeValue> attributeValues;

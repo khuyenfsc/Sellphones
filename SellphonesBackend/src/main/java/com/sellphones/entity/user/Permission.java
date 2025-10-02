@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -26,8 +27,8 @@ public class Permission extends BaseEntity<Long> {
 
     private String code;
 
-    @OneToMany
-    @JoinColumn(name = "parent_permission_id")
-    private Set<Permission> childPermissions;
+//    @OneToMany
+//    @JoinColumn(name = "parent_permission_id")
+//    private Set<Permission> childPermissions = new HashSet<>();
 
 }
