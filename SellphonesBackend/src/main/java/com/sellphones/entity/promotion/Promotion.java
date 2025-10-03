@@ -30,6 +30,7 @@ public class Promotion extends BaseEntity<Long> {
 
     private String config;
 
+    @Column(name = "promotion_condition")
     private String condition;
 
     @Column(name = "start_date")

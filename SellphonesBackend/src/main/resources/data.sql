@@ -3,9 +3,6 @@ INSERT INTO category (name, created_at) VALUES ('Điện thoại', CURRENT_TIMES
 INSERT INTO category (name, created_at) VALUES ('Tablet', CURRENT_TIMESTAMP);
 INSERT INTO category (name, created_at) VALUES ('Laptop', CURRENT_TIMESTAMP);
 
-ALTER TABLE filter_option ALTER COLUMN category_id DROP NOT NULL;
-
-
 ALTER TABLE product
   ADD CONSTRAINT fk_product_category
   FOREIGN KEY (category_id) REFERENCES category(id)
@@ -511,14 +508,13 @@ INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, s
 VALUES (11, 'OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
 
 -- iPhone 15 128GB (id=1) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
-(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ',
- 'DISCOUNT_AMOUNT', '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
-(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%',
- 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
+INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date)
+VALUES
+(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT', '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
+(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
 
 -- iPhone 15 256GB (id=2) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
 (3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết',
  'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-20'),
 (4, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí',
@@ -527,14 +523,14 @@ INSERT INTO product_promotion (id, name, description, promotion_type, config, co
  'DISCOUNT_PERCENT', '{"percent":7}', '{"paymentMethods":["VNPAY"]}', '2025-09-10', '2025-09-25');
 
 -- Galaxy S24 (id=3) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
 (6, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24',
  'DISCOUNT_AMOUNT', '{"amount":2000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30'),
 (7, 'Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%',
  'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-15', '2025-09-30');
 
 -- MacBook Air M3 (id=4) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, condition, start_date, end_date) VALUES
+INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
 (8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng',
  'SERVICE', '{"service":"Office 365","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
 (9, 'Giảm 5% khi thanh toán qua VNPAY', 'Thanh toán qua VNPAY giảm thêm 5%',
@@ -730,7 +726,7 @@ VALUES
 (9, 8, 9, 1, '2025-09-08 08:35:00', 560000, 4);
 
 INSERT INTO order_variant_promotion
-(id, name, description, promotion_type, config, condition, start_date, end_date, order_variant_id)
+(id, name, description, promotion_type, config, promotion_condition, start_date, end_date, order_variant_id)
 VALUES
 (1, 'Giảm 10%', 'Giảm 10% cho sản phẩm', 'DISCOUNT_PERCENT', '{"value":10}', NULL, '2025-09-01', '2025-09-30', 1),
 (2, 'Giảm 200k', 'Giảm 200,000 VND cho đơn hàng trên 1 triệu', 'DISCOUNT_AMOUNT', '{"value":200000}', 'totalPrice > 1000000', '2025-09-01', '2025-09-30', 2),
@@ -992,47 +988,47 @@ INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Chọn hãn
 INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Giá', 4, CURRENT_TIMESTAMP);
 
 -- Filter Options cho category = 'Điện thoại' (id = 1)
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('4 GB', 'bang-4gb', 1, 1, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('8 GB', 'bang-8gb', 2, 1, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('64 GB', 'bang-64gb', 1, 2, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('128 GB', 'bang-128gb', 2, 2, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Samsung', 'chua-Samsung', 1, 3, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Apple', 'chua-Apple', 2, 3, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Dưới 5 triệu', 'duoi-5000000', 1, 4, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('5 - 10 triệu', '5000000-10000000', 2, 4, 1, CURRENT_TIMESTAMP);
 
 -- Filter Options cho category = 'Laptop' (id = 3)
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('8 GB', 'bang-8', 1, 1, 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('16 GB', 'bang-16', 2, 1, 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('256 GB SSD', 'bang-256', 1, 2, 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('512 GB SSD', 'bang-512', 2, 2, 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Dell', 'chua-Dell', 1, 3, 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, condition, sort_order, product_filter_id, category_id, created_at)
+INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Asus', 'chua-Asus', 2, 3, 3, CURRENT_TIMESTAMP);
 
 

@@ -1,10 +1,7 @@
 package com.sellphones.entity.product;
 
 import com.sellphones.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +17,8 @@ public class FilterOption extends BaseEntity<Long> {
 
     private String name;
 
+
+    @Column(name = "filter_condition")
     private String condition;
 
     private int sortOrder;
@@ -29,6 +28,5 @@ public class FilterOption extends BaseEntity<Long> {
     private ProductFilter productFilter;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
     private Category category;
 }
