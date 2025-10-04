@@ -35,6 +35,7 @@ public enum ErrorCode {
     INVALID_PROMOTION_CONFIG("Invalid promotion configuration", HttpStatus.BAD_REQUEST),
     INVALID_REVIEW_REQUEST_FORMAT("Invalid review request format", HttpStatus.BAD_REQUEST),
     INVALID_BRAND_REQUEST_FORMAT("Invalid brand request format", HttpStatus.BAD_REQUEST),
+    INVALID_PRODUCT_REQUEST_FORMAT("Invalid product request format", HttpStatus.BAD_REQUEST),
     INVALID_ACTIVE_TOKEN("Invalid active token", HttpStatus.UNAUTHORIZED),
     INVALID_ROLE("Invalid role", HttpStatus.UNAUTHORIZED),
     NOT_CUSTOMER("User is not allowed to login as customer", HttpStatus.FORBIDDEN),

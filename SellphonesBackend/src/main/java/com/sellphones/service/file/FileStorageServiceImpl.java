@@ -3,6 +3,7 @@ package com.sellphones.service.file;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import jakarta.annotation.PostConstruct;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.util.UUID;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService{
@@ -28,6 +30,41 @@ public class FileStorageServiceImpl implements FileStorageService{
         }
     }
 
+    @Override
+    public String generateFileName(MultipartFile file) {
+        if (file == null || file.getOriginalFilename() == null) {
+            return "";
+        }
+        String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+        return UUID.randomUUID() + (ext.isEmpty() ? "" : "." + ext);
+    }
+
+
+    @Override
+    public String store(MultipartFile file, String folderName) {
+        if(file.isEmpty()){
+            throw new AppException(ErrorCode.EMPTY_FILE);
+        }
+
+        String fileName = generateFileName(file);
+
+        Path destinationFolder = root.resolve(Paths.get(folderName)).normalize().toAbsolutePath();
+        Path destinationFile = destinationFolder.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
+
+        if (!destinationFile.startsWith(root.toAbsolutePath())) {
+            throw new AppException(ErrorCode.CANNOT_STORE_FILE_OUTSIDE_CURRENT_DIRECTORY);
+        }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Files.createDirectories(destinationFolder);
+            Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            return fileName;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public void store(MultipartFile file, String fileName, String folderName) {
@@ -45,11 +82,13 @@ public class FileStorageServiceImpl implements FileStorageService{
         try (InputStream inputStream = file.getInputStream()) {
             Files.createDirectories(destinationFolder);
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
 
     @Override
     public Resource load(String fileName, String folderName) {

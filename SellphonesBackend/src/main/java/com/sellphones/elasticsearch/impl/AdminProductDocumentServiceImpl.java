@@ -5,6 +5,7 @@ import com.sellphones.dto.product.response.ProductListResponse;
 import com.sellphones.elasticsearch.AdminProductDocumentService;
 import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 import com.sellphones.elasticsearch.ProductDocument;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,12 +22,20 @@ public class AdminProductDocumentServiceImpl implements AdminProductDocumentServ
 
     private final ModelMapper modelMapper;
 
+    private final String productThumbnailFolder = "product_thumbnails";
+
     @Override
     @PreAuthorize("CATALOG.PRODUCTS.VIEW")
     public List<ProductListResponse> getProducts(AdminProductFilterRequest request) {
         List<ProductDocument> products = customProductDocumentRepository.getProductsWithAdminAuthority(request);
+        products.forEach(p -> p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), productThumbnailFolder)));
         return products.stream()
                 .map(p -> modelMapper.map(p, ProductListResponse.class))
                 .toList();
+    }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        customProductDocumentRepository.deleteProduct(productId);
     }
 }

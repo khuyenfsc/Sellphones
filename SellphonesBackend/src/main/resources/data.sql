@@ -3,20 +3,20 @@ INSERT INTO category (name, created_at) VALUES ('Điện thoại', CURRENT_TIMES
 INSERT INTO category (name, created_at) VALUES ('Tablet', CURRENT_TIMESTAMP);
 INSERT INTO category (name, created_at) VALUES ('Laptop', CURRENT_TIMESTAMP);
 
-ALTER TABLE product
-  ADD CONSTRAINT fk_product_category
-  FOREIGN KEY (category_id) REFERENCES category(id)
-  ON DELETE SET NULL;
-
-ALTER TABLE filter_option
-  ADD CONSTRAINT fk_filter_option_category
-  FOREIGN KEY (category_id) REFERENCES category(id)
-  ON DELETE SET NULL;
-
-ALTER TABLE product_filter
-  ADD CONSTRAINT fk_product_filter_category
-  FOREIGN KEY (attribute_id) REFERENCES attribute(id)
-  ON DELETE SET NULL;
+--ALTER TABLE product
+--  ADD CONSTRAINT fk_product_category
+--  FOREIGN KEY (category_id) REFERENCES category(id)
+--  ON DELETE SET NULL;
+--
+--ALTER TABLE filter_option
+--  ADD CONSTRAINT fk_filter_option_category
+--  FOREIGN KEY (category_id) REFERENCES category(id)
+--  ON DELETE SET NULL;
+--
+--ALTER TABLE product_filter
+--  ADD CONSTRAINT fk_product_filter_category
+--  FOREIGN KEY (attribute_id) REFERENCES attribute(id)
+--  ON DELETE SET NULL;
 
 INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'apple.png');
 INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'samsung.png');
@@ -130,25 +130,25 @@ VALUES
 --VALUES ('Categories', 'CATALOG.CATEGORIES',
 --        (SELECT id FROM permission WHERE code='CATALOG'), CURRENT_TIMESTAMP);
 
-INSERT INTO permission (name, code,  created_at)
-VALUES
-('Create', 'CATALOG.CATEGORIES.CREATE',  CURRENT_TIMESTAMP),
-('Edit',   'CATALOG.CATEGORIES.EDIT',    CURRENT_TIMESTAMP),
-('Delete', 'CATALOG.CATEGORIES.DELETE',  CURRENT_TIMESTAMP);
-
-INSERT INTO permission (name, code,  created_at)
-VALUES
-('View', 'CATALOG.ATTRIBUTES.VIEW',  CURRENT_TIMESTAMP),
-('Create', 'CATALOG.ATTRIBUTES.CREATE',  CURRENT_TIMESTAMP),
-('Edit',   'CATALOG.ATTRIBUTES.EDIT',    CURRENT_TIMESTAMP),
-('Delete', 'CATALOG.ATTRIBUTES.DELETE',  CURRENT_TIMESTAMP);
-
-INSERT INTO permission (name, code,  created_at)
-VALUES
-('View', 'CATALOG.BRANDS.VIEW',  CURRENT_TIMESTAMP),
-('Create', 'CATALOG.BRANDS.CREATE',  CURRENT_TIMESTAMP),
-('Edit',   'CATALOG.BRANDS.EDIT',    CURRENT_TIMESTAMP),
-('Delete', 'CATALOG.BRANDS.DELETE',  CURRENT_TIMESTAMP);
+--INSERT INTO permission (name, code,  created_at)
+--VALUES
+--('Create', 'CATALOG.CATEGORIES.CREATE',  CURRENT_TIMESTAMP),
+--('Edit',   'CATALOG.CATEGORIES.EDIT',    CURRENT_TIMESTAMP),
+--('Delete', 'CATALOG.CATEGORIES.DELETE',  CURRENT_TIMESTAMP);
+--
+--INSERT INTO permission (name, code,  created_at)
+--VALUES
+--('View', 'CATALOG.ATTRIBUTES.VIEW',  CURRENT_TIMESTAMP),
+--('Create', 'CATALOG.ATTRIBUTES.CREATE',  CURRENT_TIMESTAMP),
+--('Edit',   'CATALOG.ATTRIBUTES.EDIT',    CURRENT_TIMESTAMP),
+--('Delete', 'CATALOG.ATTRIBUTES.DELETE',  CURRENT_TIMESTAMP);
+--
+--INSERT INTO permission (name, code,  created_at)
+--VALUES
+--('View', 'CATALOG.BRANDS.VIEW',  CURRENT_TIMESTAMP),
+--('Create', 'CATALOG.BRANDS.CREATE',  CURRENT_TIMESTAMP),
+--('Edit',   'CATALOG.BRANDS.EDIT',    CURRENT_TIMESTAMP),
+--('Delete', 'CATALOG.BRANDS.DELETE',  CURRENT_TIMESTAMP);
 
 -- Root: Customers
 --INSERT INTO permission (name, code, parent_permission_id, created_at)
@@ -402,71 +402,71 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 INSERT INTO category_option_value (name, category_option_id, created_at) VALUES ('Dưới 10 triệu', 5, CURRENT_TIMESTAMP);
 INSERT INTO category_option_value (name, category_option_id, created_at) VALUES ('Từ 10 đến 15 triệu', 5, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (1, 'iPhone 15', 'https://example.com/iphone15.jpg', 'Latest iPhone model', 1, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('iPhone 15', 'https://example.com/iphone15.jpg', 'Latest iPhone model', 1, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (2, 'Samsung Galaxy S24', 'https://example.com/galaxyS24.jpg', 'Latest Samsung Galaxy', 2, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Samsung Galaxy S24', 'https://example.com/galaxyS24.jpg', 'Latest Samsung Galaxy', 2, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (3, 'Google Pixel 8 Pro', 'https://example.com/pixel8pro.jpg', 'Flagship mới nhất của Google', 3, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Google Pixel 8 Pro', 'https://example.com/pixel8pro.jpg', 'Flagship mới nhất của Google', 3, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (4, 'OnePlus 12', 'https://example.com/oneplus12.jpg', 'Điện thoại hiệu năng cao của OnePlus', 4, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('OnePlus 12', 'https://example.com/oneplus12.jpg', 'Điện thoại hiệu năng cao của OnePlus', 4, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (5, 'Xiaomi 14 Ultra', 'https://example.com/xiaomi14ultra.jpg', 'Camera đỉnh cao, cấu hình mạnh mẽ', 5, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Xiaomi 14 Ultra', 'https://example.com/xiaomi14ultra.jpg', 'Camera đỉnh cao, cấu hình mạnh mẽ', 5, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (6, 'Oppo Find X7 Pro', 'https://example.com/findx7pro.jpg', 'Thiết kế sang trọng, chụp ảnh đẹp', 6, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Oppo Find X7 Pro', 'https://example.com/findx7pro.jpg', 'Thiết kế sang trọng, chụp ảnh đẹp', 6, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (7, 'Vivo X100 Pro', 'https://example.com/vivox100pro.jpg', 'Điện thoại chuyên chụp ảnh', 7, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Vivo X100 Pro', 'https://example.com/vivox100pro.jpg', 'Điện thoại chuyên chụp ảnh', 7, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (8, 'Sony Xperia 1 V', 'https://example.com/xperia1v.jpg', 'Smartphone cao cấp với màn hình 4K', 8, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Sony Xperia 1 V', 'https://example.com/xperia1v.jpg', 'Smartphone cao cấp với màn hình 4K', 8, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (9, 'Asus ROG Phone 8', 'https://example.com/rogphone8.jpg', 'Gaming phone cực mạnh', 9, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Asus ROG Phone 8', 'https://example.com/rogphone8.jpg', 'Gaming phone cực mạnh', 9, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (10, 'Realme GT 6 Pro', 'https://example.com/realmegt6pro.jpg', 'Điện thoại flagship giá tốt', 10, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Realme GT 6 Pro', 'https://example.com/realmegt6pro.jpg', 'Điện thoại flagship giá tốt', 10, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (11, 'Huawei P60 Pro', 'https://example.com/p60pro.jpg', 'Camera Leica, chụp ảnh xuất sắc', 11, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Huawei P60 Pro', 'https://example.com/p60pro.jpg', 'Camera Leica, chụp ảnh xuất sắc', 11, CURRENT_TIMESTAMP, 1, true);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, created_at, category_id, is_featured)
-VALUES (12, 'Nothing Phone 2', 'https://example.com/nothingphone2.jpg', 'Thiết kế độc đáo với đèn LED', 12, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
+VALUES ('Nothing Phone 2', 'https://example.com/nothingphone2.jpg', 'Thiết kế độc đáo với đèn LED', 12, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (13, 'MacBook Pro 14"', 'https://example.com/macbookpro14.jpg', 'Apple MacBook Pro 14-inch with M2 Pro chip', 1, 2, true, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('MacBook Pro 14"', 'https://example.com/macbookpro14.jpg', 'Apple MacBook Pro 14-inch with M2 Pro chip', 1, 2, true, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (14, 'Dell XPS 13', 'https://example.com/dellxps13.jpg', 'Dell XPS 13 ultrabook with InfinityEdge display', 13, 2, true, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Dell XPS 13', 'https://example.com/dellxps13.jpg', 'Dell XPS 13 ultrabook with InfinityEdge display', 13, 2, true, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (15, 'HP Spectre x360', 'https://example.com/hpspectrex360.jpg', 'Convertible 2-in-1 laptop with OLED display', 14, 2, true, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('HP Spectre x360', 'https://example.com/hpspectrex360.jpg', 'Convertible 2-in-1 laptop with OLED display', 14, 2, true, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (16, 'Lenovo ThinkPad X1 Carbon', 'https://example.com/thinkpadx1carbon.jpg', 'Business laptop with lightweight carbon fiber body', 15, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Lenovo ThinkPad X1 Carbon', 'https://example.com/thinkpadx1carbon.jpg', 'Business laptop with lightweight carbon fiber body', 15, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (17, 'Asus ROG Zephyrus G14', 'https://example.com/rogzephyrusg14.jpg', 'Compact gaming laptop with Ryzen 9 processor', 9, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Asus ROG Zephyrus G14', 'https://example.com/rogzephyrusg14.jpg', 'Compact gaming laptop with Ryzen 9 processor', 9, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (18, 'MSI Stealth 15M', 'https://example.com/msistealth15m.jpg', 'Slim gaming laptop with RTX 4060 GPU', 16, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('MSI Stealth 15M', 'https://example.com/msistealth15m.jpg', 'Slim gaming laptop with RTX 4060 GPU', 16, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (19, 'Acer Swift 3', 'https://example.com/acerswift3.jpg', 'Lightweight laptop with long battery life', 17, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Acer Swift 3', 'https://example.com/acerswift3.jpg', 'Lightweight laptop with long battery life', 17, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (20, 'Razer Blade 15', 'https://example.com/razerblade15.jpg', 'Premium gaming laptop with aluminum chassis', 18, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Razer Blade 15', 'https://example.com/razerblade15.jpg', 'Premium gaming laptop with aluminum chassis', 18, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (21, 'Microsoft Surface Laptop 5', 'https://example.com/surfacelaptop5.jpg', 'Touchscreen laptop with sleek design', 19, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Microsoft Surface Laptop 5', 'https://example.com/surfacelaptop5.jpg', 'Touchscreen laptop with sleek design', 19, 2, false, CURRENT_TIMESTAMP);
 
-INSERT INTO product (id, name, thumbnail_url, description, brand_id, category_id, is_featured, created_at)
-VALUES (22, 'Huawei MateBook X Pro', 'https://example.com/matebookxpro.jpg', 'Ultra-slim laptop with 3K touchscreen', 11, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
+VALUES ('Huawei MateBook X Pro', 'https://example.com/matebookxpro.jpg', 'Ultra-slim laptop with 3K touchscreen', 11, 2, false, CURRENT_TIMESTAMP);
 
 -- Variants cho iPhone 15
 INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
@@ -645,17 +645,17 @@ VALUES
 
 
 -- Quà tặng 1: Ốp lưng iPhone 15
-INSERT INTO gift_product (id, name, stock, description, thumbnail_url, price)
+INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
 VALUES (1, 'Ốp lưng silicon iPhone 15', 100, 'Ốp lưng silicon trong suốt, bảo vệ điện thoại tốt',
         'https://example.com/iphone15-case.jpg', 0);
 
 -- Quà tặng 2: Tai nghe Bluetooth mini
-INSERT INTO gift_product (id, name, stock, description, thumbnail_url, price)
+INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
 VALUES (2, 'Tai nghe Bluetooth mini', 50, 'Tai nghe không dây, pin 12h, dễ mang theo',
         'https://example.com/bluetooth-earbuds.jpg', 0);
 
 -- Quà tặng 3: Bình giữ nhiệt
-INSERT INTO gift_product (id, name, stock, description, thumbnail_url, price)
+INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
 VALUES (3, 'Bình giữ nhiệt 500ml', 200, 'Bình giữ nhiệt inox, giữ nóng/lạnh 8h',
         'https://example.com/thermos.jpg', 0);
 
@@ -961,9 +961,9 @@ VALUES ('Intel Iris Xe', NULL, 21, NULL, 6, CURRENT_TIMESTAMP); -- GPU
 
 
 -- Insert product images
-INSERT INTO product_images (product_id, image_url) VALUES (1, 'https://example.com/iphone15-1.jpg');
-INSERT INTO product_images (product_id, image_url) VALUES (1, 'https://example.com/iphone15-2.jpg');
-INSERT INTO product_images (product_id, image_url) VALUES (2, 'https://example.com/galaxyS24-1.jpg');
+INSERT INTO product_image (product_id, image) VALUES (1, 'https://example.com/iphone15-1.jpg');
+INSERT INTO product_image (product_id, image) VALUES (1, 'https://example.com/iphone15-2.jpg');
+INSERT INTO product_image (product_id, image) VALUES (2, 'https://example.com/galaxyS24-1.jpg');
 
 
 INSERT INTO product_category (product_id, category_option_value_id) VALUES (1, 1);

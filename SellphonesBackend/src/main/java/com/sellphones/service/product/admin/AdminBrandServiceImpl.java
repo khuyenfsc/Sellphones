@@ -78,12 +78,11 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.CREATE')")
     public void addBrand(String brandJson, MultipartFile file) {
         AdminBrandRequest request = parseRequest(brandJson);
+        String fileName = "";
 
-        String fileName = generateFileName(file);
-
-        if (file != null && !fileName.isEmpty()) {
+        if (file != null) {
             try {
-                fileStorageService.store(file, fileName, folderName);
+                fileName = fileStorageService.store(file, folderName);
             } catch (Exception e) {
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
@@ -97,14 +96,15 @@ public class AdminBrandServiceImpl implements AdminBrandService{
         brandRepository.save(brand);
 
         if (file != null && !fileName.isEmpty()) {
+            String finalFileName = fileName;
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void afterCompletion(int status) {
                     if (status == STATUS_ROLLED_BACK) {
                         try {
-                            fileStorageService.delete(fileName, folderName);
+                            fileStorageService.delete(finalFileName, folderName);
                         } catch (Exception ex) {
-                            log.error("Failed to cleanup file {} after rollback", fileName, ex);
+                            log.error("Failed to cleanup file {} after rollback", finalFileName, ex);
                         }
                     }
                 }
@@ -124,10 +124,9 @@ public class AdminBrandServiceImpl implements AdminBrandService{
         brand.setName(request.getName());
 
         if (file != null && !file.isEmpty()) {
-            String newFileName = generateFileName(file);
             String oldFileName = brand.getBrandIcon();
 
-            fileStorageService.store(file, newFileName, folderName);
+            String newFileName = fileStorageService.store(file, folderName);
 
             brand.setBrandIcon(newFileName);
 
@@ -190,11 +189,5 @@ public class AdminBrandServiceImpl implements AdminBrandService{
         }
     }
 
-    private String generateFileName(MultipartFile file) {
-        if (file == null || file.getOriginalFilename() == null) {
-            return "";
-        }
-        String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        return UUID.randomUUID() + (ext.isEmpty() ? "" : "." + ext);
-    }
+
 }

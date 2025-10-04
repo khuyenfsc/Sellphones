@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AdminProductDocumentService {
     List<ProductListResponse> getProducts(AdminProductFilterRequest request);
+    void deleteProduct(Long productId);
 }

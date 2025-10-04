@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonErrorResponse> handleAppException(Exception e){
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("message", e.getMessage());
-        return new ResponseEntity<>(new CommonErrorResponse(HttpStatus.BAD_REQUEST.value(), errors), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<CommonErrorResponse> handleAppException(Exception e){
+//        Map<String, Object> errors = new HashMap<>();
+//        errors.put("message", e.getMessage());
+//        return new ResponseEntity<>(new CommonErrorResponse(HttpStatus.BAD_REQUEST.value(), errors), HttpStatus.BAD_REQUEST);
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {

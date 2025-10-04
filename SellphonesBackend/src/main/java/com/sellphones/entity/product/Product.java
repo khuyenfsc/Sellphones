@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,18 +17,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "product")
 public class Product extends BaseEntity<Long> {
 
     @Column(nullable = false, length = 255)
-    private String name; //
+    private String name;
 
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
+    private String thumbnail;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;//
+    private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -43,18 +44,18 @@ public class Product extends BaseEntity<Long> {
     private Brand brand; //
 
     @ElementCollection
-    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls;
+    @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image")
+    private List<String> images = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "product_category",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_option_value_id")
-    )
-    private List<CategoryOptionValue> categoryOptionValues;
+//    @ManyToMany
+//    @JoinTable(name = "product_category",
+//            joinColumns = @JoinColumn(name = "product_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_option_value_id")
+//    )
+//    private List<CategoryOptionValue> categoryOptionValues;
 
-    @Column(name = "is_featured", nullable = false)
+    @Column(name = "is_featured")
     private Boolean isFeatured = false;
 
     @Column(name = "is_new")

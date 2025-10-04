@@ -31,8 +31,7 @@ public class GiftProduct extends BaseEntity<Long> {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
+    private String thumbnail;
 
     @Column(precision = 19, scale = 0)
     private BigDecimal price;

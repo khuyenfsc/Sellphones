@@ -15,7 +15,7 @@ public class ProductListResponse {
 
     private String name;
 
-    private String thumbnailUrl;
+    private String thumbnail;
 
     private BigDecimal minPrice;
 }

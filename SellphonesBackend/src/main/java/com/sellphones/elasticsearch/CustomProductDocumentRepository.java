@@ -1,7 +1,6 @@
 package com.sellphones.elasticsearch;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
-import co.elastic.clients.json.JsonData;
 import com.sellphones.dto.product.admin.AdminProductFilterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.DeleteQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -114,5 +117,12 @@ public class CustomProductDocumentRepository {
         return elasticsearchOperations.search(queryBuilder.build(), ProductDocument.class).stream()
                 .map(sh -> sh.getContent())
                 .toList();
+    }
+
+    public void deleteProduct(Long productId){
+        Criteria criteria = new Criteria("id").is(productId);
+        Query query = new CriteriaQuery(criteria);
+        DeleteQuery deleteQuery = DeleteQuery.builder(query).build();
+        elasticsearchOperations.delete(deleteQuery, ProductDocument.class, IndexCoordinates.of("products"));
     }
 }

@@ -22,8 +22,8 @@ public class ProductDocument {
     @Field(type = FieldType.Text)
     private String name;
 
-    @Field(name = "thumbnail_url", type = FieldType.Text)
-    private String thumbnailUrl;
+    @Field(name = "thumbnail", type = FieldType.Text)
+    private String thumbnail;
 
     @Field(type = FieldType.Text)
     private String description;

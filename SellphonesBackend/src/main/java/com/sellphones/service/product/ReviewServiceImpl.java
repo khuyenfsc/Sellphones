@@ -89,11 +89,7 @@ public class ReviewServiceImpl implements ReviewService{
         Map<MultipartFile, String> fileMap = (files == null)?Map.of():
                 Arrays.stream(files).collect(Collectors.toMap(
                 f -> f,
-                f -> {
-                    String ext = FilenameUtils.getExtension(f.getOriginalFilename());
-
-                    return  UUID.randomUUID().toString() + (ext.isEmpty()?"":"." + ext);
-                }
+                        fileStorageService::generateFileName
         ));
 
         Review review = Review.builder()
@@ -124,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService{
         if(files != null){
             Arrays.asList(files).forEach(f -> {
                 String storedName = fileMap.get(f);
-                fileStorageService.store(f, storedName, reviewFolderName);
+                fileStorageService.store(f, reviewFolderName);
                 storedFiles.add(storedName);
             });
         }
