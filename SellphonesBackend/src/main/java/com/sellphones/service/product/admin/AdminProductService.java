@@ -1,15 +1,20 @@
 package com.sellphones.service.product.admin;
 
 
+import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
-import com.sellphones.dto.product.response.ProductListResponse;
+import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
+import com.sellphones.dto.product.response.ProductVariantResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface AdminProductService {
+    AdminProductDetailResponse getProductDetails(Long productId);
     void addProducts(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
-    List<ProductListResponse> getProductVariants(AdminProductVariantFilterRequest request);
     void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
     void deleteProduct(Long productId);
+    List<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
+    ProductVariantResponse getProductVariantDetail(Long productVariantId);
+    void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
 }

@@ -2,7 +2,7 @@ package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.entity.product.Attribute;
-import com.sellphones.entity.product.ProductAttributeValue;
+import com.sellphones.entity.product.AttributeValue;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.product.AttributeRepository;
@@ -86,9 +86,9 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<ProductAttributeValue> spec = AdminAttributeValueSpecificationBuilder.build(request, attributeId);
+        Specification<AttributeValue> spec = AdminAttributeValueSpecificationBuilder.build(request, attributeId);
 
-        Page<ProductAttributeValue> attributePage = attributeValueRepository.findAll(spec, pageable);
+        Page<AttributeValue> attributePage = attributeValueRepository.findAll(spec, pageable);
 
         return attributePage.getContent().stream()
                 .map(a -> modelMapper.map(a, AdminProductAttributeValueResponse.class))
@@ -100,7 +100,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
     public void addAttributeValue(AdminProductAttributeValueRequest request, Long attributeId) {
         Attribute attribute = attributeRepository.findById(attributeId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
-        ProductAttributeValue attributeValue = ProductAttributeValue.builder()
+        AttributeValue attributeValue = AttributeValue.builder()
                 .strVal(request.getStrVal())
                 .numericVal((request.getNumericVal()!=null)?BigDecimal.valueOf(request.getNumericVal()):null)
                 .attribute(attribute)
@@ -114,7 +114,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.EDIT')")
     public void editAttributeValue(AdminProductAttributeValueRequest request, Long attributeValueId) {
-        ProductAttributeValue attributeValue = attributeValueRepository.findById(attributeValueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
+        AttributeValue attributeValue = attributeValueRepository.findById(attributeValueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
         attributeValue.setStrVal(request.getStrVal());
         attributeValue.setNumericVal((request.getNumericVal()!=null)?BigDecimal.valueOf(request.getNumericVal()):null);
     }

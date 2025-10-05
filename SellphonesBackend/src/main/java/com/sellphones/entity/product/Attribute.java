@@ -24,6 +24,6 @@ public class Attribute extends BaseEntity<Long> {
     private String name;
 
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductAttributeValue> attributeValues = new ArrayList<>();
+    private List<AttributeValue> attributeValues = new ArrayList<>();
 
 }

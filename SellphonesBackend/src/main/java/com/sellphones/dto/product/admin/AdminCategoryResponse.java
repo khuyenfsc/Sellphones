@@ -15,5 +15,7 @@ public class AdminCategoryResponse {
 
     private String name;
 
+    private String code;
+
     private LocalDateTime createdAt;
 }

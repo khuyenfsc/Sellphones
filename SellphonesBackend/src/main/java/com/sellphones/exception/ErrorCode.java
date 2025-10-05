@@ -33,6 +33,7 @@ public enum ErrorCode {
     WARRANTY_NOT_FOUND_IN_PRODUCT("Warranty not found in product", HttpStatus.NOT_FOUND),
     PRODUCT_VARIANT_OUT_OF_STOCK("Product variant is out of stock", HttpStatus.BAD_REQUEST),
     INVALID_PROMOTION_CONFIG("Invalid promotion configuration", HttpStatus.BAD_REQUEST),
+    INVALID_REQUEST_FORMAT("Invalid request format", HttpStatus.BAD_REQUEST),
     INVALID_REVIEW_REQUEST_FORMAT("Invalid review request format", HttpStatus.BAD_REQUEST),
     INVALID_BRAND_REQUEST_FORMAT("Invalid brand request format", HttpStatus.BAD_REQUEST),
     INVALID_PRODUCT_REQUEST_FORMAT("Invalid product request format", HttpStatus.BAD_REQUEST),

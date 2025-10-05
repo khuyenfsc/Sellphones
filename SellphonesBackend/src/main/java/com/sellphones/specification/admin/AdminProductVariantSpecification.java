@@ -1,19 +1,15 @@
 package com.sellphones.specification.admin;
 
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
-import com.sellphones.entity.order.Order;
-import com.sellphones.entity.product.Brand;
-import com.sellphones.entity.product.Product;
-import com.sellphones.entity.product.ProductVariant;
-import com.sellphones.entity.product.ProductVariantStatus;
+import com.sellphones.entity.product.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.math.BigDecimal;
 
 public class AdminProductVariantSpecification {
 
-    public static Specification<ProductVariant> build(AdminProductVariantFilterRequest request){
+    public static Specification<ProductVariant> build(AdminProductVariantFilterRequest request, Long productId){
         Specification<ProductVariant> spec = (root, query, cb) -> cb.conjunction();
+        spec = spec.and(hasProductId(productId));
 
         if(request.getKeyword() != null){
             spec = spec.and(containsKeyword(request.getKeyword()));
@@ -48,5 +44,9 @@ public class AdminProductVariantSpecification {
 
     public static Specification<ProductVariant> priceBetween(Long minPrice, Long maxPrice){
         return (root, query, cb) -> cb.between(root.get("price"), minPrice, maxPrice);
+    }
+
+    public static Specification<ProductVariant> hasProductId(Long productId){
+        return (root, query, cb) -> cb.equal(root.get("product").get("id"), productId);
     }
 }

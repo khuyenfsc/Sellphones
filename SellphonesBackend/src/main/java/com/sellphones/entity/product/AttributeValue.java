@@ -17,23 +17,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @SuperBuilder
-@Table(name = "product_attribute_value")
-public class ProductAttributeValue extends BaseEntity<Long> {
+@Table(name = "attribute_value")
+public class AttributeValue extends BaseEntity<Long> {
 
     @Column(name = "str_val")
     private String strVal;
 
     @Column(name = "numeric_val")
     private BigDecimal numericVal;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @Nullable
-    @ManyToOne
-    @JoinColumn(name = "product_variant_id")
-    private ProductVariant productVariant;
 
     @ManyToOne
     @JoinColumn(name = "attribute_id")

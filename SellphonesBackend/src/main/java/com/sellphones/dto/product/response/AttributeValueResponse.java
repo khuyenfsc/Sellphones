@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductAttributeValueResponse {
+public class AttributeValueResponse {
 
     private String strVal;
 

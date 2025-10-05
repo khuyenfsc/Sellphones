@@ -27,4 +27,5 @@ public class ProductVariantResponse {
 
     private List<WarrantyResponse> warranties;
 
+    private List<AttributeValueResponse> attributeValues;
 }

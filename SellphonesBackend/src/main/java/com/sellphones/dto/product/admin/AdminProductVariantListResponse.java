@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.response;
+package com.sellphones.dto.product.admin;
 
 import com.sellphones.entity.product.ProductVariantStatus;
 import lombok.AllArgsConstructor;
@@ -21,5 +21,5 @@ public class AdminProductVariantListResponse {
     private String sku;
 
     private String variantImage;
-    
+
 }

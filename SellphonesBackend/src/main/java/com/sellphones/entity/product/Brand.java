@@ -26,7 +26,7 @@ public class Brand extends BaseEntity<Long> {
     @Column(name = "brand_icon")
     private String brandIcon;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
-    private List<Product> products;
+//    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+//    private List<Product> products;
 
 }

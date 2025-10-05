@@ -3,6 +3,7 @@ package com.sellphones.dto.product.admin;
 import com.sellphones.entity.product.ProductVariantStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,9 @@ public class AdminProductVariantFilterRequest {
     private String skuKeyword;
 
     private ProductVariantStatus status;
+
+    @NotBlank
+    private String sortType;
 
     @Min(0)
     private Long minPrice;

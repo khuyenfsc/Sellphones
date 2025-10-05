@@ -14,7 +14,7 @@ public class ProductDetailsVariantResponse {
 
     private Long id;
 
-    private List<ProductAttributeValueResponse> attributeValues;
+    private List<AttributeValueResponse> attributeValues;
 
 
 }

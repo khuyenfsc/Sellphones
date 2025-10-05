@@ -1,8 +1,6 @@
 package com.sellphones.dto.product.response;
 
 import com.sellphones.dto.promotion.GiftProductListResponse;
-import com.sellphones.entity.product.ProductAttributeValue;
-import com.sellphones.entity.promotion.GiftProduct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +25,5 @@ public class ProductDetailsResponse {
     private List<ProductDetailsVariantResponse> productVariants;
 
     private List<GiftProductListResponse> giftProducts;
-
-    private List<ProductAttributeValueResponse> attributeValues;
 
 }

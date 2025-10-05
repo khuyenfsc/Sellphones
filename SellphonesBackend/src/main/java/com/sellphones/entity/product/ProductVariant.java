@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "product_variant")
 public class ProductVariant extends BaseEntity<Long> {
 
@@ -53,8 +55,12 @@ public class ProductVariant extends BaseEntity<Long> {
     )
     private List<GiftProduct> giftProducts;
 
-    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
-    private List<ProductAttributeValue> attributeValues;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "product_variant_attribute_value",
+            joinColumns = @JoinColumn(name = "product_variant_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
+    )
+    private List<AttributeValue> attributeValues;
 
     @Column(nullable = false)
     private Long stock;

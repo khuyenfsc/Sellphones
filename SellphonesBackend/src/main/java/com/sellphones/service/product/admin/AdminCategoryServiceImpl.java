@@ -63,6 +63,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     public void addCategory(AdminCategoryRequest request) {
         Category category = Category.builder()
                         .name(request.getName())
+                        .code(request.getCode())
                         .createdAt(LocalDateTime.now())
                         .build();
         categoryRepository.save(category);

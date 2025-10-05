@@ -13,6 +13,7 @@ import com.sellphones.repository.product.BrandRepository;
 import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminBrandSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
+import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +78,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.CREATE')")
     public void addBrand(String brandJson, MultipartFile file) {
-        AdminBrandRequest request = parseRequest(brandJson);
+        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper);
         String fileName = "";
 
         if (file != null) {
@@ -116,7 +117,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.EDIT')")
     public void editBrand(String brandJson, MultipartFile file, Long id) {
-        AdminBrandRequest request = parseRequest(brandJson);
+        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper);
 
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
@@ -177,15 +178,6 @@ public class AdminBrandServiceImpl implements AdminBrandService{
                     }
                 }
             });
-        }
-    }
-
-
-    private AdminBrandRequest parseRequest(String brandJson) {
-        try {
-            return objectMapper.readValue(brandJson, AdminBrandRequest.class);
-        } catch (JsonProcessingException e) {
-            throw new AppException(ErrorCode.INVALID_BRAND_REQUEST_FORMAT);
         }
     }
 

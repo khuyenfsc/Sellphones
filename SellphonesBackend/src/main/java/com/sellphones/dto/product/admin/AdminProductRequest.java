@@ -24,5 +24,4 @@ public class AdminProductRequest {
     @NotNull
     private Long brandId;
 
-    private List<Long> attributeValueIds;
 }

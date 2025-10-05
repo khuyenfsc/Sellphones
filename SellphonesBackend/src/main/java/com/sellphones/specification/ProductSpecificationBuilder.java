@@ -1,14 +1,11 @@
 package com.sellphones.specification;
 
-import com.sellphones.dto.product.request.FilterRequest;
 import com.sellphones.dto.product.request.QueryRequest;
 import com.sellphones.dto.product.request.StaticFilterRequest;
-import com.sellphones.entity.product.Brand;
-import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.Product;
-import com.sellphones.entity.product.ProductAttributeValue;
+import com.sellphones.entity.product.AttributeValue;
+import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.criteria.Join;
-import lombok.val;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -88,11 +85,12 @@ public class ProductSpecificationBuilder {
     public static Specification<Product> hasAttributeEqual(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<Product, ProductAttributeValue> pav = root.join("attributeValues");
+            Join<Product, ProductVariant> pv = root.join("productVariants");
+            Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
             return cb.and(
-                    cb.equal(pav.get("attribute").get("id"), id),
-                    cb.equal(pav.get("numericVal"), attributeVal)
+                    cb.equal(pv_av.get("attribute").get("id"), id),
+                    cb.equal(pv_av.get("numericVal"), attributeVal)
             );
         };
 
@@ -101,11 +99,12 @@ public class ProductSpecificationBuilder {
     public static Specification<Product> hasAttributeGreater(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<Product, ProductAttributeValue> pav = root.join("attributeValues");
+            Join<Product, ProductVariant> pv = root.join("productVariants");
+            Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
             return cb.and(
-                    cb.equal(pav.get("attribute").get("id"), id),
-                    cb.greaterThanOrEqualTo(pav.get("numericVal"), attributeVal)
+                    cb.equal(pv_av.get("attribute").get("id"), id),
+                    cb.greaterThanOrEqualTo(pv_av.get("numericVal"), attributeVal)
             );
         };
 
@@ -114,11 +113,12 @@ public class ProductSpecificationBuilder {
     public static Specification<Product> hasAttributeLess(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<Product, ProductAttributeValue> pav = root.join("attributeValues");
+            Join<Product, ProductVariant> pv = root.join("productVariants");
+            Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
             return cb.and(
-                    cb.equal(pav.get("attribute").get("id"), id),
-                    cb.lessThanOrEqualTo(pav.get("numericVal"), attributeVal)
+                    cb.equal(pv.get("attribute").get("id"), id),
+                    cb.lessThanOrEqualTo(pv_av.get("numericVal"), attributeVal)
             );
         };
 
@@ -127,11 +127,12 @@ public class ProductSpecificationBuilder {
     public static Specification<Product> hasAttributeContains(Long id, String attributeVal){
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<Product, ProductAttributeValue> pav = root.join("attributeValues");
+            Join<Product, ProductVariant> pv = root.join("productVariants");
+            Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
             return cb.and(
-                    cb.equal(pav.get("attribute").get("id"), id),
-                    cb.like(pav.get("strVal"), "%" + attributeVal + "%")
+                    cb.equal(pv_av.get("attribute").get("id"), id),
+                    cb.like(pv_av.get("strVal"), "%" + attributeVal + "%")
             );
         };
 
@@ -140,11 +141,12 @@ public class ProductSpecificationBuilder {
     public static Specification<Product> hasAttributeBetween(Long id, BigDecimal minAttributeVal, BigDecimal maxAttributeVal){
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<Product, ProductAttributeValue> pav = root.join("attributeValues");
+            Join<Product, ProductVariant> pv = root.join("productVariants");
+            Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
             return cb.and(
-                    cb.equal(pav.get("attribute").get("id"), id),
-                    cb.between(pav.get("numericVal"), minAttributeVal, maxAttributeVal)
+                    cb.equal(pv_av.get("attribute").get("id"), id),
+                    cb.between(pv_av.get("numericVal"), minAttributeVal, maxAttributeVal)
             );
         };
 

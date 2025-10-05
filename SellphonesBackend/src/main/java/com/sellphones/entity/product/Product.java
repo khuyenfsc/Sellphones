@@ -40,8 +40,8 @@ public class Product extends BaseEntity<Long> {
     private List<ProductVariant> productVariants = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = true)
-    private Brand brand; //
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @ElementCollection
     @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
@@ -61,8 +61,12 @@ public class Product extends BaseEntity<Long> {
     @Column(name = "is_new")
     private Boolean isNew = true;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductAttributeValue> attributeValues;
+//
+//    @JoinTable(name = "product_attribute_value",
+//        joinColumns = @JoinColumn(name = "product_id"),
+//        inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
+//    )
+//    private List<AttributeValue> attributeValues = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "product")
 //    private List<ProductAttribute> productAttributes;
