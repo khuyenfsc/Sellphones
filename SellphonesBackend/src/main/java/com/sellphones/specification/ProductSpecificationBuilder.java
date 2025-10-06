@@ -176,6 +176,9 @@ public class ProductSpecificationBuilder {
                 return hasAttributeLess(id, value);
 
             } else if (condition.contains("chua")) {
+                if (condition.contains("-")) {
+                    condition = condition.substring(condition.indexOf("-") + 1).trim();
+                }
                 return hasAttributeContains(id, condition);
 
             } else if (validNumbers.size() >= 2) { // khoảng

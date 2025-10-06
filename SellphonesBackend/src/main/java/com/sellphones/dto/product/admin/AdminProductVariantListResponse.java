@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AdminProductVariantListResponse {
 
+    private Long id;
+
     private String productVariantName;
 
     private BigDecimal price;

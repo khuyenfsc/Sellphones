@@ -1,20 +1,29 @@
 package com.sellphones.dto.product.admin;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminAttributeResponse {
+public class AdminFilterOptionResponse {
 
     private Long id;
 
     private String name;
+
+    private String attributeName;
+
+    private String key;
+
+    private String val;
+
+    @Nullable
+    private String val2;
 
     private LocalDateTime createdAt;
 

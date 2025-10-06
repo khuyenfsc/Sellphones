@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,12 +18,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "product_filter")
 public class ProductFilter extends BaseEntity<Long> {
 
     private String name;
 
+//    @ManyToOne
+//    @JoinColumn(name = "attribute_id", nullable = true)
+//    private Attribute attribute;
+
+    @OneToMany(mappedBy = "productFilter")
+    private List<FilterOption> filterOptions = new ArrayList<>();
+
     @ManyToOne
-    @JoinColumn(name = "attribute_id", nullable = true)
-    private Attribute attribute;
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

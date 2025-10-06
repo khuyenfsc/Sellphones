@@ -1,11 +1,8 @@
 package com.sellphones.entity.promotion;
 
 import com.sellphones.entity.BaseEntity;
-import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

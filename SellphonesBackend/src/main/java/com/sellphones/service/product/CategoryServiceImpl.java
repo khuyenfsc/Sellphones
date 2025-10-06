@@ -3,10 +3,13 @@ package com.sellphones.service.product;
 import com.sellphones.dto.product.response.CategoryResponse;
 import com.sellphones.dto.product.response.FilterOptionByCategoryResponse;
 import com.sellphones.dto.product.response.FilterOptionResponse;
+import com.sellphones.dto.product.response.ProductFilterResponse;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.FilterOption;
+import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.repository.product.CategoryRepository;
 import com.sellphones.repository.product.FilterOptionRepository;
+import com.sellphones.repository.product.ProductFilterRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final CategoryRepository categoryRepository;
 
-    private final FilterOptionRepository filterOptionRepository;
+    private final ProductFilterRepository productFilterRepository;
 
     private final ModelMapper modelMapper;
 
@@ -33,25 +36,10 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<FilterOptionByCategoryResponse> getFilterOptionsByCategory(Long categoryId) {
-        List<FilterOption> filterOptions = filterOptionRepository.findByCategoryId(categoryId);
-
-        if (filterOptions.isEmpty()) {
-            return (List<FilterOptionByCategoryResponse>) Collections.EMPTY_LIST;
-        }
-
-        Map<Long, List<FilterOption>> grouped = filterOptions.stream()
-                .collect(Collectors.groupingBy(fo -> fo.getProductFilter().getAttribute().getId()));
-
-        return grouped.entrySet().stream()
-                .map(entry -> {
-                    return new FilterOptionByCategoryResponse(entry.getKey(),
-                            entry.getValue().getFirst().getProductFilter().getName(),
-                            entry.getValue().stream()
-                                    .map(fo -> modelMapper.map(fo, FilterOptionResponse.class))
-                                    .collect(Collectors.toList()));
-                })
-                .collect(Collectors.toList());
-
+    public List<ProductFilterResponse> getProductFiltersByCategory(Long categoryId) {
+        List<ProductFilter> filters = productFilterRepository.findByCategory_Id(categoryId);
+        return filters.stream()
+                .map(f -> modelMapper.map(f, ProductFilterResponse.class))
+                .toList();
     }
 }

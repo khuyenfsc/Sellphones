@@ -3,7 +3,6 @@ package com.sellphones.entity.cart;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

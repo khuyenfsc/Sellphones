@@ -35,6 +35,68 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --REFERENCES category_option_value(id)
 --ON DELETE CASCADE;
 
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE cart_item
+--DROP FOREIGN KEY fk_cart_item_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE cart_item
+--ADD CONSTRAINT fk_cart_item_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE instalment_order
+--DROP FOREIGN KEY fk_instalment_order_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE instalment_order
+--ADD CONSTRAINT fk_instalment_order_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE inventory
+--DROP FOREIGN KEY fk_inventory_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE inventory
+--ADD CONSTRAINT fk_inventory_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE order_variant
+--DROP FOREIGN KEY fk_order_variant_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE order_variant
+--ADD CONSTRAINT fk_order_variant_item_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE review
+--DROP FOREIGN KEY fk_review_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE review
+--ADD CONSTRAINT fk_review_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+ALTER TABLE stock_entry
+DROP FOREIGN KEY fk_stock_entry_product_variant;
+
+-- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+ALTER TABLE stock_entry
+ADD CONSTRAINT fk_stock_entry_product_variant
+FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+ON DELETE CASCADE;
+
+
+
 
 INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'apple.png');
 INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'samsung.png');
@@ -143,6 +205,13 @@ VALUES
 ('Edit',   'CATALOG.PRODUCTS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CATALOG.PRODUCTS.DELETE', CURRENT_TIMESTAMP);
 
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'CATALOG.PRODUCT_FILTERS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CATALOG.PRODUCT_FILTERS.CREATE', CURRENT_TIMESTAMP),
+('Copy',   'CATALOG.PRODUCT_FILTERS.COPY', CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.PRODUCT_FILTERS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.PRODUCT_FILTERS.DELETE', CURRENT_TIMESTAMP);
 -- Categories
 --INSERT INTO permission (name, code, parent_permission_id, created_at)
 --VALUES ('Categories', 'CATALOG.CATEGORIES',
@@ -487,43 +556,43 @@ INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_fea
 VALUES ('Huawei MateBook X Pro', 'https://example.com/matebookxpro.jpg', 'Ultra-slim laptop with 3K touchscreen', 11, 2, false, CURRENT_TIMESTAMP);
 
 -- Variants cho iPhone 15
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (1, 'iPhone 15B - 128G - Black', 24990000, 'IP15-128-BLK', 1, 50, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-128-blk.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('iPhone 15B - 128G - Black', 24990000, 'IP15-128-BLK', 1, 50, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-128-blk.jpg');
 
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (2, 'iPhone 15 - 256GB - White', 27990000, 'IP15-256-WHT', 1, 30, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-256-wht.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('iPhone 15 - 256GB - White', 27990000, 'IP15-256-WHT', 1, 30, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-256-wht.jpg');
 
 -- Variants cho Samsung Galaxy S24
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (3, 'Galaxy S24 - 128GB - Phantom Black', 21990000, 'SGS24-128-BLK', 2, 40, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-128-blk.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('Galaxy S24 - 128GB - Phantom Black', 21990000, 'SGS24-128-BLK', 2, 40, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-128-blk.jpg');
 
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (4, 'Galaxy S24 - 256GB - Cream', 24990000, 'SGS24-256-CRM', 2, 25, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-256-crm.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('Galaxy S24 - 256GB - Cream', 24990000, 'SGS24-256-CRM', 2, 25, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-256-crm.jpg');
 
 -- Variants cho Google Pixel 8 Pro
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (5, 'Pixel 8 Pro - 128GB - Obsidian', 20990000, 'PIX8P-128-OBS', 3, 35, CURRENT_TIMESTAMP, 'https://example.com/images/pix8p-128-obs.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('Pixel 8 Pro - 128GB - Obsidian', 20990000, 'PIX8P-128-OBS', 3, 35, CURRENT_TIMESTAMP, 'https://example.com/images/pix8p-128-obs.jpg');
 
 -- Variants cho MacBook Pro 14
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (6, 'MacBook Pro 14\" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 'MBP14-M2P-16-512', 13, 20, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-16-512.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 'MBP14-M2P-16-512', 13, 20, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-16-512.jpg');
 
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (7, 'MacBook Pro 14\" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 'MBP14-M2P-32-1TB', 13, 10, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-32-1tb.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('MacBook Pro 14" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 'MBP14-M2P-32-1TB', 13, 10, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-32-1tb.jpg');
 
 -- Variants cho Dell XPS 13
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (8, 'Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 'DXPS13-I7-16-512', 14, 15, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i7-16-512.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 'DXPS13-I7-16-512', 14, 15, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i7-16-512.jpg');
 
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (9, 'Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 'DXPS13-I5-8-256', 14, 25, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i5-8-256.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 'DXPS13-I5-8-256', 14, 25, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i5-8-256.jpg');
 
 -- Variants cho OnePlus 12
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (10, 'OnePlus 12 - 12GB RAM - 256GB', 18990000, 'OP12-12-256', 4, 40, CURRENT_TIMESTAMP, 'https://example.com/images/op12-12-256.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('OnePlus 12 - 12GB RAM - 256GB', 18990000, 'OP12-12-256', 4, 40, CURRENT_TIMESTAMP, 'https://example.com/images/op12-12-256.jpg');
 
-INSERT INTO product_variant (id, product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES (11, 'OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
+INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
+VALUES ('OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
 
 -- iPhone 15 128GB (id=1) có 2 khuyến mãi
 INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date)
@@ -1025,16 +1094,16 @@ INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Giá', 4, C
 
 -- Filter Options cho category = 'Điện thoại' (id = 1)
 INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('4 GB', 'bang-4gb', 1, 1, 1, CURRENT_TIMESTAMP);
+VALUES ('4 GB', 'bang-4', 1, 1, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('8 GB', 'bang-8gb', 2, 1, 1, CURRENT_TIMESTAMP);
+VALUES ('8 GB', 'bang-8', 2, 1, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('64 GB', 'bang-64gb', 1, 2, 1, CURRENT_TIMESTAMP);
+VALUES ('64 GB', 'bang-64', 1, 2, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('128 GB', 'bang-128gb', 2, 2, 1, CURRENT_TIMESTAMP);
+VALUES ('128 GB', 'bang-128', 2, 2, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
 VALUES ('Samsung', 'chua-Samsung', 1, 3, 1, CURRENT_TIMESTAMP);

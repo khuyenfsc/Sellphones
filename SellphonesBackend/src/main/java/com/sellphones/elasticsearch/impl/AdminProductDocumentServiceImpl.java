@@ -1,6 +1,6 @@
 package com.sellphones.elasticsearch.impl;
 
-import com.sellphones.dto.product.admin.AdminProductFilterRequest;
+import com.sellphones.dto.product.admin.AdminProductFilter_Request;
 import com.sellphones.dto.product.response.ProductListResponse;
 import com.sellphones.elasticsearch.AdminProductDocumentService;
 import com.sellphones.elasticsearch.CustomProductDocumentRepository;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class AdminProductDocumentServiceImpl implements AdminProductDocumentServ
 
     @Override
     @PreAuthorize("CATALOG.PRODUCTS.VIEW")
-    public List<ProductListResponse> getProducts(AdminProductFilterRequest request) {
+    public List<ProductListResponse> getProducts(AdminProductFilter_Request request) {
         List<ProductDocument> products = customProductDocumentRepository.getProductsWithAdminAuthority(request);
         products.forEach(p -> p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), productThumbnailFolder)));
         return products.stream()

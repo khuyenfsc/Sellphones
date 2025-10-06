@@ -29,6 +29,8 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND("Category not found", HttpStatus.NOT_FOUND),
     COMMENT_NOT_FOUND("Comment not found", HttpStatus.NOT_FOUND),
     BRAND_NOT_FOUND("Brand not found", HttpStatus.NOT_FOUND),
+    PRODUCT_FILTER_NOT_FOUND("Filter not found", HttpStatus.NOT_FOUND),
+    FILTER_OPTION_NOT_FOUND("Filter option not found", HttpStatus.NOT_FOUND),
     PRODUCT_PROMOTION_NOT_FOUND_IN_PRODUCT("Product promotion not found in product", HttpStatus.NOT_FOUND),
     WARRANTY_NOT_FOUND_IN_PRODUCT("Warranty not found in product", HttpStatus.NOT_FOUND),
     PRODUCT_VARIANT_OUT_OF_STOCK("Product variant is out of stock", HttpStatus.BAD_REQUEST),

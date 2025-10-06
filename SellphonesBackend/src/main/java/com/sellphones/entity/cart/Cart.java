@@ -1,7 +1,6 @@
 package com.sellphones.entity.cart;
 
 import com.sellphones.entity.BaseEntity;
-import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

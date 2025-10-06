@@ -17,16 +17,18 @@ public class FilterOption extends BaseEntity<Long> {
 
     private String name;
 
+    private Attribute attribute;
+
 
     @Column(name = "filter_condition")
     private String condition;
 
-    private int sortOrder;
+//    private int sortOrder;
 
     @ManyToOne
     @JoinColumn(name = "product_filter_id")
     private ProductFilter productFilter;
 
-    @ManyToOne
-    private Category category;
+//    @ManyToOne
+//    private Category category;
 }

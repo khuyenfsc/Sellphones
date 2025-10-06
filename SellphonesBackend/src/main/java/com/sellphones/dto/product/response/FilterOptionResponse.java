@@ -13,6 +13,4 @@ public class FilterOptionResponse {
 
     private String condition;
 
-    private int sortOrder;
-
 }

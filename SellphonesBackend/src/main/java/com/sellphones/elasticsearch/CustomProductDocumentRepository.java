@@ -1,7 +1,7 @@
 package com.sellphones.elasticsearch;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
-import com.sellphones.dto.product.admin.AdminProductFilterRequest;
+import com.sellphones.dto.product.admin.AdminProductFilter_Request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,7 +60,7 @@ public class CustomProductDocumentRepository {
                 .toList();
     }
 
-    public List<ProductDocument> getProductsWithAdminAuthority(AdminProductFilterRequest request){
+    public List<ProductDocument> getProductsWithAdminAuthority(AdminProductFilter_Request request){
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         NativeQueryBuilder queryBuilder = NativeQuery.builder()
                 .withPageable(pageable);

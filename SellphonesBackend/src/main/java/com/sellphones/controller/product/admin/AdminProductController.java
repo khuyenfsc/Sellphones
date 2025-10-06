@@ -2,15 +2,13 @@ package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
-import com.sellphones.dto.product.admin.AdminProductFilterRequest;
+import com.sellphones.dto.product.admin.AdminProductFilter_Request;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
 import com.sellphones.dto.product.response.ProductListResponse;
 import com.sellphones.dto.product.response.ProductVariantResponse;
 import com.sellphones.elasticsearch.AdminProductDocumentService;
-import com.sellphones.entity.product.Product;
 import com.sellphones.service.product.admin.AdminProductService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getProducts(AdminProductFilterRequest request){
+    public ResponseEntity<CommonResponse> getProducts(AdminProductFilter_Request request){
         List<ProductListResponse> products = adminProductDocumentService.getProducts(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
@@ -46,7 +44,7 @@ public class AdminProductController {
             @RequestPart(name = "file", required = false) MultipartFile thumbnailFile
     ){
 
-        adminProductService.addProducts(productJson, imageFiles, thumbnailFile);
+        adminProductService.addProduct(productJson, imageFiles, thumbnailFile);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added product successfully");
 
@@ -119,5 +117,28 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
+    @PostMapping("/edit-product-variant/{productVariantId}")
+    public ResponseEntity<CommonResponse> editProductVariant(
+            @RequestPart("product_variant") String productVariantJson,
+            @RequestPart(name = "file", required = false) MultipartFile file,
+            @PathVariable Long productVariantId
+    ){
+        adminProductService.editProductVariant(productVariantJson, file, productVariantId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Edited product variant successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @DeleteMapping("/delete-product-variant/{productVariantId}")
+    public ResponseEntity<CommonResponse> deleteProductVariant(
+            @PathVariable Long productVariantId
+    ){
+        adminProductService.deleteProductVariant(productVariantId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Deleted product variant successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
 
 }

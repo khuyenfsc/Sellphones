@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.dto.product.response.ProductVariantResponse;
 import com.sellphones.entity.product.*;
+import com.sellphones.entity.promotion.GiftProduct;
+import com.sellphones.entity.promotion.ProductPromotion;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.mapper.ProductMapper;
 import com.sellphones.repository.product.*;
+import com.sellphones.repository.promotion.GiftProductRepository;
+import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminProductVariantSpecification;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
@@ -42,6 +46,18 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     private final ProductVariantRepository productVariantRepository;
 
+    private final CategoryRepository categoryRepository;
+
+    private final BrandRepository brandRepository;
+
+    private final AttributeValueRepository attributeValueRepository;
+
+    private final ProductPromotionRepository productPromotionRepository;
+
+    private final GiftProductRepository giftProductRepository;
+
+    private final WarrantyRepository warrantyRepository;
+
     private final FileStorageService fileStorageService;
 
     private final ProductMapper productMapper;
@@ -72,15 +88,10 @@ public class AdminProductServiceImpl implements AdminProductService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
-    public void addProducts(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile) {
+    public void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile) {
         AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper);
 
         List<String> imageNames = new ArrayList<>();
-
-        System.out.println("file: " + thumbnailFile.getOriginalFilename());
-        for(MultipartFile file : imageFiles){
-            System.out.println(file.getOriginalFilename());
-        }
 
         String thumbnailName = "";
         if (thumbnailFile != null) {
@@ -99,7 +110,9 @@ public class AdminProductServiceImpl implements AdminProductService{
             });
         }
 
-        Product product = productMapper.mapToProductEntity(request, thumbnailName, imageNames);
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        Brand brand = brandRepository.findById(request.getBrandId()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
+        Product product = productMapper.mapToProductEntity(request, brand, category, thumbnailName, imageNames);
         productRepository.save(product);
 
         String finalThumbnailName = thumbnailName;
@@ -148,28 +161,12 @@ public class AdminProductServiceImpl implements AdminProductService{
         }
         product.getImages().forEach(i -> fileStorageService.delete(i, productImageFolder));
 
-        Product editedProduct = productMapper.mapToProductEntity(request, thumbnailName, imageNames);
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        Brand brand = brandRepository.findById(request.getBrandId()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
+        Product editedProduct = productMapper.mapToProductEntity(request, brand, category, thumbnailName, imageNames);
         editedProduct.setId(productId);
         productRepository.save(editedProduct);
 
-        String finalThumbnailName = thumbnailName;
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCompletion(int status) {
-                if(status == STATUS_ROLLED_BACK){
-                    if (StringUtils.hasText(finalThumbnailName)) {
-                        fileStorageService.delete(finalThumbnailName, productThumbnailFolder);
-                    }
-                    imageNames.forEach(fileName -> {
-                        try {
-                            fileStorageService.delete(fileName, productImageFolder);
-                        } catch (Exception ex) {
-                            log.error("Failed to cleanup file {} after rollback", fileName, ex);
-                        }
-                    });
-                }
-            }
-        });
     }
 
     @Override
@@ -225,7 +222,7 @@ public class AdminProductServiceImpl implements AdminProductService{
         String variantImage = "";
         if (file != null) {
             try {
-                variantImage = fileStorageService.store(file, productThumbnailFolder);
+                variantImage = fileStorageService.store(file, productVariantImageFolder);
             } catch (Exception e) {
                 log.error("Failed to upload thumbnail file {}", file.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -233,7 +230,31 @@ public class AdminProductServiceImpl implements AdminProductService{
         }
 
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        ProductVariant productVariant = productMapper.mapToProductVariantEntity(request, variantImage, product);
+        List<ProductPromotion> promotions = request.getPromotionIds() != null
+                ? productPromotionRepository.findByIdIn(request.getPromotionIds())
+                : new ArrayList<>();
+
+        List<GiftProduct> giftProducts = request.getGiftProductIds() != null
+                ? giftProductRepository.findByIdIn(request.getGiftProductIds())
+                : new ArrayList<>();
+
+        List<AttributeValue> attributeValues = request.getAttributeValueIds() != null
+                ? attributeValueRepository.findByIdIn(request.getAttributeValueIds())
+                : new ArrayList<>();
+
+        List<Warranty> warranties = request.getWarrantyIds() != null
+                ? warrantyRepository.findByIdIn(request.getWarrantyIds())
+                : new ArrayList<>();
+
+        ProductVariant productVariant = productMapper.mapToProductVariantEntity(
+                request,
+                variantImage,
+                product,
+                promotions,
+                giftProducts,
+                attributeValues,
+                warranties
+        );
         product.getProductVariants().add(productVariant);
 
         String finalVariantImage = variantImage;
@@ -242,11 +263,68 @@ public class AdminProductServiceImpl implements AdminProductService{
             public void afterCompletion(int status) {
                 if(status == STATUS_ROLLED_BACK){
                     if (StringUtils.hasText(finalVariantImage)) {
-                        fileStorageService.delete(finalVariantImage, productThumbnailFolder);
+                        fileStorageService.delete(finalVariantImage, productVariantImageFolder);
                     }
                 }
             }
         });
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
+    public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
+        ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper);
+
+        String variantImage = productVariant.getVariantImage();
+        if (file != null) {
+            try {
+                fileStorageService.store(file, variantImage, productThumbnailFolder);
+            } catch (Exception e) {
+                log.error("Failed to upload thumbnail file {}", file.getOriginalFilename(), e);
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        List<ProductPromotion> promotions = request.getPromotionIds() != null
+                ? productPromotionRepository.findByIdIn(request.getPromotionIds())
+                : new ArrayList<>();
+
+        List<GiftProduct> giftProducts = request.getGiftProductIds() != null
+                ? giftProductRepository.findByIdIn(request.getGiftProductIds())
+                : new ArrayList<>();
+
+        List<AttributeValue> attributeValues = request.getAttributeValueIds() != null
+                ? attributeValueRepository.findByIdIn(request.getAttributeValueIds())
+                : new ArrayList<>();
+
+        List<Warranty> warranties = request.getWarrantyIds() != null
+                ? warrantyRepository.findByIdIn(request.getWarrantyIds())
+                : new ArrayList<>();
+
+        ProductVariant editedProductVariant = productMapper.mapToProductVariantEntity(
+                request,
+                variantImage,
+                null,
+                promotions,
+                giftProducts,
+                attributeValues,
+                warranties
+        );
+        editedProductVariant.setSku(productVariant.getSku());
+        editedProductVariant.setId(productVariantId);
+        editedProductVariant.setProduct(productVariant.getProduct());
+        productVariantRepository.save(editedProductVariant);
+
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
+    public void deleteProductVariant(Long productVariantId) {
+        ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+        fileStorageService.delete(productVariant.getVariantImage(), productImageFolder);
+        productVariantRepository.delete(productVariant);
     }
 
 }

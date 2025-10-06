@@ -4,7 +4,6 @@ import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
 import com.sellphones.entity.promotion.OrderVariantPromotion;
-import com.sellphones.entity.promotion.Promotion;
 import jakarta.persistence.*;
 import lombok.*;
 

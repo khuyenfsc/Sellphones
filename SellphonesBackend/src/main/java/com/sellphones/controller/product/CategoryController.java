@@ -3,6 +3,8 @@ package com.sellphones.controller.product;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.product.response.CategoryResponse;
 import com.sellphones.dto.product.response.FilterOptionByCategoryResponse;
+import com.sellphones.dto.product.response.ProductFilterResponse;
+import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.service.product.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ public class CategoryController {
     public ResponseEntity<CommonResponse> getFiltersByCategory(
             @PathVariable("categoryId") Long categoryId
     ){
-        List<FilterOptionByCategoryResponse> filterOptions = categoryService.getFilterOptionsByCategory(categoryId);
+        List<ProductFilterResponse> filterOptions = categoryService.getProductFiltersByCategory(categoryId);
         Map<String, Object> map = new HashMap<>();
         map.put("filter_options", filterOptions);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));

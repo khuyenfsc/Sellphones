@@ -11,10 +11,12 @@ import java.util.List;
 
 public interface AdminProductService {
     AdminProductDetailResponse getProductDetails(Long productId);
-    void addProducts(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
+    void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
     void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
     void deleteProduct(Long productId);
     List<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
     ProductVariantResponse getProductVariantDetail(Long productVariantId);
     void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
+    void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId);
+    void deleteProductVariant(Long productVariantId);
 }
