@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "supplier")
+@Table(name = "stock_entry")
 public class StockEntry extends BaseEntity<Long> {
 
     @ManyToOne

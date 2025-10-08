@@ -1,6 +1,6 @@
 package com.sellphones.dto.product.admin;
 
-import jakarta.annotation.Nullable;
+import com.sellphones.dto.product.response.CommentUserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +10,15 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminFilterOptionResponse {
+public class AdminCommentResponse {
 
     private Long id;
 
-    private String name;
+    private CommentUserResponse user;
 
-    private String key;
+    private String content;
 
-    private String val1;
-
-    @Nullable
-    private String val2;
+    private AdminCommentProductResponse product;
 
     private LocalDateTime createdAt;
 

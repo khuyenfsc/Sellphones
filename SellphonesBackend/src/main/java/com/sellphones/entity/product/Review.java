@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -34,12 +35,15 @@ public class Review extends BaseEntity<Long> {
     @Column(name = "rating_score")
     private int ratingScore;
 
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
+
     @ManyToOne
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
     @ElementCollection
-    @CollectionTable(name = "review_images", joinColumns = @JoinColumn(name = "review_id"))
+    @CollectionTable(name = "review_image", joinColumns = @JoinColumn(name = "review_id"))
     @Column(name = "image_name")
     private List<String> imageNames;
 }

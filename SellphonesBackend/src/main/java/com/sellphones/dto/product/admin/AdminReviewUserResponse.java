@@ -4,17 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminProductAttributeValueResponse {
+public class AdminReviewUserResponse {
 
     private Long id;
 
-    private String strVal;
-
-    private BigDecimal numericVal;
+    private String fullName;
 
 }

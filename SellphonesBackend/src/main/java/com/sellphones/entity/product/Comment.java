@@ -28,9 +28,15 @@ public class Comment extends BaseEntity<Long> {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    private CommentStatus status;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Column(name = "is_replied")
+    private Boolean isReplied = false;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

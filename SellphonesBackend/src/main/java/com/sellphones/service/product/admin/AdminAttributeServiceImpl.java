@@ -80,7 +80,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
-    public List<AdminProductAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
+    public List<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -91,14 +91,14 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
         Page<AttributeValue> attributePage = attributeValueRepository.findAll(spec, pageable);
 
         return attributePage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminProductAttributeValueResponse.class))
+                .map(a -> modelMapper.map(a, AdminAttributeValueResponse.class))
                 .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
-    public void addAttributeValue(AdminProductAttributeValueRequest request, Long attributeId) {
+    public void addAttributeValue(AdminAttributeValueRequest request, Long attributeId) {
         Attribute attribute = attributeRepository.findById(attributeId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         AttributeValue attributeValue = AttributeValue.builder()
                 .strVal(request.getStrVal())
@@ -113,7 +113,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.EDIT')")
-    public void editAttributeValue(AdminProductAttributeValueRequest request, Long attributeValueId) {
+    public void editAttributeValue(AdminAttributeValueRequest request, Long attributeValueId) {
         AttributeValue attributeValue = attributeValueRepository.findById(attributeValueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
         attributeValue.setStrVal(request.getStrVal());
         attributeValue.setNumericVal((request.getNumericVal()!=null)?BigDecimal.valueOf(request.getNumericVal()):null);

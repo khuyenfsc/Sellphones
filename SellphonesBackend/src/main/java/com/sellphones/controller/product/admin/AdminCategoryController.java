@@ -38,7 +38,7 @@ public class AdminCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-category/{categoryId}")
+    @PutMapping("/edit-category/{categoryId}")
     public ResponseEntity<CommonResponse> editCategory(@RequestBody @Valid AdminCategoryRequest request, @PathVariable Long categoryId){
         adminCategoryService.editCategory(request, categoryId);
         Map<String, Object> map = new HashMap<>();
@@ -74,7 +74,7 @@ public class AdminCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-category-option/{categoryOptionId}")
+    @PutMapping("/edit-category-option/{categoryOptionId}")
     public ResponseEntity<CommonResponse> editCategoryOption(@RequestBody @Valid AdminCategoryOptionRequest request, @PathVariable Long categoryOptionId){
         adminCategoryService.editCategoryOption(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
@@ -110,7 +110,7 @@ public class AdminCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-category-option-value/{categoryOptionId}")
+    @PutMapping("/edit-category-option-value/{categoryOptionId}")
     public ResponseEntity<CommonResponse> editCategoryOptionValue(@RequestBody @Valid AdminCategoryOptionValueRequest request, @PathVariable Long categoryOptionId){
         adminCategoryService.editCategoryOptionValue(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();

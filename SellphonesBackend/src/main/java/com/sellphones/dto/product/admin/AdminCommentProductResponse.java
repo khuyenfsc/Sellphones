@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminProductAttributeValueRequest {
+public class AdminCommentProductResponse {
+    private Long id;
 
-    private String strVal;
-
-    private Long numericVal;
-
+    private String name;
 }

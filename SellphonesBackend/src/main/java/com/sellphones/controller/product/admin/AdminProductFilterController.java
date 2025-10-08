@@ -38,7 +38,7 @@ public class AdminProductFilterController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-product-filter/{id}")
+    @PutMapping("/edit-product-filter/{id}")
     public ResponseEntity<CommonResponse> editProductFilter(@RequestBody @Valid AdminProductFilterRequest request, @PathVariable Long id) {
         adminProductFilterService.editProductFilter(request, id);
         Map<String, Object> map = new HashMap<>();
@@ -57,8 +57,8 @@ public class AdminProductFilterController {
     }
 
     @GetMapping("/{filterId}/filter-options")
-    public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminFilterOptionFilterRequest request, @PathVariable Long attributeId){
-        List<AdminFilterOptionListResponse> responses = adminProductFilterService.getFilterOptions(request, attributeId);
+    public ResponseEntity<CommonResponse> getFilterOptions(@Valid AdminFilterOptionFilterRequest request, @PathVariable Long filterId){
+        List<AdminFilterOptionResponse> responses = adminProductFilterService.getFilterOptions(request, filterId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", responses);
 
@@ -66,14 +66,39 @@ public class AdminProductFilterController {
     }
 
 
-    @GetMapping("/filter-options/{optionId}")
-    public ResponseEntity<CommonResponse> getFilterOptionDetails(@PathVariable Long optionId){
-        AdminFilterOptionResponse responses = adminProductFilterService.getFilterOptionDetails(optionId);
+//    @GetMapping("/filter-options/{optionId}")
+//    public ResponseEntity<CommonResponse> getFilterOptionDetails(@PathVariable Long optionId){
+//        AdminFilterOptionResponse responses = adminProductFilterService.getFilterOptionDetails(optionId);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", responses);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+//    }
+
+    @PostMapping("/{filterId}/add-filter-option")
+    public ResponseEntity<CommonResponse> addFilterOption(@RequestBody @Valid AdminFilterOptionRequest request, @PathVariable Long filterId) {
+        adminProductFilterService.addFilterOption(request, filterId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", "Added filter option successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
+    @PutMapping("/edit-filter-option/{optionId}")
+    public ResponseEntity<CommonResponse> editFilterOption(@RequestBody @Valid AdminFilterOptionRequest request, @PathVariable Long optionId) {
+        adminProductFilterService.editFilterOption(request, optionId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Edited filter option successfully");
 
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @DeleteMapping("/delete-filter-option/{optionId}")
+    public ResponseEntity<CommonResponse> deleteFilterOption(@PathVariable Long optionId) {
+        adminProductFilterService.deleteFilterOption(optionId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Deleted filter option successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
 }

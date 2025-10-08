@@ -38,7 +38,7 @@ public class AdminAttributeController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-attribute/{id}")
+    @PutMapping("/edit-attribute/{id}")
     public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AdminAttributeRequest request, @PathVariable Long id) {
         adminAttributeService.editAttribute(request, id);
         Map<String, Object> map = new HashMap<>();
@@ -58,7 +58,7 @@ public class AdminAttributeController {
 
     @GetMapping("/{attributeId}/attribute-values")
     public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminAttributeValueFilterRequest request,@PathVariable Long attributeId){
-        List<AdminProductAttributeValueResponse> responses = adminAttributeService.getAttributeValues(request, attributeId);
+        List<AdminAttributeValueResponse> responses = adminAttributeService.getAttributeValues(request, attributeId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", responses);
 
@@ -66,7 +66,7 @@ public class AdminAttributeController {
     }
 
     @PostMapping("/{attributeId}/add-attribute-value")
-    public ResponseEntity<CommonResponse> addAttributeValue(@RequestBody AdminProductAttributeValueRequest request, @PathVariable Long attributeId) {
+    public ResponseEntity<CommonResponse> addAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeId) {
         adminAttributeService.addAttributeValue(request, attributeId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added attribute value successfully");
@@ -74,8 +74,8 @@ public class AdminAttributeController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-attribute-value/{attributeValueId}")
-    public ResponseEntity<CommonResponse> editAttributeValue(@RequestBody AdminProductAttributeValueRequest request, @PathVariable Long attributeValueId) {
+    @PutMapping("/edit-attribute-value/{attributeValueId}")
+    public ResponseEntity<CommonResponse> editAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeValueId) {
         adminAttributeService.editAttributeValue(request, attributeValueId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited attribute value successfully");

@@ -86,14 +86,14 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --ON DELETE CASCADE;
 
 -- 1. Xóa khóa ngoại cũ nếu tồn tại
-ALTER TABLE stock_entry
-DROP FOREIGN KEY fk_stock_entry_product_variant;
-
--- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
-ALTER TABLE stock_entry
-ADD CONSTRAINT fk_stock_entry_product_variant
-FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
-ON DELETE CASCADE;
+--ALTER TABLE stock_entry
+--DROP FOREIGN KEY fk_stock_entry_product_variant;
+--
+---- 2. Thêm lại khóa ngoại mới với ON DELETE CASCADE
+--ALTER TABLE stock_entry
+--ADD CONSTRAINT fk_stock_entry_product_variant
+--FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--ON DELETE CASCADE;
 
 
 
@@ -270,8 +270,16 @@ VALUES
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
+('View',   'CLIENTS.REVIEWS.VIEW', CURRENT_TIMESTAMP),
 ('Edit',   'CLIENTS.REVIEWS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CLIENTS.REVIEWS.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View',   'CLIENTS.COMMENTS.VIEW', CURRENT_TIMESTAMP),
+('REPLY',   'CLIENTS.COMMENTS.REPLY', CURRENT_TIMESTAMP),
+('Edit',   'CLIENTS.COMMENTS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CLIENTS.COMMENTS.DELETE', CURRENT_TIMESTAMP);
 
 
 ---- Root: Marketing
@@ -865,7 +873,7 @@ VALUES
 (5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 5, CURRENT_TIMESTAMP),
 (6, 'Thiết kế đẹp, nhẹ.', 5, 5, CURRENT_TIMESTAMP);
 
-INSERT INTO review_images (review_id, image_name)
+INSERT INTO review_image (review_id, image_name)
 VALUES
 (1, 'https://example.com/review1-img1.jpg'),
 (1, 'https://example.com/review1-img2.jpg'),
@@ -889,7 +897,7 @@ VALUES
 -- Trả lời vào comment id = 4 (reply lồng 2 cấp)
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 4, CURRENT_TIMESTAMP);
+(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 1, CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 2
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
@@ -900,7 +908,7 @@ VALUES
 -- Trả lời vào comment id = 7
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
 VALUES
-(2, 1, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 7, CURRENT_TIMESTAMP);
+(2, 1, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 2, CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 3
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
@@ -1092,49 +1100,94 @@ INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Bộ nhớ 
 INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Chọn hãng', 3, CURRENT_TIMESTAMP);
 INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Giá', 4, CURRENT_TIMESTAMP);
 
+---- Filter Options cho category = 'Điện thoại' (id = 1)
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('4 GB', 'bang-4', 1, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('8 GB', 'bang-8', 1, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('64 GB', 'bang-64', 2, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('128 GB', 'bang-128', 2, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('Samsung', 'chua-Samsung', 3, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('Apple', 'chua-Apple', 3, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('Dưới 5 triệu', 'duoi-5000000', 4, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('5 - 10 triệu', '5000000-10000000', 4, 1, CURRENT_TIMESTAMP);
+--
+---- Filter Options cho category = 'Laptop' (id = 3)
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('8 GB', 'bang-8', 1, 3, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('16 GB', 'bang-16', 1, 3, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('256 GB SSD', 'bang-256', 2, 3, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('512 GB SSD', 'bang-512', 2, 3, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('Dell', 'chua-Dell', 3, 3, CURRENT_TIMESTAMP);
+--
+--INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
+--VALUES ('Asus', 'chua-Asus', 3, 3, CURRENT_TIMESTAMP);
+
 -- Filter Options cho category = 'Điện thoại' (id = 1)
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('4 GB', 'bang-4', 1, 1, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('4 GB', 'bang-4', 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('8 GB', 'bang-8', 2, 1, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('8 GB', 'bang-8', 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('64 GB', 'bang-64', 1, 2, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('64 GB', 'bang-64', 2, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('128 GB', 'bang-128', 2, 2, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('128 GB', 'bang-128', 2, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('Samsung', 'chua-Samsung', 1, 3, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Samsung', 'chua-Samsung', 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('Apple', 'chua-Apple', 2, 3, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple', 'chua-Apple', 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('Dưới 5 triệu', 'duoi-5000000', 1, 4, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Dưới 5 triệu', 'duoi-5000000', 4, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('5 - 10 triệu', '5000000-10000000', 2, 4, 1, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('5 - 10 triệu', '5000000-10000000', 4, CURRENT_TIMESTAMP);
 
 -- Filter Options cho category = 'Laptop' (id = 3)
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('8 GB', 'bang-8', 1, 1, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('8 GB', 'bang-8', 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('16 GB', 'bang-16', 2, 1, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('16 GB', 'bang-16', 1, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('256 GB SSD', 'bang-256', 1, 2, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('256 GB SSD', 'bang-256', 2, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('512 GB SSD', 'bang-512', 2, 2, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('512 GB SSD', 'bang-512', 2, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('Dell', 'chua-Dell', 1, 3, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Dell', 'chua-Dell', 3, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, sort_order, product_filter_id, category_id, created_at)
-VALUES ('Asus', 'chua-Asus', 2, 3, 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Asus', 'chua-Asus', 3, CURRENT_TIMESTAMP);
+
 
 
 

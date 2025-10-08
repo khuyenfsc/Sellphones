@@ -1,15 +1,13 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminAttributeFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductFilterFilterRequest;
-import com.sellphones.entity.product.Attribute;
 import com.sellphones.entity.product.ProductFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class AdminProductFilterSpecification {
+public class AdminProductFilterSpecificationBuilder {
     public static Specification<ProductFilter> build(AdminProductFilterFilterRequest request){
         Specification<ProductFilter> spec = (root, query, cb) -> cb.conjunction();
 

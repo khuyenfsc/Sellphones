@@ -6,19 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "filter_option")
 public class FilterOption extends BaseEntity<Long> {
 
     private String name;
-
-    private Attribute attribute;
-
 
     @Column(name = "filter_condition")
     private String condition;

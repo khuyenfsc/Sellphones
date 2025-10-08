@@ -42,7 +42,7 @@ public class AdminBrandController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-brand/{id}")
+    @PutMapping("/edit-brand/{id}")
     public ResponseEntity<CommonResponse> editBrand(
             @RequestPart("brand")String brandJson,
             @PathVariable Long id,

@@ -24,11 +24,11 @@ public class ProductFilter extends BaseEntity<Long> {
 
     private String name;
 
-//    @ManyToOne
-//    @JoinColumn(name = "attribute_id", nullable = true)
-//    private Attribute attribute;
+    @ManyToOne
+    @JoinColumn(name = "attribute_id", nullable = true)
+    private Attribute attribute;
 
-    @OneToMany(mappedBy = "productFilter")
+    @OneToMany(mappedBy = "productFilter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FilterOption> filterOptions = new ArrayList<>();
 
     @ManyToOne

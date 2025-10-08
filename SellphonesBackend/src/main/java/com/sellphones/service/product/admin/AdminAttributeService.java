@@ -9,8 +9,8 @@ public interface AdminAttributeService {
     void addAttribute(AdminAttributeRequest request);
     void editAttribute(AdminAttributeRequest request, Long id);
     void deleteAttribute(Long id);
-    List<AdminProductAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeValueId);
-    void addAttributeValue(AdminProductAttributeValueRequest request, Long attributeId);
-    void editAttributeValue(AdminProductAttributeValueRequest request, Long attributeId);
+    List<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeValueId);
+    void addAttributeValue(AdminAttributeValueRequest request, Long attributeId);
+    void editAttributeValue(AdminAttributeValueRequest request, Long attributeId);
     void deleteAttributeValue(Long attributeValueId);
 }

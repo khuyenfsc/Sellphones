@@ -51,7 +51,7 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-product/{productId}")
+    @PutMapping("/edit-product/{productId}")
     public ResponseEntity<CommonResponse> editProduct(
             @RequestPart("product") String productJson,
             @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
@@ -117,7 +117,7 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/edit-product-variant/{productVariantId}")
+    @PutMapping("/edit-product-variant/{productVariantId}")
     public ResponseEntity<CommonResponse> editProductVariant(
             @RequestPart("product_variant") String productVariantJson,
             @RequestPart(name = "file", required = false) MultipartFile file,

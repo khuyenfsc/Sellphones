@@ -1,6 +1,5 @@
 package com.sellphones.service.product.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.dto.product.response.ProductVariantResponse;
@@ -14,7 +13,7 @@ import com.sellphones.repository.product.*;
 import com.sellphones.repository.promotion.GiftProductRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.service.file.FileStorageService;
-import com.sellphones.specification.admin.AdminProductVariantSpecification;
+import com.sellphones.specification.admin.AdminProductVariantSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
@@ -189,7 +188,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<ProductVariant> spec = AdminProductVariantSpecification.build(request, productId);
+        Specification<ProductVariant> spec = AdminProductVariantSpecificationBuilder.build(request, productId);
 
         Page<ProductVariant> productVariantPage = productVariantRepository.findAll(spec, pageable);
 

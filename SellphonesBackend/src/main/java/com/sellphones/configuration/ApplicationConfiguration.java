@@ -1,14 +1,8 @@
 package com.sellphones.configuration;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.sellphones.mapper.FilterOptionToAdminFilterOptionResponseConverter;
 import com.sellphones.mapper.ReviewToReviewResponsePropertyMap;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +13,7 @@ public class ApplicationConfiguration {
     public ModelMapper modelMapper(){
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.addMappings(new ReviewToReviewResponsePropertyMap());
+        modelMapper.addConverter(new FilterOptionToAdminFilterOptionResponseConverter());
         return modelMapper;
     }
 

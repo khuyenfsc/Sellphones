@@ -5,7 +5,7 @@ import com.sellphones.entity.product.*;
 import org.springframework.data.jpa.domain.Specification;
 
 
-public class AdminProductVariantSpecification {
+public class AdminProductVariantSpecificationBuilder {
 
     public static Specification<ProductVariant> build(AdminProductVariantFilterRequest request, Long productId){
         Specification<ProductVariant> spec = (root, query, cb) -> cb.conjunction();
