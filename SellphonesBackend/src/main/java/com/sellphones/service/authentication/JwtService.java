@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -62,7 +63,7 @@ public class JwtService {
                     .claim("role", roleName)
                     .claim("authorities", authentication.getAuthorities().stream()
                             .map(GrantedAuthority::getAuthority)
-                            .toList())
+                            .collect(Collectors.joining(",")))
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + expiration))
                     .jwtID(UUID.randomUUID().toString())

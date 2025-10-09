@@ -1,19 +1,25 @@
 package com.sellphones.specification;
 
+import com.sellphones.dto.product.request.ReviewFilterRequest;
 import com.sellphones.entity.product.Review;
+import com.sellphones.entity.product.ReviewStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ReviewSpecificationBuilder {
 
-    public static Specification<Review> build(Long productVariantId, Boolean hasPhotos, Integer ratingScore){
+    public static Specification<Review> build(ReviewFilterRequest request){
 
         Specification<Review> spec = (root, query, cb) -> cb.conjunction();
-        spec = spec.and(hasProductVariantId(productVariantId));
-        if(hasPhotos != null){
-            spec = spec.and(hasPhotos(hasPhotos));
+
+        spec = spec.and(hasProductVariantId(request.getProductVariantId()));
+
+        spec = spec.and(hasStatus(ReviewStatus.APPROVED));
+
+        if(request.getHasPhotos() != null){
+            spec = spec.and(hasPhotos(request.getHasPhotos()));
         }
-        if(ratingScore != null){
-            spec = spec.and(hasRatingScore(ratingScore));
+        if(request.getRatingScore() != null){
+            spec = spec.and(hasRatingScore(request.getRatingScore()));
         }
 
         return spec;
@@ -39,4 +45,7 @@ public class ReviewSpecificationBuilder {
         return (root, query, cb) -> cb.equal(root.get("ratingScore"), ratingScore);
     }
 
+    public static Specification<Review> hasStatus(ReviewStatus status) {
+        return (root, query, cb) -> cb.equal(root.get("status"), status);
+    }
 }

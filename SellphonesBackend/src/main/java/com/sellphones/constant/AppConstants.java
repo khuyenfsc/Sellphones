@@ -3,6 +3,7 @@ package com.sellphones.constant;
 public class AppConstants {
 
     public final static String[] PUBLIC_ENDPOINTS = {
+            "/api/v1/test/**",
             "/api/v1/products/**",
             "/api/v1/categories/**",
             "/api/v1/comments",

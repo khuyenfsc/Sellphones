@@ -20,6 +20,11 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --  FOREIGN KEY (attribute_id) REFERENCES attribute(id)
 --  ON DELETE SET NULL;
 
+--ALTER TABLE customer_order
+--  ADD CONSTRAINT fk_customer_order_customer_info
+--  FOREIGN KEY (customer_info_id) REFERENCES customer_info(id)
+--  ON DELETE SET NULL;
+
 --Xóa fk cũ r cấu hình lại nhớ test cẩn thận với các method delete sau khi chuyển sang db khác.
 --ALTER TABLE product_category
 --DROP CONSTRAINT fk_product_category_product,
@@ -201,17 +206,30 @@ INSERT INTO permission (name, code,  created_at)
 VALUES
 ('View', 'CATALOG.PRODUCTS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'CATALOG.PRODUCTS.CREATE', CURRENT_TIMESTAMP),
-('Copy',   'CATALOG.PRODUCTS.COPY', CURRENT_TIMESTAMP),
 ('Edit',   'CATALOG.PRODUCTS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CATALOG.PRODUCTS.DELETE', CURRENT_TIMESTAMP);
+
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
 ('View', 'CATALOG.PRODUCT_FILTERS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'CATALOG.PRODUCT_FILTERS.CREATE', CURRENT_TIMESTAMP),
-('Copy',   'CATALOG.PRODUCT_FILTERS.COPY', CURRENT_TIMESTAMP),
 ('Edit',   'CATALOG.PRODUCT_FILTERS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CATALOG.PRODUCT_FILTERS.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'INVENTORY.SUPPLIERS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'ỊNVENTORY.SUPPLIERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'INVENTORY.SUPPLIERS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'INVENTORY.SUPPLIERS.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'INVENTORY.SUPPLIERS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'ỊNVENTORY.SUPPLIERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'INVENTORY.SUPPLIERS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'INVENTORY.SUPPLIERS.DELETE', CURRENT_TIMESTAMP);
 -- Categories
 --INSERT INTO permission (name, code, parent_permission_id, created_at)
 --VALUES ('Categories', 'CATALOG.CATEGORIES',
@@ -248,6 +266,7 @@ VALUES
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
+('View', 'CLIENTS.CUSTOMERS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'CLIENTS.CUSTOMERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'CLIENTS.CUSTOMERS.EDIT',   CURRENT_TIMESTAMP),
 ('Delete', 'CLIENTS.CUSTOMERS.DELETE',CURRENT_TIMESTAMP);
@@ -259,6 +278,7 @@ VALUES
 
 INSERT INTO permission (name, code, created_at)
 VALUES
+('View', 'CLIENTS.ADDRESSES.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'CLIENTS.ADDRESSES.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'CLIENTS.ADDRESSES.EDIT',  CURRENT_TIMESTAMP),
 ('Delete', 'CLIENTS.ADDRESSES.DELETE', CURRENT_TIMESTAMP);
@@ -437,27 +457,40 @@ SELECT 4, id FROM permission WHERE code like '%SHIPMENTS%';
 
 
 
-INSERT INTO address (id, street, ward, district, province)
+INSERT INTO address (street, ward, district, province, address_type)
 VALUES
-(1, '123 Le Loi', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh'),
-(2, '45 Tran Hung Dao', 'An Hai Bac', 'Son Tra', 'Da Nang'),
-(3, '67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi'),
-(4, '89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue'),
-(5, '12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa'),
-(6, '34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang'),
-(7, '56 Ly Thuong Kiet', 'Tan Binh', 'Hai Ba Trung', 'Ha Noi'),
-(8, '78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh');
+('123 Le Loi', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER'),
+( '45 Tran Hung Dao', 'An Hai Bac', 'Son Tra', 'Da Nang', 'CUSTOMER'),
+( '67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi', 'CUSTOMER'),
+( '89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue', 'SUPPLIER'),
+( '12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa', 'CUSTOMER'),
+( '34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang', 'SUPPLIER'),
+( '56 Ly Thuong Kiet', 'Tan Binh', 'Hai Ba Trung', 'Ha Noi', 'SUPPLIER'),
+( '78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER');
 
-INSERT INTO customer_info (id, full_name, phone_number, address_id, cccd, date_of_birth)
+INSERT INTO supplier (name, contact_name, phone_number, email, address_id, tax_code, supplier_status, created_at, updated_at)
 VALUES
-(1, 'Nguyen Van A', '0901000001', 1, '012345678901', '1995-01-15'),
-(2, 'Tran Thi B', '0902000002', 2, '012345678902', '1992-05-20'),
-(3, 'Le Van C', '0903000003', 3, '012345678903', '1998-07-12'),
-(4, 'Pham Thi D', '0904000004', 4, NULL, '1990-03-05'),
-(5, 'Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22'),
-(6, 'Do Thi F', '0906000006', 6, NULL, '1997-09-10'),
-(7, 'Phan Van G', '0907000007', 7, '012345678907', '1999-12-30'),
-(8, 'Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14');
+-- Nhà cung cấp ở Huế
+('Hue Trading Co., Ltd', 'Nguyen Van A', '0912345678', 'contact@huetrading.vn', 4, '3301234567', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+-- Nhà cung cấp ở Đà Nẵng
+('Da Nang Electronics', 'Tran Thi B', '0932123456', 'support@danangelec.vn', 6, '0407654321', 'INACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+-- Nhà cung cấp ở Hà Nội
+('Ha Noi Food Supply', 'Le Van C', '0987654321', 'info@hanoifood.vn', 7, '0109876543', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+
+INSERT INTO customer_info (id, full_name, phone_number, address_id, cccd, date_of_birth, user_id)
+VALUES
+(1, 'Nguyen Van A', '0901000001', 1, '012345678901', '1995-01-15', 1), -- user_id = Nguyen Van A
+(2, 'Tran Thi B', '0902000002', 2, '012345678902', '1992-05-20', 2), -- user_id = Tran Thi B
+(3, 'Le Van C', '0903000003', 3, '012345678903', '1998-07-12', 3), -- user_id = Le Van C
+(4, 'Pham Thi D', '0904000004', 4, NULL, '1990-03-05', 4), -- user_id = Pham Thi D
+(5, 'Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22', 5), -- user_id = Hoang Van E
+(6, 'Do Thi F', '0906000006', 6, NULL, '1997-09-10', 6), -- user_id = Vu Thi F (FEMALE, Customer)
+(7, 'Phan Van G', '0907000007', 7, '012345678907', '1999-12-30', 7), -- user_id = Do Van G (Sales Manager)
+(8, 'Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14', 8); -- user_id = Nguyen Thi H (Order Admin)
+
 
 
 
@@ -831,47 +864,51 @@ VALUES
 
 
 -- Reviews for variant 1
-INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(1, 'Sản phẩm rất tốt, pin khỏe.', 5, 1, CURRENT_TIMESTAMP),
-(2, 'Máy chạy mượt, đáng tiền.', 4, 1, CURRENT_TIMESTAMP),
-(3, 'Hơi nóng khi chơi game.', 3, 1, CURRENT_TIMESTAMP),
-(4, 'Thiết kế đẹp, cầm chắc tay.', 5, 1, CURRENT_TIMESTAMP),
-(5, 'Camera ổn nhưng pin hơi yếu.', 3, 1, CURRENT_TIMESTAMP);
+(1, 'Sản phẩm rất tốt, pin khỏe.', 5, 'APPROVED', 1, CURRENT_TIMESTAMP),
+(2, 'Máy chạy mượt, đáng tiền.', 4, 'APPROVED', 1, CURRENT_TIMESTAMP),
+(3, 'Hơi nóng khi chơi game.', 3, 'PENDING', 1, CURRENT_TIMESTAMP),
+(4, 'Thiết kế đẹp, cầm chắc tay.', 5, 'APPROVED', 1, CURRENT_TIMESTAMP),
+(5, 'Camera ổn nhưng pin hơi yếu.', 3, 'DISAPPROVED', 1, CURRENT_TIMESTAMP);
 
 
 -- Reviews for variant 2
-INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(2, 'Màu sắc đẹp, giao hàng nhanh.', 4, 2, CURRENT_TIMESTAMP),
-(3, 'Màn hình sáng, hiển thị tốt.', 5, 2, CURRENT_TIMESTAMP),
-(6, 'Loa ngoài hơi nhỏ.', 3, 2, CURRENT_TIMESTAMP),
-(7, 'Pin trâu, sạc nhanh.', 5, 2, CURRENT_TIMESTAMP),
-(8, 'Máy hơi nặng, không thoải mái.', 2, 2, CURRENT_TIMESTAMP);
+(2, 'Màu sắc đẹp, giao hàng nhanh.', 4, 'APPROVED', 2, CURRENT_TIMESTAMP),
+(3, 'Màn hình sáng, hiển thị tốt.', 5, 'APPROVED', 2, CURRENT_TIMESTAMP),
+(6, 'Loa ngoài hơi nhỏ.', 3, 'PENDING', 2, CURRENT_TIMESTAMP),
+(7, 'Pin trâu, sạc nhanh.', 5, 'APPROVED', 2, CURRENT_TIMESTAMP),
+(8, 'Máy hơi nặng, không thoải mái.', 2, 'DISAPPROVED', 2, CURRENT_TIMESTAMP);
+
 
 -- Reviews for variant 3
-INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(1, 'Giá hợp lý, cấu hình mạnh.', 4, 3, CURRENT_TIMESTAMP),
-(4, 'Cảm ứng mượt, không bị lag.', 5, 3, CURRENT_TIMESTAMP),
-(5, 'Pin xuống khá nhanh.', 3, 3, CURRENT_TIMESTAMP),
-(6, 'Thiết kế tinh tế, sang trọng.', 5, 3, CURRENT_TIMESTAMP);
+(1, 'Giá hợp lý, cấu hình mạnh.', 4, 'APPROVED', 3, CURRENT_TIMESTAMP),
+(4, 'Cảm ứng mượt, không bị lag.', 5, 'APPROVED', 3, CURRENT_TIMESTAMP),
+(5, 'Pin xuống khá nhanh.', 3, 'PENDING', 3, CURRENT_TIMESTAMP),
+(6, 'Thiết kế tinh tế, sang trọng.', 5, 'APPROVED', 3, CURRENT_TIMESTAMP);
+
 
 -- Reviews for variant 4
-INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(2, 'Chụp ảnh đẹp, nhiều tính năng.', 5, 4, CURRENT_TIMESTAMP),
-(7, 'Tốc độ xử lý tốt.', 4, 4, CURRENT_TIMESTAMP),
-(8, 'Khá nóng khi chơi game nặng.', 3, 4, CURRENT_TIMESTAMP),
-(3, 'Màn hình lớn, dễ xem phim.', 5, 4, CURRENT_TIMESTAMP);
+(2, 'Chụp ảnh đẹp, nhiều tính năng.', 5, 'APPROVED', 4, CURRENT_TIMESTAMP),
+(7, 'Tốc độ xử lý tốt.', 4, 'APPROVED', 4, CURRENT_TIMESTAMP),
+(8, 'Khá nóng khi chơi game nặng.', 3, 'PENDING', 4, CURRENT_TIMESTAMP),
+(3, 'Màn hình lớn, dễ xem phim.', 5, 'APPROVED', 4, CURRENT_TIMESTAMP);
+
 
 -- Reviews for variant 5
-INSERT INTO review (user_id, content, rating_score, product_variant_id, created_at)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(1, 'Sản phẩm mới, đóng gói cẩn thận.', 5, 5, CURRENT_TIMESTAMP),
-(4, 'Dung lượng pin chưa như kỳ vọng.', 3, 5, CURRENT_TIMESTAMP),
-(5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 5, CURRENT_TIMESTAMP),
-(6, 'Thiết kế đẹp, nhẹ.', 5, 5, CURRENT_TIMESTAMP);
+(1, 'Sản phẩm mới, đóng gói cẩn thận.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP),
+(4, 'Dung lượng pin chưa như kỳ vọng.', 3, 'PENDING', 5, CURRENT_TIMESTAMP),
+(5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 'APPROVED', 5, CURRENT_TIMESTAMP),
+(6, 'Thiết kế đẹp, nhẹ.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP);
+
 
 INSERT INTO review_image (review_id, image_name)
 VALUES
@@ -882,38 +919,39 @@ VALUES
 (3, 'https://example.com/review3-img2.jpg');
 
 -- Bình luận gốc (parent_comment_id = NULL)
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, CURRENT_TIMESTAMP),
-(2, 2, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, CURRENT_TIMESTAMP),
-(3, 3, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, CURRENT_TIMESTAMP);
+(1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, 'APPROVED', CURRENT_TIMESTAMP),
+(2, 2, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, 'PENDING', CURRENT_TIMESTAMP),
+(3, 3, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, 'APPROVED', CURRENT_TIMESTAMP);
 
 -- Bình luận trả lời (child comment cho id = 1)
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, CURRENT_TIMESTAMP),
-(5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, CURRENT_TIMESTAMP);
+(4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, 'PENDING', CURRENT_TIMESTAMP),
+(5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, 'APPROVED', CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 4 (reply lồng 2 cấp)
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 1, CURRENT_TIMESTAMP);
+(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 4, 'APPROVED', CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 2
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(6, 1, 'Theo mình thì so với tính năng thì giá hợp lý.', 2, CURRENT_TIMESTAMP),
-(7, 1, 'Có shop nào bán rẻ hơn không?', 2, CURRENT_TIMESTAMP);
+(6, 2, 'Theo mình thì so với tính năng thì giá hợp lý.', 2, 'APPROVED', CURRENT_TIMESTAMP),
+(7, 2, 'Có shop nào bán rẻ hơn không?', 2, 'PENDING', CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 7
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(2, 1, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 2, CURRENT_TIMESTAMP);
+(2, 2, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 7, 'APPROVED', CURRENT_TIMESTAMP);
 
 -- Trả lời vào comment id = 3
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, created_at)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(8, 1, 'Chuẩn, shipper cũng thân thiện nữa.', 3, CURRENT_TIMESTAMP);
+(8, 3, 'Chuẩn, shipper cũng thân thiện nữa.', 3, 'APPROVED', CURRENT_TIMESTAMP);
+
 
 
 INSERT INTO attribute (name, created_at) VALUES ('RAM', CURRENT_TIMESTAMP);

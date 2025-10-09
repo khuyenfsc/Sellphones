@@ -3,6 +3,7 @@ package com.sellphones.entity.customer;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.installment.InstallmentOrder;
+import com.sellphones.entity.user.User;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,10 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "customer_info")
 public class CustomerInfo extends BaseEntity<Long> {
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String fullName;

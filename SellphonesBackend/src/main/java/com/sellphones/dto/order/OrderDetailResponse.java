@@ -1,8 +1,7 @@
 package com.sellphones.dto.order;
 
-import com.sellphones.dto.customer.CustomerInfoResponse;
+import com.sellphones.dto.customer.AdminCustomerInfo_OrderResponse;
 import com.sellphones.dto.payment.PaymentMethodResponse;
-import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.entity.payment.PaymentStatus;
 import lombok.AllArgsConstructor;
@@ -32,6 +31,6 @@ public class OrderDetailResponse {
 
     private PaymentStatus paymentStatus;
 
-    private CustomerInfoResponse customerInfo;
+    private AdminCustomerInfo_OrderResponse customerInfo;
 
 }

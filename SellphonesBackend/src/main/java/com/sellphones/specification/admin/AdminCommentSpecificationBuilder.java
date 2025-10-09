@@ -3,7 +3,6 @@ package com.sellphones.specification.admin;
 import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.entity.product.CommentStatus;
-import com.sellphones.entity.product.Review;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -12,6 +11,10 @@ import java.time.LocalTime;
 public class AdminCommentSpecificationBuilder {
     public static Specification<Comment> build(AdminCommentFilterRequest request){
         Specification<Comment> spec = (root, query, cb) -> cb.conjunction();
+
+        if(request.getParentId() != null){
+            spec = spec.and(hasParentId(request.getParentId()));
+        }
 
         if(request.getKeyword() != null){
             spec = spec.and(containsKeyword(request.getKeyword()));
@@ -35,10 +38,6 @@ public class AdminCommentSpecificationBuilder {
 
         if(request.getIsReplied() != null){
             spec = spec.and(isReplied(request.getIsReplied()));
-        }
-
-        if(request.getParentId() != null){
-            spec = spec.and(hasParentId(request.getParentId()));
         }
 
         return spec;

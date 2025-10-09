@@ -2,6 +2,7 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.request.ReviewFilterRequest;
 import com.sellphones.dto.product.request.ReviewRequest;
 import com.sellphones.dto.product.response.ReviewResponse;
 import com.sellphones.entity.product.Review;
@@ -26,14 +27,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getReviewsByConditions(
-            @RequestParam("product_variant_id") Long productVariantId,
-            @RequestParam(value = "hasPhotos", required = false) Boolean hasPhotos,
-            @RequestParam(value = "rating_score", required = false) Integer ratingScore,
-            @RequestParam(value = "page") Integer page,
-            @RequestParam("size") Integer size
-    ){
-        PageResponse<ReviewResponse> reviews = reviewService.getReviewsByConditions(productVariantId, hasPhotos, ratingScore, page, size);
+    public ResponseEntity<CommonResponse> getReviewsByConditions(ReviewFilterRequest request){
+        PageResponse<ReviewResponse> reviews = reviewService.getReviewsByConditions(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", reviews);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));

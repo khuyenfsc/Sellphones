@@ -3,6 +3,7 @@ package com.sellphones.service.product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.request.ReviewFilterRequest;
 import com.sellphones.dto.product.request.ReviewRequest;
 import com.sellphones.dto.product.response.ReviewResponse;
 import com.sellphones.entity.product.Product;
@@ -58,11 +59,12 @@ public class ReviewServiceImpl implements ReviewService{
     private final String reviewFolderName = "reviews";
 
     @Override
-    public PageResponse<ReviewResponse> getReviewsByConditions(Long productVariantId, Boolean hasPhotos, Integer ratingScore, Integer page, Integer size) {
-        Specification<Review> spec = ReviewSpecificationBuilder.build(productVariantId, hasPhotos, ratingScore);
+    public PageResponse<ReviewResponse> getReviewsByConditions(ReviewFilterRequest request) {
+        System.out.println("review filter " + request.getProductVariantId());
+        Specification<Review> spec = ReviewSpecificationBuilder.build(request);
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdAt");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
         List<ReviewResponse> responses = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();

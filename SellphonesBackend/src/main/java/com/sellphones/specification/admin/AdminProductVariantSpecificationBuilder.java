@@ -16,7 +16,7 @@ public class AdminProductVariantSpecificationBuilder {
         }
 
         if(request.getSkuKeyword() != null){
-            spec = spec.and(containsSkuHasKeyword(request.getSkuKeyword()));
+            spec = spec.and(hasSkuContain(request.getSkuKeyword()));
         }
 
         if(request.getStatus() != null){
@@ -34,7 +34,7 @@ public class AdminProductVariantSpecificationBuilder {
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
     }
 
-    public static Specification<ProductVariant> containsSkuHasKeyword(String skuKeyword){
+    public static Specification<ProductVariant> hasSkuContain(String skuKeyword){
         return (root, query, cb) -> cb.like(cb.lower(root.get("sku")), "%" + skuKeyword.toLowerCase() + "%");
     }
 

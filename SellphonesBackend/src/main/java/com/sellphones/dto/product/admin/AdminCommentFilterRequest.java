@@ -19,7 +19,7 @@ public class AdminCommentFilterRequest {
 
     private String keyword;
 
-    private Long UserId;
+    private Long userId;
 
     private Long productId;
 

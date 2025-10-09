@@ -1,6 +1,7 @@
 package com.sellphones.dto.product.admin;
 
 import com.sellphones.dto.product.response.CommentUserResponse;
+import com.sellphones.entity.product.CommentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,13 @@ public class AdminCommentResponse {
 
     private String content;
 
+    private CommentStatus status;
+
+    private Boolean isReplied;
+
     private AdminCommentProductResponse product;
+
+    private AdminParentCommentResponse parentComment;
 
     private LocalDateTime createdAt;
 

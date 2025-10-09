@@ -33,7 +33,7 @@ public class AdminOrderSpecificationBuilder {
         }
 
         if(request.getCustomerName() != null){
-            spec = spec.and(containsCustomerName(request.getCustomerName()));
+            spec = spec.and(hasCustomerNameContain(request.getCustomerName()));
         }
 
         if(request.getPaymentStatus() != null){
@@ -65,7 +65,7 @@ public class AdminOrderSpecificationBuilder {
         return (root, query, cb) -> cb.equal(root.get("paymentMethod").get("PaymentMethodType"), paymentMethodType);
     }
 
-    public static Specification<Order> containsCustomerName(String customerName){
+    public static Specification<Order> hasCustomerNameContain(String customerName){
         return (root, query, cb) -> cb.like(root.get("customerInfo").get("fullName"), customerName + "%");
     }
 
