@@ -1,7 +1,6 @@
 package com.sellphones.dto.product.admin;
 
 import com.sellphones.dto.address.AdminAddressResponse;
-import com.sellphones.entity.address.Address;
 import com.sellphones.entity.product.SupplierStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

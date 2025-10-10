@@ -1,9 +1,9 @@
-package com.sellphones.controller.product.admin;
+package com.sellphones.controller.customer;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.customer.AdminCustomerInfoFilterRequest;
 import com.sellphones.dto.customer.AdminCustomerInfoResponse;
-import com.sellphones.service.product.admin.AdminCustomerService;
+import com.sellphones.service.customer.admin.AdminCustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

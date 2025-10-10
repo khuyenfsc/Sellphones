@@ -1,4 +1,4 @@
-package com.sellphones.service.product.admin;
+package com.sellphones.service.customer.admin;
 
 import com.sellphones.dto.customer.AdminCustomerInfoFilterRequest;
 import com.sellphones.dto.customer.AdminCustomerInfoResponse;

@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdminStockEntryResponse {
 
+    private Long id;
+
     private AdminStockEntry_ProductVariantResponse productVariant;
 
     private Long quantity;

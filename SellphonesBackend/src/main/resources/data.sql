@@ -219,10 +219,10 @@ VALUES
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
-('View', 'INVENTORY.SUPPLIERS.VIEW', CURRENT_TIMESTAMP),
-('Create', 'ỊNVENTORY.SUPPLIERS.CREATE', CURRENT_TIMESTAMP),
-('Edit',   'INVENTORY.SUPPLIERS.EDIT', CURRENT_TIMESTAMP),
-('Delete', 'INVENTORY.SUPPLIERS.DELETE', CURRENT_TIMESTAMP);
+('View', 'CATALOG.WARRANTIES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CATALOG.WARRANTIES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.WARRANTIES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.WARRANTIES.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
@@ -230,6 +230,13 @@ VALUES
 ('Create', 'ỊNVENTORY.SUPPLIERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'INVENTORY.SUPPLIERS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'INVENTORY.SUPPLIERS.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'INVENTORY.STOCK_ENTRIES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'INVENTORY.STOCK_ENTRIES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'INVENTORY.STOCK_ENTRIES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'INVENTORY.STOCK_ENTRIES.DELETE', CURRENT_TIMESTAMP);
 -- Categories
 --INSERT INTO permission (name, code, parent_permission_id, created_at)
 --VALUES ('Categories', 'CATALOG.CATEGORIES',
@@ -429,6 +436,8 @@ INSERT INTO role_permission (role_id, permission_id)
 SELECT 1, id FROM permission WHERE code like 'REPORTING%';
 INSERT INTO role_permission (role_id, permission_id)
 SELECT 1, id FROM permission WHERE code like 'SETTINGS%';
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'INVENTORY%';
 
 INSERT INTO role_permission (role_id, permission_id)
 SELECT 4, id FROM permission WHERE code like '%SHIPMENTS%';
@@ -688,16 +697,28 @@ INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id)
 (4, 9),
 (4, 10);
 
-
-
-
-INSERT INTO warranty (id, name, number_of_months, val, description)
+INSERT INTO stock_entry (product_variant_id, quantity, purchase_price, import_date, supplier_id, created_at)
 VALUES
-(1, 'Bảo hành 12 tháng chính hãng', 12, 0, 'Bảo hành phần cứng chính hãng trong 12 tháng'),
-(2, 'Bảo hành mở rộng 24 tháng', 24, 600000, 'Mua thêm 24 tháng bảo hành mở rộng'),
-(3, 'Bảo hành rơi vỡ, vào nước 12 tháng', 12, 900000, 'Bao gồm rơi vỡ, vào nước 1 lần/năm'),
-(4, 'Bảo hành VIP 36 tháng', 36, 1800000, 'Bảo hành toàn diện 36 tháng, 1 đổi 1 trong 30 ngày'),
-(5, 'Bảo hành pin 18 tháng', 18, 300000, 'Thay pin miễn phí 1 lần trong 18 tháng');
+(1,  50,  150000, '2025-10-01', 1, CURRENT_TIMESTAMP),
+(2,  75,  180000, '2025-10-02', 2, CURRENT_TIMESTAMP),
+(3, 100,  200000, '2025-10-03', 3, CURRENT_TIMESTAMP),
+(4,  60,  175000, '2025-10-04', 1, CURRENT_TIMESTAMP),
+(5,  90,  220000, '2025-10-05', 2, CURRENT_TIMESTAMP),
+(6,  40,  140000, '2025-10-06', 3, CURRENT_TIMESTAMP),
+(7, 120,  250000, '2025-10-07', 1, CURRENT_TIMESTAMP),
+(8,  80,  210000, '2025-10-08', 2, CURRENT_TIMESTAMP),
+(9,  55,  160000, '2025-10-09', 3, CURRENT_TIMESTAMP),
+(10, 70,  190000, '2025-10-10', 1, CURRENT_TIMESTAMP);
+
+
+
+INSERT INTO warranty (name, months, price, description)
+VALUES
+( 'Bảo hành 12 tháng chính hãng', 12, 0, 'Bảo hành phần cứng chính hãng trong 12 tháng'),
+( 'Bảo hành mở rộng 24 tháng', 24, 600000, 'Mua thêm 24 tháng bảo hành mở rộng'),
+( 'Bảo hành rơi vỡ, vào nước 12 tháng', 12, 900000, 'Bao gồm rơi vỡ, vào nước 1 lần/năm'),
+( 'Bảo hành VIP 36 tháng', 36, 1800000, 'Bảo hành toàn diện 36 tháng, 1 đổi 1 trong 30 ngày'),
+( 'Bảo hành pin 18 tháng', 18, 300000, 'Thay pin miễn phí 1 lần trong 18 tháng');
 
 
 -- iPhone 15B - 128G - Black

@@ -1,13 +1,10 @@
-package com.sellphones.controller.product.admin;
+package com.sellphones.controller.address;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.address.AdminAddressFilterRequest;
 import com.sellphones.dto.address.AdminAddressRequest;
 import com.sellphones.dto.address.AdminAddressResponse;
-import com.sellphones.dto.customer.AdminCustomerInfoFilterRequest;
-import com.sellphones.dto.customer.AdminCustomerInfoResponse;
-import com.sellphones.dto.product.admin.AdminAttributeRequest;
-import com.sellphones.service.product.admin.AdminAddressService;
+import com.sellphones.service.address.admin.AdminAddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

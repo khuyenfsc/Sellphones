@@ -18,6 +18,8 @@ import java.util.List;
 @Table(name = "warehouse")
 public class Warehouse extends BaseEntity<Long> {
 
+    private String name;
+
     @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;

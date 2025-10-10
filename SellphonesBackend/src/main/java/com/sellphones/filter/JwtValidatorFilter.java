@@ -50,8 +50,6 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
             String username = jwtClaimsSet.getSubject();
             Object authClaim = jwtClaimsSet.getClaim("authorities");
 
-            System.out.println("authorities " + authClaim.toString());
-
             List<GrantedAuthority> authorities = authClaim != null
                     ? AuthorityUtils.commaSeparatedStringToAuthorityList(authClaim.toString())
                     : Collections.emptyList();
@@ -70,7 +68,6 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                 throw new AppException(ErrorCode.UNAUTHORIZED_CUSTOMER_ACCESS);
             }
 
-            System.out.println("authorities " + authorities);
             UserDetails userDetails = new CustomUserDetails(role, username, null, authorities);
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);

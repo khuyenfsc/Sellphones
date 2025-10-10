@@ -33,6 +33,8 @@ public enum ErrorCode {
     ADDRESS_NOT_FOUND("Address not found", HttpStatus.NOT_FOUND),
     SUPPLIER_NOT_FOUND("Supplier not found", HttpStatus.NOT_FOUND),
     PRODUCT_FILTER_NOT_FOUND("Filter not found", HttpStatus.NOT_FOUND),
+    STOCK_ENTRY_NOT_FOUND("Stock entry not found", HttpStatus.NOT_FOUND),
+    WARRANTY_NOT_FOUND("Warranty not found", HttpStatus.NOT_FOUND),
     FILTER_OPTION_NOT_FOUND("Filter option not found", HttpStatus.NOT_FOUND),
     CANNOT_DELETE_CUSTOMER_ADDRESS("Cannot delete address of type 'CUSTOMER'", HttpStatus.BAD_REQUEST),
     PRODUCT_PROMOTION_NOT_FOUND_IN_PRODUCT("Product promotion not found in product", HttpStatus.NOT_FOUND),

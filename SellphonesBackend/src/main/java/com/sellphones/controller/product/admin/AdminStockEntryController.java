@@ -1,17 +1,13 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
-import com.sellphones.dto.product.admin.AdminStockEntryFilterRequest;
-import com.sellphones.dto.product.admin.AdminStockEntryResponse;
-import com.sellphones.dto.product.admin.AdminSupplierFilterRequest;
-import com.sellphones.dto.product.admin.AdminSupplierResponse;
+import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminStockEntryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +25,33 @@ public class AdminStockEntryController {
         List<AdminStockEntryResponse> response = adminStockEntryService.getStockEntries(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @PostMapping("/add-stock-entry")
+    public ResponseEntity<CommonResponse> addStockEntry(@RequestBody @Valid AdminStockEntryRequest request) {
+        adminStockEntryService.addStockEntry(request);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Added stock entry successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @PutMapping("/edit-stock-entry/{id}")
+    public ResponseEntity<CommonResponse> editStockEntry(@RequestBody @Valid AdminStockEntryRequest request, @PathVariable Long id) {
+        adminStockEntryService.editStockEntry(request, id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Edited stock entry successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @DeleteMapping("/delete-stock-entry/{id}")
+    public ResponseEntity<CommonResponse> deleteStockEntry(@PathVariable Long id) {
+        adminStockEntryService.deleteStockEntry(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Deleted stock entry successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

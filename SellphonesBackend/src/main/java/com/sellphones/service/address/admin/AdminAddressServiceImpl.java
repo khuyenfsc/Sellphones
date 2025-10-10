@@ -1,17 +1,14 @@
-package com.sellphones.service.product.admin;
+package com.sellphones.service.address.admin;
 
 import com.sellphones.dto.address.AdminAddressFilterRequest;
 import com.sellphones.dto.address.AdminAddressRequest;
 import com.sellphones.dto.address.AdminAddressResponse;
-import com.sellphones.dto.customer.AdminCustomerInfoResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
-import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.specification.admin.AdminAddressSpecificationBuilder;
-import com.sellphones.specification.admin.AdminCustomerInfoSpecificationBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

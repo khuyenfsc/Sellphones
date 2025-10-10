@@ -1,4 +1,4 @@
-package com.sellphones.service.product.admin;
+package com.sellphones.service.address.admin;
 
 import com.sellphones.dto.address.AdminAddressFilterRequest;
 import com.sellphones.dto.address.AdminAddressRequest;

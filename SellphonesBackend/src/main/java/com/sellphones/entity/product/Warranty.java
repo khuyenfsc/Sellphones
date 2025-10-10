@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
@@ -15,15 +16,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "warranty")
 public class Warranty extends BaseEntity<Long> {
 
     private String name;
 
-    private int numberOfMonths;
+    private Integer months;
 
     @Column(precision = 19, scale = 0)
-    private BigDecimal val;
+    private BigDecimal price;
 
     @Column(columnDefinition = "TEXT")
     private String description;

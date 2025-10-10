@@ -34,19 +34,19 @@ public class AdminStockEntrySpecificationBuilder {
     }
 
     public static Specification<StockEntry> hasVariantNameContain(String variantName){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("productVariantName")), "%" + variantName.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("productVariant").get("productVariantName")), "%" + variantName.toLowerCase() + "%");
     }
 
     public static Specification<StockEntry> hasSupplierNameContain(String supplierName){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("supplierName")), "%" + supplierName.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("supplier").get("name")), "%" + supplierName.toLowerCase() + "%");
     }
 
     public static Specification<StockEntry> hasSupplierEmailContain(String supplierEmail){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("supplierEmail")), "%" + supplierEmail.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("supplier").get("email")), "%" + supplierEmail.toLowerCase() + "%");
     }
 
     public static Specification<StockEntry> hasSupplierPhoneNumberContain(String supplierPhoneNumber){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("supplierPhoneNumber")), "%" + supplierPhoneNumber.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("supplier").get("phoneNumber")), "%" + supplierPhoneNumber.toLowerCase() + "%");
     }
 
     public static Specification<StockEntry> hasImportDateBetween(LocalDate startDate, LocalDate endDate){

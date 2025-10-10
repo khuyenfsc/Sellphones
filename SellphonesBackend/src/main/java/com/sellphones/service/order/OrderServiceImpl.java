@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService{
     private BigDecimal calculateTotalPriceForOrderVariant(CartItem cartItem, Warranty warranty){
         return cartItem.getProductVariant().getPrice()
                 .multiply(new BigDecimal(cartItem.getQuantity()))
-                .add(warranty.getVal().multiply(new BigDecimal(cartItem.getQuantity()))
+                .add(warranty.getPrice().multiply(new BigDecimal(cartItem.getQuantity()))
         );
     }
 
