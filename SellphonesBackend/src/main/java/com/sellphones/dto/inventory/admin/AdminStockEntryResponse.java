@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.admin;
+package com.sellphones.dto.inventory.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ public class AdminStockEntryResponse {
 
     private Long id;
 
-    private AdminStockEntry_ProductVariantResponse productVariant;
+    private AdminStockEntry_InventoryResponse inventory;
 
     private Long quantity;
 
@@ -23,4 +23,6 @@ public class AdminStockEntryResponse {
     private LocalDate importDate;
 
     private AdminStockEntry_SupplierResponse supplier;
+
+//    private AdminWarehouseResponse warehouse;
 }

@@ -27,7 +27,5 @@ public class AdminProductVariantRequest {
 
     private List<Long> attributeValueIds;
 
-    private Long stock;
-
     private List<Long> warrantyIds;
 }

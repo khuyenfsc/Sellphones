@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminStockEntry_SupplierResponse {
-
+public class AdminComment_ProductResponse {
     private Long id;
 
     private String name;
-
 }

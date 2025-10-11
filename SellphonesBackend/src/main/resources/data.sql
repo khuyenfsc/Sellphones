@@ -100,6 +100,16 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
 --ON DELETE CASCADE;
 
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE inventory
+--DROP FOREIGN KEY fk_inventory_warehouse;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE inventory
+--  ADD CONSTRAINT fk_inventory_warehouse
+--  FOREIGN KEY (warehouse_id) REFERENCES warehouse(id)
+--  ON DELETE SET NULL;
+
 
 
 
@@ -226,6 +236,13 @@ VALUES
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
+('View', 'INVENTORY.INVENTORIES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'INVENTORY.INVENTORIES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'INVENTORY.INVENTORIES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'INVENTORY.INVENTORIES.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
 ('View', 'INVENTORY.SUPPLIERS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'ỊNVENTORY.SUPPLIERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'INVENTORY.SUPPLIERS.EDIT', CURRENT_TIMESTAMP),
@@ -237,6 +254,13 @@ VALUES
 ('Create', 'INVENTORY.STOCK_ENTRIES.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'INVENTORY.STOCK_ENTRIES.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'INVENTORY.STOCK_ENTRIES.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'INVENTORY.WAREHOUSES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'INVENTORY.WAREHOUSES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'INVENTORY.WAREHOUSES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'INVENTORY.WAREHOUSES.DELETE', CURRENT_TIMESTAMP);
 -- Categories
 --INSERT INTO permission (name, code, parent_permission_id, created_at)
 --VALUES ('Categories', 'CATALOG.CATEGORIES',
@@ -468,14 +492,37 @@ SELECT 4, id FROM permission WHERE code like '%SHIPMENTS%';
 
 INSERT INTO address (street, ward, district, province, address_type)
 VALUES
+-- CUSTOMER
 ('123 Le Loi', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER'),
-( '45 Tran Hung Dao', 'An Hai Bac', 'Son Tra', 'Da Nang', 'CUSTOMER'),
-( '67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi', 'CUSTOMER'),
-( '89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue', 'SUPPLIER'),
-( '12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa', 'CUSTOMER'),
-( '34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang', 'SUPPLIER'),
-( '56 Ly Thuong Kiet', 'Tan Binh', 'Hai Ba Trung', 'Ha Noi', 'SUPPLIER'),
-( '78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER');
+('45 Tran Hung Dao', 'An Hai Bac', 'Son Tra', 'Da Nang', 'CUSTOMER'),
+('67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi', 'CUSTOMER'),
+('12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa', 'CUSTOMER'),
+('78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER'),
+
+-- SUPPLIER
+('89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue', 'SUPPLIER'),
+('34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang', 'SUPPLIER'),
+('56 Ly Thuong Kiet', 'Tan Binh', 'Hai Ba Trung', 'Ha Noi', 'SUPPLIER'),
+
+-- WAREHOUSE
+('100 Nguyen Van Linh', 'Hoa Thuan Tay', 'Hai Chau', 'Da Nang', 'WAREHOUSE'),
+('200 Pham Van Dong', 'An Hai Bac', 'Son Tra', 'Da Nang', 'WAREHOUSE'),
+('150 Le Duan', 'Ben Thanh', 'Quan 1', 'Ho Chi Minh', 'WAREHOUSE'),
+('250 Tran Phu', 'Dien Bien', 'Ba Dinh', 'Ha Noi', 'WAREHOUSE');
+
+INSERT INTO warehouse (name, address_id)
+SELECT
+    CASE
+        WHEN province = 'Da Nang' THEN 'Kho Đà Nẵng'
+        WHEN province = 'Ho Chi Minh' THEN 'Kho Hồ Chí Minh'
+        WHEN province = 'Ha Noi' THEN 'Kho Hà Nội'
+        ELSE CONCAT('Kho tại ', province)
+    END AS name,
+    id AS address_id
+FROM address
+WHERE address_type = 'WAREHOUSE';
+
+
 
 INSERT INTO supplier (name, contact_name, phone_number, email, address_id, tax_code, supplier_status, created_at, updated_at)
 VALUES
@@ -697,18 +744,56 @@ INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id)
 (4, 9),
 (4, 10);
 
-INSERT INTO stock_entry (product_variant_id, quantity, purchase_price, import_date, supplier_id, created_at)
+INSERT INTO inventory (product_variant_id, warehouse_id, quantity)
 VALUES
+-- Kho Đà Nẵng (warehouse_id = 1)
+(1, 1, 50),
+(2, 1, 250),
+(3, 1, 180),
+(4, 1, 300),
+(5, 1, 95),
+
+-- Kho Hồ Chí Minh (warehouse_id = 2)
+(6, 2, 400),
+(7, 2, 220),
+(8, 2, 310),
+(9, 2, 150),
+(10, 2, 275),
+
+-- Kho Hà Nội (warehouse_id = 3)
+(1, 3, 180),
+(2, 3, 260),
+(3, 3, 190),
+(4, 3, 280),
+(5, 3, 330),
+
+-- Kho Đà Nẵng 2 (warehouse_id = 4)
+(6, 4, 500),
+(7, 4, 440),
+(8, 4, 150),
+(9, 4, 210),
+(10, 4, 360);
+
+INSERT INTO stock_entry (inventory_id, quantity, purchase_price, import_date, supplier_id, created_at)
+VALUES
+-- Nhập hàng vào Kho Đà Nẵng
 (1,  50,  150000, '2025-10-01', 1, CURRENT_TIMESTAMP),
 (2,  75,  180000, '2025-10-02', 2, CURRENT_TIMESTAMP),
+
+-- Nhập hàng vào Kho Hồ Chí Minh
 (3, 100,  200000, '2025-10-03', 3, CURRENT_TIMESTAMP),
 (4,  60,  175000, '2025-10-04', 1, CURRENT_TIMESTAMP),
+
+-- Nhập hàng vào Kho Hà Nội
 (5,  90,  220000, '2025-10-05', 2, CURRENT_TIMESTAMP),
 (6,  40,  140000, '2025-10-06', 3, CURRENT_TIMESTAMP),
+
+-- Nhập hàng vào Kho Đà Nẵng 2
 (7, 120,  250000, '2025-10-07', 1, CURRENT_TIMESTAMP),
 (8,  80,  210000, '2025-10-08', 2, CURRENT_TIMESTAMP),
 (9,  55,  160000, '2025-10-09', 3, CURRENT_TIMESTAMP),
 (10, 70,  190000, '2025-10-10', 1, CURRENT_TIMESTAMP);
+
 
 
 

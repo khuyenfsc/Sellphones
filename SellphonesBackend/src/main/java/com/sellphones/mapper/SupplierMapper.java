@@ -1,8 +1,8 @@
 package com.sellphones.mapper;
 
-import com.sellphones.dto.product.admin.AdminSupplierRequest;
+import com.sellphones.dto.inventory.admin.AdminSupplierRequest;
 import com.sellphones.entity.address.Address;
-import com.sellphones.entity.product.Supplier;
+import com.sellphones.entity.inventory.Supplier;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,12 +1,9 @@
-package com.sellphones.entity.product;
+package com.sellphones.entity.inventory;
 
 import com.sellphones.annotation.ValidPhoneNumber;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.address.Address;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

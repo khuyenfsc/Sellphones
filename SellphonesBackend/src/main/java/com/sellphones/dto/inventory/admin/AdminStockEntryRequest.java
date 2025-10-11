@@ -1,4 +1,4 @@
-package com.sellphones.dto.product.admin;
+package com.sellphones.dto.inventory.admin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,7 +17,9 @@ import java.time.LocalDate;
 public class AdminStockEntryRequest {
 
     @NotNull
-    private Long productVariantId;
+    private Long inventoryId;
+
+    private Long warehouseId;
 
     private Long quantity;
 

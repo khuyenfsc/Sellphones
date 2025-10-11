@@ -1,8 +1,8 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminSupplierFilterRequest;
-import com.sellphones.entity.product.Supplier;
-import com.sellphones.entity.product.SupplierStatus;
+import com.sellphones.dto.inventory.admin.AdminSupplierFilterRequest;
+import com.sellphones.entity.inventory.Supplier;
+import com.sellphones.entity.inventory.SupplierStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminSupplierSpecificationBuilder {

@@ -1,9 +1,7 @@
-package com.sellphones.entity.product;
+package com.sellphones.entity.inventory;
 
 import com.sellphones.entity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true,  exclude = {"supplier", "inventory"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,10 +19,6 @@ import java.time.LocalDate;
 @SuperBuilder
 @Table(name = "stock_entry")
 public class StockEntry extends BaseEntity<Long> {
-
-    @ManyToOne
-    @JoinColumn(name = "product_variant_id")
-    private ProductVariant productVariant;
 
     @Column(nullable = false)
     private Long quantity;
@@ -35,10 +29,16 @@ public class StockEntry extends BaseEntity<Long> {
     @Column(name = "import_date")
     private LocalDate importDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    private Invwn
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "warehouse_id")
+//    private Warehouse warehouse;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventory;
 
 }

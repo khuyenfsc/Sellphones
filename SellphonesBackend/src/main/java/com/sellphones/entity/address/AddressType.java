@@ -1,5 +1,5 @@
 package com.sellphones.entity.address;
 
 public enum AddressType {
-    CUSTOMER, SUPPLIER
+    CUSTOMER, SUPPLIER, WAREHOUSE
 }

@@ -1,6 +1,6 @@
-package com.sellphones.dto.product.admin;
+package com.sellphones.dto.inventory.admin;
 
-import com.sellphones.entity.product.SupplierStatus;
+import com.sellphones.entity.inventory.SupplierStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;

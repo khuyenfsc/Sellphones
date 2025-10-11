@@ -56,7 +56,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
                 .ward(request.getWard())
                 .district(request.getDistrict())
                 .province(request.getProvince())
-                .addressType(AddressType.SUPPLIER)
+                .addressType(request.getAddressType())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -72,6 +72,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
         address.setWard(request.getWard());
         address.setDistrict(request.getDistrict());
         address.setProvince(request.getProvince());
+        address.setAddressType(request.getAddressType());
     }
 
     @Override

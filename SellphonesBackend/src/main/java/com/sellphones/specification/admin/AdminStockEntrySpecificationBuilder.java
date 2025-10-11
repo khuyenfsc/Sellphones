@@ -1,7 +1,7 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminStockEntryFilterRequest;
-import com.sellphones.entity.product.StockEntry;
+import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
+import com.sellphones.entity.inventory.StockEntry;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -31,6 +31,14 @@ public class AdminStockEntrySpecificationBuilder {
         }
 
         return spec;
+    }
+
+    public static Specification<StockEntry> hasInventoryId(Long inventoryId){
+        return (root, query, cb) -> cb.equal(root.get("inventory").get("id"), inventoryId);
+    }
+
+    public static Specification<StockEntry> hasWarehouseId(Long warehouseId){
+        return (root, query, cb) -> cb.equal(root.get("warehouse").get("id"), warehouseId);
     }
 
     public static Specification<StockEntry> hasVariantNameContain(String variantName){

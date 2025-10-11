@@ -1,6 +1,6 @@
-package com.sellphones.dto.product.admin;
+package com.sellphones.dto.inventory.admin;
 
-import com.sellphones.entity.product.SupplierStatus;
+import com.sellphones.entity.inventory.SupplierStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

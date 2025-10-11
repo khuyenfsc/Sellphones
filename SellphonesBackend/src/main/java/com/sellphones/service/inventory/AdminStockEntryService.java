@@ -1,8 +1,8 @@
-package com.sellphones.service.product.admin;
+package com.sellphones.service.inventory;
 
-import com.sellphones.dto.product.admin.AdminStockEntryFilterRequest;
-import com.sellphones.dto.product.admin.AdminStockEntryRequest;
-import com.sellphones.dto.product.admin.AdminStockEntryResponse;
+import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
 
 import java.util.List;
 

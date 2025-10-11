@@ -3,28 +3,33 @@ package com.sellphones.entity.inventory;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"productVariant", "warehouse"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "inventory")
+@SuperBuilder
+@Table(
+        name = "inventory",
+        indexes = {
+                @Index(name = "idx_inventory_product_variant", columnList = "product_variant_id"),
+                @Index(name = "idx_inventory_warehouse", columnList = "warehouse_id")
+        },
+        uniqueConstraints = @UniqueConstraint(columnNames = {"product_variant_id", "warehouse_id"})
+)
 public class Inventory extends BaseEntity<Long> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 
-    @Column(nullable = false)
     private Long quantity;
+
 }

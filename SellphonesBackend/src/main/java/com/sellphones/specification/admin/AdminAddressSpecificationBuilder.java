@@ -9,7 +9,9 @@ public class AdminAddressSpecificationBuilder {
     public static Specification<Address> build(AdminAddressFilterRequest request){
         Specification<Address> spec = (root, query, cb) -> cb.conjunction();
 
-        spec = spec.and(hasType(AddressType.SUPPLIER));
+        if(request.getAddressType() != null){
+            spec = spec.and(hasType(request.getAddressType()));
+        }
 
         if(request.getStreet() != null){
             spec = spec.and(hasStreetContain(request.getStreet()));
@@ -49,4 +51,5 @@ public class AdminAddressSpecificationBuilder {
     public static Specification<Address> hasProvinceContain(String province){
         return (root, query, cb) -> cb.like(cb.lower(root.get("cccd")), "%" + province.toLowerCase() + "%");
     }
+
 }

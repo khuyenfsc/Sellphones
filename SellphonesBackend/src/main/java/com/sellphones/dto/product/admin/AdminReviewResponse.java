@@ -1,5 +1,6 @@
 package com.sellphones.dto.product.admin;
 
+import com.sellphones.dto.user.admin.AdminReview_UserResponse;
 import com.sellphones.entity.product.ReviewStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class AdminReviewResponse {
 
     private Long id;
 
-    private AdminReviewUserResponse user;
+    private AdminReview_UserResponse user;
 
     private String content;
 

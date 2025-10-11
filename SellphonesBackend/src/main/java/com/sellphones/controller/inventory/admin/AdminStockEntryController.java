@@ -1,8 +1,10 @@
-package com.sellphones.controller.product.admin;
+package com.sellphones.controller.inventory.admin;
 
 import com.sellphones.dto.CommonResponse;
-import com.sellphones.dto.product.admin.*;
-import com.sellphones.service.product.admin.AdminStockEntryService;
+import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
+import com.sellphones.service.inventory.AdminStockEntryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ public class AdminStockEntryController {
     private final AdminStockEntryService adminStockEntryService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getSuppliers(AdminStockEntryFilterRequest request){
+    public ResponseEntity<CommonResponse> getStockEntries(AdminStockEntryFilterRequest request){
         List<AdminStockEntryResponse> response = adminStockEntryService.getStockEntries(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);

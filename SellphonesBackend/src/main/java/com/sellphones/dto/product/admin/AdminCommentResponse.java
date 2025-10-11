@@ -23,7 +23,7 @@ public class AdminCommentResponse {
 
     private Boolean isReplied;
 
-    private AdminCommentProductResponse product;
+    private AdminComment_ProductResponse product;
 
     private AdminParentCommentResponse parentComment;
 

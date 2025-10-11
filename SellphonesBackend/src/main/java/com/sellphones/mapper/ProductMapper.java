@@ -49,7 +49,6 @@ public class ProductMapper {
                 .promotions(promotions)
                 .giftProducts(giftProducts)
                 .attributeValues(attributeValues)
-                .stock(request.getStock())
                 .warranties(warranties)
                 .build();
 
