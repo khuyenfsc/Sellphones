@@ -1,7 +1,6 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.product.response.CategoryResponse;
-import com.sellphones.dto.product.response.FilterOptionByCategoryResponse;
 import com.sellphones.dto.product.response.ProductFilterResponse;
 
 import java.util.List;

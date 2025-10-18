@@ -1,6 +1,9 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.entity.product.CommentStatus;
 import com.sellphones.entity.product.Review;
@@ -38,8 +41,8 @@ public class AdminCommentServiceImpl implements AdminCommentService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.COMMENTS.VIEW')")
-    public List<AdminCommentResponse> getComments(AdminCommentFilterRequest request) {
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.VIEW')")
+    public PageResponse<AdminCommentResponse> getComments(AdminCommentFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -48,14 +51,21 @@ public class AdminCommentServiceImpl implements AdminCommentService{
         Specification<Comment> spec = AdminCommentSpecificationBuilder.build(request);
 
         Page<Comment> commentPage = commentRepository.findAll(spec, pageable);
+        List<Comment> comments = commentPage.getContent();
+        List<AdminCommentResponse> response = comments.stream()
+                .map(c -> modelMapper.map(c, AdminCommentResponse.class))
+                .toList();
 
-        return commentPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminCommentResponse.class)).toList();
+        return PageResponse.<AdminCommentResponse>builder()
+                .result(response)
+                .total(commentPage.getTotalElements())
+                .totalPages(commentPage.getTotalPages())
+                .build();
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CLIENTS.COMMENTS.REPLY')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.REPLY')")
     public void replyComment(AdminCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setIsReplied(true);
@@ -81,14 +91,14 @@ public class AdminCommentServiceImpl implements AdminCommentService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CLIENTS.COMMENTS.EDIT')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.EDIT')")
     public void editComment(AdminEditingCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setStatus(request.getStatus());
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.COMMENTS.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.DELETE')")
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }

@@ -1,9 +1,12 @@
 package com.sellphones.service.product;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.request.FilterRequest;
 import com.sellphones.dto.product.response.ProductDetailsResponse;
 import com.sellphones.dto.product.response.ProductListResponse;
 import com.sellphones.dto.product.response.ProductVariantResponse;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.exception.AppException;
@@ -51,7 +54,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductListResponse> getProductByFilter(FilterRequest filter) {
+    public PageResponse<ProductListResponse> getProductByFilter(FilterRequest filter) {
         Specification<Product> productSpec = ProductSpecificationBuilder.build(filter.getQuery());
         Sort.Direction direction = Sort.Direction.fromOptionalString(filter.getSort())
                 .orElse(Sort.Direction.DESC);
@@ -59,11 +62,17 @@ public class ProductServiceImpl implements ProductService{
 
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), sort);
 
-        Page<Product> filteredProducts = productRepository.findAll(productSpec, pageable);
-        List<Product> products = filteredProducts.getContent();
-        return products.stream()
+        Page<Product> productPage = productRepository.findAll(productSpec, pageable);
+        List<Product> products = productPage.getContent();
+        List<ProductListResponse> response = products.stream()
                 .map(p -> modelMapper.map(p, ProductListResponse.class))
                 .collect(Collectors.toList());
+
+        return PageResponse.<ProductListResponse>builder()
+                .result(response)
+                .total(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .build();
     }
 
     @Override

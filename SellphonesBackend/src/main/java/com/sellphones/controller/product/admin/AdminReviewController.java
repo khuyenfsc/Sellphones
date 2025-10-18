@@ -1,11 +1,13 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
 import com.sellphones.dto.product.admin.AdminReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
 import com.sellphones.service.product.admin.AdminReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class AdminReviewController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getReviews(AdminReviewFilterRequest request){
-        List<AdminReviewResponse> response = adminReviewService.getReviews(request);
+        PageResponse<AdminReviewResponse> response = adminReviewService.getReviews(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

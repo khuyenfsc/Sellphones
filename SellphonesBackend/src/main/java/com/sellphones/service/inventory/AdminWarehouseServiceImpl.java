@@ -1,5 +1,6 @@
 package com.sellphones.service.inventory;
 
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.*;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.inventory.Inventory;
@@ -8,7 +9,6 @@ import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.repository.warehouse.WarehouseRepository;
-import com.sellphones.specification.admin.AdminInventorySpecificationBuilder;
 import com.sellphones.specification.admin.AdminWarehouseSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.VIEW')")
-    public List<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request) {
+    public PageResponse<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "name");
@@ -44,11 +44,17 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
 
         Specification<Warehouse> spec = AdminWarehouseSpecificationBuilder.build(request);
 
-        Page<Warehouse>warehousePage = warehouseRepository.findAll(spec, pageable);
-
-        return warehousePage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminWarehouseResponse.class))
+        Page<Warehouse> warehousePage = warehouseRepository.findAll(spec, pageable);
+        List<Warehouse> warehouses = warehousePage.getContent();
+        List<AdminWarehouseResponse> response = warehouses.stream()
+                .map(i -> modelMapper.map(i, AdminWarehouseResponse.class))
                 .toList();
+
+        return PageResponse.<AdminWarehouseResponse>builder()
+                .result(response)
+                .total(warehousePage.getTotalElements())
+                .totalPages(warehousePage.getTotalPages())
+                .build();
     }
 
     @Override
@@ -88,7 +94,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.DELETE')")
     public void deleteWarehouse(Long id) {
         warehouseRepository.deleteById(id);
     }

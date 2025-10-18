@@ -1,5 +1,7 @@
 package com.sellphones.service.inventory;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
@@ -49,7 +51,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.VIEW')")
-    public List<AdminStockEntryResponse> getStockEntries(AdminStockEntryFilterRequest request) {
+    public PageResponse<AdminStockEntryResponse> getStockEntries(AdminStockEntryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -58,10 +60,16 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
         Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.build(request);
 
         Page<StockEntry> stockEntryPage = stockEntryRepository.findAll(spec, pageable);
-
-        return stockEntryPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminStockEntryResponse.class))
+        List<StockEntry> stockEntries = stockEntryPage.getContent();
+        List<AdminStockEntryResponse> response = stockEntries.stream()
+                .map(i -> modelMapper.map(i, AdminStockEntryResponse.class))
                 .toList();
+
+        return PageResponse.<AdminStockEntryResponse>builder()
+                .result(response)
+                .total(stockEntryPage.getTotalElements())
+                .totalPages(stockEntryPage.getTotalPages())
+                .build();
     }
 
     @Override

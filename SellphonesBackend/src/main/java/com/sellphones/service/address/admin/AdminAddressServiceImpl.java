@@ -1,12 +1,14 @@
 package com.sellphones.service.address.admin;
 
-import com.sellphones.dto.address.AdminAddressFilterRequest;
-import com.sellphones.dto.address.AdminAddressRequest;
-import com.sellphones.dto.address.AdminAddressResponse;
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
+import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.AddressResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.AddressMapper;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.specification.admin.AdminAddressSpecificationBuilder;
 import jakarta.transaction.Transactional;
@@ -20,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,11 +30,13 @@ public class AdminAddressServiceImpl implements AdminAddressService{
 
     private final AddressRepository addressRepository;
 
+    private final AddressMapper addressMapper;
+
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.ADDRESSES.VIEW')")
-    public List<AdminAddressResponse> getAddresses(AdminAddressFilterRequest request) {
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.VIEW')")
+    public PageResponse<AddressResponse> getAddresses(AdminAddressFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -42,31 +45,30 @@ public class AdminAddressServiceImpl implements AdminAddressService{
         Specification<Address> spec = AdminAddressSpecificationBuilder.build(request);
 
         Page<Address> addressPage = addressRepository.findAll(spec, pageable);
-
-        return addressPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminAddressResponse.class))
+        List<Address> addresses = addressPage.getContent();
+        List<AddressResponse> response = addresses.stream()
+                .map(a -> modelMapper.map(a, AddressResponse.class))
                 .toList();
+
+
+        return PageResponse.<AddressResponse>builder()
+                .result(response)
+                .total(addressPage.getTotalElements())
+                .totalPages(addressPage.getTotalPages())
+                .build();
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.ADDRESSES.CREATE')")
-    public void addAddress(AdminAddressRequest request) {
-        Address address = Address.builder()
-                .street(request.getStreet())
-                .ward(request.getWard())
-                .district(request.getDistrict())
-                .province(request.getProvince())
-                .addressType(request.getAddressType())
-                .createdAt(LocalDateTime.now())
-                .build();
-
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.CREATE')")
+    public void addAddress(AddressRequest request) {
+        Address address = addressMapper.mapToAddressEntity(request);
         addressRepository.save(address);
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CLIENTS.ADDRESSES.EDIT')")
-    public void editAddress(AdminAddressRequest request, Long id) {
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.EDIT')")
+    public void editAddress(AddressRequest request, Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
         address.setStreet(request.getStreet());
         address.setWard(request.getWard());
@@ -76,7 +78,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.ADDRESSES.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.DELETE')")
     public void deleteAddress(Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
         if(address.getAddressType() != AddressType.SUPPLIER){

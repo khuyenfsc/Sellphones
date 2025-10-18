@@ -1,6 +1,7 @@
 package com.sellphones.service.product.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.dto.product.response.ProductVariantResponse;
 import com.sellphones.entity.product.*;
@@ -181,7 +182,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
-    public List<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
+    public PageResponse<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "price");
@@ -194,13 +195,19 @@ public class AdminProductServiceImpl implements AdminProductService{
 
         List<ProductVariant> variants = productVariantPage.getContent();
 
-        return variants.stream()
+        List<AdminProductVariantListResponse> response = variants.stream()
                 .map(v -> {
                     AdminProductVariantListResponse resp = modelMapper.map(v, AdminProductVariantListResponse.class);
                     resp.setVariantImage(ImageNameToImageUrlConverter.convert(v.getVariantImage(), productVariantImageFolder));
                     return resp;
                 })
                 .toList();
+
+        return PageResponse.<AdminProductVariantListResponse>builder()
+                .result(response)
+                .total(productVariantPage.getTotalElements())
+                .totalPages(productVariantPage.getTotalPages())
+                .build();
 
     }
 

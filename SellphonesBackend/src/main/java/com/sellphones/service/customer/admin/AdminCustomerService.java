@@ -1,11 +1,14 @@
 package com.sellphones.service.customer.admin;
 
-import com.sellphones.dto.customer.AdminCustomerInfoFilterRequest;
-import com.sellphones.dto.customer.AdminCustomerInfoResponse;
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.customer.CustomerInfoRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfoFilterRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfoResponse;
 
 import java.util.List;
 
 public interface AdminCustomerService {
-    List<AdminCustomerInfoResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request);
+    PageResponse<AdminCustomerInfoResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request);
+    void createCustomerInfo(CustomerInfoRequest request);
     void deleteCustomerInfo(Long id);
 }

@@ -1,4 +1,4 @@
-package com.sellphones.dto.inventory.admin;
+package com.sellphones.dto.product.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

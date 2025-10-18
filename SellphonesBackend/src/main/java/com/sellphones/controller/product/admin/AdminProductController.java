@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProductFilter_Request;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
@@ -88,7 +89,7 @@ public class AdminProductController {
 
     @GetMapping("/{productId}/product-variants")
     public ResponseEntity<CommonResponse> getProductVariants(AdminProductVariantFilterRequest request, @PathVariable Long productId){
-        List<AdminProductVariantListResponse> products = adminProductService.getProductVariants(request, productId);
+        PageResponse<AdminProductVariantListResponse> products = adminProductService.getProductVariants(request, productId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 

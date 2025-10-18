@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminBrandService;
 import jakarta.validation.Valid;
@@ -23,9 +24,9 @@ public class AdminBrandController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getBrands(@Valid AdminBrandFilterRequest request){
-        List<AdminBrandResponse> responses = adminBrandService.getBrands(request);
+        PageResponse<AdminBrandResponse> response = adminBrandService.getBrands(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

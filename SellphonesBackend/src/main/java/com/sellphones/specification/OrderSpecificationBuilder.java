@@ -1,5 +1,6 @@
 package com.sellphones.specification;
 
+import com.sellphones.dto.order.OrderFilterRequest;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.utils.SecurityUtils;
@@ -10,15 +11,15 @@ import java.time.LocalTime;
 
 public class OrderSpecificationBuilder {
 
-    public static Specification<Order> build(LocalDate startDate, LocalDate endDate, OrderStatus orderStatus){
+    public static Specification<Order> build(OrderFilterRequest request){
         Specification<Order> spec = (root, query, cb) -> cb.conjunction();
 
-        if(startDate != null && endDate != null){
-            spec = spec.and(hasDateBetween(startDate, endDate));
+        if(request.getStartDate() != null && request.getEndDate() != null){
+            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
         }
 
-        if(orderStatus != null){
-            spec = spec.and(hasStatus(orderStatus));
+        if(request.getStatus() != null){
+            spec = spec.and(hasStatus(request.getStatus()));
         }
 
         spec = spec.and(hasEmail(SecurityUtils.extractNameFromAuthentication()));

@@ -3,16 +3,16 @@ package com.sellphones.controller.order;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.OrderDetailResponse;
-import com.sellphones.dto.order.OrderListResponse;
+import com.sellphones.dto.order.OrderFilterRequest;
+import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
-import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.service.order.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,16 +32,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getOrders(
-        @RequestParam(required = false) LocalDate startDate,
-        @RequestParam(required = false) LocalDate endDate,
-        @RequestParam Integer page,
-        @RequestParam Integer size,
-        @RequestParam(required = false) OrderStatus orderStatus
-    ){
-        PageResponse<OrderListResponse> orderListResponses = orderService.getOrders(startDate, endDate, page, size, orderStatus);
+    public ResponseEntity<CommonResponse> getOrders(@Valid OrderFilterRequest request){
+        PageResponse<OrderResponse> response = orderService.getOrders(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("orders", orderListResponses);
+        map.put("orders", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

@@ -20,8 +20,8 @@ public class PromotionBannerController {
 
     @GetMapping("/all")
     public ResponseEntity<List<PromotionBannerResponse>> getAllPromotionBanners(){
-        List<PromotionBannerResponse> promotionBannerResponses = promotionBannerService.getAllPromotionBanners();
-        return ResponseEntity.status(HttpStatus.OK).body(promotionBannerResponses);
+        List<PromotionBannerResponse> response = promotionBannerService.getAllPromotionBanners();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

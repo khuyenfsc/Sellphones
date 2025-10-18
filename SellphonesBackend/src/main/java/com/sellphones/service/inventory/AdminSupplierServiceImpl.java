@@ -1,10 +1,13 @@
 package com.sellphones.service.inventory;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.inventory.admin.AdminSupplierFilterRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.inventory.Supplier;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -39,7 +42,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
-    public List<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request) {
+    public PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -47,11 +50,17 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
         Specification<Supplier> spec = AdminSupplierSpecificationBuilder.build(request);
 
-        Page<Supplier> commentPage = supplierRepository.findAll(spec, pageable);
-
-        return commentPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminSupplierResponse.class))
+        Page<Supplier> suppplierPage = supplierRepository.findAll(spec, pageable);
+        List<Supplier> suppliers = suppplierPage.getContent();
+        List<AdminSupplierResponse> response = suppliers.stream()
+                .map(i -> modelMapper.map(i, AdminSupplierResponse.class))
                 .toList();
+
+        return PageResponse.<AdminSupplierResponse>builder()
+                .result(response)
+                .total(suppplierPage.getTotalElements())
+                .totalPages(suppplierPage.getTotalPages())
+                .build();
     }
 
     @Override

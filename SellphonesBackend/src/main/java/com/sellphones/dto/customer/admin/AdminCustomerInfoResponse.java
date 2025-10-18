@@ -1,8 +1,7 @@
-package com.sellphones.dto.customer;
+package com.sellphones.dto.customer.admin;
 
-import com.sellphones.dto.address.AdminAddressResponse;
+import com.sellphones.dto.address.AddressResponse;
 import com.sellphones.dto.user.admin.AdminCustomerInfo_UserResponse;
-import com.sellphones.entity.address.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class AdminCustomerInfoResponse {
 
     private String phoneNumber;
 
-    private AdminAddressResponse address;
+    private AddressResponse address;
 
     private String cccd;
 

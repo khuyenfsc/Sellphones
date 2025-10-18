@@ -7,6 +7,9 @@ import com.sellphones.entity.payment.PaymentStatus;
 import com.sellphones.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
+@EntityListeners(AuditingEntityListener.class)
+@SuperBuilder
 @Table(name = "customer_order")
 public class Order extends BaseEntity<Long> {
 
@@ -27,10 +31,15 @@ public class Order extends BaseEntity<Long> {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "order_id")
     private List<OrderVariant> orderVariants;
 
     private LocalDateTime orderedAt;
+
+    @CreatedBy
+    @Column(updatable = false)
+    private String createBy;
 
     @Column(precision = 19, scale = 0)
     private BigDecimal totalPrice;
@@ -49,9 +58,12 @@ public class Order extends BaseEntity<Long> {
 
     private String note;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_info_id")
     private CustomerInfo customerInfo;
+
+    @OneToOne(mappedBy = "order")
+    private Shipment shipment;
 
     @PostPersist
     public void generateCode(){

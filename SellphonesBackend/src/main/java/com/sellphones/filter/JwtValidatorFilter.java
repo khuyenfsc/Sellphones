@@ -4,9 +4,12 @@ package com.sellphones.filter;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.sellphones.configuration.CustomUserDetails;
 import com.sellphones.constant.AppConstants;
+import com.sellphones.entity.user.Permission;
+import com.sellphones.entity.user.Role;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.service.authentication.JwtService;
+import com.sellphones.service.user.RoleService;
 import com.sellphones.utils.SecurityUtils;
 import io.jsonwebtoken.lang.Arrays;
 import jakarta.servlet.FilterChain;
@@ -14,11 +17,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -29,12 +34,17 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtValidatorFilter extends OncePerRequestFilter { ;
 
     private final JwtService jwtService;
+
+    private final RoleService roleService;
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -45,30 +55,31 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
         try {
             String jwt = SecurityUtils.extractTokenFromRequest(request);
             JWTClaimsSet jwtClaimsSet = jwtService.validateToken(jwt);
-            String role = Optional.ofNullable(jwtClaimsSet.getClaimAsString("role"))
+            String roleName = Optional.ofNullable(jwtClaimsSet.getClaimAsString("role"))
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
             String username = jwtClaimsSet.getSubject();
-            Object authClaim = jwtClaimsSet.getClaim("authorities");
+            Object roleId = jwtClaimsSet.getClaim("roleId");
 
-            List<GrantedAuthority> authorities = authClaim != null
-                    ? AuthorityUtils.commaSeparatedStringToAuthorityList(authClaim.toString())
-                    : Collections.emptyList();
+            Set<String> permissions = roleService.getPermissionByRoleId(Long.parseLong(roleId.toString()));
+            List<SimpleGrantedAuthority> authorities = permissions.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());;
+            authorities.add(new SimpleGrantedAuthority(roleName));
 
-
-            if(role == null){
+            if(roleName == null){
                 throw new AppException(ErrorCode.ROLE_NOT_FOUND);
             }
 
             boolean isAdminRequest = request.getRequestURI().startsWith("/api/v1/admin");
-            if (isAdminRequest && !"ADMIN".equals(role)) {
+            if (isAdminRequest && !"ADMIN".equals(roleName)) {
                 throw new AppException(ErrorCode.UNAUTHORIZED_ADMIN_ACCESS);
             }
 
-            if (!isAdminRequest && !"CUSTOMER".equals(role)) {
+            if (!isAdminRequest && !"CUSTOMER".equals(roleName)) {
                 throw new AppException(ErrorCode.UNAUTHORIZED_CUSTOMER_ACCESS);
             }
 
-            UserDetails userDetails = new CustomUserDetails(role, username, null, authorities);
+            UserDetails userDetails = new CustomUserDetails(roleName, username, null, authorities);
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AppException ex) {
@@ -77,6 +88,8 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                     ex.getErrorCode().getMessage());
             return;
         } catch (Exception ex) {
+//            log.error("Error at JwtValidatorFilter {}", ex.getMessage());
+            ex.printStackTrace();
             writeErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     "Internal Server Error");
             return;

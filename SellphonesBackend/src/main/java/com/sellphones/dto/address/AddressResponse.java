@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminAddressResponse {
+public class AddressResponse {
 
     private Long id;
 

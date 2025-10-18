@@ -1,8 +1,10 @@
 package com.sellphones.service.inventory;
 
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.AdminInventoryFilterRequest;
 import com.sellphones.dto.inventory.admin.AdminInventoryRequest;
 import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
+import com.sellphones.dto.order.admin.AdminShipmentListResponse;
 import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.inventory.Warehouse;
 import com.sellphones.entity.product.ProductVariant;
@@ -44,7 +46,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.VIEW')")
-    public List<AdminInventoryResponse> getInventories(AdminInventoryFilterRequest request) {
+    public PageResponse<AdminInventoryResponse> getInventories(AdminInventoryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "quantity");
@@ -53,10 +55,16 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
         Specification<Inventory> spec = AdminInventorySpecificationBuilder.build(request);
 
         Page<Inventory> inventoryPage = inventoryRepository.findAll(spec, pageable);
-
-        return inventoryPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminInventoryResponse.class))
+        List<Inventory> inventories = inventoryPage.getContent();
+        List<AdminInventoryResponse> response = inventories.stream()
+                .map(i -> modelMapper.map(i, AdminInventoryResponse.class))
                 .toList();
+
+        return PageResponse.<AdminInventoryResponse>builder()
+                .result(response)
+                .total(inventoryPage.getTotalElements())
+                .totalPages(inventoryPage.getTotalPages())
+                .build();
     }
 
     @Override

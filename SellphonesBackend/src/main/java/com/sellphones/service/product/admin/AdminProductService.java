@@ -1,6 +1,7 @@
 package com.sellphones.service.product.admin;
 
 
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
@@ -14,7 +15,7 @@ public interface AdminProductService {
     void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
     void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
     void deleteProduct(Long productId);
-    List<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
+    PageResponse<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
     ProductVariantResponse getProductVariantDetail(Long productVariantId);
     void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
     void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId);

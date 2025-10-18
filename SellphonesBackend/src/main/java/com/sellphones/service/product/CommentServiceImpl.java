@@ -43,12 +43,12 @@ public class CommentServiceImpl implements CommentService{
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Comment> commentPage = commentRepository.findByProductId(productId, pageable);
-        List<CommentResponse> responses = commentPage.getContent().stream()
+        List<CommentResponse> response = commentPage.getContent().stream()
                 .map(c -> modelMapper.map(c, CommentResponse.class))
                 .toList();
 
         return PageResponse.<CommentResponse>builder()
-                .result(responses)
+                .result(response)
                 .total(commentPage.getTotalElements())
                 .build();
     }

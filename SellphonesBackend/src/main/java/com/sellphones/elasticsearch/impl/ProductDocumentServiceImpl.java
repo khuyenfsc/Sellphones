@@ -39,11 +39,11 @@ public class ProductDocumentServiceImpl implements ProductDocumentService {
     public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, String sortType) {
         Pageable pageable = PageRequest.of(page, MAX_SIZE_RESULT);
         List<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
-        List<ProductListResponse> responses = products.stream()
+        List<ProductListResponse> response = products.stream()
                 .map(p -> modelMapper.map(p, ProductListResponse.class))
                 .toList();
         return PageResponse.<ProductListResponse>builder()
-                .result(responses)
+                .result(response)
                 .build();
     }
 

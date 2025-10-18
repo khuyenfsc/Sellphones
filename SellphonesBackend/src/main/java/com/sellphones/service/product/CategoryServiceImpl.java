@@ -1,14 +1,10 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.product.response.CategoryResponse;
-import com.sellphones.dto.product.response.FilterOptionByCategoryResponse;
-import com.sellphones.dto.product.response.FilterOptionResponse;
 import com.sellphones.dto.product.response.ProductFilterResponse;
 import com.sellphones.entity.product.Category;
-import com.sellphones.entity.product.FilterOption;
 import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.repository.product.CategoryRepository;
-import com.sellphones.repository.product.FilterOptionRepository;
 import com.sellphones.repository.product.ProductFilterRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

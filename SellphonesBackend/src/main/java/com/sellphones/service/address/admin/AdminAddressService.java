@@ -1,14 +1,13 @@
 package com.sellphones.service.address.admin;
 
-import com.sellphones.dto.address.AdminAddressFilterRequest;
-import com.sellphones.dto.address.AdminAddressRequest;
-import com.sellphones.dto.address.AdminAddressResponse;
-
-import java.util.List;
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
+import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.AddressResponse;
 
 public interface AdminAddressService {
-    List<AdminAddressResponse> getAddresses(AdminAddressFilterRequest request);
-    void addAddress(AdminAddressRequest request);
-    void editAddress(AdminAddressRequest request, Long id);
+    PageResponse<AddressResponse> getAddresses(AdminAddressFilterRequest request);
+    void addAddress(AddressRequest request);
+    void editAddress(AddressRequest request, Long id);
     void deleteAddress(Long id);
 }

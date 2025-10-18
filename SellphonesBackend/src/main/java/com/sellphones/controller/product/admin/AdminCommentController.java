@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
 import com.sellphones.dto.product.admin.AdminCommentRequest;
 import com.sellphones.dto.product.admin.AdminCommentResponse;
@@ -26,7 +27,7 @@ public class AdminCommentController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getComments(AdminCommentFilterRequest request){
-        List<AdminCommentResponse> response = adminCommentService.getComments(request);
+        PageResponse<AdminCommentResponse> response = adminCommentService.getComments(request);
         Map<String, Object> map = new HashMap<>();
         map.put("results", response);
 

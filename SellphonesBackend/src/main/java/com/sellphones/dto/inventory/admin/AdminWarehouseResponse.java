@@ -1,6 +1,6 @@
 package com.sellphones.dto.inventory.admin;
 
-import com.sellphones.dto.address.AdminAddressResponse;
+import com.sellphones.dto.address.AddressResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +13,5 @@ public class AdminWarehouseResponse {
 
     private String name;
 
-    private AdminAddressResponse address;
+    private AddressResponse address;
 }

@@ -1,6 +1,9 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.FilterOption;
 import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.exception.AppException;
@@ -36,7 +39,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCT_FILTERS.VIEW')")
-    public List<AdminProductFilterResponse> getProductFilters(AdminProductFilterFilterRequest request) {
+    public PageResponse<AdminProductFilterResponse> getProductFilters(AdminProductFilterFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -45,10 +48,16 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
         Specification<ProductFilter> spec = AdminProductFilterSpecificationBuilder.build(request);
 
         Page<ProductFilter> filterPage = productFilterRepository.findAll(spec, pageable);
-
-        return filterPage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminProductFilterResponse.class))
+        List<ProductFilter> filters = filterPage.getContent();
+        List<AdminProductFilterResponse> response = filters.stream()
+                .map(f -> modelMapper.map(f, AdminProductFilterResponse.class))
                 .toList();
+
+        return PageResponse.<AdminProductFilterResponse>builder()
+                .result(response)
+                .total(filterPage.getTotalElements())
+                .totalPages(filterPage.getTotalPages())
+                .build();
     }
 
     @Override
@@ -77,7 +86,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCT_FILTERS.VIEW')")
-    public List<AdminFilterOptionResponse> getFilterOptions(AdminFilterOptionFilterRequest request, Long filterId) {
+    public PageResponse<AdminFilterOptionResponse> getFilterOptions(AdminFilterOptionFilterRequest request, Long filterId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -85,11 +94,17 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
         Specification<FilterOption> spec = AdminFilterOptionSpecification.build(request, filterId);
 
-        Page<FilterOption> filterPage = filterOptionRepository.findAll(spec, pageable);
-
-        return filterPage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminFilterOptionResponse.class))
+        Page<FilterOption> optionPage = filterOptionRepository.findAll(spec, pageable);
+        List<FilterOption> options  = optionPage.getContent();
+        List<AdminFilterOptionResponse> response = options.stream()
+                .map(o -> modelMapper.map(o, AdminFilterOptionResponse.class))
                 .toList();
+
+        return PageResponse.<AdminFilterOptionResponse>builder()
+                .result(response)
+                .total(optionPage.getTotalElements())
+                .totalPages(optionPage.getTotalPages())
+                .build();
     }
 
 //    @Override

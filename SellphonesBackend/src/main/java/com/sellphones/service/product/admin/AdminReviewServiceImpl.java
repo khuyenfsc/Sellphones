@@ -1,5 +1,6 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
 import com.sellphones.dto.product.admin.AdminReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
@@ -33,8 +34,8 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     private final String reviewImageFolderName = "reviews";
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.REVIEWS.VIEW')")
-    public List<AdminReviewResponse> getReviews(AdminReviewFilterRequest request) {
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.VIEW')")
+    public PageResponse<AdminReviewResponse> getReviews(AdminReviewFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -45,7 +46,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
 
-        return reviewPage.getContent().stream()
+        List<AdminReviewResponse> response = reviewPage.getContent().stream()
                 .map(r ->
                     {
                         r.setImageNames(
@@ -57,11 +58,17 @@ public class AdminReviewServiceImpl implements AdminReviewService{
                     }
                 ).toList();
 
+        return PageResponse.<AdminReviewResponse>builder()
+                .result(response)
+                .total(reviewPage.getTotalElements())
+                .totalPages(reviewPage.getTotalPages())
+                .build();
+
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CLIENTS.REVIEWS.EDIT')")
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.EDIT')")
     public void editReview(AdminReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         System.out.println("status " + request.getStatus());
@@ -69,7 +76,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CLIENTS.REVIEWS.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.DELETE')")
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
     }

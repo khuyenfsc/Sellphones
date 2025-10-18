@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentServiceImpl implements PaymentService{
     @Override
-    public void pay(PaymentMethodType paymentMethodType) {
-        PaymentStrategy paymentStrategy = PaymentStrategyFactory.getPaymentStrategy(paymentMethodType);
+    public void pay(Order order) {
+        PaymentStrategy paymentStrategy = PaymentStrategyFactory.getPaymentStrategy(order.getPaymentMethod().getPaymentMethodType());
         if(paymentStrategy == null){
             throw new AppException(ErrorCode.PAYMENT_METHOD_TYPE_NOT_FOUND);
         }
@@ -21,6 +21,6 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Override
     public void refund(Order order) {
-
+        System.out.println("Refunded");
     }
 }

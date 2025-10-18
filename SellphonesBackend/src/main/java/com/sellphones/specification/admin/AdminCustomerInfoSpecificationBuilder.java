@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.customer.AdminCustomerInfoFilterRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfoFilterRequest;
 import com.sellphones.entity.customer.CustomerInfo;
 import org.springframework.data.jpa.domain.Specification;
 

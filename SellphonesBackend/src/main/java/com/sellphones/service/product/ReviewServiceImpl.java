@@ -67,10 +67,10 @@ public class ReviewServiceImpl implements ReviewService{
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
-        List<ReviewResponse> responses = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();
+        List<ReviewResponse> response = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();
 
         return PageResponse.<ReviewResponse>builder()
-                .result(responses)
+                .result(response)
                 .total(reviewPage.getTotalElements())
                 .build();
     }

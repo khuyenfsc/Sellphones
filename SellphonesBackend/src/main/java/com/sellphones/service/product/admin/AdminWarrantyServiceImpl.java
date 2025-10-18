@@ -1,8 +1,11 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.AdminWarrantyFilterRequest;
 import com.sellphones.dto.product.admin.AdminWarrantyRequest;
 import com.sellphones.dto.product.admin.AdminWarrantyResponse;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Warranty;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -33,7 +36,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.VIEW')")
-    public List<AdminWarrantyResponse> getWarranties(AdminWarrantyFilterRequest request) {
+    public PageResponse<AdminWarrantyResponse> getWarranties(AdminWarrantyFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "price");
@@ -42,10 +45,16 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
         Specification<Warranty> spec = AdminWarrantySpecificationBuilder.build(request);
 
         Page<Warranty> warrantyPage = warrantyRepository.findAll(spec, pageable);
-
-        return warrantyPage.getContent().stream()
-                .map(c -> modelMapper.map(c, AdminWarrantyResponse.class))
+        List<Warranty> warranties = warrantyPage.getContent();
+        List<AdminWarrantyResponse> response = warranties.stream()
+                .map(w -> modelMapper.map(w, AdminWarrantyResponse.class))
                 .toList();
+
+        return PageResponse.<AdminWarrantyResponse>builder()
+                .result(response)
+                .total(warrantyPage.getTotalElements())
+                .totalPages(warrantyPage.getTotalPages())
+                .build();
     }
 
     @Override

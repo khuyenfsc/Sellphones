@@ -49,6 +49,6 @@ public class AdminWarehouseSpecificationBuilder {
     }
 
     public static Specification<Warehouse> hasProvinceContain(String province){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("address").get("cccd")), "%" + province.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("address").get("province")), "%" + province.toLowerCase() + "%");
     }
 }

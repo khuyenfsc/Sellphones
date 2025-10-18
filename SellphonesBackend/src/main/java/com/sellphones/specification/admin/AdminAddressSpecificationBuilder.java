@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.address.AdminAddressFilterRequest;
+import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
 import org.springframework.data.jpa.domain.Specification;

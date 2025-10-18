@@ -24,9 +24,9 @@ public class AdminPermissionController {
     @GetMapping("/all")
     public ResponseEntity<CommonResponse> getPermissions(){
         System.out.println("Get all permissions");
-        Set<AdminPermissionResponse> responses = adminPermissionService.getAllAdminPermissions();
+        Set<AdminPermissionResponse> response = adminPermissionService.getAllAdminPermissions();
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

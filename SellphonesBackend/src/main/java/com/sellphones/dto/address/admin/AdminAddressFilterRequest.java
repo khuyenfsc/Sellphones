@@ -1,5 +1,6 @@
-package com.sellphones.dto.customer;
+package com.sellphones.dto.address.admin;
 
+import com.sellphones.entity.address.AddressType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -9,15 +10,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminCustomerInfoFilterRequest {
+public class AdminAddressFilterRequest {
 
-    private String email;
+    private String street;
 
-    private String name;
+    private String ward;
 
-    private String phoneNumber;
+    private String district;
 
-    private String cccd;
+    private String province;
+
+    private AddressType addressType;
 
     private String sortType;
 

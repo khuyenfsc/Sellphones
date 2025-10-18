@@ -1,6 +1,9 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.CategoryOption;
 import com.sellphones.entity.product.CategoryOptionValue;
@@ -43,7 +46,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
-    public List<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
+    public PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -51,11 +54,17 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
         Specification<Category> spec = AdminCategorySpecificationBuilder.build(request);
 
-        Page<Category> attributePage = categoryRepository.findAll(spec, pageable);
-
-        return attributePage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminCategoryResponse.class))
+        Page<Category> categoryPage = categoryRepository.findAll(spec, pageable);
+        List<Category> categories = categoryPage.getContent();
+        List<AdminCategoryResponse> response = categories.stream()
+                .map(c -> modelMapper.map(c, AdminCategoryResponse.class))
                 .toList();
+
+        return PageResponse.<AdminCategoryResponse>builder()
+                .result(response)
+                .total(categoryPage.getTotalElements())
+                .totalPages(categoryPage.getTotalPages())
+                .build();
     }
 
     @Override
@@ -85,7 +94,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
-    public List<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId) {
+    public PageResponse<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -94,10 +103,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         Specification<CategoryOption> spec = AdminCategoryOptionSpecificationBuilder.build(request, categoryId);
 
         Page<CategoryOption> optionPage = categoryOptionRepository.findAll(spec, pageable);
-
-        return optionPage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminCategoryOptionResponse.class))
+        List<CategoryOption> options = optionPage.getContent();
+        List<AdminCategoryOptionResponse> response = options.stream()
+                .map(o -> modelMapper.map(o, AdminCategoryOptionResponse.class))
                 .toList();
+
+        return PageResponse.<AdminCategoryOptionResponse>builder()
+                .result(response)
+                .total(optionPage.getTotalElements())
+                .totalPages(optionPage.getTotalPages())
+                .build();
     }
 
     @Override
@@ -131,7 +146,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
-    public List<AdminCategoryOptionValueResponse> getCategoryOptionValues(AdminCategoryOptionValueFilterRequest request, Long categoryOptionId) {
+    public PageResponse<AdminCategoryOptionValueResponse> getCategoryOptionValues(AdminCategoryOptionValueFilterRequest request, Long categoryOptionId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -140,10 +155,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         Specification<CategoryOptionValue> spec = AdminCategoryOptionValueSpecificationBuilder.build(request, categoryOptionId);
 
         Page<CategoryOptionValue> optionValuePage = categoryOptionValueRepository.findAll(spec, pageable);
-
-        return optionValuePage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminCategoryOptionValueResponse.class))
+        List<CategoryOptionValue> optionValues = optionValuePage.getContent();
+        List<AdminCategoryOptionValueResponse> response = optionValues.stream()
+                .map(v -> modelMapper.map(v, AdminCategoryOptionValueResponse.class))
                 .toList();
+
+        return PageResponse.<AdminCategoryOptionValueResponse>builder()
+                .result(response)
+                .total(optionValuePage.getTotalElements())
+                .totalPages(optionValuePage.getTotalPages())
+                .build();
     }
 
     @Override

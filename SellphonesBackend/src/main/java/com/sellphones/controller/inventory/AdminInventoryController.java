@@ -1,6 +1,7 @@
-package com.sellphones.controller.inventory.admin;
+package com.sellphones.controller.inventory;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.*;
 import com.sellphones.service.inventory.AdminInventoryService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class AdminInventoryController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getInventories(AdminInventoryFilterRequest request){
-        List<AdminInventoryResponse> response = adminInventoryService.getInventories(request);
+        PageResponse<AdminInventoryResponse> response = adminInventoryService.getInventories(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

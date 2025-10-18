@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface InventoryRepository extends JpaRepository<Inventory, Long>, JpaSpecificationExecutor<Inventory> {
     @Query("""
         SELECT COALESCE(SUM(i.quantity), 0)
@@ -13,4 +16,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long>, Jpa
         WHERE i.productVariant.id = :productVariantId
     """)
     Long sumQuantityByProductVariantId(@Param("productVariantId") Long productVariantId);
+
+    List<Inventory> findByIdIn(Collection<Long> ids);
 }

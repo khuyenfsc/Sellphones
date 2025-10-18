@@ -1,6 +1,9 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
+import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Attribute;
 import com.sellphones.entity.product.AttributeValue;
 import com.sellphones.exception.AppException;
@@ -39,7 +42,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
-    public List<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
+    public PageResponse<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -48,10 +51,16 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
         Specification<Attribute> spec = AdminAttributeSpecificationBuilder.build(request);
 
         Page<Attribute> attributePage = attributeRepository.findAll(spec, pageable);
-
-        return attributePage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminAttributeResponse.class))
+        List<Attribute> attributes = attributePage.getContent();
+        List<AdminAttributeResponse> response = attributes.stream()
+                .map(i -> modelMapper.map(i, AdminAttributeResponse.class))
                 .toList();
+
+        return PageResponse.<AdminAttributeResponse>builder()
+                .result(response)
+                .total(attributePage.getTotalElements())
+                .totalPages(attributePage.getTotalPages())
+                .build();
     }
 
     @Override
@@ -80,7 +89,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
-    public List<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
+    public PageResponse<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -88,11 +97,17 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
         Specification<AttributeValue> spec = AdminAttributeValueSpecificationBuilder.build(request, attributeId);
 
-        Page<AttributeValue> attributePage = attributeValueRepository.findAll(spec, pageable);
-
-        return attributePage.getContent().stream()
-                .map(a -> modelMapper.map(a, AdminAttributeValueResponse.class))
+        Page<AttributeValue> attributeValuePage = attributeValueRepository.findAll(spec, pageable);
+        List<AttributeValue> attributeValues = attributeValuePage.getContent();
+        List<AdminAttributeValueResponse> response = attributeValues.stream()
+                .map(i -> modelMapper.map(i, AdminAttributeValueResponse.class))
                 .toList();
+
+        return PageResponse.<AdminAttributeValueResponse>builder()
+                .result(response)
+                .total(attributeValuePage.getTotalElements())
+                .totalPages(attributeValuePage.getTotalPages())
+                .build();
     }
 
     @Override

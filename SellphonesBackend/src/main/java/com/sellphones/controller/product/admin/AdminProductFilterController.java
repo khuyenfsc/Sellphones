@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminProductFilterService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class AdminProductFilterController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getProductFilters(AdminProductFilterFilterRequest request){
-        List<AdminProductFilterResponse> products = adminProductFilterService.getProductFilters(request);
+        PageResponse<AdminProductFilterResponse> products = adminProductFilterService.getProductFilters(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 
@@ -58,9 +59,9 @@ public class AdminProductFilterController {
 
     @GetMapping("/{filterId}/filter-options")
     public ResponseEntity<CommonResponse> getFilterOptions(@Valid AdminFilterOptionFilterRequest request, @PathVariable Long filterId){
-        List<AdminFilterOptionResponse> responses = adminProductFilterService.getFilterOptions(request, filterId);
+        PageResponse<AdminFilterOptionResponse> response = adminProductFilterService.getFilterOptions(request, filterId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

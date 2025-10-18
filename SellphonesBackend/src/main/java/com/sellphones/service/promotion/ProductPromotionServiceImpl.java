@@ -22,14 +22,14 @@ public class ProductPromotionServiceImpl implements ProductPromotionService {
     private final PromotionActionFactory promotionActionFactory;
 
     @Override
-    public void applyPromotions(OrderVariant orderVariant, List<ProductPromotion> productPromotions, Order order) {
-        for(ProductPromotion productPromotion : productPromotions){
+    public void applyPromotions(OrderVariant orderVariant, List<OrderVariantPromotion> promotions, Order order) {
+        for(Promotion promotion : promotions){
             try{
 
-                PromotionConditionDto promotionConditionDto = objectMapper.readValue(productPromotion.getCondition(), PromotionConditionDto.class);
+                PromotionConditionDto promotionConditionDto = objectMapper.readValue(promotion.getCondition(), PromotionConditionDto.class);
                 if(PromotionConditionChecker.isEligible(order, promotionConditionDto)){
-                    PromotionAction promotionAction = promotionActionFactory.getAction(productPromotion.getType());
-                    promotionAction.apply(orderVariant, productPromotion.getConfig());
+                    PromotionAction promotionAction = promotionActionFactory.getAction(promotion.getType());
+                    promotionAction.apply(orderVariant, promotion.getConfig());
                 }
             }catch (JsonProcessingException e){
                 throw new AppException(ErrorCode.INVALID_PROMOTION_CONFIG);

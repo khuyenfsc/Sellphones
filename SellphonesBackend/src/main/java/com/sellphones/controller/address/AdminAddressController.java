@@ -1,9 +1,10 @@
 package com.sellphones.controller.address;
 
 import com.sellphones.dto.CommonResponse;
-import com.sellphones.dto.address.AdminAddressFilterRequest;
-import com.sellphones.dto.address.AdminAddressRequest;
-import com.sellphones.dto.address.AdminAddressResponse;
+import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
+import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.AddressResponse;
 import com.sellphones.service.address.admin.AdminAddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AdminAddressController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getAddresses(AdminAddressFilterRequest request){
-        List<AdminAddressResponse> response = adminAddressService.getAddresses(request);
+        PageResponse<AddressResponse> response = adminAddressService.getAddresses(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
@@ -32,7 +33,7 @@ public class AdminAddressController {
     }
 
     @PostMapping("/add-address")
-    public ResponseEntity<CommonResponse> addAddress(@RequestBody @Valid AdminAddressRequest request) {
+    public ResponseEntity<CommonResponse> addAddress(@RequestBody @Valid AddressRequest request) {
         adminAddressService.addAddress(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added address successfully");
@@ -41,7 +42,7 @@ public class AdminAddressController {
     }
 
     @PutMapping("/edit-address/{id}")
-    public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AdminAddressRequest request, @PathVariable Long id) {
+    public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AddressRequest request, @PathVariable Long id) {
         adminAddressService.editAddress(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited address successfully");

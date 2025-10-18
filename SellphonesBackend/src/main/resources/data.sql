@@ -153,64 +153,36 @@ VALUES
 ('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'MALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
 ('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 3, CURRENT_TIMESTAMP); -- Order Admin
 
----- Root: Sales
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Sales', 'SALES', NULL, CURRENT_TIMESTAMP);
---
----- Orders
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Orders', 'SALES.ORDERS', 1, CURRENT_TIMESTAMP);
-
 INSERT INTO permission (name, code, created_at)
 VALUES
 ('Create', 'SALES.ORDERS.CREATE', CURRENT_TIMESTAMP),
+('Edit', 'SALES.ORDERS.EDIT', CURRENT_TIMESTAMP),
 ('View',   'SALES.ORDERS.VIEW', CURRENT_TIMESTAMP),
 ('Cancel', 'SALES.ORDERS.CANCEL',  CURRENT_TIMESTAMP);
 
----- Invoices
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Invoices', 'SALES.INVOICES', 1, CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
 ('View',   'SALES.INVOICES.VIEW',    CURRENT_TIMESTAMP),
 ('Create', 'SALES.INVOICES.CREATE',  CURRENT_TIMESTAMP);
 
----- Shipments
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Shipments', 'SALES.SHIPMENTS', 1, CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
 ('View',   'SALES.SHIPMENTS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'SALES.SHIPMENTS.CREATE', CURRENT_TIMESTAMP);
 
----- Refunds
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Refunds', 'SALES.REFUNDS', 1, CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
 ('View',   'SALES.REFUNDS.VIEW',   CURRENT_TIMESTAMP),
 ('Create', 'SALES.REFUNDS.CREATE',  CURRENT_TIMESTAMP);
 
--- Transactions
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Transactions', 'SALES.TRANSACTIONS', 1, CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
 ('View', 'SALES.TRANSACTIONS.VIEW',  CURRENT_TIMESTAMP);
 
---
----- Root: Catalog
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Catalog', 'CATALOG', NULL, CURRENT_TIMESTAMP);
-
--- Products
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Products', 'CATALOG.PRODUCTS',
---        (SELECT id FROM permission WHERE code='CATALOG'), CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
@@ -261,91 +233,34 @@ VALUES
 ('Create', 'INVENTORY.WAREHOUSES.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'INVENTORY.WAREHOUSES.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'INVENTORY.WAREHOUSES.DELETE', CURRENT_TIMESTAMP);
--- Categories
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Categories', 'CATALOG.CATEGORIES',
---        (SELECT id FROM permission WHERE code='CATALOG'), CURRENT_TIMESTAMP);
-
---INSERT INTO permission (name, code,  created_at)
---VALUES
---('Create', 'CATALOG.CATEGORIES.CREATE',  CURRENT_TIMESTAMP),
---('Edit',   'CATALOG.CATEGORIES.EDIT',    CURRENT_TIMESTAMP),
---('Delete', 'CATALOG.CATEGORIES.DELETE',  CURRENT_TIMESTAMP);
---
---INSERT INTO permission (name, code,  created_at)
---VALUES
---('View', 'CATALOG.ATTRIBUTES.VIEW',  CURRENT_TIMESTAMP),
---('Create', 'CATALOG.ATTRIBUTES.CREATE',  CURRENT_TIMESTAMP),
---('Edit',   'CATALOG.ATTRIBUTES.EDIT',    CURRENT_TIMESTAMP),
---('Delete', 'CATALOG.ATTRIBUTES.DELETE',  CURRENT_TIMESTAMP);
---
---INSERT INTO permission (name, code,  created_at)
---VALUES
---('View', 'CATALOG.BRANDS.VIEW',  CURRENT_TIMESTAMP),
---('Create', 'CATALOG.BRANDS.CREATE',  CURRENT_TIMESTAMP),
---('Edit',   'CATALOG.BRANDS.EDIT',    CURRENT_TIMESTAMP),
---('Delete', 'CATALOG.BRANDS.DELETE',  CURRENT_TIMESTAMP);
-
--- Root: Customers
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Customers', 'CUSTOMERS', NULL, CURRENT_TIMESTAMP);
---
----- Customers (submodule)
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Customers', 'CUSTOMERS.CUSTOMERS',
---        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
-('View', 'CLIENTS.CUSTOMERS.VIEW', CURRENT_TIMESTAMP),
-('Create', 'CLIENTS.CUSTOMERS.CREATE', CURRENT_TIMESTAMP),
-('Edit',   'CLIENTS.CUSTOMERS.EDIT',   CURRENT_TIMESTAMP),
-('Delete', 'CLIENTS.CUSTOMERS.DELETE',CURRENT_TIMESTAMP);
+('View', 'CUSTOMER.CUSTOMERS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CUSTOMER.CUSTOMERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CUSTOMER.CUSTOMERS.EDIT',   CURRENT_TIMESTAMP),
+('Delete', 'CUSTOMER.CUSTOMERS.DELETE',CURRENT_TIMESTAMP);
 
--- Addresses
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Addresses', 'CUSTOMERS.ADDRESSES',
---        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
-('View', 'CLIENTS.ADDRESSES.VIEW', CURRENT_TIMESTAMP),
-('Create', 'CLIENTS.ADDRESSES.CREATE', CURRENT_TIMESTAMP),
-('Edit',   'CLIENTS.ADDRESSES.EDIT',  CURRENT_TIMESTAMP),
-('Delete', 'CLIENTS.ADDRESSES.DELETE', CURRENT_TIMESTAMP);
-
--- Reviews
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Reviews', 'CUSTOMERS.REVIEWS',
---        (SELECT id FROM permission WHERE code='CUSTOMERS'), CURRENT_TIMESTAMP);
+('View', 'CUSTOMER.ADDRESSES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CUSTOMER.ADDRESSES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CUSTOMER.ADDRESSES.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'CUSTOMER.ADDRESSES.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
-('View',   'CLIENTS.REVIEWS.VIEW', CURRENT_TIMESTAMP),
-('Edit',   'CLIENTS.REVIEWS.EDIT', CURRENT_TIMESTAMP),
-('Delete', 'CLIENTS.REVIEWS.DELETE', CURRENT_TIMESTAMP);
+('View',   'CUSTOMER.REVIEWS.VIEW', CURRENT_TIMESTAMP),
+('Edit',   'CUSTOMER.REVIEWS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CUSTOMER.REVIEWS.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
-('View',   'CLIENTS.COMMENTS.VIEW', CURRENT_TIMESTAMP),
-('REPLY',   'CLIENTS.COMMENTS.REPLY', CURRENT_TIMESTAMP),
-('Edit',   'CLIENTS.COMMENTS.EDIT', CURRENT_TIMESTAMP),
-('Delete', 'CLIENTS.COMMENTS.DELETE', CURRENT_TIMESTAMP);
-
-
----- Root: Marketing
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Marketing', 'MARKETING', NULL, CURRENT_TIMESTAMP);
-
--- Promotions
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Promotions', 'MARKETING.PROMOTIONS',
---        (SELECT id FROM permission WHERE code='MARKETING'), CURRENT_TIMESTAMP);
---
----- Payment Rules
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Payment Rules', 'MARKETING.PROMOTIONS.PAYMENT_RULES',
---        (SELECT id FROM permission WHERE code='MARKETING.PROMOTIONS'), CURRENT_TIMESTAMP);
+('View',   'CUSTOMER.COMMENTS.VIEW', CURRENT_TIMESTAMP),
+('REPLY',   'CUSTOMER.COMMENTS.REPLY', CURRENT_TIMESTAMP),
+('Edit',   'CUSTOMER.COMMENTS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CUSTOMER.COMMENTS.DELETE', CURRENT_TIMESTAMP);
 
 -- Actions for Payment Rules
 INSERT INTO permission (name, code,  created_at)
@@ -355,71 +270,6 @@ VALUES
 ('Edit',   'MARKETING.PROMOTIONS.PAYMENT_RULES.EDIT',  CURRENT_TIMESTAMP),
 ('Delete', 'MARKETING.PROMOTIONS.PAYMENT_RULES.DELETE', CURRENT_TIMESTAMP);
 
----- Communications
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Communications', 'MARKETING.COMMUNICATIONS',
---        (SELECT id FROM permission WHERE code='MARKETING'), CURRENT_TIMESTAMP);
-
----- Email Templates
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Email Templates', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES',
---        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
-
-INSERT INTO permission (name, code, created_at)
-VALUES
-('Create', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.CREATE', CURRENT_TIMESTAMP),
-('Edit',   'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.EDIT',   CURRENT_TIMESTAMP),
-('Delete', 'MARKETING.COMMUNICATIONS.EMAIL_TEMPLATES.DELETE', CURRENT_TIMESTAMP);
-
----- Events
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Events', 'MARKETING.COMMUNICATIONS.EVENTS',
---        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
-
-INSERT INTO permission (name, code, created_at)
-VALUES
-('Create', 'MARKETING.COMMUNICATIONS.EVENTS.CREATE',CURRENT_TIMESTAMP),
-('Edit',   'MARKETING.COMMUNICATIONS.EVENTS.EDIT',  CURRENT_TIMESTAMP),
-('Delete', 'MARKETING.COMMUNICATIONS.EVENTS.DELETE',  CURRENT_TIMESTAMP);
-
--- Newsletter Subscribers
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Newsletter Subscribers', 'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS',
---        (SELECT id FROM permission WHERE code='MARKETING.COMMUNICATIONS'), CURRENT_TIMESTAMP);
-
-INSERT INTO permission (name, code, created_at)
-VALUES
-('Edit',   'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS.EDIT',CURRENT_TIMESTAMP),
-('Delete', 'MARKETING.COMMUNICATIONS.NEWSLETTER_SUBSCRIBERS.DELETE', CURRENT_TIMESTAMP);
-
--- Root: Reporting
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Reporting', 'REPORTING', NULL, CURRENT_TIMESTAMP);
-
--- Sales Report
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Sales', 'REPORTING.SALES',
---        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
---
----- Customers Report
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Customers', 'REPORTING.CUSTOMERS',
---        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
---
----- Products Report
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Products', 'REPORTING.PRODUCTS',
---        (SELECT id FROM permission WHERE code='REPORTING'), CURRENT_TIMESTAMP);
---
---
----- Root: Settings
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Settings', 'SETTINGS', NULL, CURRENT_TIMESTAMP);
---
----- Inventory Sources
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Inventory Sources', 'SETTINGS.INVENTORY_SOURCES',
---        (SELECT id FROM permission WHERE code='SETTINGS'), CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
@@ -428,23 +278,18 @@ VALUES
 ('Delete', 'SETTINGS.INVENTORY_SOURCES.DELETE',  CURRENT_TIMESTAMP);
 
 
--- Users
---INSERT INTO permission (name, code, parent_permission_id, created_at)
---VALUES ('Users', 'SETTINGS.USERS',
---        (SELECT id FROM permission WHERE code='SETTINGS'), CURRENT_TIMESTAMP);
-
 INSERT INTO permission (name, code, created_at)
 VALUES
 ('Create', 'SETTINGS.USERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'SETTINGS.USERS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'SETTINGS.USERS.DELETE',  CURRENT_TIMESTAMP);
 
-INSERT INTO permission (name, code, created_at)
-VALUES
-('View', 'SETTINGS.ROLES.VIEW', CURRENT_TIMESTAMP),
-('Create', 'SETTINGS.ROLES.CREATE', CURRENT_TIMESTAMP),
-('Edit',   'SETTINGS.ROLES.EDIT', CURRENT_TIMESTAMP),
-('Delete', 'SETTINGS.ROLES.DELETE',  CURRENT_TIMESTAMP);
+--INSERT INTO permission (name, code, created_at)
+--VALUES
+--('View', 'SETTINGS.ROLES.VIEW', CURRENT_TIMESTAMP),
+--('Create', 'SETTINGS.ROLES.CREATE', CURRENT_TIMESTAMP),
+--('Edit',   'SETTINGS.ROLES.EDIT', CURRENT_TIMESTAMP),
+--('Delete', 'SETTINGS.ROLES.DELETE',  CURRENT_TIMESTAMP);
 
 
 -- ADMIN -> all permissions
@@ -453,7 +298,7 @@ SELECT 1, id FROM permission WHERE code like 'SALES%';
 INSERT INTO role_permission (role_id, permission_id)
 SELECT 1, id FROM permission WHERE code like 'CATALOG%';
 INSERT INTO role_permission (role_id, permission_id)
-SELECT 1, id FROM permission WHERE code like 'CUSTOMERS%';
+SELECT 1, id FROM permission WHERE code like 'CUSTOMER%';
 INSERT INTO role_permission (role_id, permission_id)
 SELECT 1, id FROM permission WHERE code like 'MARKETING%';
 INSERT INTO role_permission (role_id, permission_id)
@@ -510,6 +355,19 @@ VALUES
 ('150 Le Duan', 'Ben Thanh', 'Quan 1', 'Ho Chi Minh', 'WAREHOUSE'),
 ('250 Tran Phu', 'Dien Bien', 'Ba Dinh', 'Ha Noi', 'WAREHOUSE');
 
+-- PICKUP
+INSERT INTO address (street, ward, district, province, address_type)
+VALUES
+('15 Vo Thi Sau', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'PICKUP'),
+('25 Nguyen Van Linh', 'Hoa Thuan Dong', 'Hai Chau', 'Da Nang', 'PICKUP'),
+('88 Kim Ma', 'Ngoc Khanh', 'Ba Dinh', 'Ha Noi', 'PICKUP'),
+('42 Tran Quang Khai', 'Tan Lap', 'Nha Trang', 'Khanh Hoa', 'PICKUP'),
+('10 Nguyen Hue', 'Phu Hoi', 'Hue', 'Thua Thien Hue', 'PICKUP'),
+('73 Le Loi', 'Phu Nhuan', 'Hue', 'Thua Thien Hue', 'PICKUP'),
+('60 Hoang Dieu', 'Hai Chau 1', 'Hai Chau', 'Da Nang', 'PICKUP'),
+('99 Cach Mang Thang 8', 'Ben Thanh', 'Quan 1', 'Ho Chi Minh', 'PICKUP');
+
+
 INSERT INTO warehouse (name, address_id)
 SELECT
     CASE
@@ -536,16 +394,16 @@ VALUES
 
 
 
-INSERT INTO customer_info (id, full_name, phone_number, address_id, cccd, date_of_birth, user_id)
+INSERT INTO customer_info (full_name, phone_number, address_id, cccd, date_of_birth, user_id)
 VALUES
-(1, 'Nguyen Van A', '0901000001', 1, '012345678901', '1995-01-15', 1), -- user_id = Nguyen Van A
-(2, 'Tran Thi B', '0902000002', 2, '012345678902', '1992-05-20', 2), -- user_id = Tran Thi B
-(3, 'Le Van C', '0903000003', 3, '012345678903', '1998-07-12', 3), -- user_id = Le Van C
-(4, 'Pham Thi D', '0904000004', 4, NULL, '1990-03-05', 4), -- user_id = Pham Thi D
-(5, 'Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22', 5), -- user_id = Hoang Van E
-(6, 'Do Thi F', '0906000006', 6, NULL, '1997-09-10', 6), -- user_id = Vu Thi F (FEMALE, Customer)
-(7, 'Phan Van G', '0907000007', 7, '012345678907', '1999-12-30', 7), -- user_id = Do Van G (Sales Manager)
-(8, 'Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14', 8); -- user_id = Nguyen Thi H (Order Admin)
+('Nguyen Van A', '0901000001', 1, '012345678901', '1995-01-15', 1), -- user_id = Nguyen Van A
+('Tran Thi B', '0902000002', 2, '012345678902', '1992-05-20', 2), -- user_id = Tran Thi B
+('Le Van C', '0903000003', 3, '012345678903', '1998-07-12', 3), -- user_id = Le Van C
+('Pham Thi D', '0904000004', 4, NULL, '1990-03-05', 4), -- user_id = Pham Thi D
+('Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22', 5), -- user_id = Hoang Van E
+('Do Thi F', '0906000006', 6, NULL, '1997-09-10', 6), -- user_id = Vu Thi F (FEMALE, Customer)
+('Phan Van G', '0907000007', 7, '012345678907', '1999-12-30', 7), -- user_id = Do Van G (Sales Manager)
+('Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14', 8); -- user_id = Nguyen Thi H (Order Admin)
 
 
 
@@ -936,37 +794,37 @@ VALUES (1, 'Cash Payment', 'Thanh toán tiền mặt tại cửa hàng hoặc kh
 INSERT INTO payment_method (id, name, description, payment_method_type)
 VALUES (2, 'VNPay', 'Thanh toán trực tuyến thông qua cổng VNPay', 'VNPAY');
 
-INSERT INTO customer_order (id, code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
+INSERT INTO customer_order (code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
 VALUES
-(1, 'SPS1', 1, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
-(2, 'SPS2', 1, '2025-09-02 11:30:00', 3200000, 'ACCEPTED',  2, 'COMPLETED', 2),
-(3, 'SPS3', 1, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
-(4, 'SPS4', 1, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
-(5, 'SPS5', 1, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'FAILED',    5),
-(6, 'SPS6', 1, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
-(7, 'SPS7', 1, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
-(8, 'SPS8', 1, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
+('SPS1', 1, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
+('SPS2', 1, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',  2, 'COMPLETED', 2),
+('SPS3', 1, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
+('SPS4', 1, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
+('SPS5', 1, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'FAILED',    5),
+('SPS6', 1, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
+('SPS7', 1, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
+('SPS8', 1, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
 
-INSERT INTO order_variant (id, order_id, product_variant_id, quantity, added_at, total_price, warranty_id)
+INSERT INTO order_variant (order_id, product_variant_id, quantity, added_at, total_price, warranty_id)
 VALUES
-(1, 1, 1, 2, '2025-09-01 10:05:00', 1000000, 1),
-(2, 1, 2, 1, '2025-09-01 10:07:00', 500000, 2),
-(3, 2, 3, 3, '2025-09-02 11:35:00', 1200000, 3),
-(4, 3, 4, 5, '2025-09-03 14:20:00', 450000, 1),
-(5, 4, 5, 2, '2025-09-04 09:50:00', 7800000, 4),
-(6, 5, 6, 1, '2025-09-05 16:10:00', 2300000, 5),
-(7, 6, 7, 2, '2025-09-06 19:25:00', 990000, 2),
-(8, 7, 8, 10, '2025-09-07 12:50:00', 11000000, 3),
-(9, 8, 9, 1, '2025-09-08 08:35:00', 560000, 4);
+(1, 1, 2, '2025-09-01 10:05:00', 1000000, 1),
+(1, 2, 1, '2025-09-01 10:07:00', 500000, 2),
+(2, 3, 3, '2025-09-02 11:35:00', 1200000, 3),
+(3, 4, 5, '2025-09-03 14:20:00', 450000, 1),
+(4, 5, 2, '2025-09-04 09:50:00', 7800000, 4),
+(5, 6, 1, '2025-09-05 16:10:00', 2300000, 5),
+(6, 7, 2, '2025-09-06 19:25:00', 990000, 2),
+(7, 8, 10, '2025-09-07 12:50:00', 11000000, 3),
+(8, 9, 1, '2025-09-08 08:35:00', 560000, 4);
 
 INSERT INTO order_variant_promotion
-(id, name, description, promotion_type, config, promotion_condition, start_date, end_date, order_variant_id)
+(name, description, promotion_type, config, promotion_condition, start_date, end_date, order_variant_id)
 VALUES
-(1, 'Giảm 10%', 'Giảm 10% cho sản phẩm', 'DISCOUNT_PERCENT', '{"value":10}', NULL, '2025-09-01', '2025-09-30', 1),
-(2, 'Giảm 200k', 'Giảm 200,000 VND cho đơn hàng trên 1 triệu', 'DISCOUNT_AMOUNT', '{"value":200000}', 'totalPrice > 1000000', '2025-09-01', '2025-09-30', 2),
-(3, 'Bảo hành thêm 6 tháng', 'Tặng thêm 6 tháng bảo hành', 'SERVICE', '{"months":6}', NULL, '2025-09-05', '2025-12-31', 3),
-(4, 'Freeship', 'Miễn phí vận chuyển toàn quốc', 'SERVICE', '{"shipping":"free"}', NULL, '2025-09-01', '2025-09-30', 5),
-(5, 'Giảm 5%', 'Giảm 5% cho khách hàng mới', 'DISCOUNT_PERCENT', '{"value":5}', 'isNewCustomer = true', '2025-09-01', '2025-10-15', 7);
+('Giảm 10%', 'Giảm 10% cho sản phẩm', 'DISCOUNT_PERCENT', '{"value":10}', NULL, '2025-09-01', '2025-09-30', 1),
+('Giảm 200k', 'Giảm 200,000 VND cho đơn hàng trên 1 triệu', 'DISCOUNT_AMOUNT', '{"value":200000}', 'totalPrice > 1000000', '2025-09-01', '2025-09-30', 2),
+('Bảo hành thêm 6 tháng', 'Tặng thêm 6 tháng bảo hành', 'SERVICE', '{"months":6}', NULL, '2025-09-05', '2025-12-31', 3),
+('Freeship', 'Miễn phí vận chuyển toàn quốc', 'SERVICE', '{"shipping":"free"}', NULL, '2025-09-01', '2025-09-30', 5),
+('Giảm 5%', 'Giảm 5% cho khách hàng mới', 'DISCOUNT_PERCENT', '{"value":5}', 'isNewCustomer = true', '2025-09-01', '2025-10-15', 7);
 
 
 -- Reviews for variant 1

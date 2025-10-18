@@ -2,6 +2,7 @@ package com.sellphones.service.product.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminBrandFilterRequest;
 import com.sellphones.dto.product.admin.AdminBrandRequest;
 import com.sellphones.dto.product.admin.AdminBrandResponse;
@@ -51,7 +52,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.VIEW')")
-    public List<AdminBrandResponse> getBrands(AdminBrandFilterRequest request) {
+    public PageResponse<AdminBrandResponse> getBrands(AdminBrandFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
         Sort sort = Sort.by(direction, "createdAt");
@@ -64,13 +65,19 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
         List<Brand> brands = brandPage.getContent();
 
-        return brands.stream()
+        List<AdminBrandResponse> response =  brands.stream()
                 .map(b -> {
                     AdminBrandResponse resp = modelMapper.map(b, AdminBrandResponse.class);
                     resp.setBrandIcon(ImageNameToImageUrlConverter.convert(b.getBrandIcon(), folderName));
                     return resp;
                 })
                 .toList();
+
+        return PageResponse.<AdminBrandResponse>builder()
+                .result(response)
+                .total(brandPage.getTotalElements())
+                .totalPages(brandPage.getTotalPages())
+                .build();
 
     }
 

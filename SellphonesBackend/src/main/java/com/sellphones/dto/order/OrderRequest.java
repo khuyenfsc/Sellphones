@@ -19,7 +19,7 @@ public class OrderRequest {
 
     private PaymentStatus paymentStatus;
 
-    private OrderCustomerInfoRequest customerInfo;
+    private Long customerInfoId;
 
     private PaymentMethodType paymentMethodType;
 }

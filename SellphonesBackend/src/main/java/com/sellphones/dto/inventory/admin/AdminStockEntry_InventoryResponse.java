@@ -1,5 +1,6 @@
 package com.sellphones.dto.inventory.admin;
 
+import com.sellphones.dto.product.admin.AdminInventory_ProductVariantResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

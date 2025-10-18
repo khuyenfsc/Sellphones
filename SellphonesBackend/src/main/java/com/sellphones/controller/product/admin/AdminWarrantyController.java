@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminWarrantyService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class AdminWarrantyController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getWarranties(AdminWarrantyFilterRequest request){
-        List<AdminWarrantyResponse> response = adminWarrantyService.getWarranties(request);
+        PageResponse<AdminWarrantyResponse> response = adminWarrantyService.getWarranties(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

@@ -1,10 +1,12 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +24,9 @@ public class AdminCategoryController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getCategories(AdminCategoryFilterRequest request){
-        List<AdminCategoryResponse> responses = adminCategoryService.getCategories(request);
+        PageResponse<AdminCategoryResponse> response = adminCategoryService.getCategories(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
@@ -58,9 +60,9 @@ public class AdminCategoryController {
 
     @GetMapping("/{categoryId}/category-options")
     public ResponseEntity<CommonResponse> getCategoriesOptions(AdminCategoryOptionFilterRequest request, @PathVariable Long categoryId){
-        List<AdminCategoryOptionResponse> responses = adminCategoryService.getCategoryOptions(request, categoryId);
+        PageResponse<AdminCategoryOptionResponse> response = adminCategoryService.getCategoryOptions(request, categoryId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
@@ -94,9 +96,9 @@ public class AdminCategoryController {
 
     @GetMapping("/category-option/{categoryOptionId}/category-option-values")
     public ResponseEntity<CommonResponse> getCategoriesOptionValues(AdminCategoryOptionValueFilterRequest request, @PathVariable Long categoryOptionId){
-        List<AdminCategoryOptionValueResponse> responses = adminCategoryService.getCategoryOptionValues(request, categoryOptionId);
+        PageResponse<AdminCategoryOptionValueResponse> response = adminCategoryService.getCategoryOptionValues(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

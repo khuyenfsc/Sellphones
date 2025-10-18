@@ -66,7 +66,7 @@ public class AdminOrderSpecificationBuilder {
     }
 
     public static Specification<Order> hasCustomerNameContain(String customerName){
-        return (root, query, cb) -> cb.like(root.get("customerInfo").get("fullName"), customerName + "%");
+        return (root, query, cb) -> cb.like(root.get("customerInfo").get("fullName"), "%" + customerName + "%");
     }
 
     public static Specification<Order> hasPaymentStatus(PaymentStatus paymentStatus){

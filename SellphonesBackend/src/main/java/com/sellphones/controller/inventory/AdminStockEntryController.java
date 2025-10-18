@@ -1,6 +1,7 @@
-package com.sellphones.controller.inventory.admin;
+package com.sellphones.controller.inventory;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
@@ -24,7 +25,7 @@ public class AdminStockEntryController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getStockEntries(AdminStockEntryFilterRequest request){
-        List<AdminStockEntryResponse> response = adminStockEntryService.getStockEntries(request);
+        PageResponse<AdminStockEntryResponse> response = adminStockEntryService.getStockEntries(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

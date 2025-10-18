@@ -1,6 +1,7 @@
 package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
+import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.service.product.admin.AdminAttributeService;
 import jakarta.validation.Valid;
@@ -22,9 +23,9 @@ public class AdminAttributeController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getAttributes(@Valid AdminAttributeFilterRequest request){
-        List<AdminAttributeResponse> responses = adminAttributeService.getAttributes(request);
+        PageResponse<AdminAttributeResponse> response = adminAttributeService.getAttributes(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
@@ -58,9 +59,9 @@ public class AdminAttributeController {
 
     @GetMapping("/{attributeId}/attribute-values")
     public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminAttributeValueFilterRequest request,@PathVariable Long attributeId){
-        List<AdminAttributeValueResponse> responses = adminAttributeService.getAttributeValues(request, attributeId);
+        PageResponse<AdminAttributeValueResponse> response = adminAttributeService.getAttributeValues(request, attributeId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", responses);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
