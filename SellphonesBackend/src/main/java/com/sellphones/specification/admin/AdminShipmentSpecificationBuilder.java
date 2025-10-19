@@ -21,10 +21,6 @@ public class AdminShipmentSpecificationBuilder {
             spec = spec.and(hasDeliveryPartner(request.getPartner()));
         }
 
-        if(request.getWarehouseName() != null){
-            spec = spec.and(hasWarehouseNameContain(request.getWarehouseName()));
-        }
-
         if(request.getCustomerName() != null){
             spec = spec.and(hasCustomerNameContain(request.getCustomerName()));
         }

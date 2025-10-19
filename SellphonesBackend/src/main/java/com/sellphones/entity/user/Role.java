@@ -26,7 +26,7 @@ public class Role extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")

@@ -14,7 +14,7 @@ public class PromotionConditionChecker {
             new PaymentMethodCondition()
     );
 
-    public static boolean isEligible(Order order, PromotionConditionDto cond){
+    public static boolean  isEligible(Order order, PromotionConditionDto cond){
         return conditions.stream().allMatch(c -> c.isEligible(order, cond));
     }
 

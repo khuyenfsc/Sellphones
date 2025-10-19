@@ -1,9 +1,10 @@
 package com.sellphones.configuration;
 
 
+import com.sellphones.entity.user.Provider;
+import com.sellphones.entity.user.UserStatus;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
-import com.sellphones.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,11 +27,17 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetails user = userDetailsService.loadUserByUsername(username);
-        if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new AppException(ErrorCode.INVALID_PASSWORD);
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+
+        if(user.getStatus() == UserStatus.INACTIVE){
+            throw new AppException(ErrorCode.USER_INACTIVE);
         }
 
+        if(user.getProvider() == Provider.LOCAL){
+            if(!passwordEncoder.matches(password, user.getPassword())){
+                throw new AppException(ErrorCode.INVALID_PASSWORD);
+            }
+        }
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 

@@ -73,6 +73,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     private final ModelMapper modelMapper;
 
     @Override
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
     public AdminProductDetailResponse getProductDetails(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         product.setThumbnail(ImageNameToImageUrlConverter.convert(product.getThumbnail(), productThumbnailFolder));

@@ -27,14 +27,17 @@ public class User extends BaseEntity<Long> {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "avatar_url")
-    private String avatarUrl;
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Column(name = "date_of_birth")
     @JsonDeserialize(using = LocalDateDeserializer.class)

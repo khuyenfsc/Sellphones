@@ -134,15 +134,15 @@ INSERT INTO brand(name, brand_icon) VALUES ( 'Razer', 'razer.png');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Microsoft', 'microsoft.png');
 
 
-INSERT INTO role (id, name, description, role_name, created_at)
+INSERT INTO role (name, description, role_name, created_at)
 VALUES
-(1, 'Super Admin', 'Full access to the entire system', 'ADMIN', CURRENT_TIMESTAMP),
-(2, 'Sales Manager', 'Manage orders and shipments', 'ADMIN', CURRENT_TIMESTAMP),
-(3, 'Order Admin', 'Specialized in managing orders', 'ADMIN', CURRENT_TIMESTAMP),
-(4, 'Shipment Admin', 'Specialized in managing shipments', 'ADMIN', CURRENT_TIMESTAMP),
-(5, 'Customer', 'Regular customer with limited access', 'CUSTOMER', CURRENT_TIMESTAMP);
+('Super Admin', 'Full access to the entire system', 'ADMIN', CURRENT_TIMESTAMP),
+('Sales Manager', 'Manage orders and shipments', 'ADMIN', CURRENT_TIMESTAMP),
+('Order Admin', 'Specialized in managing orders', 'ADMIN', CURRENT_TIMESTAMP),
+('Shipment Admin', 'Specialized in managing shipments', 'ADMIN', CURRENT_TIMESTAMP),
+('Customer', 'Regular customer with limited access', 'CUSTOMER', CURRENT_TIMESTAMP);
 
-INSERT INTO app_user (full_name, avatar_url, email, password, date_of_birth, phone_number, gender, role_id, created_at)
+INSERT INTO app_user (full_name, avatar, email, password, date_of_birth, phone_number, gender, role_id, created_at)
 VALUES
 ('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'MALE', 1, CURRENT_TIMESTAMP), -- Super Admin
 ('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
@@ -163,25 +163,8 @@ VALUES
 
 INSERT INTO permission (name, code, created_at)
 VALUES
-('View',   'SALES.INVOICES.VIEW',    CURRENT_TIMESTAMP),
-('Create', 'SALES.INVOICES.CREATE',  CURRENT_TIMESTAMP);
-
-
-INSERT INTO permission (name, code, created_at)
-VALUES
 ('View',   'SALES.SHIPMENTS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'SALES.SHIPMENTS.CREATE', CURRENT_TIMESTAMP);
-
-
-INSERT INTO permission (name, code, created_at)
-VALUES
-('View',   'SALES.REFUNDS.VIEW',   CURRENT_TIMESTAMP),
-('Create', 'SALES.REFUNDS.CREATE',  CURRENT_TIMESTAMP);
-
-
-INSERT INTO permission (name, code,  created_at)
-VALUES
-('View', 'SALES.TRANSACTIONS.VIEW',  CURRENT_TIMESTAMP);
 
 
 INSERT INTO permission (name, code,  created_at)
@@ -262,24 +245,30 @@ VALUES
 ('Edit',   'CUSTOMER.COMMENTS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CUSTOMER.COMMENTS.DELETE', CURRENT_TIMESTAMP);
 
--- Actions for Payment Rules
 INSERT INTO permission (name, code,  created_at)
 VALUES
-('Create', 'MARKETING.PROMOTIONS.PAYMENT_RULES.CREATE', CURRENT_TIMESTAMP),
-('Copy',   'MARKETING.PROMOTIONS.PAYMENT_RULES.COPY',   CURRENT_TIMESTAMP),
-('Edit',   'MARKETING.PROMOTIONS.PAYMENT_RULES.EDIT',  CURRENT_TIMESTAMP),
-('Delete', 'MARKETING.PROMOTIONS.PAYMENT_RULES.DELETE', CURRENT_TIMESTAMP);
+('View',   'MARKETING.PROMOTIONS.PRODUCT_PROMOTIONS.VIEW',   CURRENT_TIMESTAMP),
+('Create', 'MARKETING.PROMOTIONS.PRODUCT_PROMOTIONS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.PROMOTIONS.PRODUCT_PROMOTIONS.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.PROMOTIONS.PRODUCT_PROMOTIONS.DELETE', CURRENT_TIMESTAMP);
 
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View',   'MARKETING.PROMOTIONS.GIFT_PRODUCTS.VIEW',   CURRENT_TIMESTAMP),
+('Create', 'MARKETING.PROMOTIONS.GIFT_PRODUCTS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.PROMOTIONS.GIFT_PRODUCTS.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.PROMOTIONS.GIFT_PRODUCTS.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
-('Create', 'SETTINGS.INVENTORY_SOURCES.CREATE',  CURRENT_TIMESTAMP),
-('Edit',   'SETTINGS.INVENTORY_SOURCES.EDIT',    CURRENT_TIMESTAMP),
-('Delete', 'SETTINGS.INVENTORY_SOURCES.DELETE',  CURRENT_TIMESTAMP);
-
+('View', 'SETTINGS.ROLES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'SETTINGS.ROLES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'SETTINGS.ROLES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'SETTINGS.ROLES.DELETE',  CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
+('View', 'SETTINGS.USERS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'SETTINGS.USERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'SETTINGS.USERS.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'SETTINGS.USERS.DELETE',  CURRENT_TIMESTAMP);
@@ -549,36 +538,44 @@ VALUES ('OnePlus 12 - 12GB RAM - 256GB', 18990000, 'OP12-12-256', 4, 40, CURRENT
 INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
 VALUES ('OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
 
--- iPhone 15 128GB (id=1) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date)
+-- iPhone 15 128GB có 2 khuyến mãi
+INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
 VALUES
-(1, 'Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT', '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
-(2, 'Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
+('Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT',
+ '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
+('Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT',
+ '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
 
--- iPhone 15 256GB (id=2) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
-(3, 'Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết',
- 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-20'),
-(4, 'Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí',
- 'SERVICE', '{"service":"Extended Warranty","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
-(5, 'Voucher IP256-7%', 'Nhập mã IP256 giảm thêm 7%',
- 'DISCOUNT_PERCENT', '{"percent":7}', '{"paymentMethods":["VNPAY"]}', '2025-09-10', '2025-09-25');
 
--- Galaxy S24 (id=3) có 2 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
-(6, 'Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24',
- 'DISCOUNT_AMOUNT', '{"amount":2000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30'),
-(7, 'Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%',
- 'DISCOUNT_PERCENT', '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-15', '2025-09-30');
+-- iPhone 15 256GB có 3 khuyến mãi
+INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
+VALUES
+('Giảm 10% iPhone 15 256GB', 'Giảm 10% trên giá niêm yết', 'DISCOUNT_PERCENT',
+ '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-20'),
+('Tặng bảo hành 12 tháng', 'Bảo hành thêm 12 tháng miễn phí', 'SERVICE',
+ '{"service":"Extended Warranty","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
+('Voucher IP256-7%', 'Nhập mã IP256 giảm thêm 7%', 'DISCOUNT_PERCENT',
+ '{"percent":7}', '{"paymentMethods":["VNPAY"]}', '2025-09-10', '2025-09-25');
 
--- MacBook Air M3 (id=4) có 3 khuyến mãi
-INSERT INTO product_promotion (id, name, description, promotion_type, config, promotion_condition, start_date, end_date) VALUES
-(8, 'Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng',
- 'SERVICE', '{"service":"Office 365","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
-(9, 'Giảm 5% khi thanh toán qua VNPAY', 'Thanh toán qua VNPAY giảm thêm 5%',
- 'DISCOUNT_PERCENT', '{"percent":5}', '{"paymentMethods":["VNPAY"]}', '2025-09-01', '2025-09-30'),
-(10, 'Voucher MBA-3%', 'Nhập mã MBA3 giảm thêm 3%',
- 'DISCOUNT_PERCENT', '{"percent":3}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30');
+
+-- Galaxy S24 có 2 khuyến mãi
+INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
+VALUES
+('Giảm giá trực tiếp 2 triệu', 'Giảm 2,000,000đ khi mua Galaxy S24', 'DISCOUNT_AMOUNT',
+ '{"amount":2000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30'),
+('Voucher Galaxy 10%', 'Nhập mã GS24 giảm thêm 10%', 'DISCOUNT_PERCENT',
+ '{"percent":10}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-15', '2025-09-30');
+
+
+-- MacBook Air M3 có 3 khuyến mãi
+INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
+VALUES
+('Tặng Office 365 1 năm', 'Miễn phí Microsoft Office 365 trong 12 tháng', 'SERVICE',
+ '{"service":"Office 365","duration":"12 months"}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-12-31'),
+('Giảm 5% khi thanh toán qua VNPAY', 'Thanh toán qua VNPAY giảm thêm 5%', 'DISCOUNT_PERCENT',
+ '{"percent":5}', '{"paymentMethods":["VNPAY"]}', '2025-09-01', '2025-09-30'),
+('Voucher MBA-3%', 'Nhập mã MBA3 giảm thêm 3%', 'DISCOUNT_PERCENT',
+ '{"percent":3}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-10', '2025-09-30');
 
 -- iPhone 15 128GB (id=1) liên kết với promotions 1, 2
 INSERT INTO product_variant_promotion (product_variant_id, product_promotion_id) VALUES
@@ -737,18 +734,18 @@ VALUES
 
 
 -- Quà tặng 1: Ốp lưng iPhone 15
-INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
-VALUES (1, 'Ốp lưng silicon iPhone 15', 100, 'Ốp lưng silicon trong suốt, bảo vệ điện thoại tốt',
+INSERT INTO gift_product (name, stock, description, thumbnail, price)
+VALUES ('Ốp lưng silicon iPhone 15', 100, 'Ốp lưng silicon trong suốt, bảo vệ điện thoại tốt',
         'https://example.com/iphone15-case.jpg', 0);
 
 -- Quà tặng 2: Tai nghe Bluetooth mini
-INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
-VALUES (2, 'Tai nghe Bluetooth mini', 50, 'Tai nghe không dây, pin 12h, dễ mang theo',
+INSERT INTO gift_product (name, stock, description, thumbnail, price)
+VALUES ('Tai nghe Bluetooth mini', 50, 'Tai nghe không dây, pin 12h, dễ mang theo',
         'https://example.com/bluetooth-earbuds.jpg', 0);
 
 -- Quà tặng 3: Bình giữ nhiệt
-INSERT INTO gift_product (id, name, stock, description, thumbnail, price)
-VALUES (3, 'Bình giữ nhiệt 500ml', 200, 'Bình giữ nhiệt inox, giữ nóng/lạnh 8h',
+INSERT INTO gift_product (name, stock, description, thumbnail, price)
+VALUES ('Bình giữ nhiệt 500ml', 200, 'Bình giữ nhiệt inox, giữ nóng/lạnh 8h',
         'https://example.com/thermos.jpg', 0);
 
 -- iPhone 15 (id=1 trong bảng product) được tặng kèm ốp lưng và tai nghe

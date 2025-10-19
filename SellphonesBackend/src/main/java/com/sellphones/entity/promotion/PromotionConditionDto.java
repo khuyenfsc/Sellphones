@@ -1,13 +1,11 @@
 package com.sellphones.entity.promotion;
 
 
-import com.sellphones.entity.payment.PaymentMethod;
 import com.sellphones.entity.payment.PaymentMethodType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor

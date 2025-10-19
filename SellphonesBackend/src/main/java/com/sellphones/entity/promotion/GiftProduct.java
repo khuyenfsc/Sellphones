@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "gift_product")
 public class GiftProduct extends BaseEntity<Long> {
 
@@ -33,10 +35,10 @@ public class GiftProduct extends BaseEntity<Long> {
     @Column(precision = 19, scale = 0)
     private BigDecimal price;
 
-    @ManyToMany
-    @JoinTable(name = "product_gift",
-            joinColumns = @JoinColumn(name = "gift_product_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
-    )
-    private List<ProductVariant> productVariants;
+//    @ManyToMany
+//    @JoinTable(name = "product_gift",
+//            joinColumns = @JoinColumn(name = "gift_product_id"),
+//            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
+//    )
+//    private List<ProductVariant> productVariants;
 }

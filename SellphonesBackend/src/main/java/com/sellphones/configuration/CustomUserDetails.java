@@ -1,5 +1,7 @@
 package com.sellphones.configuration;
 
+import com.sellphones.entity.user.Provider;
+import com.sellphones.entity.user.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ public class CustomUserDetails implements UserDetails {
     private final String role;
     private final String username;
     private final String password;
+    private final Provider provider;
+    private final UserStatus status;
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Override

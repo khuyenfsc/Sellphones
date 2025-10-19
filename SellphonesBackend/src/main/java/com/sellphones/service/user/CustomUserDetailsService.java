@@ -34,6 +34,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user.getRole().getRoleName().toString(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getProvider(),
+                user.getStatus(),
                 authorities);
     }
 

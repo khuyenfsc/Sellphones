@@ -5,15 +5,12 @@ import com.sellphones.dto.user.UserRequest;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.authentication.TokenType;
 import com.sellphones.entity.user.RoleName;
-import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
-import com.sellphones.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class LocalAuthenticationAction implements AuthenticationAction{
 
     private final AuthenticationManager authenticationManager;
-
-    private final UserRepository userRepository;
 
     private final JwtService jwtService;
 
