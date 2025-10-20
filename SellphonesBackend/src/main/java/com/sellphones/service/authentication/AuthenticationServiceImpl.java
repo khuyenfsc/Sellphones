@@ -3,7 +3,7 @@ package com.sellphones.service.authentication;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.sellphones.configuration.CustomUserDetails;
-import com.sellphones.dto.authentication.request.LogoutRequest;
+import com.sellphones.dto.authentication.LogoutRequest;
 import com.sellphones.dto.user.UserRequest;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.authentication.TokenType;
@@ -11,12 +11,10 @@ import com.sellphones.entity.user.RoleName;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +46,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 ? AuthorityUtils.commaSeparatedStringToAuthorityList(authClaim.toString())
                 : Collections.emptyList();
 
-        UserDetails userDetails = new CustomUserDetails(role, username, null , authorities);
+//        UserDetails userDetails = new CustomUserDetails(role, username, null , authorities);
+        UserDetails userDetails = CustomUserDetails.builder()
+                .username(username)
+                .role(role)
+                .authorities(authorities)
+                .build();
 
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
         String newAccessToken = jwtService.generateToken(authentication, TokenType.ACCESS, jwtClaimsSet.getClaim("role").toString());

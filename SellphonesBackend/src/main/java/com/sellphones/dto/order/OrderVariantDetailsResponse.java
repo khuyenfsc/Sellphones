@@ -1,8 +1,7 @@
 package com.sellphones.dto.order;
 
-import com.sellphones.dto.product.response.WarrantyResponse;
+import com.sellphones.dto.product.WarrantyResponse;
 import com.sellphones.dto.promotion.OrderVariantPromotionResponse;
-import com.sellphones.entity.promotion.OrderVariantPromotion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

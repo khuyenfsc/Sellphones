@@ -1,13 +1,11 @@
 package com.sellphones.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sellphones.dto.authentication.response.AuthenticationResponse;
+
 import com.sellphones.dto.user.UserRequest;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.user.RoleName;
 import com.sellphones.entity.user.User;
 import com.sellphones.oauth2.CustomOAuth2User;
-import com.sellphones.oauth2.CustomOAuth2UserService;
 import com.sellphones.redis.RedisAuthService;
 import com.sellphones.repository.user.UserRepository;
 import com.sellphones.service.authentication.AuthenticationService;
@@ -19,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 

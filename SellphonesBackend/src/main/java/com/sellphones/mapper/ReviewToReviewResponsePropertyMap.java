@@ -1,7 +1,7 @@
 package com.sellphones.mapper;
 
 import com.sellphones.constant.AppConstants;
-import com.sellphones.dto.product.response.ReviewResponse;
+import com.sellphones.dto.product.ReviewResponse;
 import com.sellphones.entity.product.Review;
 import org.modelmapper.Converter;
 import org.modelmapper.PropertyMap;

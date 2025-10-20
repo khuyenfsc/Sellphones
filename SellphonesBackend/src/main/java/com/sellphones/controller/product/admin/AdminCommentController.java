@@ -6,7 +6,6 @@ import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
 import com.sellphones.dto.product.admin.AdminCommentRequest;
 import com.sellphones.dto.product.admin.AdminCommentResponse;
 import com.sellphones.dto.product.admin.AdminEditingCommentRequest;
-import com.sellphones.dto.product.request.NewCommentRequest;
 import com.sellphones.service.product.admin.AdminCommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

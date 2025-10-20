@@ -1,8 +1,8 @@
 package com.sellphones.elasticsearch;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.response.ProductDocumentResponse;
-import com.sellphones.dto.product.response.ProductListResponse;
+import com.sellphones.dto.product.ProductDocumentResponse;
+import com.sellphones.dto.product.ProductListResponse;
 
 import java.util.List;
 

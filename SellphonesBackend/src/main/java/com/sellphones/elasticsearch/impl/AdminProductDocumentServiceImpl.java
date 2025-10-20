@@ -1,7 +1,7 @@
 package com.sellphones.elasticsearch.impl;
 
 import com.sellphones.dto.product.admin.AdminProductFilter_Request;
-import com.sellphones.dto.product.response.ProductListResponse;
+import com.sellphones.dto.product.ProductListResponse;
 import com.sellphones.elasticsearch.AdminProductDocumentService;
 import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 import com.sellphones.elasticsearch.ProductDocument;

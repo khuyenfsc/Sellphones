@@ -1,12 +1,10 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
-import com.sellphones.dto.product.request.FilterRequest;
-import com.sellphones.dto.product.response.ProductDetailsResponse;
-import com.sellphones.dto.product.response.ProductListResponse;
-import com.sellphones.dto.product.response.ProductVariantResponse;
-import com.sellphones.entity.inventory.Inventory;
+import com.sellphones.dto.product.FilterRequest;
+import com.sellphones.dto.product.ProductDetailsResponse;
+import com.sellphones.dto.product.ProductListResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.exception.AppException;

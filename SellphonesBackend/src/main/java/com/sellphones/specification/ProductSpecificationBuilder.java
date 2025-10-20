@@ -1,7 +1,7 @@
 package com.sellphones.specification;
 
-import com.sellphones.dto.product.request.QueryRequest;
-import com.sellphones.dto.product.request.StaticFilterRequest;
+import com.sellphones.dto.product.QueryRequest;
+import com.sellphones.dto.product.StaticFilterRequest;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.AttributeValue;
 import com.sellphones.entity.product.ProductVariant;

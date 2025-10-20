@@ -1,7 +1,7 @@
 package com.sellphones.service.product;
 
-import com.sellphones.dto.product.response.CategoryResponse;
-import com.sellphones.dto.product.response.ProductFilterResponse;
+import com.sellphones.dto.product.CategoryResponse;
+import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.repository.product.CategoryRepository;

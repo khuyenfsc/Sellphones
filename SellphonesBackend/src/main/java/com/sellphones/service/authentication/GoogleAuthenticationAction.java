@@ -10,6 +10,7 @@ import com.sellphones.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +23,19 @@ public class GoogleAuthenticationAction implements AuthenticationAction{
 
     private final JwtService jwtService;
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
     @Override
     public AuthenticationToken authenticate(UserRequest userRequest, RoleName roleName) {
 //        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userRequest.getEmail(), userRequest.getPassword(), List.of(new SimpleGrantedAuthority("CUSTOMER")));
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        AuthenticationManager authenticationManager = null;
+        try {
+            authenticationManager = authenticationConfiguration.getAuthenticationManager();
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.GET_AUTHENTICATION_MANAGER_FAILED);
+        }
         Authentication unauthentication = UsernamePasswordAuthenticationToken.unauthenticated(userRequest.getEmail(), userRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(unauthentication);
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

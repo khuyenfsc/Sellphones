@@ -2,9 +2,9 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.request.NewCommentRequest;
-import com.sellphones.dto.product.request.ReplyCommentRequest;
-import com.sellphones.dto.product.response.CommentResponse;
+import com.sellphones.dto.product.NewCommentRequest;
+import com.sellphones.dto.product.ReplyCommentRequest;
+import com.sellphones.dto.product.CommentResponse;
 import com.sellphones.service.product.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

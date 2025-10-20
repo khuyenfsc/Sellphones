@@ -1,7 +1,7 @@
 package com.sellphones.controller.user;
 
 import com.sellphones.dto.CommonResponse;
-import com.sellphones.dto.authentication.response.AuthenticationResponse;
+import com.sellphones.dto.authentication.AuthenticationResponse;
 import com.sellphones.dto.user.*;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.service.authentication.AuthenticationService;

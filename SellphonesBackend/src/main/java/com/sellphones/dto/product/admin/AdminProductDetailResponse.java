@@ -1,8 +1,7 @@
 package com.sellphones.dto.product.admin;
 
-import com.sellphones.dto.product.response.AttributeValueResponse;
-import com.sellphones.dto.product.response.ProductDetailsBrandResponse;
-import com.sellphones.dto.product.response.ProductDetailsCategoryResponse;
+import com.sellphones.dto.product.ProductDetailsBrandResponse;
+import com.sellphones.dto.product.ProductDetailsCategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

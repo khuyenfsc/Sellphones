@@ -6,6 +6,7 @@ import com.sellphones.configuration.CustomUserDetails;
 import com.sellphones.constant.AppConstants;
 import com.sellphones.entity.user.Permission;
 import com.sellphones.entity.user.Role;
+import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.service.authentication.JwtService;
@@ -79,7 +80,13 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                 throw new AppException(ErrorCode.UNAUTHORIZED_CUSTOMER_ACCESS);
             }
 
-            UserDetails userDetails = new CustomUserDetails(roleName, username, null, authorities);
+//            UserDetails userDetails = new CustomUserDetails(roleName, username, null, authorities);
+            UserDetails userDetails = CustomUserDetails.builder()
+                    .role(roleName)
+                    .username(username)
+                    .authorities(authorities)
+                    .build();
+
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AppException ex) {

@@ -1,8 +1,8 @@
 package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
-import com.sellphones.dto.product.response.CategoryResponse;
-import com.sellphones.dto.product.response.ProductFilterResponse;
+import com.sellphones.dto.product.CategoryResponse;
+import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.service.product.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

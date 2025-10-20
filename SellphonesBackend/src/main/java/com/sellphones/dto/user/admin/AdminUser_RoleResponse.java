@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 public class AdminUser_RoleResponse {
     private Long id;
 
+    private String name;
+
     private RoleName roleName;
 }

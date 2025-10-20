@@ -2,13 +2,10 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.request.FilterRequest;
-import com.sellphones.dto.product.request.FilterWrapper;
-import com.sellphones.dto.product.response.ProductDetailsResponse;
-import com.sellphones.dto.product.response.ProductDocumentResponse;
-import com.sellphones.dto.product.response.ProductListResponse;
-import com.sellphones.dto.product.response.ProductVariantResponse;
-import com.sellphones.elasticsearch.ProductDocumentService;
+import com.sellphones.dto.product.FilterRequest;
+import com.sellphones.dto.product.ProductDetailsResponse;
+import com.sellphones.dto.product.ProductListResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

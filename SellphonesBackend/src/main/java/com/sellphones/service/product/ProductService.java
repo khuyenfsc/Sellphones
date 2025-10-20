@@ -1,10 +1,10 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.request.FilterRequest;
-import com.sellphones.dto.product.response.ProductDetailsResponse;
-import com.sellphones.dto.product.response.ProductListResponse;
-import com.sellphones.dto.product.response.ProductVariantResponse;
+import com.sellphones.dto.product.FilterRequest;
+import com.sellphones.dto.product.ProductDetailsResponse;
+import com.sellphones.dto.product.ProductListResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 
 import java.util.List;
 

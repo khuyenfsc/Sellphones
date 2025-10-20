@@ -31,7 +31,7 @@ public class AdminGiftProductController {
     }
 
     @PostMapping("/create-gift-product")
-    public ResponseEntity<CommonResponse> addProduct(
+    public ResponseEntity<CommonResponse> createGIftProduct(
             @RequestPart("gift_product") String giftProductJson,
             @RequestPart(name = "file", required = false) MultipartFile thumbnailFile
     ){

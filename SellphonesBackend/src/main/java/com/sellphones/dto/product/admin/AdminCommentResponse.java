@@ -1,6 +1,6 @@
 package com.sellphones.dto.product.admin;
 
-import com.sellphones.dto.product.response.CommentUserResponse;
+import com.sellphones.dto.product.CommentUserResponse;
 import com.sellphones.entity.product.CommentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

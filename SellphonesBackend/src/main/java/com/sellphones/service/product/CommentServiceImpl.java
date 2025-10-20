@@ -1,9 +1,9 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.request.NewCommentRequest;
-import com.sellphones.dto.product.request.ReplyCommentRequest;
-import com.sellphones.dto.product.response.CommentResponse;
+import com.sellphones.dto.product.NewCommentRequest;
+import com.sellphones.dto.product.ReplyCommentRequest;
+import com.sellphones.dto.product.CommentResponse;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.user.User;

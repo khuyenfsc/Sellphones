@@ -3,7 +3,7 @@ package com.sellphones.service.product.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
-import com.sellphones.dto.product.response.ProductVariantResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.entity.product.*;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;

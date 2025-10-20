@@ -1,7 +1,7 @@
 package com.sellphones.elasticsearch;
 
 import com.sellphones.dto.product.admin.AdminProductFilter_Request;
-import com.sellphones.dto.product.response.ProductListResponse;
+import com.sellphones.dto.product.ProductListResponse;
 
 import java.util.List;
 

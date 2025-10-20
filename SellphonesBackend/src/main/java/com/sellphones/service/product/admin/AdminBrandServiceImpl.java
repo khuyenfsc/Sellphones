@@ -1,12 +1,10 @@
 package com.sellphones.service.product.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminBrandFilterRequest;
 import com.sellphones.dto.product.admin.AdminBrandRequest;
 import com.sellphones.dto.product.admin.AdminBrandResponse;
-import com.sellphones.dto.product.request.ReviewRequest;
 import com.sellphones.entity.product.Brand;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -18,7 +16,6 @@ import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j

@@ -33,6 +33,14 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --REFERENCES product(id)
 --ON DELETE CASCADE;
 
+--ALTER TABLE cart
+--DROP CONSTRAINT fk_user_cart,
+--ADD CONSTRAINT fk_user_cart
+--FOREIGN KEY (user_id)
+--REFERENCES user(id)
+--ON DELETE CASCADE;
+
+
 --ALTER TABLE product_category
 --DROP CONSTRAINT fk_product_category_category_option_value,
 --ADD CONSTRAINT fk_product_category_category_option_value
@@ -110,6 +118,55 @@ INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TI
 --  FOREIGN KEY (warehouse_id) REFERENCES warehouse(id)
 --  ON DELETE SET NULL;
 
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE customer_info
+--DROP FOREIGN KEY fk_user_customer_info;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE customer_info
+--  ADD CONSTRAINT fk_user_customer_info
+--  FOREIGN KEY (user_id) REFERENCES user(id)
+--  ON DELETE SET NULL;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE order
+--DROP FOREIGN KEY fk_user_order;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE order
+--  ADD CONSTRAINT fk_user_order
+--  FOREIGN KEY (user_id) REFERENCES user(id)
+--  ON DELETE SET NULL;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE customer_info
+--DROP FOREIGN KEY fk_user_customer_info;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE customer_info
+--  ADD CONSTRAINT fk_user_customer_info
+--  FOREIGN KEY (user_id) REFERENCES user(id)
+--  ON DELETE SET NULL;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE comment
+--DROP FOREIGN KEY fk_user_comment;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE comment
+--  ADD CONSTRAINT fk_user_comment
+--  FOREIGN KEY (user_id) REFERENCES user(id)
+--  ON DELETE SET NULL;
+
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE review
+--DROP FOREIGN KEY fk_user_review;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE customer_info
+--  ADD CONSTRAINT fk_user_review
+--  FOREIGN KEY (user_id) REFERENCES user(id)
+--  ON DELETE SET NULL;
 
 
 

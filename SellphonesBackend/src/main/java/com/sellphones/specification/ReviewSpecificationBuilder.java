@@ -1,6 +1,6 @@
 package com.sellphones.specification;
 
-import com.sellphones.dto.product.request.ReviewFilterRequest;
+import com.sellphones.dto.product.ReviewFilterRequest;
 import com.sellphones.entity.product.Review;
 import com.sellphones.entity.product.ReviewStatus;
 import org.springframework.data.jpa.domain.Specification;

@@ -5,10 +5,8 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
-import com.sellphones.dto.product.response.ProductVariantResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface AdminProductService {
     AdminProductDetailResponse getProductDetails(Long productId);
