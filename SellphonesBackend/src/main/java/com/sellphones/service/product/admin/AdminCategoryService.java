@@ -2,13 +2,14 @@ package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface AdminCategoryService {
     PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request);
-    void addCategory(AdminCategoryRequest request);
-    void editCategory(AdminCategoryRequest request, Long categoryId);
+    void addCategory(String categoryJson, MultipartFile iconFile);
+    void editCategory(String categoryJson, MultipartFile iconName, Long id);
     void deleteCategory(Long categoryId);
     PageResponse<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId);
     void addCategoryOption(AdminCategoryOptionRequest request, Long categoryId);

@@ -18,6 +18,7 @@ import com.sellphones.specification.admin.AdminProductVariantSpecificationBuilde
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -72,6 +73,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     private final ModelMapper modelMapper;
 
+    private final Validator validator;
+
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
     public AdminProductDetailResponse getProductDetails(Long productId) {
@@ -90,7 +93,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
     public void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile) {
-        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper);
+        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper, validator);
 
         List<String> imageNames = new ArrayList<>();
 
@@ -140,16 +143,20 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper);
+        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper, validator);
 
         List<String> imageNames = new ArrayList<>();
 
         String thumbnailName = product.getThumbnail();
         if (thumbnailFile != null) {
             try {
-                fileStorageService.store(thumbnailFile, thumbnailName, productThumbnailFolder);
+                if (thumbnailName != null && !thumbnailName.isEmpty()) {
+                    fileStorageService.store(thumbnailFile, thumbnailName, productThumbnailFolder);
+                } else {
+                    thumbnailName = fileStorageService.store(thumbnailFile, productThumbnailFolder);
+                }
             } catch (Exception e) {
-                log.error("Failed to upload thumbnail file {}", thumbnailFile.getOriginalFilename(), e);
+                log.error("Failed to upload icon file {}", thumbnailFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
@@ -224,8 +231,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
     public void addProductVariant(String productVariantJson, MultipartFile file, Long productId) {
-        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper);
-
+        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper, validator);
         String variantImage = "";
         if (file != null) {
             try {
@@ -282,14 +288,18 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper);
+        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper, validator);
 
         String variantImage = productVariant.getVariantImage();
         if (file != null) {
             try {
-                fileStorageService.store(file, variantImage, productThumbnailFolder);
+                if (variantImage != null && !variantImage.isEmpty()) {
+                    fileStorageService.store(file, variantImage, productVariantImageFolder);
+                } else {
+                    variantImage = fileStorageService.store(file, productVariantImageFolder);
+                }
             } catch (Exception e) {
-                log.error("Failed to upload thumbnail file {}", file.getOriginalFilename(), e);
+                log.error("Failed to upload icon file {}", file.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }

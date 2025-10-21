@@ -17,6 +17,7 @@ import com.sellphones.specification.admin.AdminUserSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -53,6 +54,8 @@ public class AdminUserServiceImpl implements AdminUserService{
 
     private final ObjectMapper objectMapper;
 
+    private final Validator validator;
+
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS.VIEW')")
     public PageResponse<AdminUserResponse> getUsers(AdminUserFilterRequest request) {
@@ -83,7 +86,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Transactional
     @PreAuthorize("hasAuthority('SETTINGS.USERS.CREATE')")
     public void createUser(String userJson, MultipartFile avatarFile) {
-        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper);
+        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper, validator);
 
         String avatar = "";
         if (avatarFile != null) {
@@ -116,20 +119,24 @@ public class AdminUserServiceImpl implements AdminUserService{
     @PreAuthorize("hasAuthority('SETTINGS.USERS.EDIT')")
     public void editUser(String userJson, MultipartFile avatarFile, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper);
+        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper, validator);
 
-        String avatar = user.getAvatar();
+        String avatarName = user.getAvatar();
         if (avatarFile != null) {
             try {
-                fileStorageService.store(avatarFile, avatar, avatarFolderName);
+                if (avatarName != null && !avatarName.isEmpty()) {
+                    fileStorageService.store(avatarFile, avatarName, avatarFolderName);
+                } else {
+                    avatarName = fileStorageService.store(avatarFile, avatarFolderName);
+                }
             } catch (Exception e) {
-                log.error("Failed to upload thumbnail file {}", avatarFile.getOriginalFilename(), e);
+                log.error("Failed to upload icon file {}", avatarFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
 
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-        User editedUser = userMapper.mapToUserEntity(request, role, avatar);
+        User editedUser = userMapper.mapToUserEntity(request, role, avatarName);
         editedUser.setId(id);
         editedUser.setCreatedAt(user.getCreatedAt());
         userRepository.save(user);

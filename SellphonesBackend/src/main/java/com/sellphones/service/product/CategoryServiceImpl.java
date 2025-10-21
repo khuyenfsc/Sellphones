@@ -6,6 +6,7 @@ import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.repository.product.CategoryRepository;
 import com.sellphones.repository.product.ProductFilterRepository;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,20 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final ProductFilterRepository productFilterRepository;
 
+    private final String categoryIconFolderName = "category_icons";
+
     private final ModelMapper modelMapper;
 
     @Override
     public List<CategoryResponse> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
-                .map(category -> modelMapper.map(category, CategoryResponse.class))
+                .map(c ->
+                    {
+                        c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), categoryIconFolderName));
+                        return modelMapper.map(c, CategoryResponse.class);
+                    }
+                )
                 .collect(Collectors.toList());
     }
 

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,17 +33,24 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/add-category")
-    public ResponseEntity<CommonResponse> addCategory(@RequestBody @Valid AdminCategoryRequest request){
-        adminCategoryService.addCategory(request);
+    public ResponseEntity<CommonResponse> addCategory(
+        @RequestPart("category") String categoryJson,
+        @RequestPart(name = "file", required = false) MultipartFile iconFile
+    ){
+        adminCategoryService.addCategory(categoryJson, iconFile);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added category value successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PutMapping("/edit-category/{categoryId}")
-    public ResponseEntity<CommonResponse> editCategory(@RequestBody @Valid AdminCategoryRequest request, @PathVariable Long categoryId){
-        adminCategoryService.editCategory(request, categoryId);
+    @PutMapping("/edit-category/{id}")
+    public ResponseEntity<CommonResponse> editCategory(
+        @RequestPart("category") String categoryJson,
+        @RequestPart(name = "file", required = false) MultipartFile iconFile,
+        @PathVariable Long id
+    ){
+        adminCategoryService.editCategory(categoryJson, iconFile, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited category successfully");
 

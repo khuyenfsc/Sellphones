@@ -8,12 +8,14 @@ import com.sellphones.dto.product.admin.AdminBrandResponse;
 import com.sellphones.entity.product.Brand;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.BrandMapper;
 import com.sellphones.repository.product.BrandRepository;
 import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminBrandSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -42,7 +44,11 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     private final ObjectMapper objectMapper;
 
+    private final Validator validator;
+
     private final FileStorageService fileStorageService;
+
+    private final BrandMapper brandMapper;
 
     private final String folderName = "brands";
 
@@ -81,7 +87,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.CREATE')")
     public void addBrand(String brandJson, MultipartFile file) {
-        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper);
+        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper, validator);
         String fileName = "";
 
         if (file != null) {
@@ -92,11 +98,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
             }
         }
 
-        Brand brand = Brand.builder()
-                .name(request.getName())
-                .brandIcon(fileName.isEmpty() ? null : fileName)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Brand brand = brandMapper.mapToBranEntity(request, fileName);
         brandRepository.save(brand);
 
         if (file != null && !fileName.isEmpty()) {
@@ -120,41 +122,30 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.EDIT')")
     public void editBrand(String brandJson, MultipartFile file, Long id) {
-        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper);
+        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper, validator);
 
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
 
-        brand.setName(request.getName());
-
-        if (file != null && !file.isEmpty()) {
-            String oldFileName = brand.getBrandIcon();
-
-            String newFileName = fileStorageService.store(file, folderName);
-
-            brand.setBrandIcon(newFileName);
-
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == STATUS_ROLLED_BACK) {
-                        try {
-                            fileStorageService.delete(newFileName, folderName);
-                        } catch (Exception e) {
-                            log.error("Failed to cleanup new file {} after rollback", newFileName, e);
-                        }
-                    } else if (status == STATUS_COMMITTED && oldFileName != null) {
-                        // Sau khi DB commit thì mới xóa file cũ
-                        try {
-                            fileStorageService.delete(oldFileName, folderName);
-                        } catch (Exception e) {
-                            log.error("Failed to delete old file {}", oldFileName, e);
-                        }
-                    }
+        String iconName = brand.getBrandIcon();
+        if (file != null) {
+            try {
+                if (iconName != null && !iconName.isEmpty()) {
+                    fileStorageService.store(file, iconName, folderName);
+                } else {
+                    iconName = fileStorageService.store(file, folderName);
                 }
-            });
+            } catch (Exception e) {
+                log.error("Failed to upload icon file {}", file.getOriginalFilename(), e);
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
         }
 
+        Brand editedBrand = brandMapper.mapToBranEntity(request, iconName);
+        brand.setId(id);
+        brand.setCreatedAt(brand.getCreatedAt());
+
+        brandRepository.save(editedBrand);
     }
 
     @Override

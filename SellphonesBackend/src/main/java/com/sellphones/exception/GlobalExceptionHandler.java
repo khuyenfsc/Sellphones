@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<CommonErrorResponse> handleAppException(AppException aex){
         Map<String, Object> errors = new HashMap<>();
-        errors.put("message", aex.getErrorCode().getMessage());
+        errors.put("message", aex.getMessage());
         return new ResponseEntity<>(new CommonErrorResponse(aex.getErrorCode().getStatusCode().value(), errors), aex.getErrorCode().getStatusCode());
     }
 

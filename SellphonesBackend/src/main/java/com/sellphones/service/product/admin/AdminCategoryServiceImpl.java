@@ -1,5 +1,6 @@
 package com.sellphones.service.product.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
@@ -7,17 +8,23 @@ import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.CategoryOption;
 import com.sellphones.entity.product.CategoryOptionValue;
+import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.CategoryMapper;
 import com.sellphones.repository.product.CategoryOptionRepository;
 import com.sellphones.repository.product.CategoryOptionValueRepository;
 import com.sellphones.repository.product.CategoryRepository;
 import com.sellphones.repository.product.ProductRepository;
+import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminCategoryOptionSpecificationBuilder;
 import com.sellphones.specification.admin.AdminCategoryOptionValueSpecificationBuilder;
 import com.sellphones.specification.admin.AdminCategorySpecificationBuilder;
+import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,12 +33,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     private final CategoryRepository categoryRepository;
@@ -42,7 +54,17 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     private final ProductRepository productRepository;
 
+    private final FileStorageService fileStorageService;
+
+    private final CategoryMapper categoryMapper;
+
     private final ModelMapper modelMapper;
+
+    private final ObjectMapper objectMapper;
+
+    private final Validator validator;
+
+    private final String categoryIconFolderName = "category_icons";
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
@@ -69,21 +91,60 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
-    public void addCategory(AdminCategoryRequest request) {
-        Category category = Category.builder()
-                        .name(request.getName())
-                        .code(request.getCode())
-                        .createdAt(LocalDateTime.now())
-                        .build();
+    public void addCategory(String categoryJson, MultipartFile iconFile) {
+        AdminCategoryRequest request = JsonParser.parseRequest(categoryJson, AdminCategoryRequest.class, objectMapper, validator);
+        String iconName = "";
+        if (iconFile != null) {
+            try {
+                iconName = fileStorageService.store(iconFile, categoryIconFolderName);
+            } catch (Exception e) {
+                log.error("Failed to upload thumbnail file {}", iconFile.getOriginalFilename(), e);
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        Category category = categoryMapper.mapToCategoryEntity(request, iconName);
+
         categoryRepository.save(category);
+
+        String finalIconName = iconName;
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCompletion(int status) {
+                if(status == STATUS_ROLLED_BACK){
+                    if (StringUtils.hasText(finalIconName)) {
+                        fileStorageService.delete(finalIconName, categoryIconFolderName);
+                    }
+                }
+            }
+        });
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.EDIT')")
-    public void editCategory(AdminCategoryRequest request, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
-        category.setName(request.getName());;
+    public void editCategory(String categoryJson, MultipartFile iconFile, Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
+        AdminCategoryRequest request = JsonParser.parseRequest(categoryJson, AdminCategoryRequest.class, objectMapper, validator);
+
+        String iconName = category.getIcon();
+        if (iconFile != null) {
+            try {
+                if (iconName != null && !iconName.isEmpty()) {
+                    fileStorageService.store(iconFile, iconName, categoryIconFolderName);
+                } else {
+                    iconName = fileStorageService.store(iconFile, categoryIconFolderName);
+                }
+            } catch (Exception e) {
+                log.error("Failed to upload icon file {}", iconFile.getOriginalFilename(), e);
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        Category editedCategory = categoryMapper.mapToCategoryEntity(request, iconName);
+        editedCategory.setId(id);
+        editedCategory.setCreatedAt(category.getCreatedAt());
+        categoryRepository.save(editedCategory);
     }
 
     @Override

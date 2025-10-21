@@ -20,11 +20,11 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<CommonResponse> getAllCategories(){
         List<CategoryResponse> categories = categoryService.getAllCategories();
         Map<String, Object> map = new HashMap<>();
-        map.put("categories", categories);
+        map.put("result", categories);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 

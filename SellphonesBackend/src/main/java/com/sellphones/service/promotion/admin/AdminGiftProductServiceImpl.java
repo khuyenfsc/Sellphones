@@ -15,6 +15,7 @@ import com.sellphones.specification.admin.AdminGiftProductSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -46,6 +47,8 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     private final ModelMapper modelMapper;
 
     private final ObjectMapper objectMapper;
+
+    private final Validator validator;
 
     private final String giftProductFolderName = "gift_products";
 
@@ -80,7 +83,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @Transactional
     @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.GIFT_PRODUCTS.CREATE')")
     public void createGiftProduct(String giftProductJson, MultipartFile thumbnailFile) {
-        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper);
+        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper, validator);
 
         String thumbnailName = "";
         if (thumbnailFile != null) {
@@ -112,14 +115,18 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.GIFT_PRODUCTS.EDIT')")
     public void editGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
-        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper);
+        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper, validator);
 
         String thumbnailName = giftProduct.getThumbnail();
         if (thumbnailFile != null) {
             try {
-                fileStorageService.store(thumbnailFile, thumbnailName, giftProductFolderName);
+                if (thumbnailName != null && !thumbnailName.isEmpty()) {
+                    fileStorageService.store(thumbnailFile, thumbnailName, giftProductFolderName);
+                } else {
+                    thumbnailName = fileStorageService.store(thumbnailFile, giftProductFolderName);
+                }
             } catch (Exception e) {
-                log.error("Failed to upload thumbnail file {}", thumbnailFile.getOriginalFilename(), e);
+                log.error("Failed to upload icon file {}", thumbnailFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }

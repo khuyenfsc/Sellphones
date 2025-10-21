@@ -11,7 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryResponse {
 
+    private Long id;
+
     private String name;
+
+    private String icon;
 
     private List<CategoryOptionResponse> categoryOptions;
 }

@@ -1,7 +1,7 @@
 -- CATEGORY
-INSERT INTO category (code, name, created_at) VALUES ('DT', 'Điện thoại', CURRENT_TIMESTAMP);
-INSERT INTO category (code, name, created_at) VALUES ('TB', 'Tablet', CURRENT_TIMESTAMP);
-INSERT INTO category (code, name, created_at) VALUES ('LT', 'Laptop', CURRENT_TIMESTAMP);
+INSERT INTO category (code, name, icon, created_at) VALUES ('DT', 'Điện thoại', 'DT.png',CURRENT_TIMESTAMP);
+INSERT INTO category (code, name, icon, created_at) VALUES ('TB', 'Tablet', 'TB.png', CURRENT_TIMESTAMP);
+INSERT INTO category (code, name, icon, created_at) VALUES ('LT', 'Laptop', 'LT.png', CURRENT_TIMESTAMP);
 
 --NHỚ TEST KỸ LẠI CÁC METHOD DELETE SAU KHI CHUYỂN DB.
 

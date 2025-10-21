@@ -26,6 +26,8 @@ public class Category extends BaseEntity<Long> {
     @Column(nullable = false)
     private String code;
 
+    private String icon;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", orphanRemoval = true)
     private List<CategoryOption> categoryOptions = new ArrayList<>();
 
