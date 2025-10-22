@@ -6,7 +6,9 @@ public class AppConstants {
             "/api/v1/test/**",
             "/api/v1/products/**",
             "/api/v1/categories/**",
+            "/api/v1/promotion-banners/**",
             "/api/v1/comments",
+            "/api/v1/brands/**",
             "/api/v1/reviews",
             "/api/v1/auth/login",
             "/api/v1/auth/admin-login",
@@ -22,6 +24,7 @@ public class AppConstants {
             "/api/v1/users/verify-forgot-password-otp",
             "/api/v1/users/reset-password",
             "/api/v1/users/register-with-google",
+
             "/oauth2/**"
     };
 

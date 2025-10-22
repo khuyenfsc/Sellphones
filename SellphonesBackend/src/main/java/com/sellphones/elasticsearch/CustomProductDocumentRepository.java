@@ -46,9 +46,9 @@ public class CustomProductDocumentRepository {
 
         if(sortType != null){
             if(sortType.equals("asc")){
-                builder = builder.withSort(Sort.by("minPrice").ascending());
+                builder = builder.withSort(Sort.by("currentPrice").ascending());
             }else if(sortType.equals("desc")){
-                builder = builder.withSort(Sort.by("minPrice").descending());
+                builder = builder.withSort(Sort.by("currentPrice").descending());
             }
         }
 
@@ -76,9 +76,9 @@ public class CustomProductDocumentRepository {
 
         if(request.getSortType() != null){
             if(request.getSortType().equals("asc")){
-                queryBuilder = queryBuilder.withSort(Sort.by("minPrice").ascending());
+                queryBuilder = queryBuilder.withSort(Sort.by("currentPrice").ascending());
             }else if(request.getSortType().equals("desc")){
-                queryBuilder = queryBuilder.withSort(Sort.by("minPrice").descending());
+                queryBuilder = queryBuilder.withSort(Sort.by("currentPrice").descending());
             }
         }
 
@@ -92,9 +92,8 @@ public class CustomProductDocumentRepository {
         }
 
         if (request.getPrice() != null) {
-            System.out.println("min price " + request.getPrice().doubleValue());
             boolBuilder.filter(QueryBuilders.range(r -> r
-                    .number(num -> num.field("min_price").lte(request.getPrice().doubleValue()))
+                    .number(num -> num.field("current_price").lte(request.getPrice().doubleValue()))
             ));
         }
 

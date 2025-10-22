@@ -141,7 +141,12 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.GIFT_PRODUCTS.DELETE')")
     public void deleteGiftProduct(Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
-        fileStorageService.delete(giftProduct.getThumbnail(), giftProductFolderName);
+        String thumbnailName = giftProduct.getThumbnail();
+
         giftProductRepository.delete(giftProduct);
+
+        if(thumbnailName != null && !thumbnailName.isEmpty()){
+            fileStorageService.delete(thumbnailName, giftProductFolderName);
+        }
     }
 }

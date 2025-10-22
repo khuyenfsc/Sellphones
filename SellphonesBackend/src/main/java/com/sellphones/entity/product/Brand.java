@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,6 +20,14 @@ import java.util.List;
 @SuperBuilder
 @Table(name = "brand")
 public class Brand extends BaseEntity<Long> {
+
+    @ManyToMany
+    @JoinTable(
+            name = "brand_category",
+            joinColumns = @JoinColumn(name = "brand_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories = new ArrayList<>();
 
     @Column(nullable = false)
     private String name;

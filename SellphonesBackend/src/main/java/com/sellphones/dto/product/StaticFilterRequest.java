@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StaticFilterRequest {
-    private Long categoryId;
+    private String categoryName;
     private String priceRange;
     private Long brandId;
+    private Boolean isFeatured;
 }

@@ -43,7 +43,8 @@ public class ProductMapper {
 
         ProductVariant productVariant = ProductVariant.builder()
                 .productVariantName(request.getProductVariantName())
-                .price(request.getPrice())
+                .rootPrice(request.getRootPrice())
+                .currentPrice(request.getCurrentPrice())
                 .status(request.getStatus())
                 .variantImage(variantImage)
                 .promotions(promotions)

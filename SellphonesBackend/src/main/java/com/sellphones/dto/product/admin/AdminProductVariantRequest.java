@@ -17,7 +17,9 @@ public class AdminProductVariantRequest {
     @NotBlank
     private String productVariantName;
 
-    private BigDecimal price;
+    private BigDecimal rootPrice;
+
+    private BigDecimal currentPrice;
 
     private ProductVariantStatus status;
 

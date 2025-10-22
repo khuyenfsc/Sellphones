@@ -31,7 +31,7 @@ export default function HomePage() {
             {/* Hàng 2: FeaturedProductsSection */}
             <div className="flex justify-center">
                 <div className="w-full max-w-7xl">
-                    <FeaturedProductsSection />
+                    <FeaturedProductsSection categoryName="Điện thoại" />
                 </div>
             </div>
         </div>

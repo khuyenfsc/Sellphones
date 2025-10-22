@@ -1,17 +1,19 @@
-package com.sellphones.dto.promotion;
+package com.sellphones.dto.promotion.admin;
 
+import com.sellphones.entity.promotion.BannerStatus;
 import com.sellphones.entity.promotion.BannerType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PromotionBannerResponse {
+public class AdminPromotionBannerResponse {
+
+    private Long id;
 
     private String name;
 
@@ -20,4 +22,8 @@ public class PromotionBannerResponse {
     private String targetUrl;
 
     private BannerType bannerType;
+
+    private BannerStatus status;
+
+    private LocalDateTime createdAt;
 }

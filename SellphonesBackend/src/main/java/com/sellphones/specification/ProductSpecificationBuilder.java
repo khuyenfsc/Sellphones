@@ -22,8 +22,8 @@ public class ProductSpecificationBuilder {
         StaticFilterRequest staticFilter = queryRequest.get_static();
         Map<String, String> dynamicFilter = queryRequest.getDynamic();
 
-        if(staticFilter.getCategoryId() != null){
-            spec = spec.and(hasCategory(staticFilter.getCategoryId()));
+        if(staticFilter.getCategoryName() != null){
+            spec = spec.and(hasCategory(staticFilter.getCategoryName()));
         }
 
         if(staticFilter.getPriceRange() != null){
@@ -68,12 +68,17 @@ public class ProductSpecificationBuilder {
 
 
     public static Specification<Product> priceBetween(BigDecimal minPrice, BigDecimal maxPrice){
-        return (root, query, cb) -> cb.between(root.get("minPrice"), minPrice, maxPrice);
+        return (root, query, cb) -> cb.between(root.get("thumbnailProduct").get("currentPrice"), minPrice, maxPrice);
     }
 
-    public static Specification<Product> hasCategory(Long categoryId){
+    public static Specification<Product> hasCategory(String categoryName){
 //        return (root, query, cb) -> cb.equal(root.get("category").get("id"), categoryId);
-        return (root, query, cb) -> cb.equal(root.get("category").get("id"), categoryId);
+        return (root, query, cb) -> cb.equal(root.get("category").get("name"), categoryName);
+
+    }
+
+    public static Specification<Product> isFeatured(Boolean isFeatured){
+        return (root, query, cb) -> cb.equal(root.get("isFeatured"), isFeatured);
 
     }
 

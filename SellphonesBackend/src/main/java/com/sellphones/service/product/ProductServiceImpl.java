@@ -43,9 +43,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductListResponse> getFeaturedProductsByCategory(Long categoryId) {
+    public List<ProductListResponse> getFeaturedProductsByCategory(String categoryName) {
         Boolean isFeatured = true;
-        List<Product> featuredProducts = productRepository.findFirst10ByCategoryIdAndIsFeatured(categoryId, isFeatured);
+        List<Product> featuredProducts = productRepository.findFirst10ByCategory_NameAndIsFeatured(categoryName, isFeatured);
         return featuredProducts.stream()
                 .map(fp -> modelMapper.map(fp, ProductListResponse.class))
                 .collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService{
         Specification<Product> productSpec = ProductSpecificationBuilder.build(filter.getQuery());
         Sort.Direction direction = Sort.Direction.fromOptionalString(filter.getSort())
                 .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "minPrice");
+        Sort sort = Sort.by(direction, "thumbnailProduct.currentPrice");
 
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), sort);
 

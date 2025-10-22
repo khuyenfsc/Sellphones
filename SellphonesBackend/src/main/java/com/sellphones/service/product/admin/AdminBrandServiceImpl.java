@@ -149,29 +149,15 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.DELETE')")
     public void deleteBrand(Long id) {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
 
         String fileName = brand.getBrandIcon();
-
         brandRepository.delete(brand);
-
-        if (fileName != null && !fileName.isBlank()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == STATUS_COMMITTED) {
-                        try {
-                            fileStorageService.delete(fileName, folderName);
-                        } catch (Exception e) {
-                            log.error("Failed to delete brand icon {}", fileName, e);
-                        }
-                    }
-                }
-            });
+        if(fileName != null && !fileName.isEmpty()){
+            fileStorageService.delete(fileName, folderName);
         }
     }
 

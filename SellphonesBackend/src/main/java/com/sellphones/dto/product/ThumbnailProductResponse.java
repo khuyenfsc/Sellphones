@@ -9,13 +9,8 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductListResponse {
+public class ThumbnailProductResponse {
+    private BigDecimal rootPrice;
 
-    private Long id;
-
-    private String name;
-
-    private String thumbnail;
-
-    private ThumbnailProductResponse thumbnailProduct;
+    private BigDecimal currentPrice;
 }

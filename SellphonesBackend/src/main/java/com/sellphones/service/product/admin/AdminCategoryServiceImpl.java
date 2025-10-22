@@ -150,7 +150,14 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.DELETE')")
     public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
+        String iconName = category.getIcon();
+
         categoryRepository.deleteById(categoryId);
+
+        if(iconName != null && !iconName.isEmpty()){
+            fileStorageService.delete(iconName, categoryIconFolderName);
+        }
     }
 
     @Override

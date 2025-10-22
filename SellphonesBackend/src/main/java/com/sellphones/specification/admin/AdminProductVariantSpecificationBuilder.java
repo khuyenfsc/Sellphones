@@ -43,7 +43,7 @@ public class AdminProductVariantSpecificationBuilder {
     }
 
     public static Specification<ProductVariant> priceBetween(Long minPrice, Long maxPrice){
-        return (root, query, cb) -> cb.between(root.get("price"), minPrice, maxPrice);
+        return (root, query, cb) -> cb.between(root.get("currentPrice"), minPrice, maxPrice);
     }
 
     public static Specification<ProductVariant> hasProductId(Long productId){

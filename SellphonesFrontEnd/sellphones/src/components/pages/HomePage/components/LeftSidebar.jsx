@@ -1,7 +1,6 @@
 import { captureOwnerStack, useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import CategoryService from "../../../../service/CategoryService"; // 🔹 Đảm bảo đúng path
-
+import CategoryService from "../../../../service/CategoryService"; 
 export default function LeftSidebar() {
   const [categories, setCategories] = useState([]);
   const [hoveredCat, setHoveredCat] = useState(null); 

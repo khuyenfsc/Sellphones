@@ -33,8 +33,9 @@ public class Product extends BaseEntity<Long> {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "min_price", precision = 19, scale = 0)
-    private BigDecimal minPrice; //
+    @OneToOne
+    @JoinColumn(name = "thumbnail_product_id")
+    private ProductVariant thumbnailProduct;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants = new ArrayList<>();
@@ -48,26 +49,9 @@ public class Product extends BaseEntity<Long> {
     @Column(name = "image")
     private List<String> images = new ArrayList<>();
 
-//    @ManyToMany
-//    @JoinTable(name = "product_category",
-//            joinColumns = @JoinColumn(name = "product_id"),
-//            inverseJoinColumns = @JoinColumn(name = "category_option_value_id")
-//    )
-//    private List<CategoryOptionValue> categoryOptionValues;
-
     @Column(name = "is_featured")
     private Boolean isFeatured = false;
 
     @Column(name = "is_new")
     private Boolean isNew = true;
-
-//
-//    @JoinTable(name = "product_attribute_value",
-//        joinColumns = @JoinColumn(name = "product_id"),
-//        inverseJoinColumns = @JoinColumn(name = "attribute_value_id")
-//    )
-//    private List<AttributeValue> attributeValues = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "product")
-//    private List<ProductAttribute> productAttributes;
 }

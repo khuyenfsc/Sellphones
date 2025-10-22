@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductListResponse> getAllProducts();
-    List<ProductListResponse> getFeaturedProductsByCategory(Long categoryId);
+    List<ProductListResponse> getFeaturedProductsByCategory(String categoryName);
     PageResponse<ProductListResponse> getProductByFilter(FilterRequest filter);
     ProductDetailsResponse getProductById(Long id);
     ProductVariantResponse getProductVariantById(Long id);

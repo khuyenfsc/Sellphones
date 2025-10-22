@@ -178,13 +178,22 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        fileStorageService.delete(product.getThumbnail(), productThumbnailFolder);
-        product.getImages().forEach(i -> fileStorageService.delete(i, productImageFolder));
+        String thumbnailName = product.getThumbnail();
+        List<String> images = product.getImages();
         productRepository.deleteById(productId);
+
+        if(thumbnailName != null && !thumbnailName.isEmpty()){
+            fileStorageService.delete(thumbnailName, productThumbnailFolder);
+        }
+
+        for(String image : images){
+            if(image != null && !images.isEmpty()){
+                fileStorageService.delete(image, productImageFolder);
+            }
+        }
     }
 
 
@@ -193,7 +202,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     public PageResponse<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "price");
+        Sort sort = Sort.by(direction, "currentPrice");
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
@@ -340,8 +349,13 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
     public void deleteProductVariant(Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        fileStorageService.delete(productVariant.getVariantImage(), productImageFolder);
+        String imageName = productVariant.getVariantImage();
+
         productVariantRepository.delete(productVariant);
+
+        if(imageName != null && !imageName.isEmpty()){
+            fileStorageService.delete(imageName, productImageFolder);
+        }
     }
 
 }

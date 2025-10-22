@@ -190,6 +190,41 @@ INSERT INTO brand(name, brand_icon) VALUES ( 'Acer', 'acer.png');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Razer', 'razer.png');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Microsoft', 'microsoft.png');
 
+-- Điện thoại (category_id = 1)
+INSERT INTO brand_category (brand_id, category_id) VALUES
+(1, 1),  -- Apple
+(2, 1),  -- Samsung
+(3, 1),  -- Google
+(4, 1),  -- OnePlus
+(5, 1),  -- Xiaomi
+(6, 1),  -- Oppo
+(7, 1),  -- Vivo
+(8, 1),  -- Sony
+(10, 1), -- Realme
+(11, 1), -- Huawei
+(12, 1); -- Nothing
+
+-- Tablet (category_id = 2)
+INSERT INTO brand_category (brand_id, category_id) VALUES
+(1, 2),  -- Apple (iPad)
+(2, 2),  -- Samsung (Galaxy Tab)
+(3, 2),  -- Google (Pixel Tablet)
+(5, 2),  -- Xiaomi (Pad)
+(6, 2),  -- Oppo Pad
+(7, 2),  -- Vivo Pad
+(11, 2); -- Huawei MatePad
+
+-- Laptop (category_id = 3)
+INSERT INTO brand_category (brand_id, category_id) VALUES
+(1, 3),   -- Apple (MacBook)
+(9, 3),   -- Asus
+(13, 3),  -- Dell
+(14, 3),  -- HP
+(15, 3),  -- Lenovo
+(16, 3),  -- MSI
+(17, 3),  -- Acer
+(18, 3),  -- Razer
+(19, 3);  -- Microsoft Surface
 
 INSERT INTO role (name, description, role_name, created_at)
 VALUES
@@ -315,6 +350,13 @@ VALUES
 ('Create', 'MARKETING.PROMOTIONS.GIFT_PRODUCTS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'MARKETING.PROMOTIONS.GIFT_PRODUCTS.EDIT',  CURRENT_TIMESTAMP),
 ('Delete', 'MARKETING.PROMOTIONS.GIFT_PRODUCTS.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View',   'MARKETING.PROMOTIONS.BANNERS.VIEW',   CURRENT_TIMESTAMP),
+('Create', 'MARKETING.PROMOTIONS.BANNERS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'MARKETING.PROMOTIONS.BANNERS.EDIT',  CURRENT_TIMESTAMP),
+('Delete', 'MARKETING.PROMOTIONS.BANNERS.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code, created_at)
 VALUES
@@ -490,110 +532,111 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 INSERT INTO category_option_value (name, category_option_id, created_at) VALUES ('Dưới 10 triệu', 5, CURRENT_TIMESTAMP);
 INSERT INTO category_option_value (name, category_option_id, created_at) VALUES ('Từ 10 đến 15 triệu', 5, CURRENT_TIMESTAMP);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('iPhone 15', 'https://example.com/iphone15.jpg', 'Latest iPhone model', 1, CURRENT_TIMESTAMP, 1, true);
+-- ======================
+-- BẢNG PRODUCT
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('iPhone 15', 'https://example.com/iphone15.jpg', 'Latest iPhone model', 1, 1, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Samsung Galaxy S24', 'https://example.com/galaxyS24.jpg', 'Latest Samsung Galaxy', 2, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('Samsung Galaxy S24', 'https://example.com/galaxyS24.jpg', 'Latest Samsung Galaxy', 2, 1, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Google Pixel 8 Pro', 'https://example.com/pixel8pro.jpg', 'Flagship mới nhất của Google', 3, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('Google Pixel 8 Pro', 'https://example.com/pixel8pro.jpg', 'Flagship mới nhất của Google', 3, 1, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('OnePlus 12', 'https://example.com/oneplus12.jpg', 'Điện thoại hiệu năng cao của OnePlus', 4, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('OnePlus 12', 'https://example.com/oneplus12.jpg', 'Điện thoại hiệu năng cao của OnePlus', 4, 1, false, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Xiaomi 14 Ultra', 'https://example.com/xiaomi14ultra.jpg', 'Camera đỉnh cao, cấu hình mạnh mẽ', 5, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('Xiaomi 14 Ultra', 'https://example.com/xiaomi14ultra.jpg', 'Camera đỉnh cao, cấu hình mạnh mẽ', 5, 1, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Oppo Find X7 Pro', 'https://example.com/findx7pro.jpg', 'Thiết kế sang trọng, chụp ảnh đẹp', 6, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('MacBook Pro 14"', 'https://example.com/macbookpro14.jpg', 'Apple MacBook Pro 14-inch with M2 Pro chip', 1, 2, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Vivo X100 Pro', 'https://example.com/vivox100pro.jpg', 'Điện thoại chuyên chụp ảnh', 7, CURRENT_TIMESTAMP, 1, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
+VALUES ('Dell XPS 13', 'https://example.com/dellxps13.jpg', 'Dell XPS 13 ultrabook with InfinityEdge display', 13, 2, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Sony Xperia 1 V', 'https://example.com/xperia1v.jpg', 'Smartphone cao cấp với màn hình 4K', 8, CURRENT_TIMESTAMP, 1, false);
+-- ======================
+-- BẢNG PRODUCT_IMAGE (ảnh phụ cho từng sản phẩm)
+-- ======================
+INSERT INTO product_image (product_id, image) VALUES
+(1, 'https://example.com/images/iphone15-1.jpg'),
+(1, 'https://example.com/images/iphone15-2.jpg'),
+(2, 'https://example.com/images/galaxyS24-1.jpg'),
+(2, 'https://example.com/images/galaxyS24-2.jpg'),
+(3, 'https://example.com/images/pixel8pro-1.jpg'),
+(4, 'https://example.com/images/oneplus12-1.jpg'),
+(6, 'https://example.com/images/macbookpro14-1.jpg'),
+(7, 'https://example.com/images/dellxps13-1.jpg');
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Asus ROG Phone 8', 'https://example.com/rogphone8.jpg', 'Gaming phone cực mạnh', 9, CURRENT_TIMESTAMP, 1, true);
+-- ======================
+-- BẢNG PRODUCT_VARIANT
+-- ======================
+-- iPhone 15
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 1, 50, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Realme GT 6 Pro', 'https://example.com/realmegt6pro.jpg', 'Điện thoại flagship giá tốt', 10, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('iPhone 15 - 256GB - White', 27990000, 26590000, 'IP15-256-WHT', 'https://example.com/images/ip15-256-wht.jpg', 1, 30, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Huawei P60 Pro', 'https://example.com/p60pro.jpg', 'Camera Leica, chụp ảnh xuất sắc', 11, CURRENT_TIMESTAMP, 1, true);
+-- Samsung Galaxy S24
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('Galaxy S24 - 128GB - Phantom Black', 21990000, 20990000, 'SGS24-128-BLK', 'https://example.com/images/sgs24-128-blk.jpg', 2, 40, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, created_at, category_id, is_featured)
-VALUES ('Nothing Phone 2', 'https://example.com/nothingphone2.jpg', 'Thiết kế độc đáo với đèn LED', 12, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('Galaxy S24 - 256GB - Cream', 24990000, 23690000, 'SGS24-256-CRM', 'https://example.com/images/sgs24-256-crm.jpg', 2, 25, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('MacBook Pro 14"', 'https://example.com/macbookpro14.jpg', 'Apple MacBook Pro 14-inch with M2 Pro chip', 1, 2, true, CURRENT_TIMESTAMP);
+-- Google Pixel 8 Pro
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('Pixel 8 Pro - 128GB - Obsidian', 20990000, 19990000, 'PIX8P-128-OBS', 'https://example.com/images/pix8p-128-obs.jpg', 3, 35, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Dell XPS 13', 'https://example.com/dellxps13.jpg', 'Dell XPS 13 ultrabook with InfinityEdge display', 13, 2, true, CURRENT_TIMESTAMP);
+-- OnePlus 12
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('OnePlus 12 - 12GB RAM - 256GB', 18990000, 17990000, 'OP12-12-256', 'https://example.com/images/op12-12-256.jpg', 4, 40, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('HP Spectre x360', 'https://example.com/hpspectrex360.jpg', 'Convertible 2-in-1 laptop with OLED display', 14, 2, true, CURRENT_TIMESTAMP);
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('OnePlus 12 - 16GB RAM - 512GB', 22990000, 21990000, 'OP12-16-512', 'https://example.com/images/op12-16-512.jpg', 4, 20, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Lenovo ThinkPad X1 Carbon', 'https://example.com/thinkpadx1carbon.jpg', 'Business laptop with lightweight carbon fiber body', 15, 2, false, CURRENT_TIMESTAMP);
+-- MacBook Pro 14
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 47990000, 'MBP14-M2P-16-512', 'https://example.com/images/mbp14-m2p-16-512.jpg', 6, 20, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Asus ROG Zephyrus G14', 'https://example.com/rogzephyrusg14.jpg', 'Compact gaming laptop with Ryzen 9 processor', 9, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('MacBook Pro 14" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 56990000, 'MBP14-M2P-32-1TB', 'https://example.com/images/mbp14-m2p-32-1tb.jpg', 6, 10, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('MSI Stealth 15M', 'https://example.com/msistealth15m.jpg', 'Slim gaming laptop with RTX 4060 GPU', 16, 2, false, CURRENT_TIMESTAMP);
+-- Dell XPS 13
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 35990000, 'DXPS13-I7-16-512', 'https://example.com/images/dxps13-i7-16-512.jpg', 7, 15, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Acer Swift 3', 'https://example.com/acerswift3.jpg', 'Lightweight laptop with long battery life', 17, 2, false, CURRENT_TIMESTAMP);
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES ('Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 27490000, 'DXPS13-I5-8-256', 'https://example.com/images/dxps13-i5-8-256.jpg', 7, 25, 'ACTIVE');
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Razer Blade 15', 'https://example.com/razerblade15.jpg', 'Premium gaming laptop with aluminum chassis', 18, 2, false, CURRENT_TIMESTAMP);
+-- ======================
+-- CẬP NHẬT thumbnail_product_id CHO PRODUCT (liên kết tới variant chính)
+-- ======================
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'IP15-128-BLK'
+) WHERE id = 1;
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Microsoft Surface Laptop 5', 'https://example.com/surfacelaptop5.jpg', 'Touchscreen laptop with sleek design', 19, 2, false, CURRENT_TIMESTAMP);
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'SGS24-128-BLK'
+) WHERE id = 2;
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, created_at)
-VALUES ('Huawei MateBook X Pro', 'https://example.com/matebookxpro.jpg', 'Ultra-slim laptop with 3K touchscreen', 11, 2, false, CURRENT_TIMESTAMP);
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'PIX8P-128-OBS'
+) WHERE id = 3;
 
--- Variants cho iPhone 15
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('iPhone 15B - 128G - Black', 24990000, 'IP15-128-BLK', 1, 50, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-128-blk.jpg');
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'OP12-12-256'
+) WHERE id = 4;
 
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('iPhone 15 - 256GB - White', 27990000, 'IP15-256-WHT', 1, 30, CURRENT_TIMESTAMP, 'https://example.com/images/ip15-256-wht.jpg');
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'MBP14-M2P-16-512'
+) WHERE id = 6;
 
--- Variants cho Samsung Galaxy S24
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('Galaxy S24 - 128GB - Phantom Black', 21990000, 'SGS24-128-BLK', 2, 40, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-128-blk.jpg');
-
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('Galaxy S24 - 256GB - Cream', 24990000, 'SGS24-256-CRM', 2, 25, CURRENT_TIMESTAMP, 'https://example.com/images/sgs24-256-crm.jpg');
-
--- Variants cho Google Pixel 8 Pro
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('Pixel 8 Pro - 128GB - Obsidian', 20990000, 'PIX8P-128-OBS', 3, 35, CURRENT_TIMESTAMP, 'https://example.com/images/pix8p-128-obs.jpg');
-
--- Variants cho MacBook Pro 14
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 'MBP14-M2P-16-512', 13, 20, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-16-512.jpg');
-
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('MacBook Pro 14" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 'MBP14-M2P-32-1TB', 13, 10, CURRENT_TIMESTAMP, 'https://example.com/images/mbp14-m2p-32-1tb.jpg');
-
--- Variants cho Dell XPS 13
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 'DXPS13-I7-16-512', 14, 15, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i7-16-512.jpg');
-
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 'DXPS13-I5-8-256', 14, 25, CURRENT_TIMESTAMP, 'https://example.com/images/dxps13-i5-8-256.jpg');
-
--- Variants cho OnePlus 12
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('OnePlus 12 - 12GB RAM - 256GB', 18990000, 'OP12-12-256', 4, 40, CURRENT_TIMESTAMP, 'https://example.com/images/op12-12-256.jpg');
-
-INSERT INTO product_variant (product_variant_name, price, sku, product_id, stock, created_at, variant_image)
-VALUES ('OnePlus 12 - 16GB RAM - 512GB', 22990000, 'OP12-16-512', 4, 20, CURRENT_TIMESTAMP, 'https://example.com/images/op12-16-512.jpg');
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'DXPS13-I7-16-512'
+) WHERE id = 7;
 
 -- iPhone 15 128GB có 2 khuyến mãi
 INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
@@ -814,15 +857,15 @@ INSERT INTO product_variant_gift (gift_product_id, product_variant_id) VALUES (3
 
 
 
-UPDATE product p
-SET min_price = (
-    SELECT MIN(v.price)
-    FROM product_variant v
-    WHERE v.product_id = p.id
-)
-WHERE EXISTS (
-    SELECT 1 FROM product_variant v WHERE v.product_id = p.id
-);
+--UPDATE product p
+--SET min_price = (
+--    SELECT MIN(v.price)
+--    FROM product_variant v
+--    WHERE v.product_id = p.id
+--)
+--WHERE EXISTS (
+--    SELECT 1 FROM product_variant v WHERE v.product_id = p.id
+--);
 
 -- User 1: có 2 sản phẩm trong giỏ (iPhone 15 128GB và MacBook Pro 14 - 16GB/512GB)
 INSERT INTO cart_item (cart_id, product_variant_id, quantity, added_at, created_at)
@@ -1129,11 +1172,6 @@ INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value
 
 
 
--- Insert product images
-INSERT INTO product_image (product_id, image) VALUES (1, 'https://example.com/iphone15-1.jpg');
-INSERT INTO product_image (product_id, image) VALUES (1, 'https://example.com/iphone15-2.jpg');
-INSERT INTO product_image (product_id, image) VALUES (2, 'https://example.com/galaxyS24-1.jpg');
-
 
 INSERT INTO product_category (product_id, category_option_value_id) VALUES (1, 1);
 INSERT INTO product_category (product_id, category_option_value_id) VALUES (1, 5);
@@ -1141,12 +1179,12 @@ INSERT INTO product_category (product_id, category_option_value_id) VALUES (1, 5
 INSERT INTO product_category (product_id, category_option_value_id) VALUES (2, 2);
 INSERT INTO product_category (product_id, category_option_value_id) VALUES (2, 4);
 
-INSERT INTO promotion_banner (id, name, img_url, target_url, banner_type, position) VALUES
-(1, 'Back to School Sale', 'https://cdn.example.com/banners/back-to-school.jpg', 'https://shop.example.com/sale/back-to-school', 'SLIDER', 1),
-(2, 'Summer Mega Sale', 'https://cdn.example.com/banners/summer-mega-sale.jpg', 'https://shop.example.com/sale/summer', 'SLIDER', 2),
-(3, 'New Arrivals', 'https://cdn.example.com/banners/new-arrivals.jpg', 'https://shop.example.com/new', 'SLIDER', 3),
-(4, 'Flash Deal - 50% OFF', 'https://cdn.example.com/banners/flash-deal.jpg', 'https://shop.example.com/deals/flash', 'RIGHT', 1),
-(5, 'Christmas Specials', 'https://cdn.example.com/banners/christmas-specials.jpg', 'https://shop.example.com/sale/christmas', 'SINGLE', 1);
+INSERT INTO promotion_banner (name, image, target_url, banner_type, status) VALUES
+('IPHONE 17 SERIES', '690x300_iPhone_17_Pro_Opensale_v3.jpg', 'https://shop.example.com/sale/back-to-school', 'SLIDER', 'ACTIVE'),
+('GALAXY Z7 SERIES', 'Z7-Sliding-1025.jpg', 'https://shop.example.com/sale/summer', 'SLIDER', 'ACTIVE'),
+('OPPO FIND X9 SERIES', 'DKNT_Sliding.2.jpg', 'https://shop.example.com/new', 'SLIDER', 'ACTIVE'),
+('Flash Deal - 50% OFF', 'https://cdn.example.com/banners/flash-deal.jpg', 'https://shop.example.com/deals/flash', 'RIGHT', 'INACTIVE'),
+('REDMI 15C', 'Sliding_Redmi_15C.jpg', 'https://shop.example.com/sale/christmas', 'SINGLE', 'ACTIVE');
 
 
 

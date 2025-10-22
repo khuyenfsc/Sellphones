@@ -26,8 +26,11 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column(name = "product_variant_name")
     private String productVariantName;
 
-    @Column(nullable = false,precision = 19, scale = 0)
-    private BigDecimal price;
+    @Column(nullable = false,precision = 19, scale = 0, name = "root_price")
+    private BigDecimal rootPrice;
+
+    @Column(nullable = false,precision = 19, scale = 0, name = "current_price")
+    private BigDecimal currentPrice;
 
     @Enumerated(EnumType.STRING)
     private ProductVariantStatus status;

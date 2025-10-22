@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product>{
 
-    List<Product> findFirst10ByCategoryIdAndIsFeatured(Long id, Boolean isFeatured);
+    List<Product> findFirst10ByCategory_NameAndIsFeatured(String categoryName, Boolean isFeatured);
 
     @Transactional
     @Modifying

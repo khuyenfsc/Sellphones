@@ -35,6 +35,7 @@ public enum ErrorCode {
     CUSTOMER_NOT_FOUND("Customer not found", HttpStatus.NOT_FOUND),
     SUPPLIER_NOT_FOUND("Supplier not found", HttpStatus.NOT_FOUND),
     PRODUCT_FILTER_NOT_FOUND("Filter not found", HttpStatus.NOT_FOUND),
+    PROMOTION_BANNER_NOT_FOUND("Promotion banner not found", HttpStatus.NOT_FOUND),
     STOCK_ENTRY_NOT_FOUND("Stock entry not found", HttpStatus.NOT_FOUND),
     INVENTORY_NOT_FOUND("Inventory not found", HttpStatus.NOT_FOUND),
     WAREHOUSE_NOT_FOUND("Warehouse not found", HttpStatus.NOT_FOUND),

@@ -146,7 +146,12 @@ public class AdminUserServiceImpl implements AdminUserService{
     @PreAuthorize("hasAuthority('SETTINGS.USERS.DELETE')")
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        fileStorageService.delete(user.getAvatar(), avatarFolderName);
+        String avatarName = user.getAvatar();
+
         userRepository.deleteById(id);
+
+        if(avatarName != null && !avatarName.isEmpty()){
+            fileStorageService.delete(avatarName, avatarFolderName);
+        }
     }
 }

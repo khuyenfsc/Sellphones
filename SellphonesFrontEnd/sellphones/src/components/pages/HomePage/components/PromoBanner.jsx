@@ -1,91 +1,99 @@
-import React, { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import PromotionBannerService from "../../../../service/PromotionBannerService";
 
-const PromoBanner = () => {
-  const banners = [
-    {
-      id: 1,
-      title: "🍎 iPad Pro",
-      subtitle1: "Hiệu năng AI tiên tiến",
-      subtitle2: "và năng lực thay đổi cuộc chơi.",
-      bg: "from-gray-900 to-gray-800",
-    },
-    {
-      id: 2,
-      title: "📱 iPhone 16 Pro",
-      subtitle1: "Hiệu năng vượt trội với chip A18 Pro",
-      subtitle2: "Thiết kế titan sang trọng.",
-      bg: "from-blue-900 to-indigo-800",
-    },
-    {
-      id: 3,
-      title: "💻 MacBook M4",
-      subtitle1: "Chip M4 cực mạnh cho hiệu năng đột phá",
-      subtitle2: "Mỏng hơn, nhẹ hơn, pin lâu hơn.",
-      bg: "from-slate-800 to-gray-700",
-    },
-  ];
+export default function PromotionBannerSlider() {
+  const [banners, setBanners] = useState([]);
+  const [height, setHeight] = useState("auto");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const imgRef = useRef(null);
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // Lấy dữ liệu banner từ API
+  useEffect(() => {
+    PromotionBannerService.getAll().then((res) => {
+      setBanners(res.data.result || []);
+    });
+  }, []);
 
-  const handlePrev = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? banners.length - 1 : prev - 1
-    );
-  };
+  // Tự động chuyển ảnh sau 5 giây
+  useEffect(() => {
+    if (banners.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [banners]);
 
-  const handleNext = () => {
-    setCurrentSlide((prev) =>
-      prev === banners.length - 1 ? 0 : prev + 1
-    );
-  };
+  const nextSlide = () =>
+    setCurrentIndex((prev) => (prev + 1) % banners.length);
+  const prevSlide = () =>
+    setCurrentIndex((prev) => (prev - 1 + banners.length) % banners.length);
 
-  const banner = banners[currentSlide];
+  if (banners.length === 0) return <p>Đang tải banner...</p>;
 
-  return (
-    <main className="flex-1">
-      {/* Hero Banner */}
+   return (
+    <div
+      className="relative w-full overflow-hidden bg-black transition-all duration-500"
+      style={{ height }}
+    >
+      {/* Container chứa tất cả ảnh */}
       <div
-        className={`relative bg-gradient-to-br ${banner.bg} rounded-lg overflow-hidden mb-6 shadow-lg transition-all duration-700`}
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * 100}%)`,
+        }}
       >
-        <div className="relative h-96 flex flex-col items-center justify-center text-white px-8 text-center">
-          <div className="text-5xl font-bold mb-4">{banner.title}</div>
-          <div className="text-2xl mb-2">{banner.subtitle1}</div>
-          <div className="text-2xl mb-8">{banner.subtitle2}</div>
-          <button className="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition font-semibold">
-            Đăng ký nhận tin
-          </button>
-        </div>
-
-        {/* Prev / Next buttons */}
-        <button
-          onClick={handlePrev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-2 transition"
-        >
-          <ChevronLeft className="text-white" />
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-2 transition"
-        >
-          <ChevronRight className="text-white" />
-        </button>
-
-        {/* Slide indicators */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-          {banners.map((_, idx) => (
-            <div
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`w-3 h-3 rounded-full cursor-pointer transition ${
-                idx === currentSlide ? "bg-white" : "bg-white/40"
-              }`}
-            ></div>
-          ))}
-        </div>
+        {banners.map((banner, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 w-full flex justify-center items-center"
+          >
+            <a
+              href={banner.targetUrl || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex justify-center"
+            >
+              <img
+                ref={index === currentIndex ? imgRef : null}
+                src={banner.image}
+                alt={banner.name}
+                className="w-full h-auto object-contain block"
+                onLoad={(e) => {
+                  setHeight(e.target.clientHeight + "px");
+                }}
+              />
+            </a>
+          </div>
+        ))}
       </div>
-    </main>
+
+      {/* Nút chuyển ảnh */}
+      <button
+        onClick={prevSlide}
+        className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/60 hover:bg-white text-black p-2 rounded-full"
+      >
+        <ChevronLeft />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/60 hover:bg-white text-black p-2 rounded-full"
+      >
+        <ChevronRight />
+      </button>
+
+      {/* Dấu chấm nhỏ */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        {banners.map((_, idx) => (
+          <div
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+              currentIndex === idx ? "bg-white" : "bg-gray-400"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
-
-export default PromoBanner;

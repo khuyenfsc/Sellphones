@@ -28,8 +28,11 @@ public class ProductDocument {
     @Field(type = FieldType.Text)
     private String description;
 
-    @Field(name ="min_price", type = FieldType.Long)
-    private Long minPrice;
+    @Field(name ="root_price", type = FieldType.Long)
+    private Long rootPrice;
+
+    @Field(name ="current_price", type = FieldType.Long)
+    private Long currentPrice;
 
     @Field(name ="category_name", type = FieldType.Text)
     private String categoryName;

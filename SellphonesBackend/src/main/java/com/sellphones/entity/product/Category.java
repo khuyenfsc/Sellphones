@@ -21,6 +21,7 @@ import java.util.List;
 @Table(name = "category")
 public class Category extends BaseEntity<Long> {
 
+    @Column(unique = true)
     private String name;
 
     @Column(nullable = false)

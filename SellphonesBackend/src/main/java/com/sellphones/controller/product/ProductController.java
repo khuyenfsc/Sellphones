@@ -36,11 +36,11 @@ public class ProductController {
 //        return ResponseEntity.status(HttpStatus.OK).body(products);
 //    }
 
-    @GetMapping
-    public ResponseEntity<CommonResponse> getFeaturedProductsByCategory(
-            @RequestParam(required = false) Long categoryId
+    @GetMapping("/featured-products/{categoryName}")
+    public ResponseEntity<CommonResponse> getFeaturedProductsByCategoryName(
+            @PathVariable String categoryName
     ){
-        List<ProductListResponse> products = productService.getFeaturedProductsByCategory(categoryId);
+        List<ProductListResponse> products = productService.getFeaturedProductsByCategory(categoryName);
         Map<String, Object> map = new HashMap<>();
         map.put("products", products);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));

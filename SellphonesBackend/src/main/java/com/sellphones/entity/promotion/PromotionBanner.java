@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.Banner;
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,14 +14,15 @@ import org.springframework.boot.Banner;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "promotion_banner")
 public class PromotionBanner extends BaseEntity<Long> {
 
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "target_url")
     private String targetUrl;
@@ -29,5 +31,6 @@ public class PromotionBanner extends BaseEntity<Long> {
     @Column(name = "banner_type", nullable = false)
     private BannerType bannerType;
 
-    private Integer position;
+    @Enumerated(EnumType.STRING)
+    private BannerStatus status;
 }

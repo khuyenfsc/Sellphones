@@ -53,6 +53,27 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Thanh cuộn sáng, mềm hơn */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5; /* nền xám nhạt hơn */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(180, 180, 180, 0.4); /* xám nhạt + độ mờ 40% */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.6); /* đậm hơn chút khi hover */
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
