@@ -29,6 +29,9 @@ public class Category extends BaseEntity<Long> {
 
     private String icon;
 
+    @Column(name = "featured_on_homepage")
+    private Boolean featuredOnHomepage = false;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", orphanRemoval = true)
     private List<CategoryOption> categoryOptions = new ArrayList<>();
 

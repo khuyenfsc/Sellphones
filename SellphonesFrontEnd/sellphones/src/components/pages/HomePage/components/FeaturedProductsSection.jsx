@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Heart, Star } from 'lucide-react';
 import BrandService from '../../../../service/BrandService';
+import ProductService from '../../../../service/ProductService';
 
 const FeaturedProductsSection = ({ categoryName }) => {
   const [brands, setBrands] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loadingBrands, setLoadingBrands] = useState(true);
+  const [loadingFeaturedProducts, setLoadingFeaturedProduct] = useState(true);
   const [activeTab, setActiveTab] = useState('phone');
 
   useEffect(() => {
@@ -21,38 +24,39 @@ const FeaturedProductsSection = ({ categoryName }) => {
       }
     };
 
-    if (categoryName) fetchBrands();
-  }, [categoryName]);
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoadingFeaturedProduct(true);
+        const encodedCategory = encodeURIComponent(categoryName);
+        const res = await ProductService.getFeaturedProductsByCategoryName(encodedCategory);
+        setFeaturedProducts(res.data?.result || []);
+      } catch (err) {
+        console.error('Lỗi khi tải danh sách sản phẩm:', err);
+      } finally {
+        setLoadingFeaturedProduct(false);
+      }
+    };
 
-  // Giữ nguyên danh sách products mẫu (nếu bạn chưa có API sản phẩm)
-  const products = [
-    {
-      id: 1,
-      name: 'iPhone 16 Pro Max 256GB | Chính hãng',
-      price: '30.490.000₫',
-      oldPrice: '34.990.000₫',
-      discount: 'Giảm 13%',
-      installment: 'Trả góp 0%',
-      rating: 4.9,
-      image: '/api/placeholder/200/200',
-      promo: 'Không phí chuyển đổi khi trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      bgColor: 'bg-gray-100',
-    },
-    // ... các sản phẩm khác
-  ];
+    if (categoryName) {
+      fetchBrands();
+      fetchFeaturedProducts();
+    }
+  }, [categoryName]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Tabs */}
-      <div className="bg-white border-b sticky top-0 z-10">
+      <div className="bg-red-50/80 border-b sticky top-0 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-around py-4">
-            <button className="text-red-600 font-semibold border-b-2 border-red-600 pb-2">
+            <span className="text-red-600 font-bold text-lg tracking-wide">
               {categoryName?.toUpperCase() || 'SẢN PHẨM'}
-            </button>
+            </span>
           </div>
         </div>
       </div>
+
+
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Brand Filter */}
@@ -79,64 +83,95 @@ const FeaturedProductsSection = ({ categoryName }) => {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-4 gap-3">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white text-black rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-            >
-              {/* Product Image */}
-              <div className={`relative ${product.bgColor} p-4`}>
-                {product.discount && (
-                  <span className="absolute top-1 left-1 bg-red-600 text-white text-[11px] px-1.5 py-0.5 rounded">
-                    {product.discount}
-                  </span>
-                )}
-                {product.installment && (
-                  <span className="absolute top-1 right-1 bg-blue-100 text-blue-700 text-[11px] px-1.5 py-0.5 rounded">
-                    {product.installment}
-                  </span>
-                )}
-                <div className="aspect-square flex items-center justify-center">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-28 h-28 object-cover rounded-lg"
-                  />
-                </div>
-              </div>
+        <div className="grid grid-cols-5 gap-2">
+          {featuredProducts.map((product) => {
+            const current = product.thumbnailProduct?.currentPrice;
+            const root = product.thumbnailProduct?.rootPrice;
 
-              {/* Product Info */}
-              <div className="p-3">
-                <h3 className="text-base font-semibold mb-1.5 line-clamp-2 text-gray-900">
-                  {product.name}
-                </h3>
+            // 👉 Tính % giảm giá (nếu có cả root và current)
+            const discountPercent =
+              current && root && root > current
+                ? Math.round(((root - current) / root) * 100)
+                : null;
 
-                <div className="mb-1.5">
-                  <span className="text-red-600 font-bold text-base">{product.price}</span>
-                  {product.oldPrice && (
-                    <span className="text-gray-500 text-xs line-through ml-1 block">{product.oldPrice}</span>
+            return (
+              <div
+                key={product.id}
+                className="bg-white text-black rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer"
+                onClick={() => navigate(`/product/${product.id}`)} // 👈 chuyển hướng khi click
+              >
+                {/* Product Image */}
+                <div className={`relative ${product.bgColor} p-1`}>
+                  {/* Hiển thị “Giảm X%” nếu có */}
+                  {discountPercent && (
+                    <span className="absolute top-1 left-1 bg-red-600 text-white text-[11px] font-semibold px-2 py-1 rounded-md shadow-sm">
+                      Giảm {discountPercent}%
+                    </span>
                   )}
+
+                  {/* Hoặc nếu bạn vẫn muốn ưu tiên discount từ product.discount */}
+                  {!discountPercent && product.discount && (
+                    <span className="absolute top-1 left-1 bg-red-600 text-white text-[11px] font-semibold px-2 py-1 rounded-md shadow-sm">
+                      {product.discount}
+                    </span>
+                  )}
+
+                  {product.installment && (
+                    <span className="absolute top-1 right-1 bg-blue-100 text-blue-700 text-[9px] px-1 py-0.5 rounded">
+                      {product.installment}
+                    </span>
+                  )}
+
+                  <div className="aspect-square flex items-center justify-center overflow-hidden">
+                    <img
+                      src={product.thumbnail}
+                      alt={product.name}
+                      className="w-36 h-36 object-cover rounded-md transform transition-transform duration-300 hover:scale-110"
+                    />
+                  </div>
                 </div>
 
-                {product.promo && (
-                  <p className="text-xs text-gray-700 mb-2 line-clamp-2">{product.promo}</p>
-                )}
+                {/* Product Info */}
+                <div className="p-1.5">
+                  <h3 className="text-sm font-bold mb-0.5 line-clamp-2 text-gray-900 leading-snug">
+                    {product.name}
+                  </h3>
 
-                {/* Rating & Favorite */}
-                <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                  <div className="flex items-center gap-0.5 text-gray-800">
-                    <Star size={16} className="fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">{product.rating}</span>
+
+                  <div className="mb-0.5 flex items-baseline">
+                    {current && (
+                      <span className="text-red-600 font-bold text-sm">
+                        {Number(current).toLocaleString("vi-VN")}₫
+                      </span>
+                    )}
+                    {root && (
+                      <span className="text-gray-400 text-[10px] line-through ml-1">
+                        {Number(root).toLocaleString("vi-VN")}₫
+                      </span>
+                    )}
                   </div>
-                  <button className="text-blue-600 hover:text-blue-700">
-                    <Heart size={18} />
-                  </button>
+
+                  {/* Rating & Favorite */}
+                  <div className="flex items-center justify-between pt-1 border-t border-gray-100">
+                    <div className="flex items-center gap-0.5 text-gray-700">
+                      <Star size={12} className="fill-yellow-400 text-yellow-400" />
+                      <span className="text-[11px] font-medium">
+                        {product.averageRating?.toFixed(1)}
+                      </span>
+                    </div>
+                    <button
+                      className="text-blue-600 hover:text-blue-700"
+                      onClick={(e) => e.stopPropagation()} // 👈 tránh click vào tim mà vẫn navigate
+                    >
+                      <Heart size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
       </div>
     </div>
   );

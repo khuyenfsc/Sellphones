@@ -18,4 +18,6 @@ public class ProductListResponse {
     private String thumbnail;
 
     private ThumbnailProductResponse thumbnailProduct;
+
+    private BigDecimal averageRating;
 }

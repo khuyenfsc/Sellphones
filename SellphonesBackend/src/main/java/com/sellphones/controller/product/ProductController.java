@@ -42,7 +42,7 @@ public class ProductController {
     ){
         List<ProductListResponse> products = productService.getFeaturedProductsByCategory(categoryName);
         Map<String, Object> map = new HashMap<>();
-        map.put("products", products);
+        map.put("result", products);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 

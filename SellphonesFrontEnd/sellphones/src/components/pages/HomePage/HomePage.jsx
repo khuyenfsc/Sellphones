@@ -1,40 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LeftSidebar from "./components/LeftSidebar";
 import PromoBanner from "./components/PromoBanner";
 import RightSidebar from "./components/RightSidebar";
 import FeaturedProductsSection from "./components/FeaturedProductsSection";
+import CategoryService from "../../../service/CategoryService";
+
 
 export default function HomePage() {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [featuredCategories, setFeaturedCategories] = useState([]);
 
-    const categories = [
-        { icon: '📱', name: 'Điện thoại' },
-        { icon: '📱', name: 'Tablet' },
-        { icon: '💻', name: 'Laptop' }
-    ];
+    useEffect(() => {
+        const fetchFeaturedCategories = async () => {
+            try {
+                const res = await CategoryService.getFeaturedCategories();
+                setFeaturedCategories(res.data?.result || []);
+            } catch (err) {
+                console.error('Lỗi khi tải danh sách thể loại nổi bật:', err);
+            } finally {
+            }
+        };
 
-    const promos = [
-        { title: 'iPhone trợ giá', value: 'đến 5 triệu' },
-        { title: 'Samsung trợ giá', value: 'đến 4 triệu' },
-        { title: 'Laptop trợ giá', value: 'đến 4 triệu' }
-    ];
+        fetchFeaturedCategories();
+    }, []);
 
     return (
         <div className="container mx-auto px-4 py-6">
             {/* Hàng 1: 3 cột */}
             <div className="flex gap-6 mb-6">
-                <LeftSidebar categories={categories} />
+                <LeftSidebar categories={featuredCategories} />
                 <PromoBanner currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
-                <RightSidebar promos={promos} />
+                <RightSidebar promos={[]} />
             </div>
 
-            {/* Hàng 2: FeaturedProductsSection */}
-            <div className="flex justify-center">
-                <div className="w-full max-w-7xl">
-                    <FeaturedProductsSection categoryName="Điện thoại" />
-                </div>
+            {/* Hàng 2: FeaturedProductsSection cho từng category */}
+            <div className="flex flex-col items-center space-y-10">
+                {featuredCategories.map((cat) => (
+                    <div key={cat.id} className="w-full max-w-7xl">
+                        <FeaturedProductsSection categoryName={cat.name} />
+                    </div>
+                ))}
             </div>
         </div>
-
     );
 }

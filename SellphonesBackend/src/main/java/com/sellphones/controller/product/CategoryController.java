@@ -2,6 +2,7 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.product.CategoryResponse;
+import com.sellphones.dto.product.FeaturedCategoryResponse;
 import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.service.product.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,17 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<CommonResponse> getAllCategories(){
         List<CategoryResponse> categories = categoryService.getAllCategories();
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", categories);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @GetMapping("/featured-categories")
+    public ResponseEntity<CommonResponse> getFeaturedCategories(){
+        List<FeaturedCategoryResponse> categories = categoryService.getFeaturedCategories();
         Map<String, Object> map = new HashMap<>();
         map.put("result", categories);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));

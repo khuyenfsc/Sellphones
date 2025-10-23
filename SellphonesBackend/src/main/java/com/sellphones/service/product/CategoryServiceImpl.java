@@ -1,6 +1,7 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.product.CategoryResponse;
+import com.sellphones.dto.product.FeaturedCategoryResponse;
 import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.ProductFilter;
@@ -44,6 +45,15 @@ public class CategoryServiceImpl implements CategoryService{
         List<ProductFilter> filters = productFilterRepository.findByCategory_Id(categoryId);
         return filters.stream()
                 .map(f -> modelMapper.map(f, ProductFilterResponse.class))
+                .toList();
+    }
+
+    @Override
+    public List<FeaturedCategoryResponse> getFeaturedCategories() {
+        Boolean featuredOnHomepage = true;
+        List<Category> categories = categoryRepository.findByFeaturedOnHomepage(featuredOnHomepage);
+        return categories.stream()
+                .map(c -> modelMapper.map(c, FeaturedCategoryResponse.class))
                 .toList();
     }
 }

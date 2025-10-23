@@ -77,10 +77,6 @@ public class ProductSpecificationBuilder {
 
     }
 
-    public static Specification<Product> isFeatured(Boolean isFeatured){
-        return (root, query, cb) -> cb.equal(root.get("isFeatured"), isFeatured);
-
-    }
 
     public static Specification<Product> hasBrand(Long brandId){
 //        return (root, query, cb) -> cb.equal(root.get("brand").get("id"), brandId);

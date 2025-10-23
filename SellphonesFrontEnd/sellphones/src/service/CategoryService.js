@@ -4,6 +4,8 @@ const CategoryService = {
   // 🔹 Lấy danh sách tất cả danh mục
   getAll: () => AxiosClient.get('/categories'),
 
+  getFeaturedCategories: () => AxiosClient.get('/categories/featured-categories'),
+
   // 🔹 Lấy thông tin chi tiết của 1 danh mục
   getById: (id) => AxiosClient.get(`/categories/${id}`),
 

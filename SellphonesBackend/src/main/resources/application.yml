@@ -23,7 +23,7 @@ spring:
         registration:
           google:
             clientId: ""
-            clientSecret: ""
+            clientSecret: "s"
             scope:
               - email
               - profile

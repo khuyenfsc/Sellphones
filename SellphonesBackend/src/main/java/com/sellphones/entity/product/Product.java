@@ -44,6 +44,9 @@ public class Product extends BaseEntity<Long> {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    @Column(name = "average_rating", precision = 2, scale = 1)
+    private BigDecimal averageRating;
+
     @ElementCollection
     @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image")

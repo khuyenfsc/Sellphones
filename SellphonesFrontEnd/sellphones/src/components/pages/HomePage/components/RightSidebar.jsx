@@ -27,25 +27,32 @@ export default function RightSidebar({ promos }) {
     
       </div>
 
-      {/* Education Offers */}
-      <div className="bg-blue-50 rounded-lg p-4 mb-4 shadow-sm">
-        <div className="font-semibold mb-3 text-gray-800">Ưu đãi cho giáo dục</div>
-        <button className="w-full bg-white border border-gray-300 py-2 rounded-lg text-sm mb-2 hover:bg-gray-50 transition font-semibold">
-          Đăng ký nhận ưu đãi
+      {/* Ưu đãi đặc biệt */}
+      <div className="bg-yellow-50 rounded-lg p-4 mb-4 shadow-sm">
+        <div className="font-semibold mb-3 text-gray-800">Ưu đãi đặc biệt</div>
+
+        <button className="w-full bg-white border border-gray-300 py-2 rounded-lg text-sm mb-2 hover:bg-gray-50 transition font-semibold text-black">
+          Đăng ký nhận khuyến mãi
         </button>
+
+
         <div className="text-sm text-red-500 flex items-center gap-2 mb-2 hover:text-red-600 transition cursor-pointer">
           <Tag size={16} />
-          Tựu trường lên cấp - Máy mới lên đời
+          Giảm giá cực sốc - Mua ngay kẻo lỡ!
         </div>
+
         <div className="text-sm text-red-500 flex items-center gap-2 hover:text-red-600 transition cursor-pointer">
           <Laptop size={16} />
-          Laptop giảm thêm đến 500K
+          Điện thoại, laptop giảm thêm đến 2 triệu
         </div>
       </div>
 
+
       {/* Hot Deals */}
       <div className="bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg p-4 text-white shadow-sm">
-        <div className="font-semibold mb-3">Thu cũ lên đời giá hời</div>
+        <div className="font-semibold mb-3 text-white-800">
+          Ưu đãi cực sốc – Mua ngay kẻo lỡ!
+        </div>
         {promos.map((promo, idx) => (
           <div key={idx} className="flex items-center gap-2 text-sm mb-2">
             <Smartphone size={16} />

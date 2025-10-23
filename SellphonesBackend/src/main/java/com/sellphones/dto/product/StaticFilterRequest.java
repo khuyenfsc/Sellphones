@@ -11,5 +11,4 @@ public class StaticFilterRequest {
     private String categoryName;
     private String priceRange;
     private Long brandId;
-    private Boolean isFeatured;
 }

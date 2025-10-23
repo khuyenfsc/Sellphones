@@ -12,6 +12,7 @@ import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.product.ProductRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.specification.ProductSpecificationBuilder;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ public class ProductServiceImpl implements ProductService{
     private final ProductVariantRepository productVariantRepository;
 
     private final ModelMapper modelMapper;
+
+    private final String thumbnailFolderName = "product_thumbnails";
 
     @Override
     public List<ProductListResponse> getAllProducts() {
@@ -46,8 +51,12 @@ public class ProductServiceImpl implements ProductService{
     public List<ProductListResponse> getFeaturedProductsByCategory(String categoryName) {
         Boolean isFeatured = true;
         List<Product> featuredProducts = productRepository.findFirst10ByCategory_NameAndIsFeatured(categoryName, isFeatured);
+
         return featuredProducts.stream()
-                .map(fp -> modelMapper.map(fp, ProductListResponse.class))
+                .map(fp -> {
+                    fp.setThumbnail(ImageNameToImageUrlConverter.convert(fp.getThumbnail(), thumbnailFolderName));
+                    return modelMapper.map(fp, ProductListResponse.class);
+                })
                 .collect(Collectors.toList());
     }
 

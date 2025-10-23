@@ -46,7 +46,8 @@ export default function LeftSidebar() {
                             }} // hover vào => hiện submenu
                             onMouseLeave={() => setHoveredCat(null)} // rời ra => ẩn submenu
                         >
-                            <button
+                            <a
+                                href={`/category/${cat.name}`} // URL bạn muốn đến
                                 className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 transition"
                             >
                                 <div className="flex items-center gap-3">
@@ -62,7 +63,8 @@ export default function LeftSidebar() {
                                     <span className="text-sm text-gray-700">{cat.name}</span>
                                 </div>
                                 <ChevronRight size={16} className="text-gray-400" />
-                            </button>
+                            </a>
+
 
                             {/* SUBMENU hiển thị khi hover */}
                             {hoveredCat?.id === cat.id && cat.categoryOptions?.length > 0 && (

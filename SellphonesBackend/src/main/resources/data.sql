@@ -1,7 +1,25 @@
 -- CATEGORY
-INSERT INTO category (code, name, icon, created_at) VALUES ('DT', 'Điện thoại', 'DT.png',CURRENT_TIMESTAMP);
-INSERT INTO category (code, name, icon, created_at) VALUES ('TB', 'Tablet', 'TB.png', CURRENT_TIMESTAMP);
-INSERT INTO category (code, name, icon, created_at) VALUES ('LT', 'Laptop', 'LT.png', CURRENT_TIMESTAMP);
+-- Danh mục chính hiện có
+-- Bổ sung thêm các danh mục mới cho Điện thoại, Tablet, Laptop
+
+INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
+-- DT và LT được set là TRUE/1
+('DT', 'Điện thoại', 'DT.png', TRUE, CURRENT_TIMESTAMP),
+('TB', 'Tablet', 'TB.png', TRUE, CURRENT_TIMESTAMP),
+('LT', 'Laptop', 'LT.png', TRUE, CURRENT_TIMESTAMP);
+
+
+-- Định nghĩa các cột cần chèn (bao gồm cột mới)
+INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
+-- Màn hình (MH) và PC được set là TRUE/1
+('PK', 'Phụ kiện', 'PK.png', FALSE, CURRENT_TIMESTAMP),
+('MH', 'Màn hình', 'MH.png', FALSE, CURRENT_TIMESTAMP),
+('PC', 'Máy tính để bàn', 'PC.png', FALSE, CURRENT_TIMESTAMP),
+('DC', 'Đồng hồ thông minh', 'DC.png', FALSE, CURRENT_TIMESTAMP),
+('TA', 'Tai nghe', 'TA.png', FALSE, CURRENT_TIMESTAMP),
+('CH', 'Thiết bị mạng & sạc', 'CH.png', FALSE, CURRENT_TIMESTAMP),
+('GM', 'Thiết bị chơi game', 'GM.png', FALSE, CURRENT_TIMESTAMP),
+('SW', 'Phần mềm & ứng dụng', 'SW.png', FALSE, CURRENT_TIMESTAMP);
 
 --NHỚ TEST KỸ LẠI CÁC METHOD DELETE SAU KHI CHUYỂN DB.
 
@@ -170,23 +188,23 @@ INSERT INTO category (code, name, icon, created_at) VALUES ('LT', 'Laptop', 'LT.
 
 
 
-INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'apple.png');
-INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'samsung.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Google', 'google.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'OnePlus', 'oneplus.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Xiaomi', 'xiaomi.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Oppo', 'oppo.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Vivo', 'vivo.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Sony', 'sony.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Asus', 'asus.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Realme', 'realme.png');
+INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'frame_59.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Google', 'sq-google-g-logo-update_dezeen_2364_col_0.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'frame_60.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'OnePlus', 'frame_65.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Xiaomi', 'frame_61.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Oppo', 'frame_62.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Vivo', 't_i_xu_ng_67_.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Sony', 'brand-icon-sony_2.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Asus', 'frame_67.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Realme', 'frame_63.jpg');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Huawei', 'huawei.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Nothing', 'nothing.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Dell', 'dell.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'HP', 'hp.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Lenovo', 'lenovo.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'MSI', 'msi.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Acer', 'acer.png');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Nothing', 'nothing-phone.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Dell', 'Dell.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'HP', 'HP.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Lenovo', 'Lenovo.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'MSI', 'MSI.jpg');
+INSERT INTO brand(name, brand_icon) VALUES ( 'Acer', 'acer.jpg');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Razer', 'razer.png');
 INSERT INTO brand(name, brand_icon) VALUES ( 'Microsoft', 'microsoft.png');
 
@@ -535,26 +553,130 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 -- ======================
 -- BẢNG PRODUCT
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('iPhone 15', 'https://example.com/iphone15.jpg', 'Latest iPhone model', 1, 1, true, true);
+-- ======================
+-- CATEGORY 1: ĐIỆN THOẠI
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
+('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true),
+('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true),
+('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 2, 1, true, true),
+('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 2, 1, true, true),
+('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 3, 1, true, true),
+('OnePlus 12', 'oneplus-12.jpg', 'Điện thoại hiệu năng cao, sạc nhanh 100W', 4, 1, true, true),
+('Xiaomi 14 Ultra', 'xiaomi-14-ultra_3_1_1_1.jpg', 'Camera Leica, cấu hình mạnh mẽ', 5, 1, true, true),
+('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false),
+('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false),
+('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true),
+('Asus ROG Phone 8', 'asus-rog-phone-8.jpg', 'Điện thoại gaming cực mạnh', 9, 1, true, true),
+('Realme GT 6', 'realme-gt-neo-6_1_.jpg', 'Snapdragon 8s Gen 3, giá cực tốt', 10, 1, false, true),
+('Huawei P70 Pro', '_ter3434_3_.jpg', 'Siêu camera và thiết kế sang trọng', 11, 1, true, true),
+('Nothing Phone 2', 'dien-thoai-nothing-phone-2a-plus_1_.jpg', 'Thiết kế trong suốt độc đáo', 12, 1, false, true),
+('Nokia X30 5G', 'nokia_8.3_3.jpg', 'Thiết kế bền vững, hỗ trợ 5G', 8, 1, false, true),
+('Xiaomi Redmi Note 13', 'photo_2024-12-20_17-05-54_1.jpg', 'Điện thoại tầm trung mạnh mẽ', 5, 1, false, true),
+('Samsung Galaxy A55', 'sm-a556_galaxy_a55_awesome_lilac_ui_2_1.jpg', 'Smartphone tầm trung pin trâu', 2, 1, false, true),
+('Oppo Reno11 Pro', 'oppo-reno11-pro_3.jpg', 'Camera chân dung cực đẹp', 6, 1, true, true),
+('Vivo V30', 'dien-thoai-vivo-v30-5g_1__2.jpg', 'Hiệu năng ổn định, thiết kế đẹp', 7, 1, false, true),
+('Huawei Nova 12', 'huawei-nova-12-pro.jpg', 'Thiết kế mỏng nhẹ, camera selfie tốt', 11, 1, false, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('Samsung Galaxy S24', 'https://example.com/galaxyS24.jpg', 'Latest Samsung Galaxy', 2, 1, true, true);
+-- ======================
+-- CATEGORY 2: LAPTOP
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
+('MacBook Pro 14 M3', 'macbook-pro-14-m3.jpg', 'Laptop cao cấp của Apple với chip M3 Pro', 1, 3, true, true),
+('MacBook Air 13 M2', 'macbook-air-13-m2.jpg', 'Siêu mỏng nhẹ, pin lâu 18 tiếng', 1, 3, true, false),
+('Dell XPS 13', 'dell-xps-13.jpg', 'Ultrabook đẳng cấp với viền màn hình siêu mỏng', 13, 3, true, true),
+('Dell Inspiron 16', 'dell-inspiron-16.jpg', 'Laptop học tập và văn phòng', 13, 3, false, true),
+('HP Spectre x360', 'hp-spectre-x360.jpg', 'Laptop 2-trong-1 sang trọng', 14, 3, true, true),
+('HP Envy 16', 'hp-envy-16.jpg', 'Màn hình 16 inch, GPU RTX 4060', 14, 2, true, false),
+('Lenovo ThinkPad X1 Carbon', 'thinkpad-x1-carbon.jpg', 'Laptop doanh nhân bền bỉ', 15, 3, true, true),
+('Lenovo Yoga 9i', 'lenovo-yoga-9i.jpg', 'Laptop xoay gập cảm ứng', 15, 3, false, true),
+('MSI Stealth 16 Studio', 'msi-stealth-16.jpg', 'Laptop gaming mỏng nhẹ', 16, 3, true, true),
+('MSI Katana 15', 'msi-katana-15.jpg', 'Laptop gaming phổ thông hiệu năng cao', 16, 3, false, true),
+('Acer Swift X', 'acer-swift-x.jpg', 'Mỏng nhẹ, GPU RTX 4050', 17, 3, false, true),
+('Acer Nitro 17', 'acer-nitro-17.jpg', 'Laptop gaming giá tốt', 17, 3, true, true),
+('Asus ROG Zephyrus G14', 'rog-zephyrus-g14.jpg', 'Laptop gaming nhỏ gọn mạnh mẽ', 9, 3, true, true),
+('Asus TUF Gaming F15', 'asus-tuf-f15.jpg', 'Laptop gaming bền bỉ', 9, 3, false, true),
+('Razer Blade 16', 'razer-blade-16.jpg', 'Laptop gaming cao cấp', 18, 3, true, true),
+('Microsoft Surface Laptop 6', 'surface-laptop-6.jpg', 'Thiết kế tối giản, pin lâu', 19, 3, true, true),
+('HP Pavilion 15', 'hp-pavilion-15.jpg', 'Giải pháp tốt cho học sinh sinh viên', 14, 3, false, true),
+('Dell Latitude 7450', 'dell-latitude-7450.jpg', 'Laptop doanh nghiệp mỏng nhẹ', 13, 3, false, true),
+('Lenovo Legion 7i', 'legion-7i.jpg', 'Laptop gaming cực mạnh', 15, 3, true, true),
+('Asus Vivobook 15 OLED', 'vivobook-15-oled.jpg', 'Màn hình OLED, giá hợp lý', 9, 3, false, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('Google Pixel 8 Pro', 'https://example.com/pixel8pro.jpg', 'Flagship mới nhất của Google', 3, 1, true, true);
+-- ======================
+-- CATEGORY 3: TABLET
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
+('iPad Pro M3', 'ipad-pro-m3.jpg', 'Máy tính bảng mạnh nhất của Apple', 1, 2, true, true),
+('iPad Air M2', 'ipad-air-m2.jpg', 'Thiết kế mỏng nhẹ, hiệu năng cao', 1, 2, true, false),
+('Samsung Galaxy Tab S9 Ultra', 'tab-s9-ultra.jpg', 'Màn hình AMOLED 14.6 inch, S Pen', 2, 2, true, true),
+('Samsung Galaxy Tab S9 FE', 'tab-s9-fe.jpg', 'Giá mềm, pin khủng 10,000mAh', 2, 2, false, true),
+('Xiaomi Pad 6 Pro', 'xiaomi-pad-6-pro.jpg', 'Hiệu năng cao, giá dễ tiếp cận', 5, 2, true, true),
+('Huawei MatePad 11', 'matepad-11.jpg', 'Hỗ trợ bút M-Pencil, HarmonyOS', 11, 2, false, true),
+('Lenovo Tab P12 Pro', 'lenovo-tab-p12-pro.jpg', 'Tablet Android cao cấp', 15, 2, true, true),
+('Realme Pad 2', 'realme-pad-2.jpg', 'Giá rẻ, pin khỏe 8000mAh', 10, 2, false, true),
+('Asus ROG Flow Z13', 'rog-flow-z13.jpg', 'Tablet gaming mạnh mẽ nhất', 9, 2, true, false),
+('Microsoft Surface Pro 10', 'surface-pro-10.jpg', 'Thiết bị 2-trong-1 mạnh mẽ', 19, 2, true, true),
+('Oppo Pad 2', 'oppo-pad-2.jpg', 'Màn hình 11.6 inch, sạc nhanh 67W', 6, 2, false, true),
+('Vivo Pad 2', 'vivo-pad-2.jpg', 'Cấu hình mạnh, màn hình 2.8K', 7, 2, false, true),
+('Sony Xperia Tablet Z6', 'xperia-tablet-z6.jpg', 'Chống nước, mỏng nhẹ', 8, 2, false, true),
+('Huawei MatePad Pro 13.2', 'matepad-pro-13.2.jpg', 'Tablet màn lớn, pin cực trâu', 11, 2, true, true),
+('Xiaomi Pad SE', 'xiaomi-pad-se.jpg', 'Máy tính bảng giá rẻ', 5, 2, false, true),
+('Realme Pad X', 'realme-pad-x.jpg', 'Thiết kế đẹp, hiệu năng ổn', 10, 2, false, true),
+('Lenovo Tab M10', 'lenovo-tab-m10.jpg', 'Tablet phổ thông dành cho học sinh', 15, 2, false, true),
+('Samsung Galaxy Tab A9', 'tab-a9.jpg', 'Tablet giá rẻ, hỗ trợ học online', 2, 2, false, true),
+('Apple iPad Mini 6', 'ipad-mini-6.jpg', 'Máy nhỏ gọn, hiệu năng mạnh', 1, 2, true, true),
+('Nothing Tab 1', 'nothing-tab-1.jpg', 'Thiết kế trong suốt độc đáo', 12, 2, false, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('OnePlus 12', 'https://example.com/oneplus12.jpg', 'Điện thoại hiệu năng cao của OnePlus', 4, 1, false, true);
+-- ======================
+-- CATEGORY 4: PHỤ KIỆN
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
+('Apple AirPods Pro 2', 'airpods-pro-2.jpg', 'Tai nghe chống ồn chủ động của Apple', 1, 4, true, true),
+('Apple MagSafe Charger', 'magsafe-charger.jpg', 'Sạc nhanh không dây chính hãng', 1, 4, false, true),
+('Samsung Galaxy Buds3 Pro', 'buds3-pro.jpg', 'Tai nghe chất lượng cao, pin trâu', 2, 4, true, true),
+('Samsung 45W Super Charger', 'samsung-45w.jpg', 'Sạc nhanh 45W USB-C', 2, 4, false, true),
+('Logitech MX Master 3S', 'mx-master-3s.jpg', 'Chuột không dây cao cấp', 17, 4, true, true),
+('Logitech K380 Keyboard', 'k380-keyboard.jpg', 'Bàn phím Bluetooth mini tiện dụng', 17, 4, false, true),
+('Anker PowerCore 20000', 'anker-powercore-20000.jpg', 'Sạc dự phòng 20,000mAh', 17, 4, true, true),
+('Sony WH-1000XM5', 'wh-1000xm5.jpg', 'Tai nghe chống ồn đỉnh cao', 8, 4, true, true),
+('Razer DeathAdder V3', 'deathadder-v3.jpg', 'Chuột gaming chính xác cao', 18, 4, true, true),
+('MSI GH30 Headset', 'msi-gh30.jpg', 'Tai nghe gaming MSI', 16, 4, false, true),
+('Dell USB-C Hub', 'dell-usb-hub.jpg', 'Bộ chia cổng kết nối Dell', 13, 4, false, true),
+('HP Wireless Mouse 250', 'hp-wireless-250.jpg', 'Chuột không dây tiện lợi', 14, 4, false, true),
+('Lenovo 65W Charger', 'lenovo-65w-charger.jpg', 'Sạc nhanh USB-C chính hãng', 15, 4, false, true),
+('Apple Pencil 2', 'apple-pencil-2.jpg', 'Bút cảm ứng chính xác cho iPad', 1, 4, true, true),
+('Samsung SmartTag 2', 'smarttag-2.jpg', 'Thiết bị định vị thông minh', 2, 4, false, true),
+('Xiaomi Mi Band 8', 'mi-band-8.jpg', 'Vòng đeo tay thông minh đa tính năng', 5, 4, true, true),
+('Huawei FreeBuds 5', 'freebuds-5.jpg', 'Tai nghe không dây thiết kế đẹp', 11, 4, false, true),
+('Nothing Ear 2', 'nothing-ear-2.jpg', 'Tai nghe trong suốt độc đáo', 12, 4, false, true),
+('Anker Soundcore Liberty 4', 'soundcore-liberty-4.jpg', 'Tai nghe âm thanh sống động', 17, 4, true, true),
+('Sony SRS-XE300 Speaker', 'srs-xe300.jpg', 'Loa Bluetooth di động chống nước', 8, 4, true, true);
 
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('Xiaomi 14 Ultra', 'https://example.com/xiaomi14ultra.jpg', 'Camera đỉnh cao, cấu hình mạnh mẽ', 5, 1, true, true);
-
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('MacBook Pro 14"', 'https://example.com/macbookpro14.jpg', 'Apple MacBook Pro 14-inch with M2 Pro chip', 1, 2, true, true);
-
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new)
-VALUES ('Dell XPS 13', 'https://example.com/dellxps13.jpg', 'Dell XPS 13 ultrabook with InfinityEdge display', 13, 2, true, true);
+-- ======================
+-- CATEGORY 5: ĐỒNG HỒ THÔNG MINH
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
+('Apple Watch Series 10', 'apple-watch-s10.jpg', 'Đồng hồ thông minh mới nhất từ Apple', 1, 5, true, true),
+('Apple Watch SE 2', 'apple-watch-se-2.jpg', 'Phiên bản tiết kiệm, đầy đủ tính năng cơ bản', 1, 5, false, true),
+('Samsung Galaxy Watch 7', 'galaxy-watch-7.jpg', 'Theo dõi sức khỏe toàn diện', 2, 5, true, true),
+('Samsung Galaxy Fit 3', 'galaxy-fit-3.jpg', 'Vòng đeo tay nhỏ gọn, pin lâu', 2, 5, false, true),
+('Huawei Watch GT 5', 'watch-gt-5.jpg', 'Pin trâu, hỗ trợ GPS chính xác', 11, 5, true, true),
+('Xiaomi Watch 3 Pro', 'xiaomi-watch-3-pro.jpg', 'Thiết kế sang trọng, hỗ trợ eSIM', 5, 5, true, true),
+('Amazfit GTR 5', 'amazfit-gtr-5.jpg', 'Đồng hồ thể thao thông minh', 5, 5, false, true),
+('Garmin Venu 3', 'garmin-venu-3.jpg', 'Theo dõi thể thao và giấc ngủ chuyên sâu', 8, 5, true, true),
+('Nothing Watch 1', 'nothing-watch-1.jpg', 'Thiết kế trong suốt ấn tượng', 12, 5, false, true),
+('Oppo Watch X', 'oppo-watch-x.jpg', 'Hỗ trợ eSIM, sạc nhanh 80%', 6, 5, false, true),
+('Vivo Watch 3', 'vivo-watch-3.jpg', 'Theo dõi sức khỏe và SpO2', 7, 5, false, true),
+('Sony SmartWatch 6', 'sony-smartwatch-6.jpg', 'Chống nước IP68, NFC thanh toán', 8, 5, false, true),
+('MSI Watch Gaming', 'msi-watch-gaming.jpg', 'Phong cách gaming, đèn RGB', 16, 5, true, true),
+('Razer Nabu X2', 'razer-nabu-x2.jpg', 'Đồng hồ thông minh cho game thủ', 18, 5, false, true),
+('Huawei Band 9', 'huawei-band-9.jpg', 'Giá rẻ, pin trâu', 11, 5, false, true),
+('Xiaomi Smart Band 9', 'mi-band-9.jpg', 'Vòng tay thể thao thế hệ mới', 5, 5, true, true),
+('Realme Watch 4', 'realme-watch-4.jpg', 'Đồng hồ trẻ trung, chống nước 5ATM', 10, 5, false, true),
+('Asus VivoWatch 6', 'vivowatch-6.jpg', 'Đo nhịp tim, SpO2 chính xác', 9, 5, false, true),
+('HP Smart Watch', 'hp-smartwatch.jpg', 'Đồng hồ thông minh pin 7 ngày', 14, 5, false, true),
+('Lenovo Smart Band 8', 'lenovo-band-8.jpg', 'Vòng tay nhẹ, chống nước IP68', 15, 5, false, true);
 
 -- ======================
 -- BẢNG PRODUCT_IMAGE (ảnh phụ cho từng sản phẩm)
@@ -572,71 +694,166 @@ INSERT INTO product_image (product_id, image) VALUES
 -- ======================
 -- BẢNG PRODUCT_VARIANT
 -- ======================
+
+-- Variants for iPhone 15 Pro Max
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('iPhone 15 Pro Max - 128GB - Black', 29990000, 28990000, 'IP15PM-128-BLK', 'https://example.com/images/ip15pm-128-blk.jpg', 1, 50, 'ACTIVE'),
+('iPhone 15 Pro Max - 256GB - Black', 32990000, 31990000, 'IP15PM-256-BLK', 'https://example.com/images/ip15pm-256-blk.jpg', 1, 40, 'ACTIVE');
+
 -- iPhone 15
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 1, 50, 'ACTIVE');
+VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 2, 50, 'ACTIVE');
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('iPhone 15 - 256GB - White', 27990000, 26590000, 'IP15-256-WHT', 'https://example.com/images/ip15-256-wht.jpg', 1, 30, 'ACTIVE');
+VALUES ('iPhone 15 - 256GB - White', 27990000, 26590000, 'IP15-256-WHT', 'https://example.com/images/ip15-256-wht.jpg', 2, 30, 'ACTIVE');
 
--- Samsung Galaxy S24
+-- Variants for Samsung Galaxy S24 Ultra (product_id = 3)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('Galaxy S24 - 128GB - Phantom Black', 21990000, 20990000, 'SGS24-128-BLK', 'https://example.com/images/sgs24-128-blk.jpg', 2, 40, 'ACTIVE');
+VALUES
+('Samsung Galaxy S24 Ultra - 256GB - Gray', 27990000, 26990000, 'SGS24U-256-GRY', 'https://example.com/images/sgs24u-256-gry.jpg', 3, 60, 'ACTIVE'),
+('Samsung Galaxy S24 Ultra - 512GB - Gray', 30990000, 29990000, 'SGS24U-512-GRY', 'https://example.com/images/sgs24u-512-gry.jpg', 3, 50, 'ACTIVE'),
+('Samsung Galaxy S24 Ultra - 1TB - Gray', 35990000, 34990000, 'SGS24U-1TB-GRY', 'https://example.com/images/sgs24u-1tb-gry.jpg', 3, 30, 'ACTIVE'),
+
+('Samsung Galaxy S24 Ultra - 256GB - Titanium Blue', 27990000, 26990000, 'SGS24U-256-BLU', 'https://example.com/images/sgs24u-256-blu.jpg', 3, 55, 'ACTIVE'),
+('Samsung Galaxy S24 Ultra - 512GB - Titanium Blue', 30990000, 29990000, 'SGS24U-512-BLU', 'https://example.com/images/sgs24u-512-blu.jpg', 3, 45, 'ACTIVE'),
+
+('Samsung Galaxy S24 Ultra - 256GB - Violet', 27990000, 26990000, 'SGS24U-256-VIO', 'https://example.com/images/sgs24u-256-vio.jpg', 3, 50, 'ACTIVE'),
+('Samsung Galaxy S24 Ultra - 512GB - Violet', 30990000, 29990000, 'SGS24U-512-VIO', 'https://example.com/images/sgs24u-512-vio.jpg', 3, 40, 'ACTIVE'),
+
+('Samsung Galaxy S24 Ultra - 512GB - Black', 30990000, 29990000, 'SGS24U-512-BLK', 'https://example.com/images/sgs24u-512-blk.jpg', 3, 45, 'ACTIVE');
+
+
+-- Variants for Samsung Galaxy S24+ (product_id = 4)
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Samsung Galaxy S24+ - 256GB - Purple', 23990000, 22990000, 'SGS24P-256-PUR', 'https://example.com/images/sgs24p-256-pur.jpg', 4, 60, 'ACTIVE'),
+('Samsung Galaxy S24+ - 512GB - Purple', 26990000, 25990000, 'SGS24P-512-PUR', 'https://example.com/images/sgs24p-512-pur.jpg', 4, 45, 'ACTIVE'),
+
+('Samsung Galaxy S24+ - 256GB - Gray', 23990000, 22990000, 'SGS24P-256-GRY', 'https://example.com/images/sgs24p-256-gry.jpg', 4, 55, 'ACTIVE'),
+('Samsung Galaxy S24+ - 512GB - Gray', 26990000, 25990000, 'SGS24P-512-GRY', 'https://example.com/images/sgs24p-512-gry.jpg', 4, 40, 'ACTIVE'),
+
+('Samsung Galaxy S24+ - 256GB - Blue', 23990000, 22990000, 'SGS24P-256-BLU', 'https://example.com/images/sgs24p-256-blu.jpg', 4, 50, 'ACTIVE'),
+('Samsung Galaxy S24+ - 512GB - Blue', 26990000, 25990000, 'SGS24P-512-BLU', 'https://example.com/images/sgs24p-512-blu.jpg', 4, 35, 'ACTIVE'),
+
+('Samsung Galaxy S24+ - 256GB - Black', 23990000, 22990000, 'SGS24P-256-BLK', 'https://example.com/images/sgs24p-256-blk.jpg', 4, 60, 'ACTIVE'),
+('Samsung Galaxy S24+ - 512GB - Black', 26990000, 25990000, 'SGS24P-512-BLK', 'https://example.com/images/sgs24p-512-blk.jpg', 4, 45, 'ACTIVE');
+
+-- Variants for Google Pixel 8 Pro (product_id = 5)
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Google Pixel 8 Pro - 128GB - Obsidian Black', 22990000, 21990000, 'GP8P-128-BLK', 'https://example.com/images/gp8p-128-blk.jpg', 5, 60, 'ACTIVE'),
+('Google Pixel 8 Pro - 256GB - Obsidian Black', 24990000, 23990000, 'GP8P-256-BLK', 'https://example.com/images/gp8p-256-blk.jpg', 5, 50, 'ACTIVE'),
+('Google Pixel 8 Pro - 512GB - Obsidian Black', 27990000, 26990000, 'GP8P-512-BLK', 'https://example.com/images/gp8p-512-blk.jpg', 5, 40, 'ACTIVE'),
+
+('Google Pixel 8 Pro - 128GB - Bay Blue', 22990000, 21990000, 'GP8P-128-BLU', 'https://example.com/images/gp8p-128-blu.jpg', 5, 55, 'ACTIVE'),
+('Google Pixel 8 Pro - 256GB - Bay Blue', 24990000, 23990000, 'GP8P-256-BLU', 'https://example.com/images/gp8p-256-blu.jpg', 5, 45, 'ACTIVE'),
+('Google Pixel 8 Pro - 512GB - Bay Blue', 27990000, 26990000, 'GP8P-512-BLU', 'https://example.com/images/gp8p-512-blu.jpg', 5, 35, 'ACTIVE'),
+
+('Google Pixel 8 Pro - 128GB - Porcelain', 22990000, 21990000, 'GP8P-128-POR', 'https://example.com/images/gp8p-128-por.jpg', 5, 50, 'ACTIVE'),
+('Google Pixel 8 Pro - 256GB - Porcelain', 24990000, 23990000, 'GP8P-256-POR', 'https://example.com/images/gp8p-256-por.jpg', 5, 40, 'ACTIVE'),
+('Google Pixel 8 Pro - 512GB - Porcelain', 27990000, 26990000, 'GP8P-512-POR', 'https://example.com/images/gp8p-512-por.jpg', 5, 30, 'ACTIVE');
+
+-- Variants for OnePlus 12 (product_id = 6)
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('OnePlus 12 - 256GB - Flowy Emerald', 19990000, 18990000, 'OP12-256-GRN', 'https://example.com/images/op12-256-grn.jpg', 6, 60, 'ACTIVE'),
+('OnePlus 12 - 512GB - Flowy Emerald', 21990000, 20990000, 'OP12-512-GRN', 'https://example.com/images/op12-512-grn.jpg', 6, 45, 'ACTIVE'),
+
+('OnePlus 12 - 256GB - Silky Black', 19990000, 18990000, 'OP12-256-BLK', 'https://example.com/images/op12-256-blk.jpg', 6, 55, 'ACTIVE'),
+('OnePlus 12 - 512GB - Silky Black', 21990000, 20990000, 'OP12-512-BLK', 'https://example.com/images/op12-512-blk.jpg', 6, 40, 'ACTIVE'),
+
+('OnePlus 12 - 256GB - Glacier White', 19990000, 18990000, 'OP12-256-WHT', 'https://example.com/images/op12-256-wht.jpg', 6, 50, 'ACTIVE'),
+('OnePlus 12 - 512GB - Glacier White', 21990000, 20990000, 'OP12-512-WHT', 'https://example.com/images/op12-512-wht.jpg', 6, 35, 'ACTIVE');
+
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('Galaxy S24 - 256GB - Cream', 24990000, 23690000, 'SGS24-256-CRM', 'https://example.com/images/sgs24-256-crm.jpg', 2, 25, 'ACTIVE');
-
--- Google Pixel 8 Pro
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('Pixel 8 Pro - 128GB - Obsidian', 20990000, 19990000, 'PIX8P-128-OBS', 'https://example.com/images/pix8p-128-obs.jpg', 3, 35, 'ACTIVE');
-
--- OnePlus 12
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('OnePlus 12 - 12GB RAM - 256GB', 18990000, 17990000, 'OP12-12-256', 'https://example.com/images/op12-12-256.jpg', 4, 40, 'ACTIVE');
+VALUES
+('Xiaomi 14 Ultra - 256GB - Black', 24990000, 23990000, 'XM14U-256-BLK', 'https://example.com/images/xiaomi-14-ultra-256-blk.jpg', 7, 50, 'ACTIVE'),
+('Xiaomi 14 Ultra - 512GB - White', 26990000, 25990000, 'XM14U-512-WHT', 'https://example.com/images/xiaomi-14-ultra-512-wht.jpg', 7, 40, 'ACTIVE'),
+('Xiaomi 14 Ultra - 1TB - Blue', 28990000, 27990000, 'XM14U-1T-BLU', 'https://example.com/images/xiaomi-14-ultra-1t-blu.jpg', 7, 25, 'ACTIVE'),
+('Xiaomi 14 Ultra - 512GB - Titanium Gray', 27490000, 26490000, 'XM14U-512-GRY', 'https://example.com/images/xiaomi-14-ultra-512-gry.jpg', 7, 30, 'ACTIVE');
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('OnePlus 12 - 16GB RAM - 512GB', 22990000, 21990000, 'OP12-16-512', 'https://example.com/images/op12-16-512.jpg', 4, 20, 'ACTIVE');
-
--- MacBook Pro 14
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 47990000, 'MBP14-M2P-16-512', 'https://example.com/images/mbp14-m2p-16-512.jpg', 6, 20, 'ACTIVE');
-
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('MacBook Pro 14" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 56990000, 'MBP14-M2P-32-1TB', 'https://example.com/images/mbp14-m2p-32-1tb.jpg', 6, 10, 'ACTIVE');
-
--- Dell XPS 13
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 35990000, 'DXPS13-I7-16-512', 'https://example.com/images/dxps13-i7-16-512.jpg', 7, 15, 'ACTIVE');
+VALUES
+('Oppo Find X7 Pro - 256GB - Black', 21990000, 20990000, 'OPFX7P-256-BLK', 'https://example.com/images/oppo-find-x7-pro-256-blk.jpg', 8, 60, 'ACTIVE'),
+('Oppo Find X7 Pro - 512GB - White', 23990000, 22990000, 'OPFX7P-512-WHT', 'https://example.com/images/oppo-find-x7-pro-512-wht.jpg', 8, 45, 'ACTIVE'),
+('Oppo Find X7 Pro - 1TB - Orange', 25990000, 24990000, 'OPFX7P-1T-ORG', 'https://example.com/images/oppo-find-x7-pro-1t-org.jpg', 8, 30, 'ACTIVE'),
+('Oppo Find X7 Pro - 512GB - Blue', 23990000, 22990000, 'OPFX7P-512-BLU', 'https://example.com/images/oppo-find-x7-pro-512-blu.jpg', 8, 40, 'ACTIVE');
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 27490000, 'DXPS13-I5-8-256', 'https://example.com/images/dxps13-i5-8-256.jpg', 7, 25, 'ACTIVE');
+VALUES
+('Vivo X100 Pro - 256GB - Black', 23990000, 22990000, 'VX100P-256-BLK', 'https://example.com/images/vivo-x100-pro-256-blk.jpg', 9, 55, 'ACTIVE'),
+('Vivo X100 Pro - 512GB - Blue', 25990000, 24990000, 'VX100P-512-BLU', 'https://example.com/images/vivo-x100-pro-512-blu.jpg', 9, 45, 'ACTIVE'),
+('Vivo X100 Pro - 512GB - White', 25990000, 24990000, 'VX100P-512-WHT', 'https://example.com/images/vivo-x100-pro-512-wht.jpg', 9, 40, 'ACTIVE'),
+('Vivo X100 Pro - 1TB - Orange', 27990000, 26990000, 'VX100P-1T-ORG', 'https://example.com/images/vivo-x100-pro-1t-org.jpg', 9, 25, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Sony Xperia 1 VI - 256GB - Black', 28990000, 27990000, 'SX1VI-256-BLK', 'https://example.com/images/sony-xperia-1vi-256-blk.jpg', 10, 40, 'ACTIVE'),
+('Sony Xperia 1 VI - 512GB - Purple', 30990000, 29990000, 'SX1VI-512-PUR', 'https://example.com/images/sony-xperia-1vi-512-pur.jpg', 10, 35, 'ACTIVE'),
+('Sony Xperia 1 VI - 512GB - White', 30990000, 29990000, 'SX1VI-512-WHT', 'https://example.com/images/sony-xperia-1vi-512-wht.jpg', 10, 30, 'ACTIVE'),
+('Sony Xperia 1 VI - 1TB - Green', 32990000, 31990000, 'SX1VI-1T-GRN', 'https://example.com/images/sony-xperia-1vi-1t-grn.jpg', 10, 20, 'ACTIVE');
+
+
+---- MacBook Pro 14
+--INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+--VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 47990000, 'MBP14-M2P-16-512', 'https://example.com/images/mbp14-m2p-16-512.jpg', 6, 20, 'ACTIVE');
+--
+--INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+--VALUES ('MacBook Pro 14" - M2 Pro - 32GB RAM - 1TB SSD', 59990000, 56990000, 'MBP14-M2P-32-1TB', 'https://example.com/images/mbp14-m2p-32-1tb.jpg', 6, 10, 'ACTIVE');
+--
+---- Dell XPS 13
+--INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+--VALUES ('Dell XPS 13 - Core i7 - 16GB RAM - 512GB SSD', 37990000, 35990000, 'DXPS13-I7-16-512', 'https://example.com/images/dxps13-i7-16-512.jpg', 7, 15, 'ACTIVE');
+--
+--INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+--VALUES ('Dell XPS 13 - Core i5 - 8GB RAM - 256GB SSD', 28990000, 27490000, 'DXPS13-I5-8-256', 'https://example.com/images/dxps13-i5-8-256.jpg', 7, 25, 'ACTIVE');
+--
+
 
 -- ======================
 -- CẬP NHẬT thumbnail_product_id CHO PRODUCT (liên kết tới variant chính)
 -- ======================
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'IP15-128-BLK'
+    SELECT id FROM product_variant WHERE sku = 'IP15PM-128-BLK'
 ) WHERE id = 1;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'SGS24-128-BLK'
+    SELECT id FROM product_variant WHERE sku = 'IP15-128-BLK'
 ) WHERE id = 2;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'PIX8P-128-OBS'
+    SELECT id FROM product_variant WHERE sku = 'SGS24U-256-GRY'
 ) WHERE id = 3;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'OP12-12-256'
+    SELECT id FROM product_variant WHERE sku = 'SGS24P-256-PUR'
 ) WHERE id = 4;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'MBP14-M2P-16-512'
+    SELECT id FROM product_variant WHERE sku = 'GP8P-128-BLK'
+) WHERE id = 5;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'OP12-256-GRN'
 ) WHERE id = 6;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'DXPS13-I7-16-512'
+    SELECT id FROM product_variant WHERE sku = 'XM14U-256-BLK'
 ) WHERE id = 7;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'OPFX7P-256-BLK'
+) WHERE id = 8;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'VX100P-256-BLK'
+) WHERE id = 9;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'SX1VI-256-BLK'
+) WHERE id = 10;
 
 -- iPhone 15 128GB có 2 khuyến mãi
 INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)
@@ -961,14 +1178,70 @@ VALUES
 (8, 'Khá nóng khi chơi game nặng.', 3, 'PENDING', 4, CURRENT_TIMESTAMP),
 (3, 'Màn hình lớn, dễ xem phim.', 5, 'APPROVED', 4, CURRENT_TIMESTAMP);
 
-
--- Reviews for variant 5
+-- Reviews for Samsung Galaxy S24 Ultra - 256GB - Gray (variant_id = 5)
 INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
 VALUES
-(1, 'Sản phẩm mới, đóng gói cẩn thận.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP),
-(4, 'Dung lượng pin chưa như kỳ vọng.', 3, 'PENDING', 5, CURRENT_TIMESTAMP),
-(5, 'Hỗ trợ 5G, tốc độ mạng nhanh.', 4, 'APPROVED', 5, CURRENT_TIMESTAMP),
-(6, 'Thiết kế đẹp, nhẹ.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP);
+(2, 'Camera zoom 100x thực sự ấn tượng, ảnh chụp rất nét.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP),
+(5, 'Hiệu năng cực mạnh, chơi game mượt mà.', 5, 'APPROVED', 5, CURRENT_TIMESTAMP),
+(8, 'Pin khá tốt nhưng sạc hơi chậm.', 4, 'APPROVED', 5, CURRENT_TIMESTAMP),
+(7, 'Màn hình sáng và hiển thị sống động, nhưng giá hơi cao.', 4, 'PENDING', 5, CURRENT_TIMESTAMP);
+
+-- Reviews for Samsung Galaxy S24+ - 256GB - Purple (variant_id = 13)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(2, 'Màu tím rất đẹp, máy cầm sang và chắc tay.', 5, 'APPROVED', 13, CURRENT_TIMESTAMP),
+(4, 'Hiệu năng mạnh, chơi game mượt mà.', 5, 'APPROVED', 13, CURRENT_TIMESTAMP),
+(7, 'Màn hình sáng, hiển thị tốt ngoài trời.', 4, 'APPROVED', 13, CURRENT_TIMESTAMP),
+(5, 'Pin hơi yếu khi dùng 5G cả ngày.', 3, 'PENDING', 13, CURRENT_TIMESTAMP);
+
+-- Reviews for Google Pixel 8 Pro - 128GB - Obsidian Black (variant_id = 21)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(1, 'Ảnh chụp từ camera Pixel siêu chi tiết, màu sắc trung thực.', 5, 'APPROVED', 21, CURRENT_TIMESTAMP),
+(3, 'Android gốc mượt, tối ưu rất tốt.', 5, 'APPROVED', 21, CURRENT_TIMESTAMP),
+(6, 'Thiết kế cứng cáp, cầm nắm dễ chịu.', 4, 'APPROVED', 21, CURRENT_TIMESTAMP),
+(8, 'Pin ổn nhưng sạc hơi chậm.', 3, 'PENDING', 21, CURRENT_TIMESTAMP);
+
+-- Reviews for OnePlus 12 - 256GB - Flowy Emerald (variant_id = 30)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(2, 'Hiệu năng cực mạnh, mở app siêu nhanh.', 5, 'APPROVED', 30, CURRENT_TIMESTAMP),
+(5, 'Màn hình đẹp, tần số quét cao 120Hz nhìn rất mượt.', 5, 'APPROVED', 30, CURRENT_TIMESTAMP),
+(7, 'Sạc nhanh 100W đúng nghĩa, pin đầy trong chưa tới 30 phút.', 5, 'APPROVED', 30, CURRENT_TIMESTAMP),
+(4, 'Máy hơi nóng khi chơi game lâu nhưng tổng thể rất tốt.', 4, 'PENDING', 30, CURRENT_TIMESTAMP);
+
+-- Reviews for Xiaomi 14 Ultra - 256GB - Black (variant_id = 36)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(3, 'Camera Leica thực sự ấn tượng, ảnh chụp chi tiết và màu rất đẹp.', 5, 'APPROVED', 36, CURRENT_TIMESTAMP),
+(6, 'Hiệu năng mạnh, chạy app mượt, không bị giật lag.', 5, 'APPROVED', 36, CURRENT_TIMESTAMP),
+(2, 'Thiết kế sang, cảm giác cầm cao cấp.', 4, 'APPROVED', 36, CURRENT_TIMESTAMP),
+(8, 'Máy hơi nặng, pin dùng ổn trong 1 ngày.', 4, 'PENDING', 36, CURRENT_TIMESTAMP);
+
+-- Reviews for Oppo Find X7 Pro - 256GB - Black (variant_id = 40)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(1, 'Thiết kế cong viền rất đẹp, cầm nắm dễ chịu.', 5, 'APPROVED', 40, CURRENT_TIMESTAMP),
+(4, 'Camera chụp đêm tốt, màu sắc tự nhiên.', 4, 'APPROVED', 40, CURRENT_TIMESTAMP),
+(6, 'Hiệu năng ổn định, giao diện ColorOS mượt mà.', 5, 'APPROVED', 40, CURRENT_TIMESTAMP),
+(7, 'Pin dùng khá tốt nhưng sạc vẫn hơi nóng.', 4, 'PENDING', 40, CURRENT_TIMESTAMP);
+
+-- Reviews for Vivo X100 Pro - 256GB - Black (variant_id = 44)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(2, 'Camera ZEISS cực kỳ ấn tượng, ảnh sắc nét và chân thực.', 5, 'APPROVED', 44, CURRENT_TIMESTAMP),
+(5, 'Màn hình sáng, hiển thị ngoài trời rất tốt.', 4, 'APPROVED', 44, CURRENT_TIMESTAMP),
+(3, 'Hiệu năng mạnh mẽ, chơi game mượt, không bị nóng.', 5, 'APPROVED', 44, CURRENT_TIMESTAMP),
+(8, 'Pin tốt nhưng sạc nhanh hơi nóng nhẹ.', 4, 'PENDING', 44, CURRENT_TIMESTAMP);
+
+-- Reviews for Sony Xperia 1 VI - 256GB - Black (variant_id = 48)
+INSERT INTO review (user_id, content, rating_score, status, product_variant_id, created_at)
+VALUES
+(1, 'Màn hình 4K OLED cực kỳ sắc nét, xem phim rất đã.', 5, 'APPROVED', 48, CURRENT_TIMESTAMP),
+(3, 'Chất lượng âm thanh đỉnh cao, đúng chất Sony.', 5, 'APPROVED', 48, CURRENT_TIMESTAMP),
+(6, 'Camera chụp tự nhiên, chi tiết tốt nhưng đôi khi lấy nét hơi chậm.', 4, 'APPROVED', 48, CURRENT_TIMESTAMP),
+(7, 'Thiết kế vuông vức, hơi khó cầm khi dùng lâu.', 3, 'PENDING', 48, CURRENT_TIMESTAMP);
+
 
 
 INSERT INTO review_image (review_id, image_name)
@@ -978,6 +1251,102 @@ VALUES
 (2, 'https://example.com/review2-img1.jpg'),
 (3, 'https://example.com/review3-img1.jpg'),
 (3, 'https://example.com/review3-img2.jpg');
+
+UPDATE product p
+SET p.average_rating = (
+    SELECT ROUND(AVG(r.rating_score), 1)
+    FROM review r
+    JOIN product_variant pv ON r.product_variant_id = pv.id
+    WHERE pv.product_id = p.id
+);
+
+
+--DELIMITER //
+--
+--CREATE TRIGGER trg_update_variant_product_rating_after_insert
+--AFTER INSERT ON review
+--FOR EACH ROW
+--BEGIN
+--    DECLARE v_product_id BIGINT;
+--
+--    -- Cập nhật trung bình rating của variant
+--    UPDATE product_variant
+--    SET rating_average = (
+--        SELECT ROUND(AVG(r.rating_score), 2)
+--        FROM review r
+--        WHERE r.product_variant_id = NEW.product_variant_id
+--    )
+--    WHERE id = NEW.product_variant_id;
+--
+--    -- Lấy product_id của variant vừa được review
+--    SELECT product_id INTO v_product_id
+--    FROM product_variant
+--    WHERE id = NEW.product_variant_id;
+--
+--    -- Cập nhật trung bình rating của product cha
+--    UPDATE product
+--    SET rating_average = (
+--        SELECT ROUND(AVG(r.rating_score), 2)
+--        FROM review r
+--        JOIN product_variant pv ON pv.id = r.product_variant_id
+--        WHERE pv.product_id = v_product_id
+--    )
+--    WHERE id = v_product_id;
+--END;
+--//
+--
+--CREATE TRIGGER trg_update_variant_product_rating_after_delete
+--AFTER DELETE ON review
+--FOR EACH ROW
+--BEGIN
+--    DECLARE v_product_id BIGINT;
+--
+--    -- Cập nhật trung bình rating của variant
+--    UPDATE product_variant
+--    SET rating_average = (
+--        SELECT ROUND(AVG(r.rating_score), 2)
+--        FROM review r
+--        WHERE r.product_variant_id = OLD.product_variant_id
+--    )
+--    WHERE id = OLD.product_variant_id;
+--
+--    -- Lấy product_id của variant bị xóa review
+--    SELECT product_id INTO v_product_id
+--    FROM product_variant
+--    WHERE id = OLD.product_variant_id;
+--
+--    -- Cập nhật trung bình rating của product cha
+--    UPDATE product
+--    SET rating_average = (
+--        SELECT ROUND(AVG(r.rating_score), 2)
+--        FROM review r
+--        JOIN product_variant pv ON pv.id = r.product_variant_id
+--        WHERE pv.product_id = v_product_id
+--    )
+--    WHERE id = v_product_id;
+--END;
+--//
+--
+--DELIMITER ;
+
+--
+--
+--
+---- THÊM MỚI các product_id CHƯA có trong product_rating_summary
+--INSERT INTO product_rating_summary (product_id, ava, created_at)
+--SELECT t.product_id, t.avg_rating, CURRENT_TIMESTAMP
+--FROM (
+--    SELECT pv.product_id, ROUND(AVG(r.rating_score), 1) AS avg_rating
+--    FROM review r
+--    JOIN product_variant pv ON r.product_variant_id = pv.id
+--    GROUP BY pv.product_id
+--) AS t
+--WHERE t.product_id NOT IN (
+--    SELECT product_id FROM product_rating_summary
+--);
+
+
+
 
 -- Bình luận gốc (parent_comment_id = NULL)
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
