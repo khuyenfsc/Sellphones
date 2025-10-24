@@ -215,6 +215,7 @@ INSERT INTO brand_category (brand_id, category_id) VALUES
 (3, 1),  -- Google
 (4, 1),  -- OnePlus
 (5, 1),  -- Xiaomi
+(6, 1),  -- Oppof
 (6, 1),  -- Oppo
 (7, 1),  -- Vivo
 (8, 1),  -- Sony
@@ -1494,51 +1495,65 @@ INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('Intel Iris Xe', NULL, 6, CURRENT_TIMESTAMP); -- GPU
 
 
--- ✅ iPhone 15 (variant 1: 128GB Black)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 1); -- 6GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 2); -- 128GB
+-- iPhone 15 Pro Max - 128GB - Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 1); -- RAM 6GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 2); -- ROM 128GB
 
--- ✅ iPhone 15 (variant 2: 256GB White)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 3); -- 6GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 4); -- 256GB
+-- iPhone 15 Pro Max - 256GB - Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 3); -- RAM 6GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 4); -- ROM 256GB
 
--- ✅ Samsung Galaxy S24 (variant 3: 128GB Black)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 5); -- 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 6); -- 128GB
+-- Samsung Galaxy S24 Ultra - 256GB - Gray
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 5); -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 6); -- ROM 128GB
 
--- ✅ Samsung Galaxy S24 (variant 4: 256GB Cream)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 7); -- 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 8); -- 256GB
+-- Samsung Galaxy S24 Ultra - 512GB - Gray
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 7); -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 8); -- ROM 256GB
 
--- ✅ Google Pixel 8 Pro (variant 5)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 9); -- 12GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 10); -- 128GB
+-- Google Pixel 8 Pro - 128GB - Obsidian Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 9); -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 10); -- ROM 128GB
 
--- ✅ MacBook Pro 14" (variant 6: 16GB / 512GB)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 11); -- 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 12); -- 512GB
+-- MacBook Pro 14" - 16GB / 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 11); -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 12); -- ROM 512GB
 
--- ✅ MacBook Pro 14" (variant 7: 32GB / 1TB)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 13); -- 32GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 14); -- 1024GB
+-- MacBook Pro 14" - 32GB / 1TB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 13); -- RAM 32GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 14); -- ROM 1024GB
 
--- ✅ Dell XPS 13 (variant 8: i7, 16GB / 512GB)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 15); -- 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 16); -- 512GB
+-- Dell XPS 13 - i7, 16GB / 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 15); -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 16); -- ROM 512GB
 
--- ✅ Dell XPS 13 (variant 9: i5, 8GB / 256GB)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 17); -- 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 18); -- 256GB
+-- Dell XPS 13 - i5, 8GB / 256GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 17); -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 18); -- ROM 256GB
 
--- ✅ OnePlus 12 (variant 10)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 21); -- 12GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 22); -- 256GB
+-- OnePlus 12 - Common specs (screen + battery)
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 19); -- Pin 5000 mAh
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 20); -- Màn hình 6.7 inch AMOLED
 
--- ✅ OnePlus 12 (variant 11)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 23); -- 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 24); -- 512GB
+-- OnePlus 12 - 256GB - Flowy Emerald
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (30, 22); -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 22); -- ROM 256GB
 
+-- OnePlus 12 - 512GB - Flowy Emerald
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 23); -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 24); -- ROM 512GB
 
+-- Sony Xperia 1 VI - 256GB - Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 25); -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 26); -- ROM 256GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 27); -- Màn hình 6.5 inch 4K OLED
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 28); -- Pin 5000 mAh
+
+-- Surface Laptop 5
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 29); -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 30); -- ROM 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 31); -- CPU Intel Core i7-1255U
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 32); -- GPU Intel Iris Xe
 
 
 
@@ -1558,10 +1573,74 @@ INSERT INTO promotion_banner (name, image, target_url, banner_type, status) VALU
 
 
 -- Product Filters
-INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Dung lượng RAM', 1, CURRENT_TIMESTAMP);
-INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Bộ nhớ trong', 2, CURRENT_TIMESTAMP);
-INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Chọn hãng', 3, CURRENT_TIMESTAMP);
-INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Giá', 4, CURRENT_TIMESTAMP);
+-- ====== CATEGORY 1: Điện thoại (DT) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Dung lượng RAM', 1, 1, CURRENT_TIMESTAMP),
+('Bộ nhớ trong (ROM)', 2, 1, CURRENT_TIMESTAMP),
+('Kích thước màn hình', 3, 1, CURRENT_TIMESTAMP),
+('Dung lượng pin', 4, 1, CURRENT_TIMESTAMP),
+('Chip xử lý (CPU)', 5, 1, CURRENT_TIMESTAMP),
+('Chip đồ họa (GPU)', 6, 1, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 2: Tablet (TB) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Dung lượng RAM', 1, 2, CURRENT_TIMESTAMP),
+('Bộ nhớ trong (ROM)', 2, 2, CURRENT_TIMESTAMP),
+('Kích thước màn hình', 3, 2, CURRENT_TIMESTAMP),
+('Dung lượng pin', 4, 2, CURRENT_TIMESTAMP),
+('Vi xử lý (CPU)', 5, 2, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 3: Laptop (LT) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Dung lượng RAM', 1, 3, CURRENT_TIMESTAMP),
+('Bộ nhớ trong (ROM)', 2, 3, CURRENT_TIMESTAMP),
+('Kích thước màn hình', 3, 3, CURRENT_TIMESTAMP),
+('Dung lượng pin', 4, 3, CURRENT_TIMESTAMP),
+('CPU', 5, 3, CURRENT_TIMESTAMP),
+('GPU', 6, 3, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 4: Phụ kiện (PK) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Tương thích thiết bị (RAM)', 1, 4, CURRENT_TIMESTAMP),
+('Dung lượng pin dự phòng', 4, 4, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 5: Màn hình (MH) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Kích thước màn hình', 3, 5, CURRENT_TIMESTAMP),
+('Loại tấm nền (GPU)', 6, 5, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 6: Máy tính để bàn (PC) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('RAM', 1, 6, CURRENT_TIMESTAMP),
+('ROM / Ổ cứng', 2, 6, CURRENT_TIMESTAMP),
+('CPU', 5, 6, CURRENT_TIMESTAMP),
+('GPU', 6, 6, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 7: Đồng hồ thông minh (DC) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Dung lượng RAM', 1, 7, CURRENT_TIMESTAMP),
+('Dung lượng pin', 4, 7, CURRENT_TIMESTAMP),
+('Kích thước màn hình', 3, 7, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 8: Tai nghe (TA) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Dung lượng pin', 4, 8, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 9: Thiết bị mạng & sạc (CH) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Công suất sạc (Pin)', 4, 9, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 10: Thiết bị chơi game (GM) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('RAM', 1, 10, CURRENT_TIMESTAMP),
+('GPU', 6, 10, CURRENT_TIMESTAMP);
+
+-- ====== CATEGORY 11: Phần mềm & ứng dụng (SW) ======
+INSERT INTO product_filter (name, attribute_id, category_id, created_at) VALUES
+('Yêu cầu RAM tối thiểu', 1, 11, CURRENT_TIMESTAMP),
+('Yêu cầu CPU', 5, 11, CURRENT_TIMESTAMP);
+
+
 
 ---- Filter Options cho category = 'Điện thoại' (id = 1)
 --INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
@@ -1607,49 +1686,183 @@ INSERT INTO product_filter (name, attribute_id, created_at) VALUES ('Giá', 4, C
 --INSERT INTO filter_option (name, filter_condition, product_filter_id, category_id, created_at)
 --VALUES ('Asus', 'chua-Asus', 3, 3, CURRENT_TIMESTAMP);
 
--- Filter Options cho category = 'Điện thoại' (id = 1)
+--📱 Category: Điện thoại (category_id = 1, product_filter_id = 1–6)
+-- RAM
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
 VALUES ('4 GB', 'bang-4', 1, CURRENT_TIMESTAMP);
-
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('6 GB', 'bang-6', 1, CURRENT_TIMESTAMP);
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
 VALUES ('8 GB', 'bang-8', 1, CURRENT_TIMESTAMP);
 
+-- ROM
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
 VALUES ('64 GB', 'bang-64', 2, CURRENT_TIMESTAMP);
-
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
 VALUES ('128 GB', 'bang-128', 2, CURRENT_TIMESTAMP);
-
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('Samsung', 'chua-Samsung', 3, CURRENT_TIMESTAMP);
+VALUES ('256 GB', 'bang-256', 2, CURRENT_TIMESTAMP);
 
+-- Màn hình
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('Apple', 'chua-Apple', 3, CURRENT_TIMESTAMP);
+VALUES ('6.1 inch', 'bang-6.1', 3, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('6.7 inch', 'bang-6.7', 3, CURRENT_TIMESTAMP);
 
+-- Pin
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('Dưới 5 triệu', 'duoi-5000000', 4, CURRENT_TIMESTAMP);
+VALUES ('< 4000 mAh', 'duoi-4000', 4, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('4000 - 5000 mAh', '4000-5000', 4, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('> 5000 mAh', 'tren-5000', 4, CURRENT_TIMESTAMP);
 
+-- CPU
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('5 - 10 triệu', '5000000-10000000', 4, CURRENT_TIMESTAMP);
+VALUES ('Snapdragon 8 Gen 2', 'chua-Snapdragon8Gen2', 5, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple A17 Pro', 'chua-A17Pro', 5, CURRENT_TIMESTAMP);
 
--- Filter Options cho category = 'Laptop' (id = 3)
+-- GPU
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('8 GB', 'bang-8', 1, CURRENT_TIMESTAMP);
+VALUES ('Adreno 740', 'chua-Adreno740', 6, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple GPU (6-core)', 'chua-AppleGPU6core', 6, CURRENT_TIMESTAMP);
 
-INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('16 GB', 'bang-16', 1, CURRENT_TIMESTAMP);
+--💊 Category: Tablet (category_id = 2)
 
+-- RAM (product_filter_id = 7)
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('256 GB SSD', 'bang-256', 2, CURRENT_TIMESTAMP);
+VALUES ('4 GB', 'bang-4', 7, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('6 GB', 'bang-6', 7, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('8 GB', 'bang-8', 7, CURRENT_TIMESTAMP);
 
+-- ROM (product_filter_id = 8)
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('512 GB SSD', 'bang-512', 2, CURRENT_TIMESTAMP);
+VALUES ('64 GB', 'bang-64', 8, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('128 GB', 'bang-128', 8, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('256 GB', 'bang-256', 8, CURRENT_TIMESTAMP);
 
+-- Màn hình (product_filter_id = 9)
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('Dell', 'chua-Dell', 3, CURRENT_TIMESTAMP);
+VALUES ('10.1 inch', 'bang-10.1', 9, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('11 inch', 'bang-11', 9, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('12.9 inch', 'bang-12.9', 9, CURRENT_TIMESTAMP);
 
+-- Pin (product_filter_id = 10)
 INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
-VALUES ('Asus', 'chua-Asus', 3, CURRENT_TIMESTAMP);
+VALUES ('< 7000 mAh', 'duoi-7000', 10, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('7000 - 9000 mAh', '7000-9000', 10, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('> 9000 mAh', 'tren-9000', 10, CURRENT_TIMESTAMP);
+
+-- CPU (product_filter_id = 11)
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple M2', 'chua-M2', 11, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Snapdragon 8 Gen 2', 'chua-Snapdragon8Gen2', 11, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('MediaTek Dimensity 9000', 'chua-Dimensity9000', 11, CURRENT_TIMESTAMP);
+
+
+--💻 Category: Laptop (category_id = 3, product_filter_id = 12–17)
+-- RAM
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('8 GB', 'bang-8', 12, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('16 GB', 'bang-16', 12, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('32 GB', 'bang-32', 12, CURRENT_TIMESTAMP);
+
+-- ROM
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('256 GB SSD', 'bang-256', 13, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('512 GB SSD', 'bang-512', 13, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('1 TB SSD', 'bang-1024', 13, CURRENT_TIMESTAMP);
+
+-- Màn hình
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('13 inch', 'bang-13', 14, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('15.6 inch', 'bang-15.6', 14, CURRENT_TIMESTAMP);
+
+-- Pin
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('< 50 Wh', 'duoi-50', 15, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('50 - 70 Wh', '50-70', 15, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('> 70 Wh', 'tren-70', 15, CURRENT_TIMESTAMP);
+
+-- CPU
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Intel Core i5', 'chua-i5', 16, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Intel Core i7', 'chua-i7', 16, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple M3', 'chua-M3', 16, CURRENT_TIMESTAMP);
+
+-- GPU
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Intel Iris Xe', 'chua-IrisXe', 17, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('NVIDIA RTX 4060', 'chua-RTX4060', 17, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('Apple M3 GPU', 'chua-AppleM3GPU', 17, CURRENT_TIMESTAMP);
+
+
+--🖥️ Category: PC (category_id = 6, product_filter_id = 28–31)
+ -- RAM
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('16 GB', 'bang-16', 28, CURRENT_TIMESTAMP);
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('32 GB', 'bang-32', 28, CURRENT_TIMESTAMP);
+
+ -- ROM
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('512 GB SSD', 'bang-512', 29, CURRENT_TIMESTAMP);
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('1 TB SSD', 'bang-1024', 29, CURRENT_TIMESTAMP);
+
+ -- CPU
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('Intel Core i7', 'chua-i7', 30, CURRENT_TIMESTAMP);
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('AMD Ryzen 7', 'chua-Ryzen7', 30, CURRENT_TIMESTAMP);
+
+ -- GPU
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('NVIDIA RTX 4070', 'chua-RTX4070', 31, CURRENT_TIMESTAMP);
+ INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+ VALUES ('AMD RX 7900', 'chua-RX7900', 31, CURRENT_TIMESTAMP);
+
+--⌚ Category: Đồng hồ thông minh (category_id = 7, product_filter_id = 32–34)
+-- RAM
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('512 MB', 'bang-0.5', 32, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('1 GB', 'bang-1', 32, CURRENT_TIMESTAMP);
+
+-- Pin
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('< 300 mAh', 'duoi-300', 33, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('300 - 500 mAh', '300-500', 33, CURRENT_TIMESTAMP);
+
+-- Màn hình
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('1.3 inch', 'bang-1.3', 34, CURRENT_TIMESTAMP);
+INSERT INTO filter_option (name, filter_condition, product_filter_id, created_at)
+VALUES ('1.6 inch', 'bang-1.6', 34, CURRENT_TIMESTAMP);
 
 
 

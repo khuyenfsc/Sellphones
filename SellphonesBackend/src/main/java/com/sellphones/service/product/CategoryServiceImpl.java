@@ -41,8 +41,8 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<ProductFilterResponse> getProductFiltersByCategory(Long categoryId) {
-        List<ProductFilter> filters = productFilterRepository.findByCategory_Id(categoryId);
+    public List<ProductFilterResponse> getProductFiltersByCategoryName(String categoryName) {
+        List<ProductFilter> filters = productFilterRepository.findByCategoryName(categoryName);
         return filters.stream()
                 .map(f -> modelMapper.map(f, ProductFilterResponse.class))
                 .toList();

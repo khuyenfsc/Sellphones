@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductFilterResponse {
 
+    private Long id;
+
     private String name;
 
     private List<FilterOptionResponse> filterOptions = new ArrayList<>();

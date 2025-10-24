@@ -72,7 +72,10 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productPage = productRepository.findAll(productSpec, pageable);
         List<Product> products = productPage.getContent();
         List<ProductListResponse> response = products.stream()
-                .map(p -> modelMapper.map(p, ProductListResponse.class))
+                .map(p -> {
+                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+                    return modelMapper.map(p, ProductListResponse.class);
+                })
                 .collect(Collectors.toList());
 
         return PageResponse.<ProductListResponse>builder()

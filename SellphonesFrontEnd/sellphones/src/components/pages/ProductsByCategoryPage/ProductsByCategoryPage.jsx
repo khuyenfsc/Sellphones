@@ -1,13 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Heart, Phone, Home } from 'lucide-react';
+import ProductGrid from '../../product/ProductGrid';
 import BrandService from '../../../service/BrandService';
+import CategoryService from '../../../service/CategoryService';
+import ProductService from '../../../service/ProductService';
 
 
 const ProductsByCategoryPage = () => {
-  const [activeFilter, setActiveFilter] = useState('Bộ lọc');
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [activeFilterGroup, setActiveFilterGroup] = useState(null);
+  const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [filters, setFilters] = useState([]);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 500000000 });
   const { slug } = useParams();
+  const categoryName = decodeURIComponent(slug);
+
+
+  const toggleFilterGroup = (groupName) => {
+    setActiveFilterGroup((prev) => (prev === groupName ? null : groupName));
+  };
+
+  const handleSelectOption = (filterGroup, option) => {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [filterGroup.name]: {
+        groupId: filterGroup.id,
+        groupName: filterGroup.name,
+        optionName: option.name,
+        condition: option.condition
+      },
+    }));
+  };
+
+
+  const handleApplyFilters = async () => {
+    // Chuyển selectedOptions → dynamic conditions
+    const dynamicFilters = {};
+
+    Object.entries(selectedOptions).forEach(([groupName, option]) => {
+      // Mặc định group "Giá" thì parse condition theo price-min-max
+      const groupId = option.groupId; // 👈 lấy id của nhóm filter
+      const condition = option.condition;
+
+      if (groupName === "Giá" && condition.includes("-")) {
+        const [min, max] = condition.split("-");
+        dynamicFilters["price"] = `${min}-${max}`;
+      } else {
+        // Các filter khác như Màu sắc, RAM, Dung lượng...
+        dynamicFilters[groupId] = condition;
+      }
+    });
+
+    // Body request
+    const filterRequest = {
+      query: {
+        _static: {
+          categoryName: slug, // lấy từ useParams
+          brandId: selectedOptions["Thương hiệu"]?.condition || null,
+        },
+        dynamic: dynamicFilters,
+      },
+      page: 0,
+      size: 10,
+      sort: "desc",
+    };
+
+    console.log("Filter body gửi đi:", filterRequest);
+
+    try {
+      const res = await ProductService.getProductsByFilters(filterRequest);
+      console.log("Kết quả lọc sản phẩm:", res.data);
+      setProducts(res.data?.products?.result || [])
+    } catch (err) {
+      console.error("Lỗi khi lọc sản phẩm:", err);
+    }
+
+    setActiveFilterGroup(null); // đóng dropdown
+  };
+
+
+  // Xóa option
+  const handleRemoveFilter = (filterName) => {
+    setSelectedOptions((prev) => {
+      const newOptions = { ...prev };
+      delete newOptions[filterName];
+      return newOptions;
+    });
+  };
 
 
   useEffect(() => {
@@ -20,74 +101,27 @@ const ProductsByCategoryPage = () => {
       } finally {
       }
     };
+
+    const fetchFilters = async () => {
+      try {
+        const res = await CategoryService.getFilterByCategoryName(slug);
+        setFilters(res.data?.result || []);
+      } catch (err) {
+        console.error('Lỗi khi tải danh sách bộ lọc:', err);
+      } finally {
+      }
+    };
+
     if (slug) {
       fetchBrands();
+      fetchFilters();
     }
   }, [slug]);
 
-  const hotSaleProducts = [
-    {
-      name: 'Samsung Galaxy S24 Plus 12GB 256GB',
-      price: '16.390.000đ',
-      oldPrice: '27.990.000đ',
-      discount: 'Giảm 5%',
-      installment: 'Không gói quà tặng trị giá tới 3,44 triệu đồng trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      rating: 5,
-      image: '📱',
-      badge: 'Giảm 5%'
-    },
-    {
-      name: 'Xiaomi POCO X7 Pro 5G 12GB 256GB - Chính hãng...',
-      price: '9.090.000đ',
-      oldPrice: '10.990.000đ',
-      discount: 'Giảm 5%',
-      installment: 'Không gói trả trước giá trị tới 1,89 triệu đồng trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      rating: 5,
-      image: '📱',
-      badge: 'Giảm 5%'
-    },
-    {
-      name: 'Samsung Galaxy A07 4GB 128GB',
-      price: '3.190.000đ',
-      oldPrice: '3.590.000đ',
-      discount: 'Giảm 6%',
-      installment: 'Không gói quà tặng trị giá tới 825,000đ trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      rating: 5,
-      image: '📱',
-      badge: 'Giảm 6%'
-    },
-    {
-      name: 'Samsung Galaxy A26 5G 8GB 128GB',
-      price: '6.270.000đ',
-      oldPrice: '8.090.000đ',
-      discount: 'Giảm 6%',
-      installment: 'Không gói quà tặng trị giá tới 1,32 triệu đồng trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      rating: 4.8,
-      image: '📱',
-      badge: 'Giảm 6%'
-    },
-    {
-      name: 'Samsung Galaxy A56 5G 8GB 128GB',
-      price: '9.310.000đ',
-      oldPrice: '11.990.000đ',
-      discount: 'Giảm 5%',
-      installment: 'Không gói quà tặng trị giá tới 1,96 triệu đồng trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...',
-      rating: 4.9,
-      image: '📱',
-      badge: 'Giảm 5%'
-    },
-  ];
+  useEffect(() => {
+    handleApplyFilters(); // 👈 Gọi ngay khi component được mount
+  }, []); // [] đảm bảo chỉ chạy 1 lần khi trang tải
 
-  const filters = [
-    'Bộ lọc',
-    'Săn hàng',
-    'Hàng mới về',
-    'Xem theo giá',
-    'Nhu cầu sử dụng',
-    'Chip xử lí',
-    'Loại điện thoại',
-    'Dung lượng RAM',
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,10 +131,13 @@ const ProductsByCategoryPage = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Home className="w-5 h-5 text-gray-600" />
-              <span className="text-sm text-gray-600">Trang chủ</span>
-              <span className="text-gray-400">/</span>
+              <span className="text-sm text-gray-600">
+                <a href="/" className="hover:underline text-blue-600">
+                  Trang chủ
+                </a>
+              </span>              <span className="text-gray-400">/</span>
               <span className="text-sm font-medium text-black bg-white px-1 rounded">
-                Điện thoại
+                {categoryName}
               </span>
             </div>
 
@@ -145,51 +182,29 @@ const ProductsByCategoryPage = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">
         {/* Title */}
-        <span className="text-base font-bold mb-6 text-black block">Điện thoại</span>
+        <span className="text-base font-bold mb-6 text-black block">{categoryName}</span>
 
         {/* Brand Filters */}
-<div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
-  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-10 gap-4">
-    {brands.map((brand) => (
-      <button
-        key={brand.id}
-        className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:border-red-500 hover:shadow-lg hover:scale-105 transition-all duration-200"
-      >
-        {/* Logo brand */}
-        <img
-          src={brand.brandIcon}
-          alt={brand.name}
-          className="w-14 h-14 mb-2 object-contain"  // <-- tăng kích thước logo ở đây
-        />
-        <span className="text-sm font-medium text-gray-700">{brand.name}</span>
-      </button>
-    ))}
-  </div>
-</div>
-
-
-
-        {/* Hot Sale Section */}
-        <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-t-lg p-4 mb-0">
-          <div className="flex items-center justify-between text-white">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🔥</span>
-              <h2 className="text-2xl font-bold">HOT SALE CUỐI TUẦN</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Kết thúc sau:</span>
-              <div className="flex gap-1">
-                {['03', '23', '51', '51'].map((num, idx) => (
-                  <span key={idx} className="bg-white text-red-600 px-2 py-1 rounded font-bold text-sm">
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-10 gap-4">
+            {brands.map((brand) => (
+              <button
+                key={brand.id}
+                className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:border-red-500 hover:shadow-lg hover:scale-105 transition-all duration-200"
+              >
+                {/* Logo brand */}
+                <img
+                  src={brand.brandIcon}
+                  alt={brand.name}
+                  className="w-14 h-14 mb-2 object-contain"  // <-- tăng kích thước logo ở đây
+                />
+                <span className="text-sm font-medium text-gray-700">{brand.name}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Hot Sale Products */}
+        {/* Hot Sale Products
         <div className="bg-white rounded-b-lg p-4 shadow-lg mb-6">
           <div className="relative">
             <button className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg">
@@ -235,79 +250,161 @@ const ProductsByCategoryPage = () => {
               <ChevronRight className="w-6 h-6" />
             </button>
           </div>
-        </div>
-
+        </div> */}
         {/* Filter Bar */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Chọn theo tiêu chí</h2>
-          <div className="flex flex-wrap gap-2">
-            {filters.map((filter, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${activeFilter === filter
-                    ? 'bg-red-600 text-white border-red-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-red-600'
-                  }`}
-              >
-                {filter}
-                {idx === 0 && ' 🔻'}
-              </button>
-            ))}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-black mb-4">Chọn theo tiêu chí</h2>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+            {/* Nhóm filter */}
+            <div className="flex flex-wrap gap-2 flex-grow">
+              {filters?.map((filterGroup, idx) => (
+                <div key={idx} className="relative">
+                  <button
+                    onClick={() => toggleFilterGroup(filterGroup.name)}
+                    className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${activeFilterGroup === filterGroup.name
+                      ? "bg-red-600 text-white border-red-600"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-red-600"
+                      }`}
+                  >
+                    {filterGroup.name} 🔻
+                  </button>
+
+                  {activeFilterGroup === filterGroup.name && (
+                    <div className="absolute mt-2 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 w-56">
+                      <div className="space-y-1">
+                        {filterGroup.filterOptions?.map((option, optIdx) => (
+                          <button
+                            key={optIdx}
+                            onClick={() => {
+                              handleSelectOption(filterGroup, option);
+                              setActiveFilterGroup(null); // 👈 đóng popup ngay sau khi chọn
+                            }}
+                            className={`block w-full text-left px-3 py-1.5 rounded-md text-sm font-medium transition-all ${selectedOptions[filterGroup.name]?.condition === option.condition
+                              ? "bg-red-600 text-white"
+                              : "text-gray-700 hover:bg-gray-100"
+                              }`}
+                          >
+                            {option.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Bộ lọc giá */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleFilterGroup("Giá")}
+                  className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${activeFilterGroup === "Giá"
+                    ? "bg-red-600 text-white border-red-600"
+                    : "bg-white text-gray-700 border-gray-300 hover:border-red-600"
+                    }`}
+                >
+                  Giá 🔻
+                </button>
+
+                {activeFilterGroup === "Giá" && (
+                  <div className="absolute mt-2 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 w-64">
+                    <span className="block text-sm font-medium text-gray-800 mb-2">Khoảng giá (₫)</span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={500000000}
+                        value={priceRange.min}
+                        onChange={(e) =>
+                          setPriceRange((prev) => ({ ...prev, min: Number(e.target.value) }))
+                        }
+                        className="w-28 border border-gray-300 rounded-md px-2 py-1 text-sm text-gray-700 focus:outline-none focus:border-red-500"
+                        placeholder="Từ"
+                      />
+                      <span className="text-gray-500">-</span>
+                      <input
+                        type="number"
+                        min={0}
+                        max={500000000}
+                        value={priceRange.max}
+                        onChange={(e) =>
+                          setPriceRange((prev) => ({ ...prev, max: Number(e.target.value) }))
+                        }
+                        className="w-28 border border-gray-300 rounded-md px-2 py-1 text-sm text-gray-700 focus:outline-none focus:border-red-500"
+                        placeholder="Đến"
+                      />
+                    </div>
+                    <div className="text-xs text-gray-600 mt-2">
+                      {priceRange.min.toLocaleString()} ₫ - {priceRange.max.toLocaleString()} ₫
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleSelectOption("Giá", {
+                          name: `${priceRange.min.toLocaleString()} - ${priceRange.max.toLocaleString()} ₫`,
+                          condition: `${priceRange.min}-${priceRange.max}`,
+                        });
+                        setActiveFilterGroup(null);
+                      }}
+                      className="mt-3 w-full bg-red-600 text-white text-sm font-medium py-1.5 rounded-md hover:bg-red-700 transition-all"
+                    >
+                      Áp dụng
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Nút lọc tổng */}
+            <button
+              onClick={handleApplyFilters}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all"
+            >
+              Lọc
+            </button>
           </div>
+
+          {/* Danh sách tiêu chí đã chọn */}
+          {Object.keys(selectedOptions).length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {Object.entries(selectedOptions).map(([filterName, option]) => (
+                <div
+                  key={filterName}
+                  className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-full px-3 py-1 text-sm text-gray-800"
+                >
+                  <span className="font-medium">
+                    {filterName}: {option.name}
+                  </span>
+                  <button
+                    onClick={() => handleRemoveFilter(filterName)}
+                    className="text-gray-500 hover:text-red-600 font-bold"
+                  >
+                    ✖
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Additional Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {['Bộ nhớ trong', 'Tính năng đặc biệt', 'Tính năng camera', 'Tần số quét', 'Kích thước màn hình', 'Kiểu màn hình', 'Công nghệ NFC', 'Tính năng đặc biệt', 'Nhu cầu sử dụng'].map((f, idx) => (
-            <button key={idx} className="px-3 py-1 bg-white border border-gray-300 rounded text-sm hover:border-red-600">
-              {f} 🔻
-            </button>
-          ))}
-        </div>
 
         {/* Sort Options */}
         <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium">Sắp xếp theo</h3>
+            <h3 className="font-medium text-black">Sắp xếp theo</h3>
             <div className="flex gap-2">
-              <button className="px-4 py-2 border border-blue-500 text-blue-500 rounded-lg text-sm">
-                📱 Phổ biến
+              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-black">
+                ↑ Giá Thấp - Cao
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                💰 Khuyến mãi HOT
+              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-black">
+                ↓ Giá Cao - Thấp
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                ⭐ Giá Thấp - Cao
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                ⭐ Giá Cao - Thấp
-              </button>
+
             </div>
           </div>
         </div>
 
         {/* Product Grid Placeholder */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {[...Array(10)].map((_, idx) => (
-            <div key={idx} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="relative">
-                {idx % 3 === 0 && (
-                  <span className="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded">
-                    Giảm {[5, 6, 33][idx % 3]}%
-                  </span>
-                )}
-                <div className="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center text-5xl">
-                  📱
-                </div>
-              </div>
-              <h3 className="text-sm font-medium mb-2 h-10 line-clamp-2">
-                Điện thoại {idx + 1}
-              </h3>
-              <div className="text-red-600 font-bold">Giá tốt</div>
-            </div>
-          ))}
-        </div>
+        <ProductGrid products={products} />
       </main>
     </div>
   );

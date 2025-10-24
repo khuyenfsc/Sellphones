@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface ProductFilterRepository extends JpaRepository<ProductFilter, Long>, JpaSpecificationExecutor<ProductFilter> {
 
-    List<ProductFilter> findByCategory_Id(Long categoryId);
+    List<ProductFilter> findByCategoryName(String categoryName);
 
 }

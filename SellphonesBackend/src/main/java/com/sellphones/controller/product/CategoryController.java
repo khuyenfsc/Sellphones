@@ -37,13 +37,13 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @GetMapping("/{categoryId}/filters")
+    @GetMapping("/{categoryName}/filters")
     public ResponseEntity<CommonResponse> getFiltersByCategory(
-            @PathVariable("categoryId") Long categoryId
+            @PathVariable("categoryName") String categoryName
     ){
-        List<ProductFilterResponse> filterOptions = categoryService.getProductFiltersByCategory(categoryId);
+        List<ProductFilterResponse> filterOptions = categoryService.getProductFiltersByCategoryName(categoryName);
         Map<String, Object> map = new HashMap<>();
-        map.put("filter_options", filterOptions);
+        map.put("result", filterOptions);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 }
