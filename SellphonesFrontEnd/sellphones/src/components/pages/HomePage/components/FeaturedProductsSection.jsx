@@ -37,7 +37,6 @@ const FeaturedProductsSection = ({ categoryName }) => {
     if (categoryName) {
       fetchBrands();
       fetchFeaturedProducts();
-      console.log(featuredProducts)
     }
   }, [categoryName]);
 
@@ -63,20 +62,25 @@ const FeaturedProductsSection = ({ categoryName }) => {
             {loadingBrands ? (
               <span className="text-gray-500 text-sm">Đang tải thương hiệu...</span>
             ) : brands.length > 0 ? (
-              brands.map((brand, idx) => (
-                <button
+              brands.map((brand) => (
+                <a
                   key={brand.id}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm whitespace-nowrap border-gray-300 hover:border-gray-400 text-black`}
+                  href={`/category/${encodeURIComponent(categoryName)}?brand=${brand.id}`} // 👉 chuyển hướng thật sự
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm whitespace-nowrap border-gray-300 hover:border-gray-400 text-black"
                 >
                   {brand.name}
-                </button>
+                </a>
               ))
             ) : (
               <span className="text-gray-500 text-sm">Không có thương hiệu nào</span>
             )}
-            <button className="flex items-center gap-1 px-4 py-2 text-blue-600 text-sm whitespace-nowrap">
+            <a
+              href={`/category/${encodeURIComponent(categoryName)}`}
+              className="flex items-center gap-1 px-4 py-2 text-blue-600 text-sm whitespace-nowrap hover:underline"
+            >
               Xem tất cả <ChevronRight size={16} />
-            </button>
+            </a>
+
           </div>
         </div>
 

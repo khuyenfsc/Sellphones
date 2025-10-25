@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import LeftSidebar from "./components/LeftSidebar";
+import LeftSidebar from "./components/Category";
 import PromoBanner from "./components/PromoBanner";
 import RightSidebar from "./components/RightSidebar";
 import FeaturedProductsSection from "./components/FeaturedProductsSection";

@@ -14,7 +14,9 @@ public class ProductVariantResponse {
 
     private String productVariantName;
 
-    private BigDecimal price;
+    private BigDecimal rootPrice;
+
+    private BigDecimal currentPrice;
 
     private String sku;
 

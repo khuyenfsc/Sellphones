@@ -1,8 +1,12 @@
-import { ChevronDown, Search, ShoppingCart, User } from "lucide-react";
+import { ChevronDown, Search, ShoppingCart, User, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import Category from "../pages/HomePage/components/Category";
 
 const Header = () => {
+  const [showCategory, setShowCategory] = useState(false);
+
   return (
-    <header className="bg-blue-500 py-3">
+    <header className="relative bg-blue-500 py-3">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4">
           {/* Logo */}
@@ -10,8 +14,11 @@ const Header = () => {
             sellphones
           </h1>
 
-          {/* Category Dropdown */}
-          <button className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300">
+          {/* Category Dropdown Button */}
+          <button
+            onClick={() => setShowCategory(!showCategory)}
+            className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300 relative"
+          >
             <span className="text-sm font-medium">Danh mục</span>
             <ChevronDown size={16} />
           </button>
@@ -45,6 +52,14 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {/* CATEGORY DROPDOWN — hiển thị bên dưới header */}
+      {showCategory && (
+        <div className="absolute left-0 top-full mt-2 w-max bg-white shadow-lg border border-gray-200 rounded-lg z-50">
+          <Category />
+        </div>
+      )}
+
     </header>
   );
 };

@@ -560,24 +560,36 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
 ('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true),
 ('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true),
-('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 2, 1, true, true),
-('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 2, 1, true, true),
-('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 3, 1, true, true),
+
+('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 3, 1, true, true),
+('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 3, 1, true, true),
+('Samsung Galaxy A55', 'sm-a556_galaxy_a55_awesome_lilac_ui_2_1.jpg', 'Smartphone tầm trung pin trâu', 3, 1, false, true),
+
+('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 2, 1, true, true),
+
 ('OnePlus 12', 'oneplus-12.jpg', 'Điện thoại hiệu năng cao, sạc nhanh 100W', 4, 1, true, true),
+
 ('Xiaomi 14 Ultra', 'xiaomi-14-ultra_3_1_1_1.jpg', 'Camera Leica, cấu hình mạnh mẽ', 5, 1, true, true),
-('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false),
-('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false),
-('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true),
-('Asus ROG Phone 8', 'asus-rog-phone-8.jpg', 'Điện thoại gaming cực mạnh', 9, 1, true, true),
-('Realme GT 6', 'realme-gt-neo-6_1_.jpg', 'Snapdragon 8s Gen 3, giá cực tốt', 10, 1, false, true),
-('Huawei P70 Pro', '_ter3434_3_.jpg', 'Siêu camera và thiết kế sang trọng', 11, 1, true, true),
-('Nothing Phone 2', 'dien-thoai-nothing-phone-2a-plus_1_.jpg', 'Thiết kế trong suốt độc đáo', 12, 1, false, true),
-('Nokia X30 5G', 'nokia_8.3_3.jpg', 'Thiết kế bền vững, hỗ trợ 5G', 8, 1, false, true),
 ('Xiaomi Redmi Note 13', 'photo_2024-12-20_17-05-54_1.jpg', 'Điện thoại tầm trung mạnh mẽ', 5, 1, false, true),
-('Samsung Galaxy A55', 'sm-a556_galaxy_a55_awesome_lilac_ui_2_1.jpg', 'Smartphone tầm trung pin trâu', 2, 1, false, true),
+
+('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false),
 ('Oppo Reno11 Pro', 'oppo-reno11-pro_3.jpg', 'Camera chân dung cực đẹp', 6, 1, true, true),
+
+('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false),
 ('Vivo V30', 'dien-thoai-vivo-v30-5g_1__2.jpg', 'Hiệu năng ổn định, thiết kế đẹp', 7, 1, false, true),
-('Huawei Nova 12', 'huawei-nova-12-pro.jpg', 'Thiết kế mỏng nhẹ, camera selfie tốt', 11, 1, false, true);
+
+('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true),
+
+('Asus ROG Phone 8', 'asus-rog-phone-8.jpg', 'Điện thoại gaming cực mạnh', 9, 1, true, true),
+
+('Realme GT 6', 'realme-gt-neo-6_1_.jpg', 'Snapdragon 8s Gen 3, giá cực tốt', 10, 1, false, true),
+
+('Huawei P70 Pro', '_ter3434_3_.jpg', 'Siêu camera và thiết kế sang trọng', 11, 1, true, true),
+('Huawei Nova 12', 'huawei-nova-12-pro.jpg', 'Thiết kế mỏng nhẹ, camera selfie tốt', 11, 1, false, true),
+
+('Nothing Phone 2', 'dien-thoai-nothing-phone-2a-plus_1_.jpg', 'Thiết kế trong suốt độc đáo', 12, 1, false, true),
+
+('Nokia X30 5G', 'nokia_8.3_3.jpg', 'Thiết kế bền vững, hỗ trợ 5G', NULL, 1, false, true); -- Nokia chưa có trong bảng brand
 
 -- ======================
 -- CATEGORY 2: LAPTOP
@@ -834,18 +846,14 @@ UPDATE product SET thumbnail_product_id = (
 
 UPDATE product SET thumbnail_product_id = (
     SELECT id FROM product_variant WHERE sku = 'GP8P-128-BLK'
-) WHERE id = 5;
-
-UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'OP12-256-GRN'
 ) WHERE id = 6;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'XM14U-256-BLK'
+    SELECT id FROM product_variant WHERE sku = 'OP12-256-GRN'
 ) WHERE id = 7;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'OPFX7P-256-BLK'
+    SELECT id FROM product_variant WHERE sku = 'XM14U-256-BLK'
 ) WHERE id = 8;
 
 UPDATE product SET thumbnail_product_id = (
@@ -853,8 +861,12 @@ UPDATE product SET thumbnail_product_id = (
 ) WHERE id = 9;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'SX1VI-256-BLK'
+    SELECT id FROM product_variant WHERE sku = 'OPFX7P-256-BLK'
 ) WHERE id = 10;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'SX1VI-256-BLK'
+) WHERE id = 14;
 
 -- iPhone 15 128GB có 2 khuyến mãi
 INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)

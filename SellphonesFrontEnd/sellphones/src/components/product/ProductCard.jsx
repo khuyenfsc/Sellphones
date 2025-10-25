@@ -79,12 +79,7 @@ const ProductCard = ({ product }) => {
               {product.averageRating?.toFixed(1)}
             </span>
           </div>
-          <button
-            className="text-blue-600 hover:text-blue-700"
-            onClick={(e) => e.stopPropagation()} // 👈 tránh click vào tim mà vẫn navigate
-          >
-            <Heart size={14} />
-          </button>
+    
         </div>
       </div>
     </div>

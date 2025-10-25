@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Heart, Phone, Home } from 'lucide-react';
+import { Home, Package } from 'lucide-react';
 import ProductGrid from '../../product/ProductGrid';
 import BrandService from '../../../service/BrandService';
 import CategoryService from '../../../service/CategoryService';
@@ -13,10 +13,20 @@ const ProductsByCategoryPage = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [filters, setFilters] = useState([]);
+  const [sort, setSort] = useState("desc"); // mặc định giảm dần
+  const [loading, setLoading] = useState(false); // ✅ thêm state loading
+  const [selectedBrandId, setSelectedBrandId] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 500000000 });
   const { slug } = useParams();
   const categoryName = decodeURIComponent(slug);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const brandId = params.get("brand");
+    setSelectedBrandId(brandId ? parseInt(brandId) : null);
+  }, []);
 
   const toggleFilterGroup = (groupName) => {
     setActiveFilterGroup((prev) => (prev === groupName ? null : groupName));
@@ -34,6 +44,10 @@ const ProductsByCategoryPage = () => {
     }));
   };
 
+  const handleSelectBrand = (brandId) => {
+    setSelectedBrandId((prev) => (prev === brandId ? null : brandId)); // bấm lại để bỏ chọn
+  };
+
 
   const handleApplyFilters = async () => {
     // Chuyển selectedOptions → dynamic conditions
@@ -44,6 +58,7 @@ const ProductsByCategoryPage = () => {
       const groupId = option.groupId; // 👈 lấy id của nhóm filter
       const condition = option.condition;
 
+
       if (groupName === "Giá" && condition.includes("-")) {
         const [min, max] = condition.split("-");
         dynamicFilters["price"] = `${min}-${max}`;
@@ -53,28 +68,36 @@ const ProductsByCategoryPage = () => {
       }
     });
 
+    const formattedPriceRange = `${priceRange.min}-${priceRange.max}`;
+
+
     // Body request
     const filterRequest = {
       query: {
         _static: {
           categoryName: slug, // lấy từ useParams
-          brandId: selectedOptions["Thương hiệu"]?.condition || null,
+          brandId: selectedBrandId || null,
+          priceRange: formattedPriceRange, // chỉ lúc này mới dùng tới
         },
         dynamic: dynamicFilters,
       },
-      page: 0,
-      size: 10,
-      sort: "desc",
+      page: currentPage - 1,
+      size: 5,
+      sort,
     };
 
     console.log("Filter body gửi đi:", filterRequest);
 
     try {
+      setLoading(true); // ✅ Bắt đầu loading
       const res = await ProductService.getProductsByFilters(filterRequest);
       console.log("Kết quả lọc sản phẩm:", res.data);
+      setTotalPages(res.data?.products?.totalPages || 1);
       setProducts(res.data?.products?.result || [])
     } catch (err) {
       console.error("Lỗi khi lọc sản phẩm:", err);
+    } finally {
+      setLoading(false); // ✅ Kết thúc loading
     }
 
     setActiveFilterGroup(null); // đóng dropdown
@@ -119,8 +142,10 @@ const ProductsByCategoryPage = () => {
   }, [slug]);
 
   useEffect(() => {
-    handleApplyFilters(); // 👈 Gọi ngay khi component được mount
-  }, []); // [] đảm bảo chỉ chạy 1 lần khi trang tải
+    handleApplyFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sort, selectedBrandId, currentPage]);
+
 
 
   return (
@@ -144,39 +169,6 @@ const ProductsByCategoryPage = () => {
           </div>
         </div>
 
-
-        {/* <div className="bg-gradient-to-r from-red-50 to-pink-50 py-6">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-sm text-gray-600">iPhone nhập khẩu từng có</p>
-                <p className="text-red-600 font-bold">Giá đài cổ tên tuổi 5 triệu</p>
-                <button className="mt-2 px-4 py-1 bg-red-600 text-white rounded-full text-sm">
-                  Tìm ngay
-                </button>
-              </div>
-              
-              <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 text-white">
-                <h3 className="text-2xl font-bold">TECNO</h3>
-                <p className="text-xl">SPARK 40 Pro+</p>
-                <p className="mt-2">Giá chỉ 5.190.000đ</p>
-                <button className="mt-3 px-4 py-1 bg-white text-blue-600 rounded-full text-sm font-medium">
-                  MUA NGAY
-                </button>
-              </div>
-
-              <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-6 text-white">
-                <p className="text-sm">5-Teacher Giảm thêm 5%</p>
-                <p className="text-lg">Lên đến giá trị</p>
-                <p className="text-3xl font-bold">500k <span className="text-sm">giảm</span></p>
-                <p className="text-red-500 font-bold">29%</p>
-                <button className="mt-2 px-4 py-1 bg-white text-gray-900 rounded-full text-sm">
-                  MUA NGAY
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </header>
 
       {/* Main Content */}
@@ -190,6 +182,7 @@ const ProductsByCategoryPage = () => {
             {brands.map((brand) => (
               <button
                 key={brand.id}
+                onClick={() => handleSelectBrand(brand.id)}
                 className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:border-red-500 hover:shadow-lg hover:scale-105 transition-all duration-200"
               >
                 {/* Logo brand */}
@@ -204,53 +197,6 @@ const ProductsByCategoryPage = () => {
           </div>
         </div>
 
-        {/* Hot Sale Products
-        <div className="bg-white rounded-b-lg p-4 shadow-lg mb-6">
-          <div className="relative">
-            <button className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg">
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {hotSaleProducts.map((product, idx) => (
-                <div key={idx} className="border border-red-200 rounded-lg p-3 hover:shadow-xl transition-all relative bg-gradient-to-b from-white to-red-50">
-                  <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
-                    {product.badge}
-                  </div>
-                  <div className="absolute top-2 right-2">
-                    <Heart className="w-5 h-5 text-gray-400" />
-                  </div>
-
-                  <div className="text-6xl text-center mb-3 mt-6">{product.image}</div>
-
-                  <h3 className="text-sm font-medium mb-2 h-10 line-clamp-2">{product.name}</h3>
-
-                  <div className="mb-2">
-                    <span className="text-red-600 font-bold text-lg">{product.price}</span>
-                    <span className="text-gray-400 line-through text-xs ml-2">{product.oldPrice}</span>
-                  </div>
-
-                  <p className="text-xs text-gray-600 mb-3 h-12 line-clamp-3">{product.installment}</p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <span className="text-yellow-500">⭐</span>
-                      <span className="text-sm font-medium">{product.rating}</span>
-                    </div>
-                    <button className="text-blue-600 text-sm flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      Yêu thích
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg">
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-        </div> */}
         {/* Filter Bar */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-black mb-4">Chọn theo tiêu chí</h2>
@@ -339,16 +285,14 @@ const ProductsByCategoryPage = () => {
                     </div>
                     <button
                       onClick={() => {
-                        handleSelectOption("Giá", {
-                          name: `${priceRange.min.toLocaleString()} - ${priceRange.max.toLocaleString()} ₫`,
-                          condition: `${priceRange.min}-${priceRange.max}`,
-                        });
+                        // chỉ đóng popup, không set selectedOptions
                         setActiveFilterGroup(null);
                       }}
                       className="mt-3 w-full bg-red-600 text-white text-sm font-medium py-1.5 rounded-md hover:bg-red-700 transition-all"
                     >
                       Áp dụng
                     </button>
+
                   </div>
                 )}
               </div>
@@ -384,27 +328,137 @@ const ProductsByCategoryPage = () => {
               ))}
             </div>
           )}
+
+          {/* Hiển thị khoảng giá đã chọn */}
+          {(priceRange.min > 0 || priceRange.max < 500000000) && (
+            <div className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-full px-3 py-1 text-sm text-gray-800">
+              <span className="font-medium">
+                Giá: {priceRange.min.toLocaleString()} - {priceRange.max.toLocaleString()} ₫
+              </span>
+              <button
+                onClick={() =>
+                  setPriceRange({ min: 0, max: 500000000 }) // reset giá về mặc định
+                }
+                className="text-gray-500 hover:text-red-600 font-bold"
+              >
+                ✖
+              </button>
+            </div>
+          )}
         </div>
 
-
-        {/* Sort Options */}
-        <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium text-black">Sắp xếp theo</h3>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-black">
-                ↑ Giá Thấp - Cao
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-black">
-                ↓ Giá Cao - Thấp
-              </button>
-
-            </div>
+        {/* Hiển thị Brand đã chọn */}
+        {selectedBrandId && (
+          <div className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-full px-3 py-1 text-sm text-gray-800 mt-2">
+            <span className="font-medium">
+              Thương hiệu: {brands.find((b) => b.id === selectedBrandId)?.name}
+            </span>
+            <button
+              onClick={() => setSelectedBrandId(null)}
+              className="text-gray-500 hover:text-red-600 font-bold"
+            >
+              ✖
+            </button>
           </div>
+        )}
+
+
+
+        <div className="flex items-center gap-2 mb-6">
+          <button
+            onClick={() => setSort("asc")}
+            className={`px-4 py-2 border rounded-lg text-sm transition-all ${sort === "asc"
+              ? "bg-red-600 text-white border-red-600"
+              : "border-gray-300 text-black"
+              }`}
+          >
+            ↑ Giá Thấp - Cao
+          </button>
+
+          <button
+            onClick={() => setSort("desc")}
+            className={`px-4 py-2 border rounded-lg text-sm transition-all ${sort === "desc"
+              ? "bg-red-600 text-white border-red-600"
+              : "border-gray-300 text-black"
+              }`}
+          >
+            ↓ Giá Cao - Thấp
+          </button>
         </div>
 
         {/* Product Grid Placeholder */}
-        <ProductGrid products={products} />
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-64">
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-3 text-gray-700 font-medium">Đang tải sản phẩm...</p>
+          </div>
+        ) : products.length > 0 ? (
+          <>
+            <ProductGrid products={products} />
+
+            {/* Pagination */}
+            <div className="flex justify-center items-center mt-6 gap-4 flex-wrap">
+              {/* Nút Trang trước */}
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className={`px-3 py-2 rounded-lg border text-sm ${currentPage === 1
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-white hover:bg-red-50 border-red-400 text-red-500'
+                  }`}
+              >
+                Trang trước
+              </button>
+
+              {/* Dropdown chọn trang */}
+              <div className="flex items-center gap-2">
+                <p className="text-gray-700 font-medium">Trang</p>
+                <select
+                  value={currentPage}
+                  onChange={(e) => setCurrentPage(Number(e.target.value))}
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm 
+             focus:ring-2 focus:ring-red-400 focus:outline-none 
+             bg-white text-black"
+                  size={1} // hiển thị dạng dropdown
+                >
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <option
+                      key={i + 1}
+                      value={i + 1}
+                      className="bg-white text-black" // bảo đảm màu cho từng option
+                    >
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+
+                <p className="text-gray-700 font-medium">/ {totalPages}</p>
+              </div>
+
+              {/* Nút Trang sau */}
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className={`px-3 py-2 rounded-lg border text-sm ${currentPage === totalPages
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-white hover:bg-red-50 border-red-400 text-red-500'
+                  }`}
+              >
+                Trang sau
+              </button>
+            </div>
+
+
+          </>
+
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+            <Package className="w-10 h-10 mb-2" />
+            <p>Không tìm thấy sản phẩm phù hợp</p>
+          </div>
+        )}
+
+
       </main>
     </div>
   );
