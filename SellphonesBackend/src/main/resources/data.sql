@@ -563,20 +563,16 @@ INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_fea
 
 ('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 3, 1, true, true),
 ('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 3, 1, true, true),
-('Samsung Galaxy A55', 'sm-a556_galaxy_a55_awesome_lilac_ui_2_1.jpg', 'Smartphone tầm trung pin trâu', 3, 1, false, true),
 
 ('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 2, 1, true, true),
 
 ('OnePlus 12', 'oneplus-12.jpg', 'Điện thoại hiệu năng cao, sạc nhanh 100W', 4, 1, true, true),
 
 ('Xiaomi 14 Ultra', 'xiaomi-14-ultra_3_1_1_1.jpg', 'Camera Leica, cấu hình mạnh mẽ', 5, 1, true, true),
-('Xiaomi Redmi Note 13', 'photo_2024-12-20_17-05-54_1.jpg', 'Điện thoại tầm trung mạnh mẽ', 5, 1, false, true),
 
 ('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false),
-('Oppo Reno11 Pro', 'oppo-reno11-pro_3.jpg', 'Camera chân dung cực đẹp', 6, 1, true, true),
 
 ('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false),
-('Vivo V30', 'dien-thoai-vivo-v30-5g_1__2.jpg', 'Hiệu năng ổn định, thiết kế đẹp', 7, 1, false, true),
 
 ('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true),
 
@@ -695,14 +691,14 @@ INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_fea
 -- BẢNG PRODUCT_IMAGE (ảnh phụ cho từng sản phẩm)
 -- ======================
 INSERT INTO product_image (product_id, image) VALUES
-(1, 'https://example.com/images/iphone15-1.jpg'),
-(1, 'https://example.com/images/iphone15-2.jpg'),
-(2, 'https://example.com/images/galaxyS24-1.jpg'),
-(2, 'https://example.com/images/galaxyS24-2.jpg'),
-(3, 'https://example.com/images/pixel8pro-1.jpg'),
-(4, 'https://example.com/images/oneplus12-1.jpg'),
-(6, 'https://example.com/images/macbookpro14-1.jpg'),
-(7, 'https://example.com/images/dellxps13-1.jpg');
+(1, 'iphone-15-plus_1__1.jpg'),
+(1, 'vn1b93_1_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-2_design_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-3_design_detail_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-5_colors_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-7_features_specs_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-8_usb-c_charge_cable_2.jpg'),
+(1, 'vn_iphone_15_pink_pdp_image_position-9_accessory_2.jpg');
 
 -- ======================
 -- BẢNG PRODUCT_VARIANT
@@ -711,7 +707,7 @@ INSERT INTO product_image (product_id, image) VALUES
 -- Variants for iPhone 15 Pro Max
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
-('iPhone 15 Pro Max - 128GB - Black', 29990000, 28990000, 'IP15PM-128-BLK', 'https://example.com/images/ip15pm-128-blk.jpg', 1, 50, 'ACTIVE'),
+('iPhone 15 Pro Max - 128GB - Black', 29990000, 28990000, 'IP15PM-128-BLK', 'iphone-15-128-gbden.jpg', 1, 50, 'ACTIVE'),
 ('iPhone 15 Pro Max - 256GB - Black', 32990000, 31990000, 'IP15PM-256-BLK', 'https://example.com/images/ip15pm-256-blk.jpg', 1, 40, 'ACTIVE');
 
 -- iPhone 15
@@ -808,6 +804,47 @@ VALUES
 ('Sony Xperia 1 VI - 512GB - White', 30990000, 29990000, 'SX1VI-512-WHT', 'https://example.com/images/sony-xperia-1vi-512-wht.jpg', 10, 30, 'ACTIVE'),
 ('Sony Xperia 1 VI - 1TB - Green', 32990000, 31990000, 'SX1VI-1T-GRN', 'https://example.com/images/sony-xperia-1vi-1t-grn.jpg', 10, 20, 'ACTIVE');
 
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Asus ROG Phone 8 - 256GB - Black', 23990000, 22990000, 'ROG8-256-BLK', 'https://example.com/images/rog8-256-blk.jpg', 11, 40, 'ACTIVE'),
+('Asus ROG Phone 8 - 512GB - Black', 26990000, 25990000, 'ROG8-512-BLK', 'https://example.com/images/rog8-512-blk.jpg', 11, 30, 'ACTIVE'),
+('Asus ROG Phone 8 - 512GB - Silver', 26990000, 25990000, 'ROG8-512-SLV', 'https://example.com/images/rog8-512-slv.jpg', 11, 25, 'ACTIVE'),
+('Asus ROG Phone 8 - 1TB - Black', 30990000, 29990000, 'ROG8-1TB-BLK', 'https://example.com/images/rog8-1tb-blk.jpg', 11, 20, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Realme GT 6 - 256GB - Silver', 13990000, 12990000, 'RGT6-256-SLV', 'https://example.com/images/rgt6-256-slv.jpg', 12, 50, 'ACTIVE'),
+('Realme GT 6 - 512GB - Silver', 15990000, 14990000, 'RGT6-512-SLV', 'https://example.com/images/rgt6-512-slv.jpg', 12, 40, 'ACTIVE'),
+('Realme GT 6 - 512GB - Green', 15990000, 14990000, 'RGT6-512-GRN', 'https://example.com/images/rgt6-512-grn.jpg', 12, 35, 'ACTIVE'),
+('Realme GT 6 - 1TB - Silver', 18990000, 17990000, 'RGT6-1TB-SLV', 'https://example.com/images/rgt6-1tb-slv.jpg', 12, 25, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Huawei P70 Pro - 512GB - Black', 28990000, 27990000, 'P70P-512-BLK', 'https://example.com/images/p70p-512-blk.jpg', 13, 35, 'ACTIVE'),
+('Huawei P70 Pro - 256GB - Black', 25990000, 24990000, 'P70P-256-BLK', 'https://example.com/images/p70p-256-blk.jpg', 13, 45, 'ACTIVE'),
+('Huawei P70 Pro - 512GB - White', 28990000, 27990000, 'P70P-512-WHT', 'https://example.com/images/p70p-512-wht.jpg', 13, 30, 'ACTIVE'),
+('Huawei P70 Pro - 1TB - Black', 32990000, 31990000, 'P70P-1TB-BLK', 'https://example.com/images/p70p-1tb-blk.jpg', 13, 20, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Huawei Nova 12 - 128GB - Blue', 10990000, 9990000, 'NOVA12-128-BLU', 'https://example.com/images/nova12-128-blu.jpg', 14, 60, 'ACTIVE'),
+('Huawei Nova 12 - 256GB - Blue', 11990000, 10990000, 'NOVA12-256-BLU', 'https://example.com/images/nova12-256-blu.jpg', 14, 50, 'ACTIVE'),
+('Huawei Nova 12 - 256GB - Pink', 11990000, 10990000, 'NOVA12-256-PNK', 'https://example.com/images/nova12-256-pnk.jpg', 14, 40, 'ACTIVE'),
+('Huawei Nova 12 - 512GB - Blue', 13990000, 12990000, 'NOVA12-512-BLU', 'https://example.com/images/nova12-512-blu.jpg', 14, 30, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Nothing Phone 2 - 128GB - White', 14990000, 13990000, 'NP2-128-WHT', 'https://example.com/images/np2-128-wht.jpg', 15, 60, 'ACTIVE'),
+('Nothing Phone 2 - 256GB - White', 16990000, 15990000, 'NP2-256-WHT', 'https://example.com/images/np2-256-wht.jpg', 15, 50, 'ACTIVE'),
+('Nothing Phone 2 - 256GB - Black', 16990000, 15990000, 'NP2-256-BLK', 'https://example.com/images/np2-256-blk.jpg', 15, 40, 'ACTIVE'),
+('Nothing Phone 2 - 512GB - White', 19990000, 18990000, 'NP2-512-WHT', 'https://example.com/images/np2-512-wht.jpg', 15, 25, 'ACTIVE');
+
+INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+VALUES
+('Nokia X30 5G - 128GB - Blue', 9990000, 9490000, 'NX30-128-BLU', 'https://example.com/images/nx30-128-blu.jpg', 16, 55, 'ACTIVE'),
+('Nokia X30 5G - 256GB - Blue', 10990000, 10490000, 'NX30-256-BLU', 'https://example.com/images/nx30-256-blu.jpg', 16, 45, 'ACTIVE'),
+('Nokia X30 5G - 256GB - White', 10990000, 10490000, 'NX30-256-WHT', 'https://example.com/images/nx30-256-wht.jpg', 16, 35, 'ACTIVE'),
+('Nokia X30 5G - 256GB - Green', 10990000, 10490000, 'NX30-256-GRN', 'https://example.com/images/nx30-256-grn.jpg', 16, 25, 'ACTIVE');
 
 ---- MacBook Pro 14
 --INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
@@ -846,14 +883,18 @@ UPDATE product SET thumbnail_product_id = (
 
 UPDATE product SET thumbnail_product_id = (
     SELECT id FROM product_variant WHERE sku = 'GP8P-128-BLK'
-) WHERE id = 6;
+) WHERE id = 5;
 
 UPDATE product SET thumbnail_product_id = (
     SELECT id FROM product_variant WHERE sku = 'OP12-256-GRN'
-) WHERE id = 7;
+) WHERE id = 6;
 
 UPDATE product SET thumbnail_product_id = (
     SELECT id FROM product_variant WHERE sku = 'XM14U-256-BLK'
+) WHERE id = 7;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'OPFX7P-256-BLK'
 ) WHERE id = 8;
 
 UPDATE product SET thumbnail_product_id = (
@@ -861,12 +902,32 @@ UPDATE product SET thumbnail_product_id = (
 ) WHERE id = 9;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'OPFX7P-256-BLK'
+    SELECT id FROM product_variant WHERE sku = 'SX1VI-256-BLK'
 ) WHERE id = 10;
 
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'SX1VI-256-BLK'
+    SELECT id FROM product_variant WHERE sku = 'ROG8-256-BLK'
+) WHERE id = 11;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'RGT6-256-SLV'
+) WHERE id = 12;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'P70P-512-BLK'
+) WHERE id = 13;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'NOVA12-128-BLU'
 ) WHERE id = 14;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'NP2-128-WHT'
+) WHERE id = 15;
+
+UPDATE product SET thumbnail_product_id = (
+    SELECT id FROM product_variant WHERE sku = 'NX30-128-BLU'
+) WHERE id = 16;
 
 -- iPhone 15 128GB có 2 khuyến mãi
 INSERT INTO product_promotion (name, description, promotion_type, config, promotion_condition, start_date, end_date)

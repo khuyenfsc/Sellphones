@@ -9,6 +9,7 @@ import java.util.List;
 public interface ProductDocumentService {
 
     List<ProductDocumentResponse> getSuggestedProducts(String keyword);
+    List<ProductListResponse> getSimilarProducts(Long productId);
     PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, String sortType);
 
 }

@@ -17,7 +17,9 @@ public class ProductListResponse {
 
     private String thumbnail;
 
-    private ThumbnailProductResponse thumbnailProduct;
+    private BigDecimal rootPrice;
+
+    private BigDecimal currentPrice;
 
     private BigDecimal averageRating;
 }

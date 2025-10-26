@@ -1,7 +1,8 @@
 package com.sellphones.elasticsearch;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sellphones.dto.product.admin.AdminProductFilter_Request;
+import com.sellphones.entity.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -115,6 +116,64 @@ public class CustomProductDocumentRepository {
 
         return elasticsearchOperations.search(queryBuilder.build(), ProductDocument.class).stream()
                 .map(sh -> sh.getContent())
+                .toList();
+    }
+
+    public List<ProductDocument> getSimilarProducts(Product product){
+
+        double currentPrice = product.getThumbnailProduct().getCurrentPrice().doubleValue();
+        double minPrice = currentPrice * 0.9;  // -10%
+        double maxPrice = currentPrice * 1.1;  // +10%
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query moreLikeThisQuery = QueryBuilders
+                .moreLikeThis(likeThisConfig -> likeThisConfig
+                        .fields("name")
+                        .like(Like.of(likeConfig -> likeConfig
+                                .document(LikeBuilders.document()
+                                        .index("products")
+                                        .id(String.valueOf(product.getId()))
+                                        .build()
+                                ))
+                        )
+                        .minTermFreq(1)
+                        .minDocFreq(1)
+                        .maxQueryTerms(25)
+                );
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query rangeQuery = QueryBuilders
+                .range(rangeConfig -> rangeConfig
+                        .number(nbConfig -> nbConfig
+                                .field("current_price")
+                                .gte(minPrice)
+                                .lte(maxPrice)
+                        )
+                );
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query boolQuery = QueryBuilders.bool()
+                .must(moreLikeThisQuery, rangeQuery)
+                .filter(QueryBuilders.term(termConfig -> termConfig
+                        .field("category_name.keyword")
+                        .value(product.getCategory().getName())
+                ))
+                .mustNot(QueryBuilders.term(termConfig -> termConfig
+                        .field("id")
+                        .value(product.getId())
+                ))
+                .build()._toQuery();
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query functionScoreQuery = QueryBuilders.functionScore(f -> f
+                .query(boolQuery)
+                .scoreMode(FunctionScoreMode.Multiply)
+                .boostMode(FunctionBoostMode.Sum)
+        );
+
+        NativeQuery query = NativeQuery.builder()
+                .withQuery(functionScoreQuery)
+                .withMaxResults(10)
+                .build();
+
+        return elasticsearchOperations.search(query, ProductDocument.class)
+                .stream().map(sh -> sh.getContent())
                 .toList();
     }
 

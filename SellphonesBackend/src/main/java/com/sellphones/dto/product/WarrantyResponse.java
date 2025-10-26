@@ -13,9 +13,9 @@ public class WarrantyResponse {
 
     private String name;
 
-    private int numberOfMonths;
+    private int months;
 
-    private BigDecimal val;
+    private BigDecimal price;
 
     private String description;
 

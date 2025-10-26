@@ -24,8 +24,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-//    private final ProductDocumentService productDocumentService;
-
 //    @GetMapping("/all")
 //    public ResponseEntity<List<ProductListResponse>> getAllProducts(){
 //        List<ProductListResponse> products = productService.getAllProducts();
@@ -58,7 +56,7 @@ public class ProductController {
     public ResponseEntity<CommonResponse> getProductById(@PathVariable Long id){
         ProductDetailsResponse product = productService.getProductById(id);
         Map<String, Object> map = new HashMap<>();
-        map.put("product_details", product);
+        map.put("result", product);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
@@ -66,7 +64,15 @@ public class ProductController {
     public ResponseEntity<CommonResponse> getProductVariantById(@PathVariable Long id){
         ProductVariantResponse product = productService.getProductVariantById(id);
         Map<String, Object> map = new HashMap<>();
-        map.put("product_variant", product);
+        map.put("result", product);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @GetMapping("/{id}/similar-products")
+    public ResponseEntity<CommonResponse> getSimilarProducts(@PathVariable Long id){
+        List<ProductListResponse> product = productService.getSimilarProducts(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", product);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 

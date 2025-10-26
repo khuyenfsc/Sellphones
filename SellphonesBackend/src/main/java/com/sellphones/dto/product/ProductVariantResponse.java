@@ -1,5 +1,6 @@
 package com.sellphones.dto.product;
 
+import com.sellphones.dto.promotion.GiftProductListResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class ProductVariantResponse {
     private String variantImage;
 
     private List<ProductPromotionResponse> promotions;
+
+    private List<GiftProductListResponse> giftProducts;
 
     private Long stock;
 

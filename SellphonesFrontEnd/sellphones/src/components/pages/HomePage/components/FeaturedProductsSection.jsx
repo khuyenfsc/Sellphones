@@ -7,31 +7,17 @@ import ProductGrid from '../../../product/ProductGrid';
 const FeaturedProductsSection = ({ categoryName }) => {
   const [brands, setBrands] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [loadingBrands, setLoadingBrands] = useState(true);
 
   useEffect(() => {
+
     const fetchBrands = async () => {
-      try {
-        setLoadingBrands(true);
-        const encodedCategory = encodeURIComponent(categoryName);
-        const res = await BrandService.getByCategoryName(encodedCategory);
-        setBrands(res.data?.result || []);
-      } catch (err) {
-        console.error('Lỗi khi tải danh sách thương hiệu:', err);
-      } finally {
-        setLoadingBrands(false);
-      }
+      const data = await BrandService.getByCategoryName(categoryName);
+      setBrands(data);
     };
 
     const fetchFeaturedProducts = async () => {
-      try {
-        const encodedCategory = encodeURIComponent(categoryName);
-        const res = await ProductService.getFeaturedProductsByCategoryName(encodedCategory);
-        setFeaturedProducts(res.data?.result || []);
-      } catch (err) {
-        console.error('Lỗi khi tải danh sách sản phẩm:', err);
-      } finally {
-      }
+      const data = await ProductService.getFeaturedProductsByCategoryName(categoryName);
+      setFeaturedProducts(data);
     };
 
     if (categoryName) {
@@ -59,10 +45,7 @@ const FeaturedProductsSection = ({ categoryName }) => {
         {/* Brand Filter */}
         <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
           <div className="flex items-center gap-3 overflow-x-auto">
-            {loadingBrands ? (
-              <span className="text-gray-500 text-sm">Đang tải thương hiệu...</span>
-            ) : brands.length > 0 ? (
-              brands.map((brand) => (
+              {brands.map((brand) => (
                 <a
                   key={brand.id}
                   href={`/category/${encodeURIComponent(categoryName)}?brand=${brand.id}`} // 👉 chuyển hướng thật sự
@@ -70,10 +53,7 @@ const FeaturedProductsSection = ({ categoryName }) => {
                 >
                   {brand.name}
                 </a>
-              ))
-            ) : (
-              <span className="text-gray-500 text-sm">Không có thương hiệu nào</span>
-            )}
+              ))}
             <a
               href={`/category/${encodeURIComponent(categoryName)}`}
               className="flex items-center gap-1 px-4 py-2 text-blue-600 text-sm whitespace-nowrap hover:underline"

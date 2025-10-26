@@ -1,6 +1,6 @@
 package com.sellphones.dto.product.admin;
 
-import com.sellphones.dto.product.ProductDetailsBrandResponse;
+import com.sellphones.dto.product.ProductDetails_BrandResponse;
 import com.sellphones.dto.product.ProductDetailsCategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class AdminProductDetailResponse {
 
     private String description;
 
-    private ProductDetailsBrandResponse brand;
+    private ProductDetails_BrandResponse brand;
 
     private List<String> images;
 

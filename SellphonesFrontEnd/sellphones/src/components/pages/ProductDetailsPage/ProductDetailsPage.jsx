@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { Heart, MessageCircle, Info, Share2, ChevronLeft, ChevronRight, MapPin, Phone, Star, ShoppingCart, Check, Gift } from 'lucide-react';
+import ProductService from "../../../service/ProductService";
+import ProductSpecsModal from './components/ProductSpecsModal';
 
 const images = ["📱", "💻", "⌚", "🎧"];
 
-export default function ProductPage() {
+export default function ProductDetailsPage() {
     const [selectedStorage, setSelectedStorage] = useState('256GB');
     const [selectedColor, setSelectedColor] = useState('red');
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showSpecs, setShowSpecs] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const { slug } = useParams();
+    const [product, setProduct] = useState(null);
+    const [productVariant, setProductVariant] = useState(null);
+
+
+    useEffect(() => {
+        if (!slug) {
+            return;
+        }
+
+        const fetchProduct = async () => {
+            const result = await ProductService.getProductById(slug);
+            if (result) setProduct(result);
+        };
+
+        fetchProduct();
+    }, [slug]);
+
+    useEffect(() => {
+        if (!product?.thumbnailProduct?.id) return;
+
+        const fetchVariantDetails = async () => {
+            const id = product.thumbnailProduct.id;
+            const res = await ProductService.getProductVariantById(id);
+            console.log("Chi tiết biến thể:", res);
+        };
+
+        fetchVariantDetails();
+    }, [product]);
 
     const reviewStats = {
         "5": 23,
@@ -80,77 +112,45 @@ export default function ProductPage() {
         <div className="min-h-screen bg-gray-50">
 
             {/* Header */}
-            <header className="bg-white text-black p-4">
-                <div className="container mx-auto">
-                    <nav className="text-sm mb-2 flex items-center gap-2">
-                        <span>Trang chủ</span>
-                        <span>/</span>
-                        <span>Điện thoại</span>
-                        <span>/</span>
-                        <span>Samsung</span>
-                        <span>/</span>
-                        <span>Galaxy Z</span>
-                        <span>/</span>
-                        <span>Galaxy Z7 Series</span>
-                        <span>/</span>
-                        <span className="font-semibold">Samsung Galaxy Z Flip7 12GB 256GB</span>
-                    </nav>
-                </div>
-            </header>
+            {product ? (
+                <header className="bg-white text-black p-4">
+                    <div className="container mx-auto">
+                        <nav className="text-sm mb-2 flex items-center gap-2">
+                            <a href="/" className="hover:underline text-blue-600">
+                                Trang chủ
+                            </a>
+                            <span>/</span>
+
+                            <a
+                                href={`/category/${encodeURIComponent(product.category?.name || '')}`}
+                                className="text-blue-700 hover:underline hover:text-blue-900 transition"
+                            >
+                                {product.category?.name || 'Đang tải...'}
+                            </a>
+
+                            <span>/</span>
+                            <a
+                                href={`/category/${encodeURIComponent(product.category?.name || '')}?brand=${product.brand?.id || ''}`}
+                                className="text-blue-700 hover:underline hover:text-blue-900 transition"
+                            >
+                                {product.brand?.name || 'Đang tải...'}
+                            </a>
+
+                            <span>/</span>
+                            <span>{product.name}</span>
+                            <span>/</span>
+                            <span className="font-semibold">{productVariant?.productVariantName || ''}</span>
+                        </nav>
+                    </div>
+                </header>
+            ) : (
+                <p className="p-4 text-gray-500">Đang tải dữ liệu sản phẩm...</p>
+            )}
+
 
             {/* Modal */}
             {showSpecs && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    {/* Nội dung modal */}
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
-
-
-                        {/* Specs Table */}
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold text-black">Thông số kỹ thuật</h2>
-                            <button
-                                onClick={() => setShowSpecs(false)}
-                                className="text-blue-600 text-sm"
-                            >
-                                Đóng
-                            </button>
-                        </div>
-                        <div className="space-y-2 max-h-[60vh] overflow-y-auto">
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Kích thước màn hình</span>
-                                <span className="font-medium text-black">6.9 inches</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600 ">Công nghệ màn hình</span>
-                                <span className="font-medium text-black">Dynamic AMOLED 2X</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Camera sau</span>
-                                <span className="font-medium text-black">50 MP, F1.8 + 12 MP, F2.2</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600 text-black">Camera trước</span>
-                                <span className="font-medium text-black">10MP, F2.2</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Công nghệ NFC</span>
-                                <span className="font-medium text-black">Có</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Dung lượng RAM</span>
-                                <span className="font-medium text-black">12 GB</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Bộ nhớ trong</span>
-                                <span className="font-medium text-black">256 GB</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-600">Pin</span>
-                                <span className="font-medium text-black">4300mAh</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ProductSpecsModal show={showSpecs} onClose={() => setShowSpecs(false)} />
             )}
 
 
@@ -160,7 +160,7 @@ export default function ProductPage() {
                     <div className="col-span-6">
                         <div className="bg-white rounded-lg shadow-sm p-4">
                             <div className="text-lg font-semibold text-black mb-2">
-                                Samsung Galaxy Z Flip7 12GB 256GB
+                                {productVariant?.productVariantName || ''}
                             </div>
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="flex items-center gap-1">
@@ -343,7 +343,6 @@ export default function ProductPage() {
                                 </div>
                             </div>
 
-                            {/* Promotions Banner */}
                             <div className="border-2 border-blue-700 bg-blue-100 rounded-lg p-4 mb-6">
                                 {/* Tiêu đề */}
                                 <div className="flex items-center gap-2 mb-3">
@@ -366,17 +365,17 @@ export default function ProductPage() {
                                 </div>
                             </div>
 
+                            {/* Nút thêm vào giỏ hàng */}
+                            <button
+                                className="w-full flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded-lg transition duration-200"
+                                onClick={() => alert("Đã thêm vào giỏ hàng!")}
+                            >
+                                <ShoppingCart className="w-5 h-5" />
+                                Thêm vào giỏ hàng +
+                            </button>
+
                             {/* Promotional Products */}
                             <div className="mb-6">
-                                <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4 mb-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-2xl">🔥</span>
-                                            <span className="font-semibold text-black">Mua kèm giá sốc</span>
-                                        </div>
-                                        <button className="text-blue-600 text-sm text-black">Xem tất cả</button>
-                                    </div>
-                                </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="border rounded-lg p-4">

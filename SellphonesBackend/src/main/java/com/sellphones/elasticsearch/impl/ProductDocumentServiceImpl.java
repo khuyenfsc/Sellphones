@@ -7,6 +7,11 @@ import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 import com.sellphones.elasticsearch.ProductDocument;
 import com.sellphones.elasticsearch.ProductDocumentRepository;
 import com.sellphones.elasticsearch.ProductDocumentService;
+import com.sellphones.entity.product.Product;
+import com.sellphones.exception.AppException;
+import com.sellphones.exception.ErrorCode;
+import com.sellphones.repository.product.ProductRepository;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +26,13 @@ public class ProductDocumentServiceImpl implements ProductDocumentService {
 
     private final Integer MAX_SIZE_RESULT = 4;
 
-    private final ProductDocumentRepository productDocumentRepository;
+    private final ProductRepository productRepository;
 
     private final CustomProductDocumentRepository customProductDocumentRepository;
 
     private final ModelMapper modelMapper;
+
+    private final String productThumbnailFolder = "product_thumbnails";
 
     @Override
     public List<ProductDocumentResponse> getSuggestedProducts(String keyword) {
@@ -33,6 +40,18 @@ public class ProductDocumentServiceImpl implements ProductDocumentService {
         return products.stream()
                 .map(p -> modelMapper.map(p, ProductDocumentResponse.class))
                 .toList();
+    }
+
+    @Override
+    public List<ProductListResponse> getSimilarProducts(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<ProductDocument> products =  customProductDocumentRepository.getSimilarProducts(product);
+        return products.stream()
+                .map(p ->{
+                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), productThumbnailFolder));
+                            return modelMapper.map(p, ProductListResponse.class);
+                        }
+                ).toList();
     }
 
     @Override

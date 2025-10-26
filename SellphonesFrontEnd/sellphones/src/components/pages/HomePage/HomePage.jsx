@@ -12,17 +12,13 @@ export default function HomePage() {
 
     useEffect(() => {
         const fetchFeaturedCategories = async () => {
-            try {
-                const res = await CategoryService.getFeaturedCategories();
-                setFeaturedCategories(res.data?.result || []);
-            } catch (err) {
-                console.error('Lỗi khi tải danh sách thể loại nổi bật:', err);
-            } finally {
-            }
+            const data = await CategoryService.getFeaturedCategories();
+            setFeaturedCategories(data);
         };
 
         fetchFeaturedCategories();
     }, []);
+
 
     return (
         <div className="container mx-auto px-4 py-6">

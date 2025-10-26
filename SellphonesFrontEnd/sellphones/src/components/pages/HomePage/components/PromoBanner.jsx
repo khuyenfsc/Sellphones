@@ -10,9 +10,12 @@ export default function PromotionBannerSlider() {
 
   // Lấy dữ liệu banner từ API
   useEffect(() => {
-    PromotionBannerService.getAll().then((res) => {
-      setBanners(res.data.result || []);
-    });
+    const fetchBanners = async () => {
+      const data = await PromotionBannerService.getAll();
+      setBanners(data);
+    };
+
+    fetchBanners();
   }, []);
 
   // Tự động chuyển ảnh sau 5 giây

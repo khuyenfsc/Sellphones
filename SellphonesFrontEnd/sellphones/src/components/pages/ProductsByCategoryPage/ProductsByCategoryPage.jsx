@@ -50,58 +50,33 @@ const ProductsByCategoryPage = () => {
 
 
   const handleApplyFilters = async () => {
-    // Chuyển selectedOptions → dynamic conditions
-    const dynamicFilters = {};
-
-    Object.entries(selectedOptions).forEach(([groupName, option]) => {
-      // Mặc định group "Giá" thì parse condition theo price-min-max
-      const groupId = option.groupId; // 👈 lấy id của nhóm filter
-      const condition = option.condition;
-
-
-      if (groupName === "Giá" && condition.includes("-")) {
-        const [min, max] = condition.split("-");
-        dynamicFilters["price"] = `${min}-${max}`;
-      } else {
-        // Các filter khác như Màu sắc, RAM, Dung lượng...
-        dynamicFilters[groupId] = condition;
-      }
-    });
-
-    const formattedPriceRange = `${priceRange.min}-${priceRange.max}`;
-
-
-    // Body request
-    const filterRequest = {
-      query: {
-        _static: {
-          categoryName: slug, // lấy từ useParams
-          brandId: selectedBrandId || null,
-          priceRange: formattedPriceRange, // chỉ lúc này mới dùng tới
-        },
-        dynamic: dynamicFilters,
-      },
-      page: currentPage - 1,
-      size: 5,
-      sort,
-    };
-
-    console.log("Filter body gửi đi:", filterRequest);
+    setLoading(true);
 
     try {
-      setLoading(true); // ✅ Bắt đầu loading
-      const res = await ProductService.getProductsByFilters(filterRequest);
-      console.log("Kết quả lọc sản phẩm:", res.data);
-      setTotalPages(res.data?.products?.totalPages || 1);
-      setProducts(res.data?.products?.result || [])
+      const staticParams = {
+        categoryName: slug,
+        brandId: selectedBrandId,
+        priceRange: `${priceRange.min}-${priceRange.max}`,
+      };
+
+      const { products, totalPages } = await ProductService.getProductsByFilters(
+        selectedOptions,
+        staticParams,
+        currentPage - 1,
+        5,
+        sort
+      );
+
+      setProducts(products);
+      setTotalPages(totalPages);
     } catch (err) {
       console.error("Lỗi khi lọc sản phẩm:", err);
     } finally {
-      setLoading(false); // ✅ Kết thúc loading
+      setLoading(false);
+      setActiveFilterGroup(null);
     }
-
-    setActiveFilterGroup(null); // đóng dropdown
   };
+
 
 
   // Xóa option
@@ -116,23 +91,13 @@ const ProductsByCategoryPage = () => {
 
   useEffect(() => {
     const fetchBrands = async () => {
-      try {
-        const res = await BrandService.getByCategoryName(slug);
-        setBrands(res.data?.result || []);
-      } catch (err) {
-        console.error('Lỗi khi tải danh sách thương hiệu:', err);
-      } finally {
-      }
+      const data = await BrandService.getByCategoryName(slug);
+      setBrands(data);
     };
 
     const fetchFilters = async () => {
-      try {
-        const res = await CategoryService.getFilterByCategoryName(slug);
-        setFilters(res.data?.result || []);
-      } catch (err) {
-        console.error('Lỗi khi tải danh sách bộ lọc:', err);
-      } finally {
-      }
+      const data = await CategoryService.getFiltersByCategoryName(slug);
+        setFilters(data);
     };
 
     if (slug) {

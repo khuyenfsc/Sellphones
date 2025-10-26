@@ -1,35 +1,27 @@
 import { captureOwnerStack, useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import CategoryService from "../../../../service/CategoryService";
+
 export default function Category() {
     const [categories, setCategories] = useState([]);
     const [hoveredCat, setHoveredCat] = useState(null);
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await CategoryService.getAll();
-                if (res?.data?.result) {
-                    setCategories(res.data.result);
-                } else {
-                    setCategories([]);
-                }
-            } catch (error) {
-                console.error("Lỗi khi tải danh mục:", error);
-                setCategories([]);
-            }
+        const loadCategories = async () => {
+            const data = await CategoryService.getAllCategories();
+            setCategories(data);
         };
-
-        fetchCategories();
+        loadCategories();
     }, []);
 
-    useEffect(() => {
-        if (hoveredCat) {
-            console.log("Đang hover:", hoveredCat);
-        } else {
-            console.log("Không hover gì cả");
-        }
-    }, [hoveredCat]);
+
+    // useEffect(() => {
+    //     if (hoveredCat) {
+    //         console.log("Đang hover:", hoveredCat);
+    //     } else {
+    //         console.log("Không hover gì cả");
+    //     }
+    // }, [hoveredCat]);
 
     return (
         <aside className="w-64 flex-shrink-0 z-10">
