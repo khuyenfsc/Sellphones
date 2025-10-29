@@ -1,20 +1,12 @@
 package com.sellphones.dto.product;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDetailsVariantResponse {
-
-    private Long id;
-
-    private List<AttributeValueResponse> attributeValues;
-
-
+public class ProductAttributeValueOptionResponse {
+    private AttributeValueResponse attributeValue;
 }

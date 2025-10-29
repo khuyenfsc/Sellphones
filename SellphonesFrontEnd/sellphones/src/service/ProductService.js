@@ -45,6 +45,20 @@ const ProductService = {
     }
   },
 
+  async getSimilarProducts(id) {
+    try {
+
+      const res = await AxiosClient.get(`/products/${id}/similar-products`);
+      const similarProducts = res?.data?.result ?? null;
+
+      // 👉 Có thể transform thêm nếu cần
+      return similarProducts;
+    } catch (error) {
+      console.error(`❌ Lỗi khi tải sản phẩm tương tự "${id}":`, error);
+      return null;
+    }
+  },
+
   async getProductsByFilters(selectedOptions, staticParams, page = 0, size = 5, sort = "desc") {
     try {
       // 🔹 Bước 1: Chuyển selectedOptions → dynamicFilters

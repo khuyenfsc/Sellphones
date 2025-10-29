@@ -169,7 +169,7 @@ public class CustomProductDocumentRepository {
 
         NativeQuery query = NativeQuery.builder()
                 .withQuery(functionScoreQuery)
-                .withMaxResults(10)
+                .withMaxResults(5)
                 .build();
 
         return elasticsearchOperations.search(query, ProductDocument.class)

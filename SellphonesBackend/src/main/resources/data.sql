@@ -705,10 +705,17 @@ INSERT INTO product_image (product_id, image) VALUES
 -- ======================
 
 -- Variants for iPhone 15 Pro Max
-INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
+INSERT INTO product_variant
+(product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status, variant_attributes)
 VALUES
-('iPhone 15 Pro Max - 128GB - Black', 29990000, 28990000, 'IP15PM-128-BLK', 'iphone-15-128-gbden.jpg', 1, 50, 'ACTIVE'),
-('iPhone 15 Pro Max - 256GB - Black', 32990000, 31990000, 'IP15PM-256-BLK', 'https://example.com/images/ip15pm-256-blk.jpg', 1, 40, 'ACTIVE');
+-- 128GB
+('iPhone 15 Pro Max - 6GB - 128GB - Black', 29990000, 28990000, 'IP15PM-6-128-BLK', 'iphone-15-128-gbden.jpg', 1, 50, 'ACTIVE', '6GB-128GB'),
+
+-- 256GB
+('iPhone 15 Pro Max - 6GB - 256GB - Black', 32990000, 31990000, 'IP15PM-6-256-BLK', 'iphone-15-256-gbden.jpg', 1, 40, 'ACTIVE', '6GB-256GB'),
+
+-- 512GB
+('iPhone 15 Pro Max - 8GB - 512GB - Black', 36990000, 35990000, 'IP15PM-8-512-BLK', 'iphone-15-512-gbden.jpg', 1, 30, 'ACTIVE', '8GB-512GB');
 
 -- iPhone 15
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
@@ -846,6 +853,7 @@ VALUES
 ('Nokia X30 5G - 256GB - White', 10990000, 10490000, 'NX30-256-WHT', 'https://example.com/images/nx30-256-wht.jpg', 16, 35, 'ACTIVE'),
 ('Nokia X30 5G - 256GB - Green', 10990000, 10490000, 'NX30-256-GRN', 'https://example.com/images/nx30-256-grn.jpg', 16, 25, 'ACTIVE');
 
+
 ---- MacBook Pro 14
 --INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 --VALUES ('MacBook Pro 14" - M2 Pro - 16GB RAM - 512GB SSD', 49990000, 47990000, 'MBP14-M2P-16-512', 'https://example.com/images/mbp14-m2p-16-512.jpg', 6, 20, 'ACTIVE');
@@ -866,7 +874,7 @@ VALUES
 -- CẬP NHẬT thumbnail_product_id CHO PRODUCT (liên kết tới variant chính)
 -- ======================
 UPDATE product SET thumbnail_product_id = (
-    SELECT id FROM product_variant WHERE sku = 'IP15PM-128-BLK'
+    SELECT id FROM product_variant WHERE sku = 'IP15PM-6-128-BLK'
 ) WHERE id = 1;
 
 UPDATE product SET thumbnail_product_id = (
@@ -1127,12 +1135,12 @@ VALUES
 -- Quà tặng 1: Ốp lưng iPhone 15
 INSERT INTO gift_product (name, stock, description, thumbnail, price)
 VALUES ('Ốp lưng silicon iPhone 15', 100, 'Ốp lưng silicon trong suốt, bảo vệ điện thoại tốt',
-        'https://example.com/iphone15-case.jpg', 0);
+        'op-lung-iphone-15-pro-max-wiwu-zcc-108-silicon-1.jpg', 0);
 
 -- Quà tặng 2: Tai nghe Bluetooth mini
 INSERT INTO gift_product (name, stock, description, thumbnail, price)
 VALUES ('Tai nghe Bluetooth mini', 50, 'Tai nghe không dây, pin 12h, dễ mang theo',
-        'https://example.com/bluetooth-earbuds.jpg', 0);
+        'group_194_2_.jpg', 0);
 
 -- Quà tặng 3: Bình giữ nhiệt
 INSERT INTO gift_product (name, stock, description, thumbnail, price)
@@ -1326,13 +1334,52 @@ VALUES
 (3, 'https://example.com/review3-img1.jpg'),
 (3, 'https://example.com/review3-img2.jpg');
 
+--NHỚ TẠO TRIGGER
 UPDATE product p
-SET p.average_rating = (
-    SELECT ROUND(AVG(r.rating_score), 1)
-    FROM review r
-    JOIN product_variant pv ON r.product_variant_id = pv.id
-    WHERE pv.product_id = p.id
-);
+SET
+    p.average_rating = (
+        SELECT ROUND(AVG(r.rating_score), 1)
+        FROM review r
+        JOIN product_variant pv ON r.product_variant_id = pv.id
+        WHERE pv.product_id = p.id
+    ),
+    p.total_reviews = (
+        SELECT COUNT(r.id)
+        FROM review r
+        JOIN product_variant pv ON r.product_variant_id = pv.id
+        WHERE pv.product_id = p.id
+    );
+
+
+--
+--CREATE TRIGGER trg_after_insert_review
+--AFTER INSERT ON review
+--FOR EACH ROW
+--CALL "
+--    UPDATE product
+--    SET total_reviews = (
+--        SELECT COUNT(r.id)
+--        FROM review r
+--        JOIN product_variant pv ON r.product_variant_id = pv.id
+--        WHERE pv.product_id = (
+--            SELECT product_id FROM product_variant WHERE id = NEW.product_variant_id
+--        )
+--    ),
+--    average_rating = (
+--        SELECT ROUND(AVG(r.rating_score), 1)
+--        FROM review r
+--        JOIN product_variant pv ON r.product_variant_id = pv.id
+--        WHERE pv.product_id = (
+--            SELECT product_id FROM product_variant WHERE id = NEW.product_variant_id
+--        )
+--    )
+--    WHERE id = (
+--        SELECT product_id FROM product_variant WHERE id = NEW.product_variant_id
+--    );
+--";
+
+
+
 
 
 --DELIMITER //
@@ -1466,167 +1513,136 @@ INSERT INTO attribute (name, created_at) VALUES ('CPU', CURRENT_TIMESTAMP);
 INSERT INTO attribute (name, created_at) VALUES ('GPU', CURRENT_TIMESTAMP);
 
 
--- ✅ iPhone 15 (variant 1: 128GB Black)
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('6GB', 6, 1, CURRENT_TIMESTAMP); -- RAM
 
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('128GB', 128, 2, CURRENT_TIMESTAMP); -- ROM
 
--- ✅ iPhone 15 (variant 2: 256GB White)
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('6GB', 6, 1, CURRENT_TIMESTAMP);
-
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('256GB', 256, 2, CURRENT_TIMESTAMP);
 
--- ✅ Samsung Galaxy S24 (variant 3: 128GB Black)
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('8GB', 8, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('128GB', 128, 2, CURRENT_TIMESTAMP);
-
--- ✅ Samsung Galaxy S24 (variant 4: 256GB Cream)
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('8GB', 8, 1, CURRENT_TIMESTAMP);
-
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('256GB', 256, 2, CURRENT_TIMESTAMP);
-
--- ✅ Google Pixel 8 Pro (variant 5)
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('12GB', 12, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('128GB', 128, 2, CURRENT_TIMESTAMP);
 
--- ✅ MacBook Pro 14" (variant 6: 16GB RAM / 512GB)
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('16GB', 16, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('512GB', 512, 2, CURRENT_TIMESTAMP);
 
--- ✅ MacBook Pro 14" (variant 7: 32GB RAM / 1TB)
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('32GB', 32, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('1024GB', 1024, 2, CURRENT_TIMESTAMP); -- ROM 1TB đổi thành 1024GB
 
--- ✅ Dell XPS 13 (variant 8: i7, 16GB / 512GB)
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('16GB', 16, 1, CURRENT_TIMESTAMP);
-
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('512GB', 512, 2, CURRENT_TIMESTAMP);
-
--- ✅ Dell XPS 13 (variant 9: i5, 8GB / 256GB)
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('8GB', 8, 1, CURRENT_TIMESTAMP);
-
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('256GB', 256, 2, CURRENT_TIMESTAMP);
-
--- ✅ OnePlus 12 - Common
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('5000 mAh', 5000, 4, CURRENT_TIMESTAMP);
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('6.7 inch AMOLED', NULL, 3, CURRENT_TIMESTAMP); -- Màn hình
 
--- ✅ OnePlus 12 - Variant 10
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('12GB', 12, 1, CURRENT_TIMESTAMP); -- RAM
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('256GB', 256, 2, CURRENT_TIMESTAMP); -- ROM
-
--- ✅ OnePlus 12 - Variant 11
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('16GB', 16, 1, CURRENT_TIMESTAMP);
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('512GB', 512, 2, CURRENT_TIMESTAMP);
-
--- ✅ Sony Xperia 1 V
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('12GB', 12, 1, CURRENT_TIMESTAMP); -- RAM
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('256GB', 256, 2, CURRENT_TIMESTAMP); -- ROM
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('6.5 inch 4K OLED', NULL, 3, CURRENT_TIMESTAMP); -- Màn hình
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('5000 mAh', 5000, 4, CURRENT_TIMESTAMP); -- Pin
 
--- ✅ Surface Laptop 5
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('16GB', 16, 1, CURRENT_TIMESTAMP); -- RAM
-INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
-VALUES ('512GB', 512, 2, CURRENT_TIMESTAMP); -- ROM
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('Intel Core i7-1255U', NULL, 5, CURRENT_TIMESTAMP); -- CPU
+
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('Intel Iris Xe', NULL, 6, CURRENT_TIMESTAMP); -- GPU
 
+INSERT INTO product_variant_attribute (id, product_id, attribute_id, created_at) VALUES
+(1, 1, 1, '2025-10-27 17:18:25.586400'), -- RAM
+(2, 1, 2, '2025-10-27 17:18:25.586401'); -- ROM
+--(3, 1, 3, '2025-10-27 17:18:25.586402'), -- Màn hình
+--(4, 1, 4, '2025-10-27 17:18:25.586403'), -- Pin
+--(5, 1, 5, '2025-10-27 17:18:25.586404'), -- CPU
+--(6, 1, 6, '2025-10-27 17:18:25.586405'); -- GPU
 
--- iPhone 15 Pro Max - 128GB - Black
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 1); -- RAM 6GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 2); -- ROM 128GB
+INSERT INTO product_attribute_value_option (id, attribute_value_id, product_variant_attribute_id, created_at) VALUES
+(1, 1, 1, '2025-10-27 17:18:25.577406'),  -- RAM 6GB
+(2, 2, 2, '2025-10-27 17:18:25.578406'),  -- ROM 128GB
+(3, 3, 2, '2025-10-27 17:18:25.578910'),  -- ROM 256GB
+(4, 4, 1, '2025-10-27 17:18:25.578911'), -- RAM 8GB
+(5, 8, 2, '2025-10-27 17:18:25.578911');
+--(5, 5, 1, '2025-10-27 17:18:25.579010'),  -- RAM 12GB
+--(6, 6, 2, '2025-10-27 17:18:25.579110'),  -- ROM 128GB (Pixel)
+--(7, 7, 1, '2025-10-27 17:18:25.579210'),  -- RAM 16GB
+--(8, 8, 2, '2025-10-27 17:18:25.579310'),  -- ROM 512GB
+--(9, 9, 1, '2025-10-27 17:18:25.579410'),  -- RAM 32GB
+--(10, 10, 2, '2025-10-27 17:18:25.579510'), -- ROM 1TB (1024GB)
+--(11, 11, 4, '2025-10-27 17:18:25.579610'), -- Pin 5000mAh
+--(12, 12, 3, '2025-10-27 17:18:25.579710'), -- Màn hình 6.7 inch AMOLED
+--(13, 13, 3, '2025-10-27 17:18:25.579810'), -- Màn hình 6.5 inch 4K OLED
+--(14, 14, 5, '2025-10-27 17:18:25.579910'), -- CPU Intel Core i7-1255U
+--(15, 15, 6, '2025-10-27 17:18:25.580010'); -- GPU Intel Iris Xe
 
--- iPhone 15 Pro Max - 256GB - Black
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 3); -- RAM 6GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 4); -- ROM 256GB
 
--- Samsung Galaxy S24 Ultra - 256GB - Gray
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 5); -- RAM 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 6); -- ROM 128GB
+-- ✅ iPhone 15 Pro Max - 128GB - Black (variant_id = 1)
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 1);  -- RAM 6GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 2);  -- ROM 128GB
 
--- Samsung Galaxy S24 Ultra - 512GB - Gray
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 7); -- RAM 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 8); -- ROM 256GB
+-- ✅ iPhone 15 Pro Max - 256GB - Black (variant_id = 2)
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 1);  -- RAM 6GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (2, 3);  -- ROM 256GB
 
--- Google Pixel 8 Pro - 128GB - Obsidian Black
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 9); -- RAM 12GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 10); -- ROM 128GB
+-- ✅ iPhone 15 Pro Max - 512GB - Black (variant_id = 3)
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 4);  -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (3, 8);  -- ROM 512GB
 
--- MacBook Pro 14" - 16GB / 512GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 11); -- RAM 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 12); -- ROM 512GB
+-- ✅ Samsung Galaxy S24 Ultra - 512GB - Gray
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 4);  -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (4, 8);  -- ROM 512GB
 
--- MacBook Pro 14" - 32GB / 1TB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 13); -- RAM 32GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 14); -- ROM 1024GB
+-- ✅ Google Pixel 8 Pro - 128GB - Obsidian Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 5);  -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (5, 6);  -- ROM 128GB
 
--- Dell XPS 13 - i7, 16GB / 512GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 15); -- RAM 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 16); -- ROM 512GB
+-- ✅ MacBook Pro 14" - 16GB / 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 7);  -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (6, 8);  -- ROM 512GB
 
--- Dell XPS 13 - i5, 8GB / 256GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 17); -- RAM 8GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 18); -- ROM 256GB
+-- ✅ MacBook Pro 14" - 32GB / 1TB (1024GB)
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 9);  -- RAM 32GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (7, 10); -- ROM 1024GB
 
--- OnePlus 12 - Common specs (screen + battery)
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 19); -- Pin 5000 mAh
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 20); -- Màn hình 6.7 inch AMOLED
+-- ✅ Dell XPS 13 - i7, 16GB / 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 7);  -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (8, 8);  -- ROM 512GB
 
--- OnePlus 12 - 256GB - Flowy Emerald
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (30, 22); -- RAM 12GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 22); -- ROM 256GB
+-- ✅ Dell XPS 13 - i5, 8GB / 256GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 4);  -- RAM 8GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (9, 3);  -- ROM 256GB
 
--- OnePlus 12 - 512GB - Flowy Emerald
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 23); -- RAM 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 24); -- ROM 512GB
+-- ✅ OnePlus 12 - 256GB - Flowy Emerald
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 5); -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 3); -- ROM 256GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 11); -- Pin 5000 mAh
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (10, 12); -- Màn hình 6.7 inch AMOLED
 
--- Sony Xperia 1 VI - 256GB - Black
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 25); -- RAM 12GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 26); -- ROM 256GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 27); -- Màn hình 6.5 inch 4K OLED
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 28); -- Pin 5000 mAh
+-- ✅ OnePlus 12 - 512GB - Flowy Emerald
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 7);  -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 8);  -- ROM 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 11); -- Pin 5000 mAh
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (11, 12); -- Màn hình 6.7 inch AMOLED
 
--- Surface Laptop 5
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 29); -- RAM 16GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 30); -- ROM 512GB
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 31); -- CPU Intel Core i7-1255U
-INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 32); -- GPU Intel Iris Xe
+-- ✅ Sony Xperia 1 VI - 256GB - Black
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 5);  -- RAM 12GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 3);  -- ROM 256GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 13); -- Màn hình 6.5 inch 4K OLED
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (12, 11); -- Pin 5000 mAh
+
+-- ✅ Surface Laptop 5
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 7);  -- RAM 16GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 8);  -- ROM 512GB
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 14); -- CPU Intel Core i7-1255U
+INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (13, 15); -- GPU Intel Iris Xe
 
 
 

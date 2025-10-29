@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -17,12 +18,18 @@ public class ProductDetailsResponse {
 
     private String description;
 
+    private BigDecimal averageRating;
+
+    private Long totalReviews;
+
     private ProductDetails_BrandResponse brand;
+
+    private List<ProductVariantAttributeResponse> variantAttributes;
 
     private List<String> images;
 
-    private List<ProductDetailsVariantResponse> productVariants;
+    private List<ProductDetails_VariantResponse> productVariants;
 
-    private ProductDetailsVariantResponse thumbnailProduct;
+    private ProductDetails_VariantResponse thumbnailProduct;
 
 }
