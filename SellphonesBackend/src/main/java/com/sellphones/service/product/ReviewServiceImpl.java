@@ -3,10 +3,12 @@ package com.sellphones.service.product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.RatingStatsResponse;
 import com.sellphones.dto.product.ReviewFilterRequest;
 import com.sellphones.dto.product.ReviewRequest;
 import com.sellphones.dto.product.ReviewResponse;
 import com.sellphones.entity.product.ProductVariant;
+import com.sellphones.entity.product.RatingStats;
 import com.sellphones.entity.product.Review;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
@@ -56,18 +58,36 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public PageResponse<ReviewResponse> getReviewsByConditions(ReviewFilterRequest request) {
+        System.out.println("page " + request.getPage() + " size " + request.getSize());
         Specification<Review> spec = ReviewSpecificationBuilder.build(request);
         Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, "createdAt");
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt")
+                .and(Sort.by(Sort.Direction.DESC, "id"));        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
+        System.out.println("reviews " + reviews.getFirst().getId());
         List<ReviewResponse> response = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();
-
+        System.out.println("response " + response);
         return PageResponse.<ReviewResponse>builder()
                 .result(response)
                 .total(reviewPage.getTotalElements())
+                .totalPages(reviewPage.getTotalPages())
                 .build();
+    }
+
+    @Override
+    public Map<Integer, Long> getRatingStatsByProductVariantId(Long id) {
+        List<RatingStats> stats = reviewRepository.findRatingStatsByVariantId(id);
+        Map<Integer, Long> statsMap = stats.stream()
+                .collect(Collectors.toMap(
+                        RatingStats::getRatingScore,
+                        RatingStats::getTotal
+                ));
+
+        for(int i = 1; i <= 5; i++){
+            statsMap.putIfAbsent(i, 0L);
+        }
+        return statsMap;
     }
 
     @Override

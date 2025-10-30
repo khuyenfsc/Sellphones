@@ -2,10 +2,7 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.FilterRequest;
-import com.sellphones.dto.product.ProductDetailsResponse;
-import com.sellphones.dto.product.ProductListResponse;
-import com.sellphones.dto.product.ProductVariantResponse;
+import com.sellphones.dto.product.*;
 import com.sellphones.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,28 +73,29 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-//    @GetMapping("/quick_search")
-//    public ResponseEntity<CommonResponse> getSuggestedProducts(
-//            @RequestParam String keyword
-//    ){
-//        System.out.println("Keyword is " + keyword);
-//        List<ProductDocumentResponse> products = productDocumentService.getSuggestedProducts(keyword);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("suggested_products", products);
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
-//    }
-//
-//    @GetMapping("/advanced_search")
-//    public ResponseEntity<CommonResponse> searchProductsByKeyword(
-//            @RequestParam String keyword,
-//            @RequestParam Integer page,
-//            @RequestParam(required = false, name = "sort_type") String sortType
-//    ){
-//        PageResponse<ProductListResponse> products = productDocumentService.searchProductsByKeyword(keyword, page, sortType);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("products", products);
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
-//    }
-//
+    @GetMapping("/quick_search")
+    public ResponseEntity<CommonResponse> getSuggestedProducts(
+            @RequestParam String keyword
+    ){
+        System.out.println("Keyword is " + keyword);
+        List<ProductDocumentResponse> products = productService.getSuggestedProducts(keyword);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", products);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @GetMapping("/advanced-search")
+    public ResponseEntity<CommonResponse> searchProductsByKeyword(
+            @RequestParam String keyword,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false, name = "sort_type") String sortType
+    ){
+        PageResponse<ProductListResponse> products = productService.searchProductsByKeyword(keyword, page, size, sortType);
+        Map<String, Object> map = new HashMap<>();
+        map.put("products", products);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
 
 }

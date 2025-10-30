@@ -1328,9 +1328,14 @@ VALUES
 
 INSERT INTO review_image (review_id, image_name)
 VALUES
-(1, 'https://example.com/review1-img1.jpg'),
-(1, 'https://example.com/review1-img2.jpg'),
-(2, 'https://example.com/review2-img1.jpg'),
+(1, '8dcff819-55ab-43b9-a977-728ffc051d04.jpg'),
+(1, '59f61c1c-351d-4290-97d4-64a503166e2f.jpg'),
+(1, 'group_194_2_.jpg'),
+(1, 'group_194_2_.jpg'),
+(1, 'group_194_2_.jpg'),
+(1, 'e7cd9751-81c3-4358-b0fe-06866535d467.jpg'),
+(1, 'e7cd9751-81c3-4358-b0fe-06866535d467.jpg'),
+(2, 'Screenshot 2025-09-11 193356.png'),
 (3, 'https://example.com/review3-img1.jpg'),
 (3, 'https://example.com/review3-img2.jpg');
 
@@ -1469,39 +1474,53 @@ SET
 
 
 
--- Bình luận gốc (parent_comment_id = NULL)
+-- ====================================
+-- 🧱 BÌNH LUẬN CHA (PARENT_COMMENT_ID = NULL)
+-- ====================================
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, 'APPROVED', CURRENT_TIMESTAMP),
-(2, 2, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, 'PENDING', CURRENT_TIMESTAMP),
-(3, 3, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, 'APPROVED', CURRENT_TIMESTAMP);
+(1, 1, 'Sản phẩm này dùng khá ổn, chất lượng tốt.', NULL, 'APPROVED', CURRENT_TIMESTAMP),  -- id = 1
+(2, 1, 'Mình thấy giá hơi cao so với mặt bằng chung.', NULL, 'APPROVED', CURRENT_TIMESTAMP),
+(3, 1, 'Đóng gói cẩn thận, giao hàng nhanh.', NULL, 'APPROVED', CURRENT_TIMESTAMP),
 
--- Bình luận trả lời (child comment cho id = 1)
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
-VALUES
-(4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, 'PENDING', CURRENT_TIMESTAMP),
-(5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, 'APPROVED', CURRENT_TIMESTAMP);
+-- ✅ Thêm mới bình luận cha cho product_id = 1
+(4, 1, 'Thiết kế đẹp, cầm rất chắc tay.', NULL, 'APPROVED', CURRENT_TIMESTAMP),             -- id = 4
+(5, 1, 'Mình thấy màn hình hơi ám vàng nhẹ.', NULL, 'APPROVED', CURRENT_TIMESTAMP),         -- id = 5
+(6, 1, 'Hiệu năng ổn định, chơi game mượt.', NULL, 'APPROVED', CURRENT_TIMESTAMP);          -- id = 6
 
--- Trả lời vào comment id = 4 (reply lồng 2 cấp)
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
-VALUES
-(1, 1, 'Mình dùng được 3 tháng rồi, pin vẫn ngon nhé.', 4, 'APPROVED', CURRENT_TIMESTAMP);
 
--- Trả lời vào comment id = 2
-INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
-VALUES
-(6, 2, 'Theo mình thì so với tính năng thì giá hợp lý.', 2, 'APPROVED', CURRENT_TIMESTAMP),
-(7, 2, 'Có shop nào bán rẻ hơn không?', 2, 'PENDING', CURRENT_TIMESTAMP);
+-- ====================================
+-- 💬 BÌNH LUẬN CON (REPLY CẤP 2)
+-- ====================================
 
--- Trả lời vào comment id = 7
+-- Trả lời bình luận id = 1
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(2, 2, 'Mình thấy trên web chính hãng thì cũng bằng giá thôi.', 7, 'APPROVED', CURRENT_TIMESTAMP);
+(4, 1, 'Bạn dùng lâu chưa, pin có ổn không?', 1, 'APPROVED', CURRENT_TIMESTAMP),
+(5, 1, 'Mình cũng thấy chất lượng ổn thật.', 1, 'APPROVED', CURRENT_TIMESTAMP),
+(6, 1, 'Theo mình thì camera hơi kém, còn lại ổn.', 1, 'APPROVED', CURRENT_TIMESTAMP),
+(7, 1, 'Đúng rồi, pin ổn mà sạc cũng nhanh nữa.', 1, 'APPROVED', CURRENT_TIMESTAMP),
+(8, 1, 'Bạn mua ở đâu thế, giá tốt không?', 1, 'APPROVED', CURRENT_TIMESTAMP);
 
--- Trả lời vào comment id = 3
+-- Trả lời bình luận id = 4 (cha)
 INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
 VALUES
-(8, 3, 'Chuẩn, shipper cũng thân thiện nữa.', 3, 'APPROVED', CURRENT_TIMESTAMP);
+(1, 1, 'Chuẩn, thiết kế sang mà lại nhẹ tay.', 4, 'APPROVED', CURRENT_TIMESTAMP),
+(2, 1, 'Mình thích nhất phần viền mỏng, nhìn cao cấp.', 4, 'APPROVED', CURRENT_TIMESTAMP),
+(3, 1, 'Cầm chắc thật nhưng hơi trơn tay.', 4, 'PENDING', CURRENT_TIMESTAMP);
+
+-- Trả lời bình luận id = 5 (cha)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
+VALUES
+(4, 1, 'Mình cũng bị ám vàng nhẹ, nhưng không đáng kể.', 5, 'APPROVED', CURRENT_TIMESTAMP),
+(5, 1, 'Bạn thử chỉnh lại True Tone xem, đỡ hơn nhiều.', 5, 'APPROVED', CURRENT_TIMESTAMP);
+
+-- Trả lời bình luận id = 6 (cha)
+INSERT INTO comment (user_id, product_id, content, parent_comment_id, status, created_at)
+VALUES
+(6, 1, 'Chuẩn, chơi Liên Quân mượt lắm.', 6, 'APPROVED', CURRENT_TIMESTAMP),
+(7, 1, 'Có hơi nóng nhẹ khi chơi lâu, nhưng chấp nhận được.', 6, 'APPROVED', CURRENT_TIMESTAMP),
+(8, 1, 'Mình test game nặng vẫn ổn, FPS ổn định.', 6, 'APPROVED', CURRENT_TIMESTAMP);
 
 
 

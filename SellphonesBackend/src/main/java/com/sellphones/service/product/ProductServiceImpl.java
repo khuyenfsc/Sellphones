@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    private final Integer maxSizeResult = 4;
-
     private final ProductRepository productRepository;
 
     private final CustomProductDocumentRepository customProductDocumentRepository;
@@ -134,8 +132,8 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, String sortType) {
-        Pageable pageable = PageRequest.of(page, maxSizeResult);
+    public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType) {
+        Pageable pageable = PageRequest.of(page, size);
         List<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
         List<ProductListResponse> response = products.stream()
                 .map(p -> modelMapper.map(p, ProductListResponse.class))

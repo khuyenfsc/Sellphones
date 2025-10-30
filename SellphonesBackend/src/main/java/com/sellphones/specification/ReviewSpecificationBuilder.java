@@ -31,12 +31,10 @@ public class ReviewSpecificationBuilder {
 
     public static Specification<Review> hasPhotos(Boolean hasPhotos){
         return (root, query, cb) -> {
-            query.distinct(true);
-
             if(hasPhotos){
-                return cb.isNotEmpty(root.get("imageUrls"));
+                return cb.isNotEmpty(root.get("imageNames"));
             }else{
-                return cb.isEmpty(root.get("imageUrls"));
+                return cb.isEmpty(root.get("imageNames"));
             }
         };
     }

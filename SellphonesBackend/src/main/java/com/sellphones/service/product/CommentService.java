@@ -7,7 +7,8 @@ import com.sellphones.dto.product.CommentResponse;
 import org.springframework.data.repository.query.Param;
 
 public interface CommentService {
-    PageResponse<CommentResponse> getCommentByProduct(@Param("productId") Long productId, Integer page, Integer size);
+    PageResponse<CommentResponse> getCommentByProduct(Long productId, Integer page, Integer size);
+    PageResponse<CommentResponse> getCommentsByParentCommentId(Long parentId, Integer page, Integer size);
     void addNewComment(NewCommentRequest newCommentRequest);
     void replyComment(ReplyCommentRequest replyCommentRequest);
 }

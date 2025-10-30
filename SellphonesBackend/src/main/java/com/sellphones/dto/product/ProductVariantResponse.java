@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductVariantResponse {
 
+    private Long id;
+
     private String productVariantName;
 
     private BigDecimal rootPrice;

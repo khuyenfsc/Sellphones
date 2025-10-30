@@ -34,6 +34,19 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
+    @GetMapping("/child-comments")
+    public ResponseEntity<CommonResponse> getCommentByParentCommentId(
+            @RequestParam("parentId") Long parentId,
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size
+    ){
+        PageResponse<CommentResponse> response = commentService.getCommentsByParentCommentId(parentId, page, size);
+        Map<String, Object> map = new HashMap<>();
+        map.put("comments", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
     @PostMapping("/product/add-comment")
     public ResponseEntity<CommonResponse> addComment(@RequestBody NewCommentRequest newCommentRequest){
         commentService.addNewComment(newCommentRequest);

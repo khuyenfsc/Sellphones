@@ -5,6 +5,7 @@ import com.sellphones.dto.product.NewCommentRequest;
 import com.sellphones.dto.product.ReplyCommentRequest;
 import com.sellphones.dto.product.CommentResponse;
 import com.sellphones.entity.product.Comment;
+import com.sellphones.entity.product.CommentStatus;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
@@ -43,6 +44,23 @@ public class CommentServiceImpl implements CommentService{
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Comment> commentPage = commentRepository.findByProductId(productId, pageable);
+        List<CommentResponse> response = commentPage.getContent().stream()
+                .map(c -> modelMapper.map(c, CommentResponse.class))
+                .toList();
+
+        return PageResponse.<CommentResponse>builder()
+                .result(response)
+                .total(commentPage.getTotalElements())
+                .totalPages(commentPage.getTotalPages())
+                .build();
+    }
+
+    @Override
+    public PageResponse<CommentResponse> getCommentsByParentCommentId(Long parentId, Integer page, Integer size) {
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Comment> commentPage = commentRepository.findByStatusAndParentComment_Id(CommentStatus.APPROVED, parentId, pageable);
         List<CommentResponse> response = commentPage.getContent().stream()
                 .map(c -> modelMapper.map(c, CommentResponse.class))
                 .toList();

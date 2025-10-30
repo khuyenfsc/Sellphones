@@ -2,8 +2,10 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.RatingStatsResponse;
 import com.sellphones.dto.product.ReviewFilterRequest;
 import com.sellphones.dto.product.ReviewResponse;
+import com.sellphones.entity.product.RatingStats;
 import com.sellphones.service.product.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,6 +29,14 @@ public class ReviewController {
         PageResponse<ReviewResponse> reviews = reviewService.getReviewsByConditions(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", reviews);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+    @GetMapping("/product-variants/{variantId}/rating-stats")
+    public ResponseEntity<CommonResponse> getRatingStatsByProductVariantId(@PathVariable Long variantId){
+        Map<Integer, Long> response = reviewService.getRatingStatsByProductVariantId(variantId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", response);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 

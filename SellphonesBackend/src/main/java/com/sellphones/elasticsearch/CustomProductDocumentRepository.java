@@ -30,6 +30,7 @@ public class CustomProductDocumentRepository {
                 .withQuery(QueryBuilders.matchPhrasePrefix(m -> m
                         .field("name")
                         .query(keyword)))
+                .withMaxResults(5)
                 .build();
 
         return elasticsearchOperations.search(query, ProductDocument.class)

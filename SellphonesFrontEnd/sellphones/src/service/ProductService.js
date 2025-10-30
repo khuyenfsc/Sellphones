@@ -31,6 +31,43 @@ const ProductService = {
     }
   },
 
+  async getSuggestedProducts(keyword) {
+    try {
+      const encodedKeyword = encodeURIComponent(keyword);
+
+      const res = await AxiosClient.get(`/products/quick_search?keyword=${encodedKeyword}`);
+      const products = res?.data?.result ?? [];
+
+      // 👉 Có thể transform thêm nếu cần
+      return products;
+    } catch (error) {
+      console.error(`❌ Lỗi khi tải sản phẩm theo từ khóa "${keyword}":`, error);
+      return [];
+    }
+  },
+
+  async searchProductsByKeyword(keyword, page = 1, size = 12, sortType = null) {
+    try {
+      const encodedKeyword = encodeURIComponent(keyword);
+
+      // Tạo URL query động
+      let url = `/products/advanced-search?keyword=${encodedKeyword}&page=${page}&size=${size}`;
+      if (sortType) {
+        url += `&sort_type=${sortType}`;
+      }
+
+      const res = await AxiosClient.get(url);
+
+      // ✅ Dữ liệu trả về có thể nằm trong res.data.result.products
+      const products = res?.data?.result?.products ?? [];
+      return products;
+
+    } catch (error) {
+      console.error(`❌ Lỗi khi tải sản phẩm theo từ khóa "${keyword}":`, error);
+      return [];
+    }
+  },
+
   async getProductVariantById(id) {
     try {
 
