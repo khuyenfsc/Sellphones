@@ -21,5 +21,5 @@ public class ProductListResponse {
 
     private BigDecimal currentPrice;
 
-    private BigDecimal averageRating;
+    private Double averageRating;
 }

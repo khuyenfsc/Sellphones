@@ -4,12 +4,12 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sellphones.dto.product.admin.AdminProductFilter_Request;
 import com.sellphones.entity.product.Product;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
@@ -39,7 +39,7 @@ public class CustomProductDocumentRepository {
                 .toList();
     }
 
-    public List<ProductDocument> getProductsByKeyword(String keyword, Pageable pageable, String sortType){
+    public Page<ProductDocument> getProductsByKeyword(String keyword, Pageable pageable, String sortType){
         NativeQueryBuilder builder = NativeQuery.builder()
                 .withQuery(QueryBuilders.match(m -> m
                         .field("name.partial")
@@ -56,10 +56,15 @@ public class CustomProductDocumentRepository {
 
         Query query = builder.build();
 
-        return elasticsearchOperations.search(query, ProductDocument.class)
-                .stream()
-                .map(sh -> sh.getContent())
+        SearchHits<ProductDocument> searchHits = elasticsearchOperations.search(query, ProductDocument.class);
+
+        List<ProductDocument> content = searchHits.stream()
+                .map(SearchHit::getContent)
                 .toList();
+
+        long totalHits = searchHits.getTotalHits();
+
+        return new PageImpl<>(content, pageable, totalHits);
     }
 
     public List<ProductDocument> getProductsWithAdminAuthority(AdminProductFilter_Request request){

@@ -12,6 +12,4 @@ public class BasicUserResponse {
     private Long id;
 
     private String fullName;
-
-    private Role role;
 }

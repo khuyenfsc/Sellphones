@@ -1,5 +1,7 @@
 import { ChevronDown, Search, ShoppingCart, User } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import Category from "../pages/HomePage/components/Category";
 import ProductService from "../../service/ProductService";
 
@@ -19,6 +21,8 @@ const Header = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { user, loading: loadingUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const debouncedKeyword = useDebounce(keyword, 500);
 
@@ -45,6 +49,14 @@ const Header = () => {
   const handleSelect = (name) => {
     setKeyword(name);
     setShowDropdown(false);
+  };
+
+  // 👉 Hàm xử lý khi tìm kiếm
+  const handleSearch = () => {
+    if (keyword.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+      setShowDropdown(false);
+    }
   };
 
   return (
@@ -77,9 +89,18 @@ const Header = () => {
               }}
               onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch(); // ⌨️ Bắt phím Enter
+              }}
               className="w-full px-3 py-1.5 rounded-md bg-white text-gray-800 outline-none shadow-sm focus:ring-2 focus:ring-indigo-500"
             />
-            <Search className="absolute right-3 top-2 text-gray-400" size={18} />
+
+            {/* 🔍 Icon search */}
+            <Search
+              className="absolute right-3 top-2 text-gray-400 cursor-pointer hover:text-indigo-500 transition"
+              size={18}
+              onClick={handleSearch} // 🖱️ Click icon để tìm kiếm
+            />
 
             {/* Danh sách gợi ý */}
             {showDropdown && (loading || suggestions.length > 0) && (
@@ -97,7 +118,7 @@ const Header = () => {
                     </div>
                   ))
                 )}
-                {!loading && suggestions.length === 0 && debouncedKeyword.length >= 2 && (
+                {!loading && suggestions.length === 0 && keyword.trim().length >= 2 && (
                   <div className="p-3 text-sm text-gray-400">Không có kết quả</div>
                 )}
               </div>
@@ -105,17 +126,31 @@ const Header = () => {
           </div>
 
           {/* Cart & Login */}
+          {/* Cart & Login / User */}
           <div className="flex items-center gap-4 ml-auto">
+            {/* Nút giỏ hàng */}
             <button className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300">
               <ShoppingCart size={20} />
               <span className="text-sm font-medium">Giỏ hàng</span>
             </button>
 
-            <button className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300">
-              <User size={20} />
-              <span className="text-sm font-medium">Đăng nhập</span>
-            </button>
+            {loadingUser ? (
+              <span className="text-white">Đang tải...</span>
+            ) : (
+              <a
+                href={user ? "/profile" : "/login"}
+                className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300 no-underline font-normal"
+              >
+                <User size={20} />
+                <span className="text-sm font-medium">
+                  {user
+                    ? user?.user.fullName?.split(" ").slice(-1)[0] || "Người dùng"
+                    : "Đăng nhập"}
+                </span>
+              </a>
+            )}
           </div>
+
         </div>
       </div>
 

@@ -134,12 +134,17 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType) {
         Pageable pageable = PageRequest.of(page, size);
-        List<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
-        List<ProductListResponse> response = products.stream()
-                .map(p -> modelMapper.map(p, ProductListResponse.class))
-                .toList();
+        Page<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
+        List<ProductListResponse> response = products.getContent().stream()
+                .map(p ->{
+                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+                            return modelMapper.map(p, ProductListResponse.class);
+                        }
+                ).toList();
         return PageResponse.<ProductListResponse>builder()
                 .result(response)
+                .totalPages(products.getTotalPages())
+                .total(products.getTotalElements())
                 .build();
     }
 

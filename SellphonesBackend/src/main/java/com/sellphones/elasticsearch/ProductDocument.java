@@ -28,6 +28,9 @@ public class ProductDocument {
     @Field(type = FieldType.Text)
     private String description;
 
+    @Field(name = "average_rating", type = FieldType.Double)
+    private Double averageRating;
+
     @Field(name ="root_price", type = FieldType.Long)
     private Long rootPrice;
 

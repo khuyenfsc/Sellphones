@@ -46,7 +46,7 @@ const ProductService = {
     }
   },
 
-  async searchProductsByKeyword(keyword, page = 1, size = 12, sortType = null) {
+  async searchProductsByKeyword(keyword, page = 0, size = 12, sortType = null) {
     try {
       const encodedKeyword = encodeURIComponent(keyword);
 
@@ -59,7 +59,7 @@ const ProductService = {
       const res = await AxiosClient.get(url);
 
       // ✅ Dữ liệu trả về có thể nằm trong res.data.result.products
-      const products = res?.data?.result?.products ?? [];
+      const products = res?.data?.products ?? [];
       return products;
 
     } catch (error) {

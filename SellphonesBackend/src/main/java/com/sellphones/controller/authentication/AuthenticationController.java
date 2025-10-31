@@ -3,6 +3,7 @@ package com.sellphones.controller.authentication;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.authentication.LogoutRequest;
 import com.sellphones.dto.authentication.AuthenticationResponse;
+import com.sellphones.dto.user.BasicUserResponse;
 import com.sellphones.dto.user.UserRequest;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.user.RoleName;
@@ -46,7 +47,15 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/refresh")
+    @GetMapping("/me")
+    public ResponseEntity<CommonResponse> getCurrentUser(){
+        BasicUserResponse userResponse = authenticationService.getCurrentUser();
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", userResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
+        @PostMapping("/refresh")
     public ResponseEntity<CommonResponse> refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         AuthenticationToken authenticationToken = authenticationService.refreshToken(refreshToken);
         SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken());

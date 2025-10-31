@@ -253,16 +253,16 @@ VALUES
 ('Shipment Admin', 'Specialized in managing shipments', 'ADMIN', CURRENT_TIMESTAMP),
 ('Customer', 'Regular customer with limited access', 'CUSTOMER', CURRENT_TIMESTAMP);
 
-INSERT INTO app_user (full_name, avatar, email, password, date_of_birth, phone_number, gender, role_id, created_at)
+INSERT INTO app_user (full_name, avatar, email, password, date_of_birth, phone_number, gender, role_id, provider, created_at)
 VALUES
-('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'MALE', 1, CURRENT_TIMESTAMP), -- Super Admin
-('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
-('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'MALE', 3, CURRENT_TIMESTAMP), -- Order Admin
-('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 4, CURRENT_TIMESTAMP), -- Shipment Admin
-('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'MALE', 5, CURRENT_TIMESTAMP), -- Customer
-('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 5, CURRENT_TIMESTAMP), -- Customer
-('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'MALE', 2, CURRENT_TIMESTAMP), -- Sales Manager
-('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 3, CURRENT_TIMESTAMP); -- Order Admin
+('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'MALE', 1, 'LOCAL', CURRENT_TIMESTAMP), -- Super Admin
+('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'MALE', 3, 'LOCAL', CURRENT_TIMESTAMP), -- Order Admin
+('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 4, 'LOCAL', CURRENT_TIMESTAMP), -- Shipment Admin
+('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'MALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
+('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
+('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'MALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 3, 'LOCAL', CURRENT_TIMESTAMP); -- Order Admin
 
 INSERT INTO permission (name, code, created_at)
 VALUES
