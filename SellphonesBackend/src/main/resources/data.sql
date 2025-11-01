@@ -255,14 +255,14 @@ VALUES
 
 INSERT INTO app_user (full_name, avatar, email, password, date_of_birth, phone_number, gender, role_id, provider, created_at)
 VALUES
-('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', NULL, NULL, 'MALE', 1, 'LOCAL', CURRENT_TIMESTAMP), -- Super Admin
-('Tran Thi B', NULL, 'b@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
-('Le Van C', NULL, 'c@example.com', '{noop}123456', NULL, NULL, 'MALE', 3, 'LOCAL', CURRENT_TIMESTAMP), -- Order Admin
-('Pham Thi D', NULL, 'd@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 4, 'LOCAL', CURRENT_TIMESTAMP), -- Shipment Admin
-('Hoang Van E', NULL, 'e@example.com', '{noop}123456', NULL, NULL, 'MALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
-('Vu Thi F', NULL, 'f@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
-('Do Van G', NULL, 'g@example.com', '{noop}123456', NULL, NULL, 'MALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
-('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', NULL, NULL, 'FEMALE', 3, 'LOCAL', CURRENT_TIMESTAMP); -- Order Admin
+('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', '1985-03-15', '0901234567', 'MALE', 1, 'LOCAL', CURRENT_TIMESTAMP), -- Super Admin
+('Tran Thi B', NULL, 'b@example.com', '{noop}123456', '1990-07-20', '0902345678', 'FEMALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Le Van C', NULL, 'c@example.com', '{noop}123456', '1988-11-02', '0903456789', 'MALE', 3, 'LOCAL', CURRENT_TIMESTAMP), -- Order Admin
+('Pham Thi D', NULL, 'd@example.com', '{noop}123456', '1992-05-12', '0904567890', 'FEMALE', 4, 'LOCAL', CURRENT_TIMESTAMP), -- Shipment Admin
+('Hoang Van E', NULL, 'e@example.com', '{noop}123456', '1995-09-25', '0905678901', 'MALE', 5, 'GOOGLE', CURRENT_TIMESTAMP), -- Customer
+('Vu Thi F', NULL, 'f@example.com', '{noop}123456', '1997-01-08', '0906789012', 'FEMALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
+('Do Van G', NULL, 'g@example.com', '{noop}123456', '1989-12-30', '0907890123', 'MALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', '1993-04-18', '0908901234', 'FEMALE', 3, 'LOCAL', CURRENT_TIMESTAMP); -- Order Admin
 
 INSERT INTO permission (name, code, created_at)
 VALUES
@@ -450,7 +450,7 @@ VALUES
 ('67 Nguyen Trai', 'Thuong Dinh', 'Thanh Xuan', 'Ha Noi', 'CUSTOMER'),
 ('12 Tran Phu', 'Loc Tho', 'Nha Trang', 'Khanh Hoa', 'CUSTOMER'),
 ('78 Nguyen Hue', 'Ben Nghe', 'Quan 1', 'Ho Chi Minh', 'CUSTOMER'),
-
+('21  Yen Xá', 'Tân Triều', 'Thanh Trì', 'Hà Nội', 'CUSTOMER'),
 -- SUPPLIER
 ('89 Hung Vuong', 'Phu Nhuan', 'Hue', 'Thua Thien Hue', 'SUPPLIER'),
 ('34 Vo Van Kiet', 'My An', 'Ngu Hanh Son', 'Da Nang', 'SUPPLIER'),
@@ -508,7 +508,7 @@ VALUES
 ('Le Van C', '0903000003', 3, '012345678903', '1998-07-12', 3), -- user_id = Le Van C
 ('Pham Thi D', '0904000004', 4, NULL, '1990-03-05', 4), -- user_id = Pham Thi D
 ('Hoang Van E', '0905000005', 5, '012345678905', '1993-11-22', 5), -- user_id = Hoang Van E
-('Do Thi F', '0906000006', 6, NULL, '1997-09-10', 6), -- user_id = Vu Thi F (FEMALE, Customer)
+('Hoang Van E', '0905000005', 6, '012345678906', '1993-11-22', 5), -- user_id = Hoang Van E
 ('Phan Van G', '0907000007', 7, '012345678907', '1999-12-30', 7), -- user_id = Do Van G (Sales Manager)
 ('Vu Thi H', '0908000008', 8, '012345678908', '1991-06-14', 8); -- user_id = Nguyen Thi H (Order Admin)
 

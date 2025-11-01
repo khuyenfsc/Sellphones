@@ -1,0 +1,263 @@
+// src/components/CustomerAddressList.jsx
+import React, { useState } from "react";
+import { Plus, MapPin } from "lucide-react";
+import AddAddressModal from "./AddAddressModel";
+import CustomerInfoService from "../../../../service/CustomerInfoService";
+
+export default function CustomerAddressList({ loading, customerInfos, setCustomerInfos }) {
+    const [isAdding, setIsAdding] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        type: "", // "success" | "error"
+    });
+
+
+    // ✅ Gộp luôn dateOfBirth vào formData
+    const [formData, setFormData] = useState({
+        fullName: "",
+        phone: "",
+        address: "",
+        ward: "",
+        district: "",
+        city: "",
+        dateOfBirth: null,
+    });
+
+    // ✅ Mở form
+    const handleAddAddress = () => setIsAdding(true);
+
+    // ✅ Đóng form + reset dữ liệu
+    const handleCloseForm = () => {
+        setIsAdding(false);
+        setFormData({
+            fullName: "",
+            phone: "",
+            address: "",
+            ward: "",
+            district: "",
+            city: "",
+            dateOfBirth: null,
+        });
+        setErrors({});
+    };
+
+    // ✅ Khi người dùng nhập input text
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // ✅ Khi người dùng bấm “Lưu”
+    const handleSave = async (e) => {
+        e.preventDefault();
+
+        if (!validate()) return;
+
+        // Chuyển đổi dữ liệu form sang định dạng đúng cho API
+        const formattedData = {
+            fullName: formData.fullName,
+            phoneNumber: formData.phone, // đổi field name cho khớp với API
+            dateOfBirth: formData.dateOfBirth
+                ? `${formData.dateOfBirth.getFullYear()}-${String(
+                    formData.dateOfBirth.getMonth() + 1
+                ).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
+                : "",
+
+            address: {
+                street: formData.address,
+                ward: formData.ward,
+                district: formData.district,
+                province: formData.city,
+            },
+        };
+
+        console.log("📦 Dữ liệu gửi lên server:", formattedData);
+
+        try {
+            const res = await CustomerInfoService.createCustomerInfo(formattedData);
+
+            if (res.success) {
+                // ✅ Hiện toast thành công
+                setToast({
+                    show: true,
+                    message: "Đã thêm địa chỉ mới thành công!",
+                    type: "success",
+                });
+
+                const updatedList = await CustomerInfoService.getCustomerInfos();
+                if (updatedList.success) {
+                    setCustomerInfos(updatedList.data);
+                }
+
+                // Ẩn sau 3s
+                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+
+                handleCloseForm(); // reset form
+            } else {
+                // ❌ Hiện toast lỗi
+                setToast({
+                    show: true,
+                    message: res.message || "Không thể thêm địa chỉ mới!",
+                    type: "error",
+                });
+
+                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+            }
+        } catch (error) {
+            console.error("❌ Lỗi khi tạo khách hàng:", error);
+            setToast({
+                show: true,
+                message: "Đã xảy ra lỗi khi thêm địa chỉ mới!",
+                type: "error",
+            });
+            setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+        }
+    };
+
+
+
+
+    // ✅ Validate các trường
+    const validate = () => {
+        const newErrors = {};
+
+        if (!formData.fullName.trim()) {
+            newErrors.fullName = "Họ và tên không được để trống";
+        }
+
+        if (!formData.phone.trim()) {
+            newErrors.phone = "Số điện thoại không được để trống";
+        } else if (!/^(0\d{9})$/.test(formData.phone)) {
+            newErrors.phone = "Số điện thoại không hợp lệ (phải có 10 chữ số và bắt đầu bằng 0)";
+        }
+
+        if (!formData.address.trim()) {
+            newErrors.address = "Địa chỉ không được để trống";
+        }
+
+        if (!formData.ward.trim()) {
+            newErrors.ward = "Phường/Xã không được để trống";
+        }
+
+        if (!formData.district.trim()) {
+            newErrors.district = "Quận/Huyện không được để trống";
+        }
+
+        if (!formData.city.trim()) {
+            newErrors.city = "Tỉnh/Thành phố không được để trống";
+        }
+
+        // Ngày sinh: nếu có thì phải hợp lệ
+        if (formData.dateOfBirth) {
+            if (isNaN(new Date(formData.dateOfBirth))) {
+                newErrors.dateOfBirth = "Ngày sinh không hợp lệ";
+            }
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    return (
+        <>
+            {/* Danh sách địa chỉ */}
+            <div className="bg-white rounded-lg shadow-sm p-6 relative z-10">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold">Địa chỉ nhận hàng</h2>
+                    <button
+                        className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium"
+                        onClick={handleAddAddress}
+                    >
+                        <Plus className="w-4 h-4" />
+                        Thêm địa chỉ
+                    </button>
+                </div>
+
+                {loading ? (
+                    <p className="text-gray-500 text-sm">Đang tải danh sách địa chỉ...</p>
+                ) : customerInfos.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12">
+                        <div className="mb-4">
+                            <div className="w-32 h-32 bg-pink-100 rounded-full flex items-center justify-center relative">
+                                <div className="absolute inset-0 flex items-center justify-center text-6xl">🐰</div>
+                                <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
+                                    <div className="bg-white rounded-lg shadow-lg p-3">
+                                        <div className="text-3xl">🎁</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-gray-500 text-sm">Bạn chưa có địa chỉ nào được tạo</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        {customerInfos.map((info) => (
+                            <div
+                                key={info.id}
+                                className="border border-gray-200 rounded-lg p-4 flex items-start gap-4 hover:shadow-md transition"
+                            >
+                                <div className="flex-shrink-0 mt-1">
+                                    <MapPin className="w-5 h-5 text-red-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-gray-800">
+                                        {info.fullName} — {info.phoneNumber}
+                                    </h3>
+                                    <p className="text-gray-600 mt-1 text-sm">
+                                        {info.address.street}, {info.address.ward}, {info.address.district},{" "}
+                                        {info.address.province}
+                                    </p>
+                                    <p className="text-gray-500 text-xs mt-1">
+                                        Ngày sinh:{" "}
+                                        {new Date(info.dateOfBirth).toLocaleDateString("vi-VN")}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* ✅ Overlay + Form trượt vào */}
+            <AddAddressModal
+                isAdding={isAdding}
+                handleCloseForm={handleCloseForm}
+                formData={formData}
+                handleChange={handleChange}
+                handleSave={handleSave}
+                setFormData={setFormData}
+                errors={errors}
+            />
+
+            {toast.show && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500">
+                    <div
+                        className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${toast.type === "success"
+                                ? "bg-green-500 text-white"
+                                : "bg-red-500 text-white"
+                            }`}
+                    >
+                        {toast.type === "success" && (
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        )}
+                        <span>{toast.message}</span>
+                    </div>
+                </div>
+            )}
+
+        </>
+    );
+}

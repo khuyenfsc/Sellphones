@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../../../context/AuthContext';
 import UserService from '../../../service/UserService';
 import axios from 'axios';
 
@@ -10,6 +12,15 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const navigate = useNavigate();
+    const { user, setUser, loading: loadingUser } = useContext(AuthContext);
+
+    // 👉 Nếu đã login, chuyển hướng sang trang chính
+    useEffect(() => {
+        if (!loadingUser && user) {
+            navigate("/"); // chuyển hướng về trang chủ
+        }
+    }, [user, loadingUser, navigate]);
 
     const handleLogin = async () => {
         setError("");

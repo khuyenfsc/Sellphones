@@ -71,12 +71,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional
-    public void updateProfile(UpdatedInfoRequest updatedInfoRequest) {
+    public UserProfileResponse updateProfile(UpdatedInfoRequest updatedInfoRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         user.setFullName(updatedInfoRequest.getFullName());
         user.setDateOfBirth(updatedInfoRequest.getDateOfBirth());
         user.setGender(updatedInfoRequest.getGender());
+
+        user = userRepository.save(user);
+
+        return modelMapper.map(user, UserProfileResponse.class);
     }
 
     @Override

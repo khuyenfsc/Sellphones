@@ -2,7 +2,7 @@ package com.sellphones.service.address.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
-import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.admin.AdminAddressRequest;
 import com.sellphones.dto.address.AddressResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
@@ -60,15 +60,16 @@ public class AdminAddressServiceImpl implements AdminAddressService{
 
     @Override
     @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.CREATE')")
-    public void addAddress(AddressRequest request) {
+    public void addAddress(AdminAddressRequest request) {
         Address address = addressMapper.mapToAddressEntity(request);
+        address.setAddressType(request.getAddressType());
         addressRepository.save(address);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.EDIT')")
-    public void editAddress(AddressRequest request, Long id) {
+    public void editAddress(AdminAddressRequest request, Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
         address.setStreet(request.getStreet());
         address.setWard(request.getWard());

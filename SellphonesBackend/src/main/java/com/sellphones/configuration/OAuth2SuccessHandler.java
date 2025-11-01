@@ -3,6 +3,7 @@ package com.sellphones.configuration;
 
 import com.sellphones.dto.user.UserRequest;
 import com.sellphones.entity.authentication.AuthenticationToken;
+import com.sellphones.entity.user.Provider;
 import com.sellphones.entity.user.RoleName;
 import com.sellphones.entity.user.User;
 import com.sellphones.oauth2.CustomOAuth2User;
@@ -48,6 +49,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         User user = userRepository.findByEmail(email).orElse(null);
         if(user != null){
             AuthenticationToken authenticationToken = authenticationService.authenticate(googleAuthenticationAction, new UserRequest(attributes.get("email").toString(), null), RoleName.CUSTOMER);
+            user.setProvider(Provider.GOOGLE);
+            userRepository.save(user);
             ResponseCookie cookie = ResponseCookie.from("refreshToken", authenticationToken.getRefreshToken())
                     .httpOnly(true)
                     .domain("localhost")

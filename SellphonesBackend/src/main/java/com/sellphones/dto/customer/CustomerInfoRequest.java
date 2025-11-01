@@ -1,6 +1,7 @@
 package com.sellphones.dto.customer;
 
 import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.admin.AdminAddressRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

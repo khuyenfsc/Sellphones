@@ -63,11 +63,11 @@ const Header = () => {
     <header className="relative bg-blue-500 py-3">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4">
-          {/* Logo */}
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            sellphones
+          <h1 className="text-3xl font-extrabold tracking-tight">
+            <a href="/" className="text-white hover:text-gray-200 transition-colors">
+              sellphones
+            </a>
           </h1>
-
           {/* Category Dropdown Button */}
           <button
             onClick={() => setShowCategory(!showCategory)}
@@ -135,20 +135,30 @@ const Header = () => {
             </button>
 
             {loadingUser ? (
-              <span className="text-white">Đang tải...</span>
-            ) : (
+              <div className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md animate-pulse">
+                <User size={20} />
+                <span className="text-sm font-medium">Đang tải...</span>
+              </div>
+            ) : user ? (
               <a
-                href={user ? "/profile" : "/login"}
+                href="/dashboard"
                 className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300 no-underline font-normal"
               >
                 <User size={20} />
                 <span className="text-sm font-medium">
-                  {user
-                    ? user?.user.fullName?.split(" ").slice(-1)[0] || "Người dùng"
-                    : "Đăng nhập"}
+                  {user?.user.fullName?.split(" ").slice(-1)[0]}
                 </span>
               </a>
+            ) : (
+              <a
+                href="/login"
+                className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300 no-underline font-normal"
+              >
+                <User size={20} />
+                <span className="text-sm font-medium">Đăng nhập</span>
+              </a>
             )}
+
           </div>
 
         </div>

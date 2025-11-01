@@ -1,9 +1,9 @@
-package com.sellphones.controller.address;
+package com.sellphones.controller.address.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.address.admin.AdminAddressFilterRequest;
-import com.sellphones.dto.address.AddressRequest;
+import com.sellphones.dto.address.admin.AdminAddressRequest;
 import com.sellphones.dto.address.AddressResponse;
 import com.sellphones.service.address.admin.AdminAddressService;
 import jakarta.validation.Valid;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,7 +32,7 @@ public class AdminAddressController {
     }
 
     @PostMapping("/add-address")
-    public ResponseEntity<CommonResponse> addAddress(@RequestBody @Valid AddressRequest request) {
+    public ResponseEntity<CommonResponse> addAddress(@RequestBody @Valid AdminAddressRequest request) {
         adminAddressService.addAddress(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added address successfully");
@@ -42,7 +41,7 @@ public class AdminAddressController {
     }
 
     @PutMapping("/edit-address/{id}")
-    public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AddressRequest request, @PathVariable Long id) {
+    public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AdminAddressRequest request, @PathVariable Long id) {
         adminAddressService.editAddress(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited address successfully");

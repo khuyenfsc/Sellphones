@@ -47,11 +47,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/update-profile")
+    @PutMapping("/update-profile")
     public ResponseEntity<CommonResponse> updateProfile(@RequestBody @Valid UpdatedInfoRequest updatedInfoRequest){
-        userService.updateProfile(updatedInfoRequest);
+        UserProfileResponse response = userService.updateProfile(updatedInfoRequest);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Updated info successfully");
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
