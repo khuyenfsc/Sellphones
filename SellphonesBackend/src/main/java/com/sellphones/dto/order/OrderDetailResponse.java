@@ -1,5 +1,6 @@
 package com.sellphones.dto.order;
 
+import com.sellphones.dto.customer.CustomerInfoResponse;
 import com.sellphones.dto.customer.admin.AdminOrder_CustomerInfoResponse;
 import com.sellphones.dto.payment.PaymentMethodResponse;
 import com.sellphones.entity.order.OrderStatus;
@@ -31,6 +32,6 @@ public class OrderDetailResponse {
 
     private PaymentStatus paymentStatus;
 
-    private AdminOrder_CustomerInfoResponse customerInfo;
+    private CustomerInfoResponse customerInfo;
 
 }

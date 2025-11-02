@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../../../../context/UserContext";
 
 export default function UserHeader() {
-    const { user, loadingUser } = useUser();
+    const { user, loadingUser, totalOrders, loadingTotal } = useUser();
 
     if (loadingUser) {
         return (
@@ -34,7 +34,7 @@ export default function UserHeader() {
                                 🛒
                             </div>
                             <div>
-                                <p className="text-lg font-bold">1</p>
+                                <p className="text-lg font-bold">{totalOrders}</p>
                                 <p className="text-xs text-gray-600">Đơn hàng đã mua</p>
                             </div>
                         </div>

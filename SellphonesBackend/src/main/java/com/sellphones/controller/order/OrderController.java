@@ -23,6 +23,15 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @GetMapping("/total")
+    public ResponseEntity<CommonResponse> getTotalOrders(){
+        Map<String, Object> total = orderService.getTotalOrders();
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", total);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+    }
+
     @PostMapping("/order")
     public ResponseEntity<CommonResponse> order(@RequestBody OrderRequest orderRequest){
         orderService.order(orderRequest);
@@ -44,7 +53,7 @@ public class OrderController {
     public ResponseEntity<CommonResponse> getOrderDetailById(@PathVariable Long id){
         OrderDetailResponse orderDetailResponse = orderService.getOrderDetailsById(id);
         Map<String, Object> map = new HashMap<>();
-        map.put("order", orderDetailResponse);
+        map.put("result", orderDetailResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }

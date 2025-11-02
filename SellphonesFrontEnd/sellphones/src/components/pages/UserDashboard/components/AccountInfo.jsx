@@ -1,29 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Edit2, Plus, Link2, Unlink, MapPin, X } from 'lucide-react';
-import { parse, format, isValid } from "date-fns";
-import { motion, AnimatePresence } from "framer-motion";
 import { useUser } from '../../../../context/UserContext';
 import CustomerInfoService from '../../../../service/CustomerInfoService';
-import UserService from '../../../../service/UserService';
 import UserProfile from './UserProfile';
 import CustomerAddressList from './CustomerAddressList';
+import PasswordSection from './PasswordSection';
 
 export default function AccountInfo() {
     const { user, setUser } = useUser();
     const [customerInfos, setCustomerInfos] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
-    const [isAdding, setIsAdding] = useState(false);
-    const [customerFormData, setCustomerFormData] = useState({
-        fullName: "",
-        phoneNumber: "",
-        street: "",
-        ward: "",
-        district: "",
-        province: "",
-        dateOfBirth: "",
-    });
-
 
 
     useEffect(() => {
@@ -57,15 +42,7 @@ export default function AccountInfo() {
                 {/* Mật khẩu và tài khoản liên kết */}
                 <div className="grid grid-cols-2 gap-6">
                     {/* Mật khẩu */}
-                    <div className="bg-white rounded-lg shadow-sm p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold">Mật khẩu</h2>
-                            <button className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium">
-                                <Edit2 className="w-4 h-4" />
-                                Thay đổi mật khẩu
-                            </button>
-                        </div>
-                    </div>
+                    <PasswordSection />
 
                     {/* Liên kết tài khoản */}
                     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -100,23 +77,6 @@ export default function AccountInfo() {
                     </div>
                 </div>
             </div>
-
-
-
-            {toast.show && (
-                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500">
-                    <div className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg
-            ${toast.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"}
-        `}>
-                        {toast.type === "success" && (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                        )}
-                        <span>{toast.message}</span>
-                    </div>
-                </div>
-            )}
 
         </div>
     );

@@ -21,6 +21,7 @@ import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,8 +72,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @CacheEvict(
+            value = "me",
+            key = "'getCurrentUser_' + T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()"
+    )
     public UserProfileResponse updateProfile(UpdatedInfoRequest updatedInfoRequest) {
-        User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
         user.setFullName(updatedInfoRequest.getFullName());
         user.setDateOfBirth(updatedInfoRequest.getDateOfBirth());
         user.setGender(updatedInfoRequest.getGender());
@@ -81,6 +88,7 @@ public class UserServiceImpl implements UserService{
 
         return modelMapper.map(user, UserProfileResponse.class);
     }
+
 
     @Override
     @Transactional

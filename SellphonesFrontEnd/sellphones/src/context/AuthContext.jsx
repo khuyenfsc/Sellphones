@@ -7,11 +7,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
+
         const res = await UserService.getCurrentUser();
-        if (res) setUser(res);
+        console.log(res);
+        if (res) setUser(res.user);
       } catch {
         setUser(null);
       } finally {

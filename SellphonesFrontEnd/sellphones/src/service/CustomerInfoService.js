@@ -125,6 +125,70 @@ const CustomerInfoService = {
             };
         }
     },
+
+    async updateCustomerInfo(id, customerData) {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return { success: false, message: "Chưa đăng nhập", data: null };
+
+            // Gửi dữ liệu cập nhật khách hàng lên server
+            const res = await AxiosClient.put(`/customers/update-customer-info/${id}`, customerData, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+
+            const result = res?.data?.result ?? null;
+
+            return {
+                success: true,
+                data: result,
+                message: "Cập nhật thông tin khách hàng thành công!",
+            };
+        } catch (error) {
+            // Nếu token hết hạn → thử refresh token
+            if (error.response?.status === 401) {
+                try {
+                    const refreshResult = await AuthService.refreshToken(); // 👈 gọi sang AuthService
+                    if (refreshResult.success) {
+                        // Retry lại với token mới
+                        const retryRes = await AxiosClient.put(`/customers/update-customer-info/${id}`, customerData, {
+                            headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
+                            withCredentials: true,
+                        });
+
+                        const result = retryRes?.data?.result ?? null;
+
+                        return {
+                            success: true,
+                            data: result,
+                            message: "Cập nhật thông tin khách hàng thành công (sau khi refresh token)!",
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!",
+                            data: null,
+                        };
+                    }
+                } catch (retryError) {
+                    console.error("❌ Lỗi khi retry cập nhật thông tin khách hàng:", retryError);
+                    return {
+                        success: false,
+                        message: "Không thể làm mới token. Vui lòng đăng nhập lại!",
+                        data: null,
+                    };
+                }
+            }
+
+            console.error("❌ Lỗi khi cập nhật thông tin khách hàng:", error);
+            return {
+                success: false,
+                message: "Không thể cập nhật thông tin khách hàng. Vui lòng thử lại sau!",
+                data: null,
+            };
+        }
+    },
+
 };
 
 export default CustomerInfoService;

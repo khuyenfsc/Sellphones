@@ -31,6 +31,8 @@ export default function LoginPage() {
         setLoading(false);
 
         if (result.success) {
+            const res = await UserService.getCurrentUser();
+            setUser(res.user)
             setShowSuccess(true);
 
             // ⏳ Sau 2 giây thì chuyển hướng về trang chủ

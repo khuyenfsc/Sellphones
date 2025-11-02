@@ -1,4 +1,4 @@
-package com.sellphones.dto.order;
+package com.sellphones.dto.product;
 
 import com.sellphones.dto.promotion.GiftProductListResponse;
 import lombok.AllArgsConstructor;
@@ -11,13 +11,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderProductVariantDetailsResponse {
+public class Order_ProductVariantDetailsResponse {
+
+    private Long id;
 
     private String productVariantName;
 
-    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     private String variantImage;
+
+    private Order_ProductResponse product;
 
     private List<GiftProductListResponse> giftProducts;
 

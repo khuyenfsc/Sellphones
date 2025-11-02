@@ -146,7 +146,7 @@ const Header = () => {
               >
                 <User size={20} />
                 <span className="text-sm font-medium">
-                  {user?.user.fullName?.split(" ").slice(-1)[0]}
+                  {user?.fullName?.split(" ").slice(-1)[0]}
                 </span>
               </a>
             ) : (

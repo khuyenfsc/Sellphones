@@ -29,9 +29,7 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error.response) {
       // Có phản hồi lỗi từ server
-      console.error('API Error:', error.response.data?.message || error.message);
     } else {
-      console.error('Network Error:', error.message);
     }
     return Promise.reject(error);
   }

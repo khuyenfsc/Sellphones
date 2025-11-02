@@ -33,11 +33,14 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
             throw new AppException(ErrorCode.USER_INACTIVE);
         }
 
-        if(user.getProvider() == Provider.LOCAL){
+        if(user.getPassword() != null){
             if(!passwordEncoder.matches(password, user.getPassword())){
                 throw new AppException(ErrorCode.INVALID_PASSWORD);
             }
+        }else{
+            throw new AppException(ErrorCode.INVALID_LOGIN_METHOD);
         }
+
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 

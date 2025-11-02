@@ -1,5 +1,6 @@
 package com.sellphones.dto.order;
 
+import com.sellphones.dto.product.Order_ProductVariantDetailsResponse;
 import com.sellphones.dto.product.WarrantyResponse;
 import com.sellphones.dto.promotion.OrderVariantPromotionResponse;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderVariantDetailsResponse {
 
-    private OrderProductVariantDetailsResponse productVariant;
+    private Order_ProductVariantDetailsResponse productVariant;
 
     private Long quantity;
 
     private BigDecimal totalPrice;
+
+    private BigDecimal discountAmount;
 
     private WarrantyResponse warranty;
 

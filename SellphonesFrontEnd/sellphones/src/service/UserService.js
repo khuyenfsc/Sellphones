@@ -28,45 +28,62 @@ const UserService = {
             const res = await AxiosClient.post('/auth/refresh', {}, { withCredentials: true });
             const newAccessToken = res?.data?.result?.accessToken;
 
-            if (newAccessToken) {
-                localStorage.setItem('accessToken', newAccessToken);
-                return { success: true, accessToken: newAccessToken };
-            }
+            if (!newAccessToken) throw new Error("Không có accessToken mới");
 
-            return { success: false };
+            localStorage.setItem('accessToken', newAccessToken);
+            return { success: true, accessToken: newAccessToken };
         } catch (error) {
-            console.error('❌ Lỗi refresh token:', error);
+            // 🧹 Nếu refresh thất bại → xóa token cũ
             localStorage.removeItem('accessToken');
             return { success: false };
         }
     },
 
+
     async getCurrentUser() {
         try {
-            const token = localStorage.getItem('accessToken');
-            if (!token) return { success: false, message: 'Chưa đăng nhập' };
+            let token = localStorage.getItem('accessToken');
 
+            // ⚡️ Nếu chưa có token → thử refresh ngay
+            if (!token) {
+                const refresh = await this.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // 🧭 Gọi API /auth/me
             const res = await AxiosClient.get('/auth/me', {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             return { success: true, user: res.data?.result };
+
         } catch (err) {
-            // Nếu bị 401, thử refresh token
-            if (err.response?.status === 401) {
-                const refreshResult = await this.refreshToken();
-                if (refreshResult.success) {
-                    const retryRes = await AxiosClient.get('/auth/me', {
-                        headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
-                    });
-                    return { success: true, user: retryRes.data };
+            const status = err.response?.status;
+
+            // 🧱 Nếu token hết hạn → thử refresh 1 lần
+            if (status === 401) {
+                const refresh = await this.refreshToken();
+
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.get('/auth/me', {
+                            headers: { Authorization: `Bearer ${newToken}` },
+                        });
+                        return { success: true, user: retryRes.data?.result };
+                    } catch {
+                        console.warn("❌ Gọi lại /auth/me sau refresh thất bại");
+                    }
                 }
             }
 
-            console.error('❌ Lỗi lấy thông tin người dùng:', err);
+            // 🔕 Không spam log 401 nữa, chỉ log lỗi không mong muốn
+            if (status !== 401) console.error("❌ Lỗi getCurrentUser:", err.message);
             return { success: false };
         }
     },
+
 
     async getProfile() {
         try {
@@ -127,6 +144,75 @@ const UserService = {
 
             console.error('❌ Lỗi cập nhật thông tin người dùng:', err);
             return { success: false, message: 'Không thể cập nhật thông tin người dùng' };
+        }
+    },
+
+    async changePassword(passwordData) {
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) return { success: false, message: 'Chưa đăng nhập' };
+
+            // Gọi API đổi mật khẩu
+            await AxiosClient.put('/users/change-password', passwordData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            return { success: true, message: 'Đổi mật khẩu thành công' };
+        } catch (err) {
+            // Token hết hạn → thử refresh
+            if (err.response?.status === 401) {
+                const refreshResult = await this.refreshToken();
+                if (refreshResult.success) {
+                    await AxiosClient.put('/users/change-password', passwordData, {
+                        headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
+                    });
+                    return { success: true, message: 'Đổi mật khẩu thành công' };
+                }
+            }
+
+            console.error('❌ Lỗi đổi mật khẩu:', err);
+            return { success: false, message: 'Không thể đổi mật khẩu' };
+        }
+    },
+
+    async logout() {
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) return { success: false, message: 'Chưa đăng nhập' };
+
+            const logoutData = { accessToken: token };
+
+            // Gọi API logout, gửi kèm cookie
+            await AxiosClient.post('/auth/logout', logoutData, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true, // ⚠️ gửi cookie
+            });
+
+            // Xoá token localStorage sau khi logout
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken'); // nếu lưu refresh token
+
+            return { success: true, message: 'Đăng xuất thành công' };
+        } catch (err) {
+            // Token hết hạn → thử refresh
+            if (err.response?.status === 401) {
+                const refreshResult = await this.refreshToken();
+                if (refreshResult.success) {
+                    const logoutData = { accessToken: refreshResult.accessToken };
+                    await AxiosClient.post('/auth/logout', logoutData, {
+                        headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
+                        withCredentials: true, // ⚠️ gửi cookie
+                    });
+
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+
+                    return { success: true, message: 'Đăng xuất thành công' };
+                }
+            }
+
+            console.error('❌ Lỗi logout:', err);
+            return { success: false, message: 'Không thể đăng xuất' };
         }
     }
 

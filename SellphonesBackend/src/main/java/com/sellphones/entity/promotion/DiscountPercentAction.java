@@ -22,9 +22,24 @@ public class DiscountPercentAction implements PromotionAction{
     public void apply(OrderVariant orderVariant, String configJson) {
         JsonNode json = objectMapper.readTree(configJson);
         int percent = json.get("percent").asInt();
-        BigDecimal discount = orderVariant.getTotalPrice()
+        BigDecimal amount = orderVariant.getTotalPrice()
                 .multiply(BigDecimal.valueOf(percent))
                 .divide(BigDecimal.valueOf(100));
 
-        orderVariant.setTotalPrice(orderVariant.getTotalPrice().subtract(discount));    }
+        BigDecimal quantityBD = BigDecimal.valueOf(orderVariant.getQuantity());
+        BigDecimal totalDiscount = amount.multiply(quantityBD);
+
+        BigDecimal currentTotal = orderVariant.getTotalPrice();
+        BigDecimal newTotal = currentTotal.subtract(totalDiscount);
+
+        if (newTotal.compareTo(BigDecimal.ZERO) < 0) {
+            newTotal = BigDecimal.ZERO;
+        }
+
+        orderVariant.setDiscountAmount(
+                orderVariant.getDiscountAmount().add(totalDiscount)
+        );
+
+        orderVariant.setTotalPrice(newTotal);
+    }
 }

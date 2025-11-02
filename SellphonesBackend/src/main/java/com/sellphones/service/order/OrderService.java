@@ -6,7 +6,11 @@ import com.sellphones.dto.order.OrderFilterRequest;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
 
+import java.util.Map;
+
 public interface OrderService {
+
+    Map<String, Object> getTotalOrders();
 
     void order(OrderRequest orderRequest);
 

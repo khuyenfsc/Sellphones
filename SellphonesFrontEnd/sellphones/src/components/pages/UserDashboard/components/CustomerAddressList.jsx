@@ -1,11 +1,15 @@
 // src/components/CustomerAddressList.jsx
 import React, { useState } from "react";
-import { Plus, MapPin } from "lucide-react";
+import { Plus, MapPin, Pencil, Trash2 } from "lucide-react";
 import AddAddressModal from "./AddAddressModel";
-import CustomerInfoService from "../../../../service/CustomerInfoService";
+import CustomerInfoFormModal from "./CustomerInfoFormModal";
+import { motion, AnimatePresence } from "framer-motion";
+import CustomerInfoService from "../../../../service/CustomerInfoService"
 
 export default function CustomerAddressList({ loading, customerInfos, setCustomerInfos }) {
     const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState(null);
     const [errors, setErrors] = useState({});
     const [toast, setToast] = useState({
         show: false,
@@ -28,9 +32,12 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
     // ✅ Mở form
     const handleAddAddress = () => setIsAdding(true);
 
-    // ✅ Đóng form + reset dữ liệu
     const handleCloseForm = () => {
         setIsAdding(false);
+        setIsEditing(false); // 👈 reset trạng thái edit nếu đang edit
+        setEditingId(null);  // 👈 reset id đang chỉnh sửa
+
+        // Reset dữ liệu form
         setFormData({
             fullName: "",
             phone: "",
@@ -40,8 +47,11 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
             city: "",
             dateOfBirth: null,
         });
+
+        // Xóa lỗi cũ
         setErrors({});
     };
+
 
     // ✅ Khi người dùng nhập input text
     const handleChange = (e) => {
@@ -53,8 +63,7 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
     };
 
     // ✅ Khi người dùng bấm “Lưu”
-    const handleSave = async (e) => {
-        e.preventDefault();
+    const handleSave = async () => {
 
         if (!validate()) return;
 
@@ -75,6 +84,7 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
                 province: formData.city,
             },
         };
+
 
         console.log("📦 Dữ liệu gửi lên server:", formattedData);
 
@@ -120,6 +130,78 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
     };
 
 
+    const handleEdit = (info) => {
+        setEditingId(info.id); // Lưu id riêng biệt
+        setFormData({
+            fullName: info.fullName,
+            phone: info.phoneNumber,
+            address: info.address.street,
+            ward: info.address.ward,
+            district: info.address.district,
+            city: info.address.province,
+            dateOfBirth: info.dateOfBirth ? new Date(info.dateOfBirth) : null,
+        });
+        setIsEditing(true); // Mở modal chỉnh sửa (tái sử dụng form cũ)
+    };
+
+    const handleUpdate = async () => {
+
+        if (!validate()) return;
+
+        const formattedData = {
+            fullName: formData.fullName,
+            phoneNumber: formData.phone,
+            dateOfBirth: formData.dateOfBirth
+                ? `${formData.dateOfBirth.getFullYear()}-${String(
+                    formData.dateOfBirth.getMonth() + 1
+                ).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
+                : "",
+            address: {
+                street: formData.address,
+                ward: formData.ward,
+                district: formData.district,
+                province: formData.city,
+            },
+        };
+
+        console.log("📦 Dữ liệu cập nhật gửi lên server:", formattedData);
+
+        try {
+            const res = await CustomerInfoService.updateCustomerInfo(editingId, formattedData);
+
+            if (res.success) {
+                setToast({
+                    show: true,
+                    message: "Cập nhật thông tin khách hàng thành công!",
+                    type: "success",
+                });
+
+                const updatedList = await CustomerInfoService.getCustomerInfos();
+                if (updatedList.success) {
+                    setCustomerInfos(updatedList.data);
+                }
+
+                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+                handleCloseForm();
+                setEditingId(null); // reset lại id
+            } else {
+                setToast({
+                    show: true,
+                    message: res.message || "Không thể cập nhật thông tin khách hàng!",
+                    type: "error",
+                });
+                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+            }
+        } catch (error) {
+            console.error("❌ Lỗi khi cập nhật khách hàng:", error);
+            setToast({
+                show: true,
+                message: "Đã xảy ra lỗi khi cập nhật thông tin khách hàng!",
+                type: "error",
+            });
+            setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+        }
+    };
 
 
     // ✅ Validate các trường
@@ -199,23 +281,40 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
                         {customerInfos.map((info) => (
                             <div
                                 key={info.id}
-                                className="border border-gray-200 rounded-lg p-4 flex items-start gap-4 hover:shadow-md transition"
+                                className="border border-gray-200 rounded-lg p-4 flex items-start justify-between hover:shadow-md transition"
                             >
-                                <div className="flex-shrink-0 mt-1">
-                                    <MapPin className="w-5 h-5 text-red-500" />
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0 mt-1">
+                                        <MapPin className="w-5 h-5 text-red-500" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-gray-800">
+                                            {info.fullName} — {info.phoneNumber}
+                                        </h3>
+                                        <p className="text-gray-600 mt-1 text-sm">
+                                            {info.address.street}, {info.address.ward}, {info.address.district},{" "}
+                                            {info.address.province}
+                                        </p>
+                                        <p className="text-gray-500 text-xs mt-1">
+                                            Ngày sinh: {new Date(info.dateOfBirth).toLocaleDateString("vi-VN")}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-medium text-gray-800">
-                                        {info.fullName} — {info.phoneNumber}
-                                    </h3>
-                                    <p className="text-gray-600 mt-1 text-sm">
-                                        {info.address.street}, {info.address.ward}, {info.address.district},{" "}
-                                        {info.address.province}
-                                    </p>
-                                    <p className="text-gray-500 text-xs mt-1">
-                                        Ngày sinh:{" "}
-                                        {new Date(info.dateOfBirth).toLocaleDateString("vi-VN")}
-                                    </p>
+
+                                {/* Nút chỉnh sửa / xóa */}
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => handleEdit(info)}
+                                        className="text-blue-500 hover:text-blue-700"
+                                    >
+                                        <Pencil className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(info.id)}
+                                        className="text-red-500 hover:text-red-700"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -223,23 +322,43 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
                 )}
             </div>
 
-            {/* ✅ Overlay + Form trượt vào */}
-            <AddAddressModal
-                isAdding={isAdding}
-                handleCloseForm={handleCloseForm}
-                formData={formData}
-                handleChange={handleChange}
-                handleSave={handleSave}
-                setFormData={setFormData}
-                errors={errors}
-            />
+            <AnimatePresence>
+                {isAdding && (
+                    <CustomerInfoFormModal
+                        visible={isAdding}
+                        onClose={handleCloseForm}
+                        title="Thêm địa chỉ mới"
+                        formData={formData}
+                        setFormData={setFormData}
+                        errors={errors}
+                        setErrors={setErrors}
+                        onSubmit={handleSave}
+                        mode="add"
+                    />
+                )}
+
+                {isEditing && (
+                    <CustomerInfoFormModal
+                        visible={isEditing}
+                        onClose={handleCloseForm}
+                        title="Chỉnh sửa địa chỉ"
+                        formData={formData}
+                        setFormData={setFormData}
+                        errors={errors}
+                        setErrors={setErrors}
+                        onSubmit={handleUpdate} // hàm update gọi CustomerInfoService.updateCustomerInfo
+                        mode="edit"
+                    />
+                )}
+            </AnimatePresence>
+
 
             {toast.show && (
                 <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500">
                     <div
                         className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${toast.type === "success"
-                                ? "bg-green-500 text-white"
-                                : "bg-red-500 text-white"
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
                             }`}
                     >
                         {toast.type === "success" && (

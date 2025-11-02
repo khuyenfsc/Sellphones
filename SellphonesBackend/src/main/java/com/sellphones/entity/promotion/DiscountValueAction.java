@@ -22,6 +22,22 @@ public class DiscountValueAction implements PromotionAction{
     public void apply(OrderVariant orderVariant, String configJson) {
         JsonNode json = objectMapper.readTree(configJson);
         BigDecimal amount = json.get("amount").decimalValue();
-        orderVariant.setTotalPrice(orderVariant.getTotalPrice().subtract(amount.multiply(new BigDecimal(orderVariant.getQuantity()))));
+
+        BigDecimal quantityBD = BigDecimal.valueOf(orderVariant.getQuantity());
+        BigDecimal totalDiscount = amount.multiply(quantityBD);
+
+        BigDecimal currentTotal = orderVariant.getTotalPrice() != null
+                ? orderVariant.getTotalPrice()
+                : BigDecimal.ZERO;
+        BigDecimal newTotal = currentTotal.subtract(totalDiscount);
+
+        if (newTotal.compareTo(BigDecimal.ZERO) < 0) {
+            newTotal = BigDecimal.ZERO;
+        }
+
+        orderVariant.setDiscountAmount(
+                orderVariant.getDiscountAmount().add(totalDiscount)
+        );
+        orderVariant.setTotalPrice(newTotal);
     }
 }

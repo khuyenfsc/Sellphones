@@ -1,4 +1,4 @@
-package com.sellphones.dto.order;
+package com.sellphones.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderProductVariantListResponse {
+public class Order_ProductVariantListResponse {
 
     private String productVariantName;
 
-    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     private String variantImage;
 

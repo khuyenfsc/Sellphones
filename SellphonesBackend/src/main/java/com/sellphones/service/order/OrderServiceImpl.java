@@ -2,6 +2,7 @@ package com.sellphones.service.order;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.*;
+import com.sellphones.dto.product.OrderProductRequest;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.customer.CustomerInfo;
@@ -25,6 +26,7 @@ import com.sellphones.repository.user.UserRepository;
 import com.sellphones.service.payment.PaymentService;
 import com.sellphones.service.promotion.ProductPromotionService;
 import com.sellphones.specification.OrderSpecificationBuilder;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +64,19 @@ public class OrderServiceImpl implements OrderService{
     private final PaymentService paymentService;
 
     private final ModelMapper modelMapper;
+
+    private final String productVariantFolderName = "product_variant_images";
+
+    private final String giftProductThumbnailFolderName = "gift_products";
+
+    @Override
+    public Map<String, Object> getTotalOrders() {
+        Long total = orderRepository.countByUser_Email(SecurityUtils.extractNameFromAuthentication());
+        Map<String, Object> resultData = new HashMap<>();
+        resultData.put("total", total);
+
+        return resultData;
+    }
 
     @Override
     @Transactional
@@ -108,19 +123,20 @@ public class OrderServiceImpl implements OrderService{
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
         List<Order> orders = orderPage.getContent();
         List<OrderResponse> response = orders.stream()
-                .map(o -> modelMapper.map(o, OrderResponse.class))
+                .map(o -> convertOrderToResponse(o, OrderResponse.class))
                 .toList();
 
         return PageResponse.<OrderResponse>builder()
                 .result(response)
                 .total(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
                 .build();
     }
 
     @Override
     public OrderDetailResponse getOrderDetailsById(Long id) {
         Order order = orderRepository.findByUser_EmailAndId(SecurityUtils.extractNameFromAuthentication(), id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        return modelMapper.map(order, OrderDetailResponse.class);
+        return convertOrderToResponse(order, OrderDetailResponse.class);
     }
 
     @Override
@@ -134,6 +150,24 @@ public class OrderServiceImpl implements OrderService{
         } else {
             throw new AppException(ErrorCode.CANCEL_ORDER_FAILED);
         }
+    }
+
+    private <T> T convertOrderToResponse(Order o, Class<T> clazz){
+        List<OrderVariant> orderVariants = o.getOrderVariants();
+        for(OrderVariant ov : orderVariants){
+            ProductVariant variant = ov.getProductVariant();
+
+            for(GiftProduct gp:variant.getGiftProducts()){
+                gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), giftProductThumbnailFolderName));
+            }
+
+            variant.setVariantImage(
+                    ImageNameToImageUrlConverter.convert(variant.getVariantImage(),
+                            productVariantFolderName)
+            );
+        }
+
+        return modelMapper.map(o, clazz);
     }
 
     private List<OrderVariant> makeOrderVariants(List<OrderProductRequest> orderProducts) {

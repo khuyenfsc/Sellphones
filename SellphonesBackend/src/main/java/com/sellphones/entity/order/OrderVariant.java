@@ -41,6 +41,9 @@ public class OrderVariant extends BaseEntity<Long> {
     @JoinColumn(name = "warranty_id")
     private Warranty warranty;
 
+    @Column(name = "discount_amount")
+    private BigDecimal discountAmount;
+
     @OneToMany(mappedBy = "orderVariant", cascade = CascadeType.PERSIST)
     private List<OrderVariantPromotion> promotions;
 

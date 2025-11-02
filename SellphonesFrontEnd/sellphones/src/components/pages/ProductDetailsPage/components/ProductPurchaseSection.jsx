@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Check, Gift, ShoppingCart } from "lucide-react";
 import ProductService from "../../../../service/ProductService";
 
-const ProductPurchaseSection = ({ product, onVariantChange }) => {
+const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) => {
     const [disabledValues, setDisabledValues] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState({});
     const [currentVariant, setCurrentVariant] = useState(null);
@@ -14,10 +14,13 @@ const ProductPurchaseSection = ({ product, onVariantChange }) => {
 
     // --- 1️⃣ Khi tải trang: tự chọn theo thumbnailProduct
     useEffect(() => {
-        if (product?.thumbnailProduct?.id) {
-            fetchVariantDetail(product.thumbnailProduct.id);
+        const variantIdToFetch = initialVariantId || product?.thumbnailProduct?.id;
+
+        if (!currentVariant && variantIdToFetch) {
+            fetchVariantDetail(variantIdToFetch);
         }
-    }, []);
+    }, [initialVariantId, product, currentVariant]);
+
 
     useEffect(() => {
         // ⚠️ Nếu đang reset → bỏ qua logic fetch
@@ -91,16 +94,25 @@ const ProductPurchaseSection = ({ product, onVariantChange }) => {
             return;
         }
 
-        const selectedStr = Object.values(selectedOptions).join("-");
+        // ✅ Lấy thứ tự attribute chuẩn
+        const orderedAttributes = product.variantAttributes.map(v => v.attribute.name);
+
+        // ✅ Tạo chuỗi lựa chọn đúng thứ tự
+        const selectedStr = orderedAttributes
+            .map(attrName => selectedOptions[attrName])
+            .filter(Boolean) // loại bỏ undefined
+            .join("-");
+
+        // ✅ So khớp đúng variant
         const matchedVariant = product.productVariants.find(
-            (v) => v.variantAttributes === selectedStr
+            v => v.variantAttributes === selectedStr
         );
 
         if (matchedVariant) {
             if (matchedVariant.id !== currentVariant?.id) {
                 fetchVariantDetail(matchedVariant.id);
                 setCurrentVariant(matchedVariant);
-                onVariantChange(matchedVariant)
+                onVariantChange(matchedVariant);
             } else {
                 console.log("Đã chọn đúng variant hiện tại, không cần fetch lại.");
             }
@@ -108,6 +120,7 @@ const ProductPurchaseSection = ({ product, onVariantChange }) => {
             alert("Không tồn tại biến thể phù hợp với lựa chọn này!");
         }
     };
+
 
 
 

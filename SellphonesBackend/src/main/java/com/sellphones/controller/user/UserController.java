@@ -56,7 +56,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/change-password")
+    @PutMapping("/change-password")
     public ResponseEntity<CommonResponse> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest){
         userService.changePassword(changePasswordRequest);
         Map<String, Object> map = new HashMap<>();

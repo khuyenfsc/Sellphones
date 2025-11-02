@@ -9,12 +9,15 @@ import UserDashboard from "./components/pages/UserDashboard/UserDashboard";
 import AccountInfo from "./components/pages/UserDashboard/components/AccountInfo";
 import OrderHistory from "./components/pages/UserDashboard/components/OrderHistory";
 import LogoutConfirm from "./components/pages/UserDashboard/components/LogoutConfirm";
+import CartPage from "./components/pages/CartPage/CartPage";
+import ProtectedRoute from "./components/Route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
-    <Router>
-      <AuthProvider>
+    // ✅ Bọc AuthProvider ngoài Router
+    <AuthProvider>
+      <Router>
         <MainLayout>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -23,16 +26,26 @@ export default function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
 
-            {/* ✅ Nested routes */}
-            <Route path="/dashboard" element={<UserDashboard />}>
+            {/* ✅ Nested routes (Protected) */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<AccountInfo />} />
               <Route path="account/info" element={<AccountInfo />} />
               <Route path="account/history" element={<OrderHistory />} />
               <Route path="account/logout" element={<LogoutConfirm />} />
             </Route>
+
+            <Route path="/cart" element={<CartPage />} />
+
           </Routes>
         </MainLayout>
-      </AuthProvider>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }

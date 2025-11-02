@@ -1192,26 +1192,28 @@ VALUES (2, 'VNPay', 'Thanh toán trực tuyến thông qua cổng VNPay', 'VNPAY
 
 INSERT INTO customer_order (code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
 VALUES
-('SPS1', 1, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
-('SPS2', 1, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',  2, 'COMPLETED', 2),
-('SPS3', 1, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
-('SPS4', 1, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
-('SPS5', 1, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'FAILED',    5),
-('SPS6', 1, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
-('SPS7', 1, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
-('SPS8', 1, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
+('SPS1', 5, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
+('SPS2', 5, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',  2, 'COMPLETED', 2),
+('SPS3', 5, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
+('SPS4', 5, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
+('SPS5', 5, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'PENDING',    5),
+('SPS6', 5, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
+('SPS7', 5, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
+('SPS8', 5, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
 
-INSERT INTO order_variant (order_id, product_variant_id, quantity, added_at, total_price, warranty_id)
+INSERT INTO order_variant
+(order_id, product_variant_id, quantity, added_at, total_price, warranty_id, discount_amount)
 VALUES
-(1, 1, 2, '2025-09-01 10:05:00', 1000000, 1),
-(1, 2, 1, '2025-09-01 10:07:00', 500000, 2),
-(2, 3, 3, '2025-09-02 11:35:00', 1200000, 3),
-(3, 4, 5, '2025-09-03 14:20:00', 450000, 1),
-(4, 5, 2, '2025-09-04 09:50:00', 7800000, 4),
-(5, 6, 1, '2025-09-05 16:10:00', 2300000, 5),
-(6, 7, 2, '2025-09-06 19:25:00', 990000, 2),
-(7, 8, 10, '2025-09-07 12:50:00', 11000000, 3),
-(8, 9, 1, '2025-09-08 08:35:00', 560000, 4);
+(1, 1, 2, '2025-09-01 10:05:00', 1000000, 1, 50000),     -- giảm 5%
+(1, 2, 1, '2025-09-01 10:07:00', 500000, 2, 25000),      -- giảm 5%
+(2, 3, 3, '2025-09-02 11:35:00', 1200000, 3, 100000),    -- giảm 8.3%
+(3, 4, 5, '2025-09-03 14:20:00', 450000, 1, 30000),      -- giảm 6.6%
+(4, 5, 2, '2025-09-04 09:50:00', 7800000, 4, 700000),    -- giảm ~9%
+(5, 6, 1, '2025-09-05 16:10:00', 2300000, 5, 200000),    -- giảm ~8.7%
+(6, 7, 2, '2025-09-06 19:25:00', 990000, 2, 90000),      -- giảm 9%
+(7, 8, 10, '2025-09-07 12:50:00', 11000000, 3, 1000000), -- giảm ~9%
+(8, 9, 1, '2025-09-08 08:35:00', 560000, 4, 40000);      -- giảm ~7%
+
 
 INSERT INTO order_variant_promotion
 (name, description, promotion_type, config, promotion_condition, start_date, end_date, order_variant_id)
