@@ -32,7 +32,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @PostMapping("/order")
+    @PostMapping()
     public ResponseEntity<CommonResponse> order(@RequestBody OrderRequest orderRequest){
         orderService.order(orderRequest);
         Map<String, Object> map = new HashMap<>();

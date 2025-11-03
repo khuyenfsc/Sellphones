@@ -20,9 +20,9 @@ import java.util.List;
 @Table(name = "order_variant")
 public class OrderVariant extends BaseEntity<Long> {
 
-//    @ManyToOne
-//    @JoinColumn(name = "order_id")
-//    private Order order;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_variant_id")

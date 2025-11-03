@@ -88,7 +88,7 @@ const CustomerInfoService = {
                     const refreshResult = await AuthService.refreshToken(); // 👈 gọi sang AuthService
                     if (refreshResult.success) {
                         // Retry lại với token mới
-                        const retryRes = await AxiosClient.post("/customers", customerData, {
+                        const retryRes = await AxiosClient.post("/customers/create-customer-info", customerData, {
                             headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
                             withCredentials: true,
                         });
@@ -186,6 +186,43 @@ const CustomerInfoService = {
                 message: "Không thể cập nhật thông tin khách hàng. Vui lòng thử lại sau!",
                 data: null,
             };
+        }
+    },
+
+    async deleteCustomerInfo(customerInfoId) {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return { success: false, message: "Chưa đăng nhập" };
+
+            const res = await AxiosClient.delete(
+                `http://localhost:8080/api/v1/customers/delete-customer-info/${customerInfoId}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            const result = res.data?.result || "Deleted customer info successfully";
+            return { success: true, result };
+
+        } catch (err) {
+            // ✅ Nếu token hết hạn → thử refresh token
+            if (err.response?.status === 401) {
+                const refreshResult = await UserService.refreshToken();
+                if (refreshResult.success) {
+                    const retryRes = await AxiosClient.delete(
+                        `http://localhost:8080/api/v1/customers/delete-customer-info/${customerInfoId}`,
+                        {
+                            headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
+                        }
+                    );
+
+                    const result = retryRes.data?.result || "Deleted customer info successfully";
+                    return { success: true, result };
+                }
+            }
+
+            console.error("❌ Lỗi xóa Customer Info:", err);
+            return { success: false, message: "Không thể xóa Customer Info" };
         }
     },
 

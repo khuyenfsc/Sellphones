@@ -1,10 +1,12 @@
 // src/components/CustomerAddressList.jsx
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import { Plus, MapPin, Pencil, Trash2 } from "lucide-react";
 import AddAddressModal from "./AddAddressModel";
 import CustomerInfoFormModal from "./CustomerInfoFormModal";
 import { motion, AnimatePresence } from "framer-motion";
 import CustomerInfoService from "../../../../service/CustomerInfoService"
+
 
 export default function CustomerAddressList({ loading, customerInfos, setCustomerInfos }) {
     const [isAdding, setIsAdding] = useState(false);
@@ -31,6 +33,44 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
 
     // ✅ Mở form
     const handleAddAddress = () => setIsAdding(true);
+
+    const handleDelete = async (customerInfoId) => {
+        // 🧠 Hiện popup xác nhận
+        const confirmResult = await Swal.fire({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Hành động này không thể hoàn tác!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy",
+        });
+
+        if (!confirmResult.isConfirmed) return; // ❌ Người dùng bấm "Hủy"
+
+        // 🔄 Gọi API xóa
+        const response = await CustomerInfoService.deleteCustomerInfo(customerInfoId);
+
+        if (response.success) {
+            // ✅ Xóa thành công → cập nhật lại danh sách
+            setCustomerInfos((prev) => prev.filter(info => info.id !== customerInfoId));
+
+            await Swal.fire({
+                icon: "success",
+                title: "Đã xóa!",
+                text: "Customer Info đã được xóa thành công.",
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        } else {
+            await Swal.fire({
+                icon: "error",
+                title: "Lỗi!",
+                text: response.message || "Không thể xóa Customer Info.",
+            });
+        }
+    };
 
     const handleCloseForm = () => {
         setIsAdding(false);

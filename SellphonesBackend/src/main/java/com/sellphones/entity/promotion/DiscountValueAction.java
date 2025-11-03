@@ -35,8 +35,9 @@ public class DiscountValueAction implements PromotionAction{
             newTotal = BigDecimal.ZERO;
         }
 
+        BigDecimal discountAmount = orderVariant.getDiscountAmount() != null ? orderVariant.getDiscountAmount() : BigDecimal.valueOf(0);
         orderVariant.setDiscountAmount(
-                orderVariant.getDiscountAmount().add(totalDiscount)
+                discountAmount.add(totalDiscount)
         );
         orderVariant.setTotalPrice(newTotal);
     }

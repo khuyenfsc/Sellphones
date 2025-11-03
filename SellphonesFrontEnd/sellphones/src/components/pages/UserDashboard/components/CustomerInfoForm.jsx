@@ -40,7 +40,7 @@ const CustomerInfoForm = ({
     };
 
     return (
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4 text-black" onSubmit={handleSubmit}>
             <div>
                 <label className="block text-gray-700 mb-1">Họ và tên</label>
                 <input
@@ -120,7 +120,7 @@ const CustomerInfoForm = ({
                     selected={formData.dateOfBirth}
                     onChange={(date) => setFormData((prev) => ({ ...prev, dateOfBirth: date }))}
                     dateFormat="dd/MM/yyyy"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
                 />
             </div>
 

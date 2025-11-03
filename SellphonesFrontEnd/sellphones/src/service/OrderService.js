@@ -112,7 +112,86 @@ const OrderService = {
             console.error("❌ Lỗi lấy chi tiết đơn hàng:", err);
             return { success: false, message: "Không thể lấy chi tiết đơn hàng" };
         }
-    }
+    },
+
+    async createOrder(orderData) {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return { success: false, message: "Chưa đăng nhập" };
+            if (!orderData || !orderData.orderProducts?.length) {
+                return { success: false, message: "Thiếu thông tin đơn hàng" };
+            }
+
+            // Gọi API tạo đơn hàng
+            const res = await AxiosClient.post(`/orders`, orderData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const result = res.data?.result || {};
+            return { success: true, result };
+
+        } catch (err) {
+            // Nếu token hết hạn → thử refresh token
+            if (err.response?.status === 401) {
+                const refreshResult = await UserService.refreshToken();
+                if (refreshResult.success) {
+                    const retryRes = await AxiosClient.post(`/orders`, orderData, {
+                        headers: {
+                            Authorization: `Bearer ${refreshResult.accessToken}`,
+                        },
+                    });
+                    const result = retryRes.data?.result || {};
+                    return { success: true, result };
+                }
+            }
+
+            console.error("❌ Lỗi tạo đơn hàng:", err);
+            return { success: false, message: "Không thể tạo đơn hàng" };
+        }
+    },
+
+    async checkUserPurchasedVariant(productVariantId) {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return { success: false, message: "Chưa đăng nhập" };
+            if (!productVariantId) return { success: false, message: "Thiếu productVariantId" };
+
+            // Gọi API kiểm tra - truyền variantId trong URL
+            const res = await AxiosClient.get(
+                `/order-variants/${productVariantId}/purchased`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            const result = res.data?.result ?? false;
+            return { success: true, result };
+
+        } catch (err) {
+            // Nếu token hết hạn → thử refresh token
+            if (err.response?.status === 401) {
+                const refreshResult = await UserService.refreshToken();
+                if (refreshResult.success) {
+                    const retryRes = await AxiosClient.get(
+                        `/order-variants/${productVariantId}/purchased`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${refreshResult.accessToken}`,
+                            },
+                        }
+                    );
+                    const result = retryRes.data?.result ?? false;
+                    return { success: true, result };
+                }
+            }
+
+            console.error("❌ Lỗi kiểm tra lịch sử mua hàng:", err);
+            return { success: false, message: "Không thể kiểm tra lịch sử mua hàng" };
+        }
+    },
+
+
+
 
 
 }

@@ -2,24 +2,21 @@ package com.sellphones.service.cart;
 
 import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartResponse;
-import com.sellphones.dto.cart.DeletedItemRequest;
 import com.sellphones.dto.cart.ItemQuantityRequest;
 import com.sellphones.entity.cart.Cart;
 import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.product.ProductVariant;
+import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.cart.CartRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,11 +34,27 @@ public class CartServiceImpl implements CartService{
 
     private final CartItemRepository cartItemRepository;
 
+    private final String variantImageFolderName = "product_variant_images";
+
+    private final String giftProductFolderName = "gift_products";
+
     private final static Long DEFAULT_QUANTITY = 1L;
 
     @Override
     public CartResponse getCart() {
         Cart cart = getCurrentUserCart();
+        List<CartItem> cartItems = cart.getCartItems();
+
+        for(CartItem ci : cartItems){
+            ProductVariant variant = ci.getProductVariant();
+            variant.setVariantImage(ImageNameToImageUrlConverter.convert(variant.getVariantImage(), variantImageFolderName));
+
+            List<GiftProduct> giftProducts = variant.getGiftProducts();
+            for(GiftProduct gp : giftProducts){
+                gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), giftProductFolderName));
+            }
+        }
+
         return modelMapper.map(cart, CartResponse.class);
     }
 
@@ -54,14 +67,21 @@ public class CartServiceImpl implements CartService{
             throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
         }
 
-        CartItem existingItem = cartItemRepository.findByProductVariantAndCart_User_Email(productVariant, SecurityUtils.extractNameFromAuthentication())
-                .orElse(null);
-        if(existingItem != null){
-            throw new AppException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
-        }
+//        CartItem existingItem = cartItemRepository.findByProductVariantAndCart_User_Email(productVariant, SecurityUtils.extractNameFromAuthentication())
+//                .orElse(null);
+//        if(existingItem != null){
+//            throw new AppException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
+//        }
 
         Cart cart = getCurrentUserCart();
-        cartItemRepository.save(new CartItem(cart, productVariant, DEFAULT_QUANTITY, LocalDateTime.now()));
+        CartItem newItem = CartItem.builder()
+                        .cart(cart)
+                        .productVariant(productVariant)
+                        .quantity(DEFAULT_QUANTITY)
+                        .addedAt(LocalDateTime.now())
+                        .createdAt(LocalDateTime.now())
+                        .build();
+        cart.getCartItems().add(newItem);
     }
 
     @Override
@@ -73,8 +93,8 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public void deleteCartItem(DeletedItemRequest deletedItemRequest) {
-        CartItem cartItem = cartItemRepository.findByIdAndCart_User_Email(deletedItemRequest.getCartItemId(), SecurityUtils.extractNameFromAuthentication())
+    public void deleteCartItem(Long itemId) {
+        CartItem cartItem = cartItemRepository.findByIdAndCart_User_Email(itemId, SecurityUtils.extractNameFromAuthentication())
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND));
         cartItemRepository.delete(cartItem);
     }

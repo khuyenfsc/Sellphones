@@ -93,17 +93,18 @@ public class OrderServiceImpl implements OrderService{
             customerInfo = customerInfoRepository.findById(request.getCustomerInfoId()).orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
         }
 
-        List<OrderVariant> orderVariants = makeOrderVariants(orderProducts);
-
         Order order = Order.builder()
                 .user(user)
-                .orderVariants(orderVariants)
                 .orderStatus(OrderStatus.PENDING)
                 .paymentMethod(paymentMethod)
                 .paymentStatus(PaymentStatus.PENDING)
                 .orderedAt(LocalDateTime.now())
                 .customerInfo(customerInfo)
                 .build();
+
+        List<OrderVariant> orderVariants = makeOrderVariants(orderProducts, order);
+        order.setOrderVariants(orderVariants);
+
         calculateTotalPriceForOrder(order);
 
         paymentService.pay(order);
@@ -170,24 +171,15 @@ public class OrderServiceImpl implements OrderService{
         return modelMapper.map(o, clazz);
     }
 
-    private List<OrderVariant> makeOrderVariants(List<OrderProductRequest> orderProducts) {
+    private List<OrderVariant> makeOrderVariants(List<OrderProductRequest> orderProducts, Order order) {
         List<OrderVariant> orderVariants = new ArrayList<>();
-
-        Set<Long> allPromotionIds = orderProducts.stream()
-                .flatMap(op -> op.getPromotionIds().stream())
-                .collect(Collectors.toSet());
-        List<ProductPromotion> promotions = productPromotionRepository.findByIdIn(allPromotionIds);
-        Map<Long, ProductPromotion> promotionMap = promotions.stream().collect(Collectors.toMap(BaseEntity::getId, p -> p));
 
         List<Long> cartItemIds = orderProducts.stream().map(OrderProductRequest::getCartItemId).toList();
         List<CartItem> cartItems = cartItemRepository.findByCart_User_EmailAndIdIn(SecurityUtils.extractNameFromAuthentication(), cartItemIds);
-        Map<Long, List<Long>> promotionIdMap = orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getPromotionIds));
         Map<Long, Long> warrantyIdMap =  orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
 
         for(CartItem cartItem : cartItems){
-            List<Long> promotionIds = promotionIdMap.get(cartItem.getId());
-            List<ProductPromotion> cartItemPromotions = promotionIds.stream().map(promotionMap::get).filter(Objects::nonNull).toList();
-            ProductVariant productVariant = cartItem.getProductVariant();
+         ProductVariant productVariant = cartItem.getProductVariant();
             if(productVariant.getStock() < cartItem.getQuantity()){
                 throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
             }
@@ -195,14 +187,15 @@ public class OrderServiceImpl implements OrderService{
             productVariant.setStock(productVariant.getStock() - cartItem.getQuantity());
 
             OrderVariant orderVariant = OrderVariant.builder()
+                    .order(order)
                     .productVariant(productVariant)
                     .quantity(cartItem.getQuantity())
                     .addedAt(LocalDateTime.now())
-                    .totalPrice(calculateTotalPriceForOrderVariant(cartItem, warranty))
+                    .totalPrice(productVariant.getCurrentPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                     .warranty(warranty)
                     .build();
 
-            List<OrderVariantPromotion> orderVariantPromotions = cartItemPromotions.stream()
+            List<OrderVariantPromotion> orderVariantPromotions = cartItem.getProductVariant().getPromotions().stream()
                     .map(ovp -> convertToOrderVariantPromotion(ovp, orderVariant))
                     .toList();
             orderVariant.setPromotions(orderVariantPromotions);
@@ -211,16 +204,20 @@ public class OrderServiceImpl implements OrderService{
         return orderVariants;
     }
 
-    private BigDecimal calculateTotalPriceForOrderVariant(CartItem cartItem, Warranty warranty){
-        return cartItem.getProductVariant().getCurrentPrice()
-                .multiply(new BigDecimal(cartItem.getQuantity()))
-                .add(warranty.getPrice().multiply(new BigDecimal(cartItem.getQuantity()))
-        );
-    }
-
     private void calculateTotalPriceForOrder(Order order){
         List<OrderVariant> orderVariants = order.getOrderVariants();
-        orderVariants.forEach(ov -> productPromotionService.applyPromotions(ov, ov.getPromotions(), order));
+        for (OrderVariant ov : orderVariants) {
+            productPromotionService.applyPromotions(ov, ov.getPromotions(), order);
+
+            BigDecimal basePrice = Optional.ofNullable(ov.getTotalPrice()).orElse(BigDecimal.ZERO);
+            BigDecimal warrantyPrice = Optional.ofNullable(ov.getWarranty())
+                    .map(Warranty::getPrice)
+                    .orElse(BigDecimal.ZERO)
+                    .multiply(BigDecimal.valueOf(ov.getQuantity()));
+
+            ov.setTotalPrice(basePrice.add(warrantyPrice));
+        }
+
         order.setTotalPrice(orderVariants.stream()
                 .map(OrderVariant::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)

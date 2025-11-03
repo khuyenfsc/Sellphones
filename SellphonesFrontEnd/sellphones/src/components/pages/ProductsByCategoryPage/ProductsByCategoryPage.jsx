@@ -125,8 +125,7 @@ const ProductsByCategoryPage = () => {
                 <a href="/" className="hover:underline text-blue-600">
                   Trang chủ
                 </a>
-              </span>              
-              <span className="text-gray-400">/</span>
+              </span>              <span className="text-gray-400">/</span>
               <span className="text-sm font-medium text-black bg-white px-1 rounded">
                 {categoryName}
               </span>

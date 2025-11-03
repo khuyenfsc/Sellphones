@@ -6,6 +6,7 @@ import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 import com.sellphones.elasticsearch.ProductDocument;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
+import com.sellphones.entity.product.ProductVariantStatus;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -92,6 +93,12 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDetailsResponse getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow( () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        List<ProductVariant> variants = product.getProductVariants();
+        product.setProductVariants(
+                variants.stream().filter(v -> v.getStatus() == ProductVariantStatus.ACTIVE).toList()
+        );
+
         List<String> images = new ArrayList<>();
         for(String image : product.getImages()){
             images.add(ImageNameToImageUrlConverter.convert(image, productImagesFolder));

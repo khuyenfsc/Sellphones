@@ -143,25 +143,19 @@ const OrderDetails = ({ order }) => {
                 <div className="bg-gray-50 p-5 rounded-lg space-y-3">
                     <p className="font-semibold text-lg border-b pb-2">Thanh toán</p>
 
-                    {/* Tổng số tiền trước giảm giá */}
-                    <div className="flex justify-between">
-                        <span className="font-medium">Tổng số tiền:</span>
-                        <span>{formatCurrency(order.totalPrice)}</span>
-                    </div>
-
-                    {/* Giảm giá (nếu có) */}
+                    {/* Số tiền đã giảm (nếu có) */}
                     {totalDiscount > 0 && (
-                        <div className="flex justify-between text-green-700">
-                            <span className="font-medium">Giảm giá:</span>
+                        <div className="flex justify-between text-gray-600 text-sm mt-1">
+                            <span>Đã giảm:</span>
                             <span>-{formatCurrency(totalDiscount)}</span>
                         </div>
                     )}
 
-                    {/* Tổng tiền cần thanh toán */}
-                    <div className="flex justify-between">
+                    {/* Tổng số tiền cần thanh toán */}
+                    <div className="flex justify-between mt-2">
                         <span className="font-medium">Tổng số tiền cần thanh toán:</span>
                         <span className="text-red-600 font-semibold">
-                            {formatCurrency(order.totalPaid || (order.totalPrice - totalDiscount))}
+                            {formatCurrency(order.totalPrice)}
                         </span>
                     </div>
 
@@ -169,23 +163,22 @@ const OrderDetails = ({ order }) => {
                     <div className="flex justify-between items-center">
                         <span className="font-medium">Trạng thái thanh toán:</span>
                         <span
-                            className={`font-semibold ${
-                                order.paymentStatus === "COMPLETED"
+                            className={`font-semibold ${order.paymentStatus === "COMPLETED"
                                     ? "text-green-600"
                                     : order.paymentStatus === "PENDING"
-                                    ? "text-yellow-600"
-                                    : order.paymentStatus === "REFUNDED"
-                                    ? "text-gray-500"
-                                    : "text-gray-700"
-                            }`}
+                                        ? "text-yellow-600"
+                                        : order.paymentStatus === "REFUNDED"
+                                            ? "text-gray-500"
+                                            : "text-gray-700"
+                                }`}
                         >
                             {order.paymentStatus === "COMPLETED"
                                 ? "Đã thanh toán"
                                 : order.paymentStatus === "PENDING"
-                                ? "Chờ thanh toán"
-                                : order.paymentStatus === "REFUNDED"
-                                ? "Đã hoàn tiền"
-                                : "Không xác định"}
+                                    ? "Chờ thanh toán"
+                                    : order.paymentStatus === "REFUNDED"
+                                        ? "Đã hoàn tiền"
+                                        : "Không xác định"}
                         </span>
                     </div>
                 </div>

@@ -7,11 +7,7 @@ const CategoryService = {
       const res = await AxiosClient.get("/categories");
       const result = res?.data?.result ?? [];
       // Có thể transform thêm nếu cần
-      return result.map(cat => ({
-        ...cat,
-        icon: cat.icon || null,
-        categoryOptions: cat.categoryOptions || [],
-      }));
+      return result;
     } catch (error) {
       console.error("❌ Lỗi khi tải danh mục:", error);
       return []; // fallback để component không crash

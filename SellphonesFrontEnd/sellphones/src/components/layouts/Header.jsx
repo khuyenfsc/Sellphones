@@ -129,10 +129,13 @@ const Header = () => {
           {/* Cart & Login / User */}
           <div className="flex items-center gap-4 ml-auto">
             {/* Nút giỏ hàng */}
-            <button className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300">
+            <a
+              href="/cart"
+              className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md hover:bg-indigo-600 transition-colors duration-300"
+            >
               <ShoppingCart size={20} />
               <span className="text-sm font-medium">Giỏ hàng</span>
-            </button>
+            </a>
 
             {loadingUser ? (
               <div className="flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg border border-white/30 backdrop-blur-md animate-pulse">

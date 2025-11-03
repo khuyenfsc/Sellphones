@@ -10,6 +10,7 @@ import AccountInfo from "./components/pages/UserDashboard/components/AccountInfo
 import OrderHistory from "./components/pages/UserDashboard/components/OrderHistory";
 import LogoutConfirm from "./components/pages/UserDashboard/components/LogoutConfirm";
 import CartPage from "./components/pages/CartPage/CartPage";
+import CheckoutPage from "./components/pages/CartPage/components/CheckoutPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -42,6 +43,8 @@ export default function App() {
             </Route>
 
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+
 
           </Routes>
         </MainLayout>

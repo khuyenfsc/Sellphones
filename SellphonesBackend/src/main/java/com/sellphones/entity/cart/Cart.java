@@ -25,6 +25,7 @@ public class Cart extends BaseEntity<Long> {
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OrderBy("id DESC")
     private List<CartItem> cartItems = new ArrayList<>();
 
     @Column(name = "updated_at")

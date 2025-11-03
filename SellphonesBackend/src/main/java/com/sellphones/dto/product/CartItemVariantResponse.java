@@ -1,4 +1,4 @@
-package com.sellphones.dto.cart;
+package com.sellphones.dto.product;
 
 import com.sellphones.dto.promotion.GiftProductListResponse;
 import com.sellphones.dto.promotion.ProductPromotionResponse;
@@ -19,9 +19,15 @@ public class CartItemVariantResponse {
 
     private String productVariantName;
 
-    private BigDecimal price;
+    private BigDecimal rootPrice;
+
+    private BigDecimal currentPrice;
 
     private String variantImage;
+
+    private Long stock;
+
+    private Cart_ProductResponse product;
 
     private List<ProductPromotionResponse> promotions;
 

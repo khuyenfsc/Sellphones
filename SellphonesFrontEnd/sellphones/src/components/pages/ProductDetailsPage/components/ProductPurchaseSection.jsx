@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Check, Gift, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ProductService from "../../../../service/ProductService";
+import CartService from "../../../../service/CartService";
 
 const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) => {
     const [disabledValues, setDisabledValues] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState({});
     const [currentVariant, setCurrentVariant] = useState(null);
+    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [loading, setLoading] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const skipEffectRef = useRef(false); // 🧠 flag để tránh loop
     const isResettingRef = useRef(false);
+    const navigate = useNavigate(); // hook để chuyển hướng
     const attributeOrder = product?.variantAttributes?.map(a => a.attribute.name) || [];
 
 
@@ -51,6 +56,34 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
         setDisabledValues(toDisable);
     }, [selectedOptions]);
 
+  
+
+
+    const handleAddToCart = async () => {
+        if (isAdding) return;
+        setIsAdding(true);
+
+        const result = await CartService.addCartItem(currentVariant?.id);
+        setIsAdding(false);
+
+        if (result.success) {
+            // Hiển thị toast
+            setToast({ show: true, message: result.result, type: "success" });
+
+            // Sau 1.5s, ẩn toast và chuyển hướng
+            setTimeout(() => {
+                setToast({ show: false, message: "", type: "success" });
+                navigate("/cart");
+            }, 1500);
+        } else {
+            setToast({ show: true, message: result.message || "Thêm sản phẩm thất bại", type: "error" });
+
+            // Ẩn toast sau 1.5s
+            setTimeout(() => {
+                setToast({ show: false, message: "", type: "error" });
+            }, 1500);
+        }
+    };
 
     const fetchVariantDetail = async (variantId) => {
         try {
@@ -67,7 +100,7 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
             res.attributeValues.forEach((att) => {
                 selected[att.attribute.name] = att.strVal;
             });
-            console.log(selected);
+            // console.log(selected);
             setSelectedOptions(selected);
         } catch (error) {
             console.error("❌ Lỗi khi tải variant:", error);
@@ -230,10 +263,11 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
                 {/* Add to Cart */}
                 <button
                     className="w-full flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded-lg transition duration-200 mb-6"
-                    onClick={() => alert("Đã thêm vào giỏ hàng!")}
+                    onClick={handleAddToCart}
+                    disabled={isAdding}
                 >
                     <ShoppingCart className="w-5 h-5" />
-                    Thêm vào giỏ hàng +
+                    {isAdding ? "Đang thêm..." : "Thêm vào giỏ hàng +"}
                 </button>
 
                 {/* Gift / Promotional Products Section */}
@@ -326,6 +360,32 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
                 )}
 
             </div>
+
+            {/* Toast */}
+            {toast.show && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500">
+                    <div
+                        className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${
+                            toast.type === "success"
+                                ? "bg-green-500 text-white"
+                                : "bg-red-500 text-white"
+                        }`}
+                    >
+                        {toast.type === "success" && (
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        )}
+                        <span>{toast.message}</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

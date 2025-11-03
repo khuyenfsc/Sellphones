@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Star, StarHalf, ChevronLeft, ChevronRight, X } from "lucide-react";
 import ReviewService from "../../../../service/ReviewService";
+import OrderService from "../../../../service/OrderService";
+import ReviewModal from "./ReviewModal";
 
 const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) => {
     const [total, setTotal] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [reviews, setReviews] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImages, setCurrentImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [checking, setChecking] = useState(true);
+    const [purchased, setPurchased] = useState(false);
     const totalReviews = Object.values(reviewStats).reduce((sum, count) => sum + count, 0);
     const averageRating = totalReviews === 0
         ? 0
@@ -37,6 +42,12 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
     const starsToShow = fullStars + (decimal >= 0.75 ? 1 : 0);
     const emptyStars = 5 - starsToShow - (hasHalfStar ? 1 : 0);
 
+    const handleReviewSuccess = (newReview) => {
+        console.log(reviews);
+        // ✅ Cập nhật ngay danh sách review (không cần reload)
+        setReviews(prev => [newReview, ...prev]);
+    };
+
     // Khi click vào filter
     const handleFilterClick = (filter) => {
         setFilters((prev) => {
@@ -62,7 +73,7 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
         });
 
         if (data) {
-            setReviews(data);
+            setReviews(data.result);
             setTotal(data.total || 0);
             setTotalPages(data.totalPages || 1);
         }
@@ -88,6 +99,20 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
         // console.log("🔄 Fetch reviews for page:", currentPage);
         fetchReviews()
     }, [currentPage]);
+
+    useEffect(() => {
+        const checkPurchase = async () => {
+            if (!productVariantId) return;
+            setChecking(true);
+            const res = await OrderService.checkUserPurchasedVariant(productVariantId);
+            setChecking(false);
+            if (res.success) {
+                console.log(res.result)
+                setPurchased(res.result);
+            }
+        };
+        checkPurchase();
+    }, [productVariantId]);
 
 
     return (
@@ -120,8 +145,19 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
                         ))}
                     </div>
                     <p className="text-gray-600">{totalReviews} lượt đánh giá</p>
-                    <button className="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg">
-                        Viết đánh giá
+                    <button
+                        onClick={() => purchased && setShowModal(true)}
+                        className={`mt-4 px-6 py-2 rounded-lg text-white transition-colors ${purchased
+                                ? "bg-red-600 hover:bg-red-700"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
+                        disabled={!purchased || checking}
+                    >
+                        {checking
+                            ? "Đang kiểm tra..."
+                            : purchased
+                                ? "Viết đánh giá"
+                                : "Chưa thể đánh giá"}
                     </button>
                 </div>
 
@@ -177,7 +213,7 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
 
             {/* Danh sách đánh giá */}
             <div className="space-y-6">
-                {reviews?.result?.map((review, idx) => (
+                {reviews?.map((review, idx) => (
                     <div key={review.id || idx} className="border-b pb-6">
                         <div className="flex items-start gap-4">
                             {/* Avatar */}
@@ -196,8 +232,8 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
                                             <Star
                                                 key={i}
                                                 className={`w-4 h-4 ${i <= review.ratingScore
-                                                        ? "fill-yellow-400 text-yellow-400"
-                                                        : "fill-gray-200 text-gray-200"
+                                                    ? "fill-yellow-400 text-yellow-400"
+                                                    : "fill-gray-200 text-gray-200"
                                                     }`}
                                             />
                                         ))}
@@ -342,6 +378,15 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
                     Trang sau
                 </button>
             </div>
+
+            {/* Modal hiển thị khi bấm */}
+            {showModal && (
+                <ReviewModal
+                    variantId={productVariantId}
+                    onClose={() => setShowModal(false)}
+                    onReviewSuccess={handleReviewSuccess}
+                />
+            )}
 
         </div>
     );

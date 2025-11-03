@@ -25,7 +25,7 @@ public class CartController {
     public ResponseEntity<CommonResponse> getCartItems(){
         CartResponse cartResponse = cartService.getCart();
         Map<String, Object> map = new HashMap<>();
-        map.put("cart", cartResponse);
+        map.put("result", cartResponse);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
@@ -45,9 +45,9 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
     }
 
-    @DeleteMapping("/delete-cart-item")
-    public ResponseEntity<CommonResponse> deleteCartItem(@RequestBody DeletedItemRequest deletedItemRequest){
-        cartService.deleteCartItem(deletedItemRequest);
+    @DeleteMapping("/delete-cart-item/{itemId}")
+    public ResponseEntity<CommonResponse> deleteCartItem(@PathVariable Long itemId){
+        cartService.deleteCartItem(itemId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted cart item successfully");
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));

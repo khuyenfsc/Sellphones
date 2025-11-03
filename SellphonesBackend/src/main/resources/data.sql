@@ -517,7 +517,7 @@ VALUES
 
 -- Giỏ hàng của User 1
 INSERT INTO cart (id, user_id, created_at, updated_at)
-VALUES (1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Giỏ hàng của User 2
 INSERT INTO cart (id, user_id, created_at, updated_at)
@@ -1192,7 +1192,7 @@ VALUES (2, 'VNPay', 'Thanh toán trực tuyến thông qua cổng VNPay', 'VNPAY
 
 INSERT INTO customer_order (code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
 VALUES
-('SPS1', 5, '2025-09-01 10:00:00', 1500000, 'PENDING',   1, 'PENDING',   1),
+('SPS1', 5, '2025-09-01 10:00:00', 1500000, 'DELIVERED',   1, 'PENDING',   1),
 ('SPS2', 5, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',  2, 'COMPLETED', 2),
 ('SPS3', 5, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
 ('SPS4', 5, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),

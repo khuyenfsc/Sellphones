@@ -10,6 +10,7 @@ import com.sellphones.dto.product.ReviewResponse;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.RatingStats;
 import com.sellphones.entity.product.Review;
+import com.sellphones.entity.product.ReviewStatus;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -65,9 +66,7 @@ public class ReviewServiceImpl implements ReviewService{
                 .and(Sort.by(Sort.Direction.DESC, "id"));        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
-        System.out.println("reviews " + reviews.getFirst().getId());
         List<ReviewResponse> response = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();
-        System.out.println("response " + response);
         return PageResponse.<ReviewResponse>builder()
                 .result(response)
                 .total(reviewPage.getTotalElements())
@@ -113,6 +112,7 @@ public class ReviewServiceImpl implements ReviewService{
                 .ratingScore(reviewRequest.getRatingScore())
                 .user(user)
                 .productVariant(productVariant)
+                .status(ReviewStatus.APPROVED)
                 .content(reviewRequest.getContent())
                 .createdAt(LocalDateTime.now())
                 .imageNames(fileMap.values().stream().toList())

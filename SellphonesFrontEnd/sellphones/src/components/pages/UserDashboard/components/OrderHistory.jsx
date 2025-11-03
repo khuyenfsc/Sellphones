@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import OrderService from "../../../../service/OrderService";
-import OrderDetails from "./OrderDetails"; // import component chi tiết
+import OrderDetails from "./OrderDetails"; 
 
 export default function OrderHistory() {
   const tabs = [
