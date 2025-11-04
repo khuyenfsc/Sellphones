@@ -29,7 +29,7 @@ public class AdminSupplierController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-supplier")
@@ -38,7 +38,7 @@ public class AdminSupplierController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added supplier successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/edit-supplier/{id}")
@@ -47,7 +47,7 @@ public class AdminSupplierController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited supplier successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-supplier/{id}")
@@ -56,6 +56,6 @@ public class AdminSupplierController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted supplier successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 }

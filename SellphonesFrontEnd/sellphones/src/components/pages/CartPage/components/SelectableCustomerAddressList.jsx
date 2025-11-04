@@ -6,6 +6,7 @@ import AddAddressModal from "../../UserDashboard/components/AddAddressModel";
 import CustomerInfoFormModal from "../../UserDashboard/components/CustomerInfoFormModal";
 import { motion, AnimatePresence } from "framer-motion";
 import CustomerInfoService from "../../../../service/CustomerInfoService";
+import { toast } from "react-toastify";
 
 export default function SelectableCustomerAddressList({
   loading,
@@ -16,6 +17,8 @@ export default function SelectableCustomerAddressList({
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -27,7 +30,6 @@ export default function SelectableCustomerAddressList({
     city: "",
     dateOfBirth: null,
   });
-  const [toast, setToast] = useState({ show: false, message: "", type: "" });
 
   const handleAddAddress = () => setIsAdding(true);
 
@@ -59,7 +61,9 @@ export default function SelectableCustomerAddressList({
       fullName: formData.fullName,
       phoneNumber: formData.phone,
       dateOfBirth: formData.dateOfBirth
-        ? `${formData.dateOfBirth.getFullYear()}-${String(formData.dateOfBirth.getMonth() + 1).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
+        ? `${formData.dateOfBirth.getFullYear()}-${String(
+          formData.dateOfBirth.getMonth() + 1
+        ).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
         : "",
       address: {
         street: formData.address,
@@ -70,20 +74,23 @@ export default function SelectableCustomerAddressList({
     };
 
     try {
+      setIsSaving(true);
       const res = await CustomerInfoService.createCustomerInfo(formattedData);
       if (res.success) {
-        setToast({ show: true, message: "Đã thêm địa chỉ mới!", type: "success" });
+        toast.success("Đã thêm địa chỉ mới!");
+
         const updatedList = await CustomerInfoService.getCustomerInfos();
         if (updatedList.success) setCustomerInfos(updatedList.data);
+
         handleCloseForm();
       } else {
-        setToast({ show: true, message: res.message || "Lỗi khi thêm địa chỉ", type: "error" });
+        toast.error(res.message || "Lỗi khi thêm địa chỉ");
       }
-      setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
     } catch (err) {
       console.error(err);
-      setToast({ show: true, message: "Lỗi hệ thống!", type: "error" });
-      setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+      toast.error("Lỗi hệ thống!");
+    } finally{
+        setIsSaving(false);
     }
   };
 
@@ -108,7 +115,9 @@ export default function SelectableCustomerAddressList({
       fullName: formData.fullName,
       phoneNumber: formData.phone,
       dateOfBirth: formData.dateOfBirth
-        ? `${formData.dateOfBirth.getFullYear()}-${String(formData.dateOfBirth.getMonth() + 1).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
+        ? `${formData.dateOfBirth.getFullYear()}-${String(
+          formData.dateOfBirth.getMonth() + 1
+        ).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
         : "",
       address: {
         street: formData.address,
@@ -119,21 +128,23 @@ export default function SelectableCustomerAddressList({
     };
 
     try {
+      setIsUpdating(true);
       const res = await CustomerInfoService.updateCustomerInfo(editingId, formattedData);
+
       if (res.success) {
-        setToast({ show: true, message: "Cập nhật thành công!", type: "success" });
+        toast.success("Cập nhật thành công!");
         const updatedList = await CustomerInfoService.getCustomerInfos();
         if (updatedList.success) setCustomerInfos(updatedList.data);
         handleCloseForm();
         setEditingId(null);
       } else {
-        setToast({ show: true, message: res.message || "Lỗi khi cập nhật", type: "error" });
+        toast.error(res.message || "Lỗi khi cập nhật");
       }
-      setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
     } catch (err) {
       console.error(err);
-      setToast({ show: true, message: "Lỗi hệ thống!", type: "error" });
-      setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+      toast.error("Lỗi hệ thống!");
+    }finally{
+      setIsUpdating(false);
     }
   };
 
@@ -181,9 +192,8 @@ export default function SelectableCustomerAddressList({
             {customerInfos.map((info) => (
               <div
                 key={info.id}
-                className={`border p-4 rounded-lg flex items-start justify-between cursor-pointer hover:shadow-md transition ${
-                  selectedCustomer?.id === info.id ? "border-red-600 bg-red-50" : "border-gray-200"
-                }`}
+                className={`border p-4 rounded-lg flex items-start justify-between cursor-pointer hover:shadow-md transition ${selectedCustomer?.id === info.id ? "border-red-600 bg-red-50" : "border-gray-200"
+                  }`}
                 onClick={() => setSelectedCustomer(info)} // ✅ chọn địa chỉ
               >
                 <div className="flex items-start gap-4">
@@ -222,6 +232,7 @@ export default function SelectableCustomerAddressList({
             errors={errors}
             setErrors={setErrors}
             onSubmit={handleSave}
+            isSubmitting={isSaving}
             mode="add"
           />
         )}
@@ -236,6 +247,7 @@ export default function SelectableCustomerAddressList({
             errors={errors}
             setErrors={setErrors}
             onSubmit={handleUpdate}
+            isSubmitting={isUpdating}
             mode="edit"
           />
         )}

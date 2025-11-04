@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import OrderService from "../../../../service/OrderService";
-import OrderDetails from "./OrderDetails"; 
+import OrderDetails from "./OrderDetails";
 
 export default function OrderHistory() {
   const tabs = [
@@ -195,10 +195,11 @@ export default function OrderHistory() {
 
       {/* Danh sách đơn hàng */}
       {loading ? (
-        <p className="text-center text-gray-500">Đang tải...</p>
-      ) : orders.length === 0 ? (
-        <p className="text-center text-gray-500">Không có đơn hàng nào.</p>
-      ) : (
+        <div className="flex items-center justify-center py-20">
+          <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>) : orders.length === 0 ? (
+          <p className="text-center text-gray-500">Không có đơn hàng nào.</p>
+        ) : (
         orders.map((order) => (
           <div key={order.id} className="border rounded-md p-3 mb-3">
             <div className="flex justify-between items-start mb-3">

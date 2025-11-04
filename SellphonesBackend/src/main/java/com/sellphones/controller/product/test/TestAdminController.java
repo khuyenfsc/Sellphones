@@ -26,7 +26,8 @@ public class TestAdminController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> map = new HashMap<>();
         map.put("result", authentication.getAuthorities());
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 

@@ -35,7 +35,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-product")
@@ -49,7 +50,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-product/{productId}")
@@ -63,7 +65,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-product/{productId}")
@@ -75,7 +78,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{productId}")
@@ -84,7 +88,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{productId}/product-variants")
@@ -93,7 +98,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/product-variants/{productVariantId}")
@@ -102,7 +108,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/{productId}/add-product-variant")
@@ -115,7 +122,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added product variant successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-product-variant/{productVariantId}")
@@ -128,7 +136,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product variant successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-product-variant/{productVariantId}")
@@ -139,7 +148,8 @@ public class AdminProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product variant successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

@@ -5,19 +5,17 @@ import { Plus, MapPin, Pencil, Trash2 } from "lucide-react";
 import AddAddressModal from "./AddAddressModel";
 import CustomerInfoFormModal from "./CustomerInfoFormModal";
 import { motion, AnimatePresence } from "framer-motion";
-import CustomerInfoService from "../../../../service/CustomerInfoService"
+import CustomerInfoService from "../../../../service/CustomerInfoService";
+import { toast } from "react-toastify";
 
 
 export default function CustomerAddressList({ loading, customerInfos, setCustomerInfos }) {
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [errors, setErrors] = useState({});
-    const [toast, setToast] = useState({
-        show: false,
-        message: "",
-        type: "", // "success" | "error"
-    });
 
 
     // ✅ Gộp luôn dateOfBirth vào formData
@@ -72,6 +70,8 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
         }
     };
 
+    
+
     const handleCloseForm = () => {
         setIsAdding(false);
         setIsEditing(false); // 👈 reset trạng thái edit nếu đang edit
@@ -102,21 +102,17 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
         }));
     };
 
-    // ✅ Khi người dùng bấm “Lưu”
     const handleSave = async () => {
-
         if (!validate()) return;
 
-        // Chuyển đổi dữ liệu form sang định dạng đúng cho API
         const formattedData = {
             fullName: formData.fullName,
-            phoneNumber: formData.phone, // đổi field name cho khớp với API
+            phoneNumber: formData.phone,
             dateOfBirth: formData.dateOfBirth
                 ? `${formData.dateOfBirth.getFullYear()}-${String(
                     formData.dateOfBirth.getMonth() + 1
                 ).padStart(2, "0")}-${String(formData.dateOfBirth.getDate()).padStart(2, "0")}`
                 : "",
-
             address: {
                 street: formData.address,
                 ward: formData.ward,
@@ -125,53 +121,35 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
             },
         };
 
-
         console.log("📦 Dữ liệu gửi lên server:", formattedData);
 
         try {
+            setIsSaving(true); // bật trạng thái đang lưu
+
             const res = await CustomerInfoService.createCustomerInfo(formattedData);
 
             if (res.success) {
-                // ✅ Hiện toast thành công
-                setToast({
-                    show: true,
-                    message: "Đã thêm địa chỉ mới thành công!",
-                    type: "success",
-                });
+                toast.success("Đã thêm địa chỉ mới thành công!");
 
                 const updatedList = await CustomerInfoService.getCustomerInfos();
-                if (updatedList.success) {
-                    setCustomerInfos(updatedList.data);
-                }
-
-                // Ẩn sau 3s
-                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+                if (updatedList.success) setCustomerInfos(updatedList.data);
 
                 handleCloseForm(); // reset form
             } else {
-                // ❌ Hiện toast lỗi
-                setToast({
-                    show: true,
-                    message: res.message || "Không thể thêm địa chỉ mới!",
-                    type: "error",
-                });
-
-                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+                toast.error(res.message || "Không thể thêm địa chỉ mới!");
             }
         } catch (error) {
             console.error("❌ Lỗi khi tạo khách hàng:", error);
-            setToast({
-                show: true,
-                message: "Đã xảy ra lỗi khi thêm địa chỉ mới!",
-                type: "error",
-            });
-            setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+            toast.error("Đã xảy ra lỗi khi thêm địa chỉ mới!");
+        } finally {
+            setIsSaving(false); // tắt trạng thái đang lưu
         }
     };
 
 
+    // 🧩 Khi người dùng chọn chỉnh sửa
     const handleEdit = (info) => {
-        setEditingId(info.id); // Lưu id riêng biệt
+        setEditingId(info.id);
         setFormData({
             fullName: info.fullName,
             phone: info.phoneNumber,
@@ -181,11 +159,10 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
             city: info.address.province,
             dateOfBirth: info.dateOfBirth ? new Date(info.dateOfBirth) : null,
         });
-        setIsEditing(true); // Mở modal chỉnh sửa (tái sử dụng form cũ)
+        setIsEditing(true);
     };
 
     const handleUpdate = async () => {
-
         if (!validate()) return;
 
         const formattedData = {
@@ -207,42 +184,28 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
         console.log("📦 Dữ liệu cập nhật gửi lên server:", formattedData);
 
         try {
+            setIsUpdating(true); // bật trạng thái đang update
+
             const res = await CustomerInfoService.updateCustomerInfo(editingId, formattedData);
 
             if (res.success) {
-                setToast({
-                    show: true,
-                    message: "Cập nhật thông tin khách hàng thành công!",
-                    type: "success",
-                });
+                toast.success("Cập nhật thông tin thành công!");
 
                 const updatedList = await CustomerInfoService.getCustomerInfos();
-                if (updatedList.success) {
-                    setCustomerInfos(updatedList.data);
-                }
+                if (updatedList.success) setCustomerInfos(updatedList.data);
 
-                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
                 handleCloseForm();
-                setEditingId(null); // reset lại id
+                setEditingId(null);
             } else {
-                setToast({
-                    show: true,
-                    message: res.message || "Không thể cập nhật thông tin khách hàng!",
-                    type: "error",
-                });
-                setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+                toast.error(res.message || "Không thể cập nhật thông tin khách hàng!");
             }
         } catch (error) {
             console.error("❌ Lỗi khi cập nhật khách hàng:", error);
-            setToast({
-                show: true,
-                message: "Đã xảy ra lỗi khi cập nhật thông tin khách hàng!",
-                type: "error",
-            });
-            setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+            toast.error("Đã xảy ra lỗi khi cập nhật thông tin khách hàng!");
+        } finally {
+            setIsUpdating(false); // tắt trạng thái đang update
         }
     };
-
 
     // ✅ Validate các trường
     const validate = () => {
@@ -373,6 +336,7 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
                         errors={errors}
                         setErrors={setErrors}
                         onSubmit={handleSave}
+                        isSubmitting={isSaving}
                         mode="add"
                     />
                 )}
@@ -386,7 +350,8 @@ export default function CustomerAddressList({ loading, customerInfos, setCustome
                         setFormData={setFormData}
                         errors={errors}
                         setErrors={setErrors}
-                        onSubmit={handleUpdate} // hàm update gọi CustomerInfoService.updateCustomerInfo
+                        onSubmit={handleUpdate} 
+                        isSubmitting={isUpdating}
                         mode="edit"
                     />
                 )}

@@ -15,11 +15,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -41,10 +44,32 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final RedisAuthService redisAuthService;
 
+    private final OAuth2AuthorizedClientService authorizedClientService;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
+
+//        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+
+//        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
+//                oauthToken.getAuthorizedClientRegistrationId(),
+//                oauthToken.getName()
+//        );
+//
+//        String accessToken = client.getAccessToken().getTokenValue();
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(accessToken);
+//        HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//        String url = "https://people.googleapis.com/v1/people/me?personFields=genders,birthdays,phoneNumbers";
+//        ResponseEntity<Map> peopleResponse = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+//
+//        System.out.println("People API: " + peopleResponse.getBody());
+
         String email = attributes.get("email").toString();
         User user = userRepository.findByEmail(email).orElse(null);
         if(user != null){
@@ -66,7 +91,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             //Đổi thành url front end ví dụ:  response.sendRedirect("http://localhost:3000/oauth2/success");
             response.sendRedirect("http://localhost:3000/oauth2/success");
         }else{
-            String name = attributes.get("name").toString();
+            String familyName = (String) attributes.get("family_name");
+            String givenName = (String) attributes.get("given_name");
+
+            String name;
+            if (familyName != null && givenName != null) {
+                name = familyName + " " + givenName;
+            } else if (attributes.get("name") != null) {
+                name = attributes.get("name").toString();
+            } else {
+                name = "Unknown User";
+            }
+
             String activeToken = Base64.getUrlEncoder().withoutPadding()
                     .encodeToString(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8));
             String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8);

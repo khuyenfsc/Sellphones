@@ -12,6 +12,7 @@ export default function EditProfileModal({
   handleChange,
   handleDateChange,
   handleSave,
+  isSaving
 }) {
   return (
     <AnimatePresence>
@@ -96,17 +97,17 @@ export default function EditProfileModal({
 
               <div className="pt-4 flex justify-end gap-3">
                 <button
-                  onClick={onClose}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
-                >
-                  Hủy
-                </button>
-                <button
                   onClick={handleSave}
-                  className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                  disabled={isSaving}
+                  className={`px-4 py-2 rounded-lg text-white ${isSaving
+                      ? "bg-gray-400 cursor-not-allowed" // màu xám khi đang lưu và không thể click
+                      : "bg-red-600 hover:bg-red-700"   // màu bình thường khi chưa click
+                    }`}
                 >
-                  Lưu thay đổi
+                  {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
                 </button>
+
+
               </div>
             </div>
           </motion.div>

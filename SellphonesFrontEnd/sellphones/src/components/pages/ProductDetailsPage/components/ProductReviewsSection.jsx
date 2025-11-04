@@ -14,6 +14,7 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
     const [currentImages, setCurrentImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [checking, setChecking] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [purchased, setPurchased] = useState(false);
     const totalReviews = Object.values(reviewStats).reduce((sum, count) => sum + count, 0);
     const averageRating = totalReviews === 0
@@ -66,6 +67,7 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
     };
 
     const fetchReviews = async () => {
+        setLoading(true); // bật loading
         const data = await ReviewService.getReviews({
             productVariantId,
             ...filters,
@@ -77,8 +79,8 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
             setTotal(data.total || 0);
             setTotalPages(data.totalPages || 1);
         }
+        setLoading(false); // tắt loading
     };
-
     const openLightbox = (images, index) => {
         setCurrentImages(images);
         setCurrentIndex(index);
@@ -148,8 +150,8 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
                     <button
                         onClick={() => purchased && setShowModal(true)}
                         className={`mt-4 px-6 py-2 rounded-lg text-white transition-colors ${purchased
-                                ? "bg-red-600 hover:bg-red-700"
-                                : "bg-gray-400 cursor-not-allowed"
+                            ? "bg-red-600 hover:bg-red-700"
+                            : "bg-gray-400 cursor-not-allowed"
                             }`}
                         disabled={!purchased || checking}
                     >
@@ -211,87 +213,87 @@ const ProductReviewsSection = ({ productName, productVariantId, reviewStats }) =
                 })}
             </div>
 
-            {/* Danh sách đánh giá */}
-            <div className="space-y-6">
-                {reviews?.map((review, idx) => (
-                    <div key={review.id || idx} className="border-b pb-6">
-                        <div className="flex items-start gap-4">
-                            {/* Avatar */}
-                            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center font-semibold text-white">
-                                {review.user?.fullName?.charAt(0)?.toUpperCase() || "?"}
-                            </div>
+            <div className="relative min-h-[200px]">
+                {loading ? (
+                    // Loading spinner khi đang load
+                    <div className="flex items-center justify-center py-20">
+                        <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                    </div>
+                ) : (
+                    // Danh sách đánh giá khi load xong
+                    <div className="space-y-6">
+                        {reviews?.map((review, idx) => (
+                            <div key={review.id || idx} className="border-b pb-6">
+                                <div className="flex items-start gap-4">
+                                    {/* Avatar */}
+                                    <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center font-semibold text-white">
+                                        {review.user?.fullName?.charAt(0)?.toUpperCase() || "?"}
+                                    </div>
 
-                            <div className="flex-1">
-                                {/* Tên + Rating */}
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className="font-semibold text-black">
-                                        {review.user?.fullName}
-                                    </span>
-                                    <div className="flex gap-1">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <Star
-                                                key={i}
-                                                className={`w-4 h-4 ${i <= review.ratingScore
-                                                    ? "fill-yellow-400 text-yellow-400"
-                                                    : "fill-gray-200 text-gray-200"
-                                                    }`}
-                                            />
-                                        ))}
+                                    <div className="flex-1">
+                                        {/* Tên + Rating */}
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="font-semibold text-black">
+                                                {review.user?.fullName}
+                                            </span>
+                                            <div className="flex gap-1">
+                                                {[1, 2, 3, 4, 5].map((i) => (
+                                                    <Star
+                                                        key={i}
+                                                        className={`w-4 h-4 ${i <= review.ratingScore
+                                                                ? "fill-yellow-400 text-yellow-400"
+                                                                : "fill-gray-200 text-gray-200"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Nội dung */}
+                                        <p className="text-sm text-gray-700 mb-2">{review.content}</p>
+
+                                        {/* Hình ảnh */}
+                                        {review.imageNames && review.imageNames.length > 0 && (
+                                            <div className="flex gap-2 flex-wrap mb-2">
+                                                {review.imageNames.slice(0, 5).map((imgUrl, imgIdx) => {
+                                                    const isLastVisible = imgIdx === 4 && review.imageNames.length > 5;
+                                                    return (
+                                                        <div
+                                                            key={imgIdx}
+                                                            className="relative cursor-pointer"
+                                                            onClick={() => openLightbox(review.imageNames, imgIdx)}
+                                                        >
+                                                            <img
+                                                                src={imgUrl}
+                                                                alt={`review-img-${imgIdx}`}
+                                                                className="w-20 h-20 object-cover rounded-lg border"
+                                                            />
+                                                            {isLastVisible && (
+                                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                                                                    <span className="text-white font-semibold text-lg">
+                                                                        +{review.imageNames.length - 5}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+
+                                        {/* Thời gian */}
+                                        <p className="text-xs text-gray-500">
+                                            ⏱ Đánh giá đã đăng vào{" "}
+                                            {new Date(review.createdAt).toLocaleString("vi-VN")}
+                                        </p>
                                     </div>
                                 </div>
-
-                                {/* Nội dung */}
-                                <p className="text-sm text-gray-700 mb-2">{review.content}</p>
-
-                                {/* Hình ảnh */}
-                                {review.imageNames && review.imageNames.length > 0 && (
-                                    <div className="flex gap-2 flex-wrap mb-2">
-                                        {review.imageNames.slice(0, 5).map((imgUrl, imgIdx) => {
-                                            const isLastVisible =
-                                                imgIdx === 4 &&
-                                                review.imageNames.length > 5;
-                                            return (
-                                                <div
-                                                    key={imgIdx}
-                                                    className="relative cursor-pointer"
-                                                    onClick={() =>
-                                                        openLightbox(
-                                                            review.imageNames,
-                                                            imgIdx
-                                                        )
-                                                    }
-                                                >
-                                                    <img
-                                                        src={imgUrl}
-                                                        alt={`review-img-${imgIdx}`}
-                                                        className="w-20 h-20 object-cover rounded-lg border"
-                                                    />
-                                                    {/* Overlay "+N" */}
-                                                    {isLastVisible && (
-                                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
-                                                            <span className="text-white font-semibold text-lg">
-                                                                +{review.imageNames.length - 5}
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-
-                                {/* Thời gian */}
-                                <p className="text-xs text-gray-500">
-                                    ⏱ Đánh giá đã đăng vào{" "}
-                                    {new Date(
-                                        review.createdAt
-                                    ).toLocaleString("vi-VN")}
-                                </p>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                ))}
+                )}
             </div>
+
 
             {/* 🖼 Lightbox */}
             {lightboxOpen && (

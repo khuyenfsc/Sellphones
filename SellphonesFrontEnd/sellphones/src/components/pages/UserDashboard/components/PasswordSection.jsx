@@ -2,14 +2,11 @@ import { useState } from "react";
 import { Edit2 } from "lucide-react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import UserService from "../../../../service/UserService";
+import { toast } from "react-toastify";
+
 
 const PasswordSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [toast, setToast] = useState({
-        show: false,
-        message: "",
-        type: "", // "success" | "error"
-    });
     const [formData, setFormData] = useState({
         oldPassword: "",
         newPassword: "",
@@ -33,7 +30,8 @@ const PasswordSection = () => {
         if (!formData.newPassword) {
             newErrors.newPassword = "Vui lòng nhập mật khẩu mới";
         } else if (!strongPasswordRegex.test(formData.newPassword)) {
-            newErrors.newPassword = "Mật khẩu phải dài ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt";
+            newErrors.newPassword =
+                "Mật khẩu phải dài ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt";
         }
 
         if (formData.newPassword !== formData.confirmPassword) {
@@ -41,7 +39,7 @@ const PasswordSection = () => {
         }
 
         setErrors(newErrors);
-        if (Object.keys(newErrors).length > 0) return; // nếu có lỗi thì dừng lại
+        if (Object.keys(newErrors).length > 0) return;
 
         try {
             const res = await UserService.changePassword({
@@ -50,12 +48,9 @@ const PasswordSection = () => {
             });
 
             if (res.success) {
-                setToast({
-                    show: true,
-                    type: "success",
-                    message: "Đổi mật khẩu thành công!",
-                });
+                toast.success("Đổi mật khẩu thành công!");
                 setIsModalOpen(false);
+
                 // Reset form
                 setFormData({
                     oldPassword: "",
@@ -64,19 +59,11 @@ const PasswordSection = () => {
                 });
                 setErrors({});
             } else {
-                setToast({
-                    show: true,
-                    type: "error",
-                    message: "Đổi mật khẩu thất bại! Vui lòng thử lại.",
-                });
+                toast.error("Đổi mật khẩu thất bại! Vui lòng thử lại.");
             }
         } catch (err) {
             console.error("❌ Lỗi khi đổi mật khẩu:", err);
-            setToast({
-                show: true,
-                type: "error",
-                message: "Đã xảy ra lỗi khi đổi mật khẩu!",
-            });
+            toast.error("Đã xảy ra lỗi khi đổi mật khẩu!");
         }
 
         setIsModalOpen(false);

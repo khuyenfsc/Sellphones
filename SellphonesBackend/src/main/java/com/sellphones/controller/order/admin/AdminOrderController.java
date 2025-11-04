@@ -33,7 +33,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/make-order")
@@ -42,7 +42,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Make order successfully!");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/confirm/{id}")
@@ -51,7 +51,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Confirmed order successfully!");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/ship-order/{id}")
@@ -60,7 +60,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Shipped order successfully!");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/deliver-order/{id}")
@@ -69,7 +69,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Delivered order successfully!");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/cancel-order/{id}")
@@ -78,7 +78,7 @@ public class AdminOrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Cancelled order successfully!");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
 }

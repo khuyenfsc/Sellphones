@@ -34,7 +34,7 @@ public class AuthenticationController {
         Map<String, Object> map = new HashMap<>();
 
         map.put("result", new AuthenticationResponse(authenticationToken.getAccessToken()));
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/admin-login")
@@ -44,7 +44,7 @@ public class AuthenticationController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", new AuthenticationResponse(authenticationToken.getAccessToken()));
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @GetMapping("/me")
@@ -52,17 +52,17 @@ public class AuthenticationController {
         BasicUserResponse userResponse = authenticationService.getCurrentUser();
         Map<String, Object> map = new HashMap<>();
         map.put("result", userResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-        @PostMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<CommonResponse> refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         AuthenticationToken authenticationToken = authenticationService.refreshToken(refreshToken);
         SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken());
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", new AuthenticationResponse(authenticationToken.getAccessToken()));
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/logout")
@@ -72,7 +72,7 @@ public class AuthenticationController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Logged out!");
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
 }

@@ -27,7 +27,8 @@ public class AdminWarrantyController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-warranty")
@@ -36,7 +37,8 @@ public class AdminWarrantyController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added warranty successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-warranty/{id}")
@@ -45,7 +47,8 @@ public class AdminWarrantyController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited warranty successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-warranty/{id}")
@@ -54,6 +57,7 @@ public class AdminWarrantyController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted warranty successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

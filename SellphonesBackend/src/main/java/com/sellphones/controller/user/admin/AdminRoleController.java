@@ -29,7 +29,8 @@ public class AdminRoleController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/role-details/{id}")
@@ -38,7 +39,8 @@ public class AdminRoleController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/create-role")
@@ -47,7 +49,8 @@ public class AdminRoleController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created role successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-role/{id}")
@@ -59,7 +62,8 @@ public class AdminRoleController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited role successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-role/{id}")
@@ -68,7 +72,8 @@ public class AdminRoleController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted role successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

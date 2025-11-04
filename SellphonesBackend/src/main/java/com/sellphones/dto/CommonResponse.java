@@ -10,5 +10,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Data
 public class CommonResponse{
+    private int status;
+
     private Map<String, Object> data;
 }

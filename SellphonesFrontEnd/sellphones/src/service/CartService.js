@@ -104,7 +104,7 @@ const CartService = {
             if (!token) return { success: false, message: "Chưa đăng nhập" };
 
             const res = await AxiosClient.post(
-                `/cart/add-cart-item`,
+                `/cart/add-item`,
                 { productVariantId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

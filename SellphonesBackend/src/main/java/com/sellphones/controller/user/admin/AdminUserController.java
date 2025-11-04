@@ -27,7 +27,8 @@ public class AdminUserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/create-user")
@@ -40,7 +41,8 @@ public class AdminUserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created user successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-user/{id}")
@@ -53,7 +55,8 @@ public class AdminUserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited user successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-user/{id}")
@@ -62,6 +65,7 @@ public class AdminUserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted user successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

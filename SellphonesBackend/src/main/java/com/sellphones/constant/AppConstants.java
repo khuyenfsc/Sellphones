@@ -7,7 +7,7 @@ public class AppConstants {
             "/api/v1/products/**",
             "/api/v1/categories/**",
             "/api/v1/promotion-banners/**",
-            "/api/v1/comments/**",
+            "/api/v1/comments",
             "/api/v1/brands/**",
             "/api/v1/reviews",
             "/api/v1/reviews/product-variants/**",

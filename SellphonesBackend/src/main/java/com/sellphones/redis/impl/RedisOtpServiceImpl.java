@@ -26,7 +26,7 @@ public class RedisOtpServiceImpl implements RedisOtpService {
     public Otp getRegisterOtp(String email) {
         Object otp = redisTemplate.opsForValue().get(email);
         if(otp == null){
-            throw new AppException(ErrorCode.OTP_NOT_FOUND_FOR_EMAIL);
+            return null;
         }
         return (Otp) otp;
     }

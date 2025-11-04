@@ -28,7 +28,8 @@ public class AdminBrandController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-brand")
@@ -40,7 +41,8 @@ public class AdminBrandController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added brand successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-brand/{id}")
@@ -53,7 +55,8 @@ public class AdminBrandController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited brand successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/delete-brand/{id}")
@@ -64,7 +67,8 @@ public class AdminBrandController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted brand successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

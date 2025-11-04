@@ -27,3 +27,6 @@ spring:
             scope:
               - email
               - profile
+#              - https://www.googleapis.com/auth/user.gender.read
+#              - https://www.googleapis.com/auth/user.birthday.read
+#              - https://www.googleapis.com/auth/user.phonenumbers.read

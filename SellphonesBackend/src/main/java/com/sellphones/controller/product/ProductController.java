@@ -38,7 +38,8 @@ public class ProductController {
         List<ProductListResponse> products = productService.getFeaturedProductsByCategory(categoryName);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/query")
@@ -46,7 +47,8 @@ public class ProductController {
         PageResponse<ProductListResponse> products = productService.getProductByFilter(filter);
         Map<String, Object> map = new HashMap<>();
         map.put("products", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{id}")
@@ -54,7 +56,8 @@ public class ProductController {
         ProductDetailsResponse product = productService.getProductById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", product);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/product-variants/{id}")
@@ -62,7 +65,8 @@ public class ProductController {
         ProductVariantResponse product = productService.getProductVariantById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", product);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{id}/similar-products")
@@ -70,7 +74,8 @@ public class ProductController {
         List<ProductListResponse> product = productService.getSimilarProducts(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", product);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/quick_search")
@@ -81,7 +86,8 @@ public class ProductController {
         List<ProductDocumentResponse> products = productService.getSuggestedProducts(keyword);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/advanced-search")
@@ -94,7 +100,8 @@ public class ProductController {
         PageResponse<ProductListResponse> products = productService.searchProductsByKeyword(keyword, page, size, sortType);
         Map<String, Object> map = new HashMap<>();
         map.put("products", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 

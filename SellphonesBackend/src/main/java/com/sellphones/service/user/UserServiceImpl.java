@@ -2,6 +2,7 @@ package com.sellphones.service.user;
 
 import com.sellphones.dto.user.*;
 import com.sellphones.entity.authentication.AuthenticationToken;
+import com.sellphones.entity.cart.Cart;
 import com.sellphones.entity.user.Provider;
 import com.sellphones.entity.user.Role;
 import com.sellphones.entity.user.RoleName;
@@ -12,6 +13,7 @@ import com.sellphones.redis.Otp;
 import com.sellphones.redis.RedisAuthService;
 import com.sellphones.redis.RedisOtpService;
 import com.sellphones.redis.RedisUserService;
+import com.sellphones.repository.cart.CartRepository;
 import com.sellphones.repository.user.RoleRepository;
 import com.sellphones.repository.user.UserRepository;
 import com.sellphones.service.authentication.AuthenticationService;
@@ -51,6 +53,8 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
+
+    private final CartRepository cartRepository;
 
     private final EmailService emailService;
 
@@ -161,7 +165,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ActiveProfileResponse verifyUser(UserRegisterRequest userRegisterRequest) {
-        Role role = getCustomerRole();
         User user = userRepository.findByEmail(userRegisterRequest.getEmail()).orElse(null);
         if(user != null){
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
@@ -173,7 +176,6 @@ public class UserServiceImpl implements UserService{
                 .password(passwordEncoder.encode(userRegisterRequest.getPassword()))
                 .dateOfBirth(userRegisterRequest.getDateOfBirth())
                 .phoneNumber(userRegisterRequest.getPhoneNumber())
-                .role(role)
                 .gender(userRegisterRequest.getGender())
                 .build();
 
@@ -187,12 +189,18 @@ public class UserServiceImpl implements UserService{
     @Override
     public void verifyRegisterOtp(RegisterOtpRequest registerOtpRequest) {
         Otp otp = redisOtpService.getRegisterOtp(registerOtpRequest.getEmail());
-        if(!otp.getOtp().equals(registerOtpRequest.getOtp())){
+        if(otp == null || !otp.getOtp().equals(registerOtpRequest.getOtp())){
             throw new AppException(ErrorCode.INVALID_OTP);
         }
 
         User user = redisUserService.getUser(registerOtpRequest.getActiveToken());
-        userRepository.save(user);
+        user.setRole(getCustomerRole());
+        User savedUser = userRepository.save(user);
+
+        Cart cart = new Cart();
+        cart.setUser(savedUser);
+        cart.setUpdatedAt(LocalDateTime.now());
+        cartRepository.save(cart);
 
         redisUserService.deleteUser(registerOtpRequest.getActiveToken());
         redisOtpService.deleteRegisterOtp(registerOtpRequest.getEmail());

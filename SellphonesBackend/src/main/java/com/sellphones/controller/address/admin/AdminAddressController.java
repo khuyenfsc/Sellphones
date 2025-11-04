@@ -28,7 +28,7 @@ public class AdminAddressController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-address")
@@ -37,7 +37,7 @@ public class AdminAddressController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added address successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/edit-address/{id}")
@@ -46,7 +46,7 @@ public class AdminAddressController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited address successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-address/{id}")
@@ -55,6 +55,6 @@ public class AdminAddressController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted address successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 }

@@ -72,22 +72,25 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void addNewComment(NewCommentRequest newCommentRequest) {
+    public CommentResponse addNewComment(NewCommentRequest newCommentRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Product product = productRepository.findById(newCommentRequest.getProductId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Comment comment = Comment.builder()
                 .user(user)
                 .product(product)
                 .content(newCommentRequest.getContent())
+                .status(CommentStatus.APPROVED)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        commentRepository.save(comment);
+        Comment newComment = commentRepository.save(comment);
+
+        return modelMapper.map(newComment, CommentResponse.class);
     }
 
     @Override
     @Transactional
-    public void replyComment(ReplyCommentRequest replyCommentRequest) {
+    public CommentResponse replyComment(ReplyCommentRequest replyCommentRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Comment parentComment = commentRepository.findById(replyCommentRequest.getParentId()).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         Product product = productRepository.findById(parentComment.getProduct().getId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -97,10 +100,12 @@ public class CommentServiceImpl implements CommentService{
                 .product(product)
                 .content(replyCommentRequest.getContent())
                 .parentComment(parentComment)
+                .status(CommentStatus.APPROVED)
                 .createdAt(LocalDateTime.now())
                 .build();
-        commentRepository.save(comment);
+        Comment replyComment = commentRepository.save(comment);
 
+        return modelMapper.map(replyComment, CommentResponse.class);
     }
 
     private List<Comment> flatten(List<Comment> comments){

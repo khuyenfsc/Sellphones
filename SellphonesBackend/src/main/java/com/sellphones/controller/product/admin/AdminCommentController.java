@@ -29,7 +29,8 @@ public class AdminCommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("results", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/{commentId}/reply-comment")
@@ -38,7 +39,8 @@ public class AdminCommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Replied comment successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-comment/{commentId}")
@@ -47,7 +49,8 @@ public class AdminCommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited comment successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-comment/{commentId}")
@@ -56,7 +59,8 @@ public class AdminCommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted comment successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

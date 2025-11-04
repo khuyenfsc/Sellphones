@@ -27,7 +27,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-attribute")
@@ -36,7 +37,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added attribute successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-attribute/{id}")
@@ -45,7 +47,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited attribute successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-attribute/{id}")
@@ -54,7 +57,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted attribute successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{attributeId}/attribute-values")
@@ -63,7 +67,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/{attributeId}/add-attribute-value")
@@ -72,7 +77,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added attribute value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-attribute-value/{attributeValueId}")
@@ -81,7 +87,8 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited attribute value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-attribute-value/{attributeValueId}")
@@ -90,6 +97,7 @@ public class AdminAttributeController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted attribute value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

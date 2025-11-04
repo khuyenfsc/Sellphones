@@ -29,7 +29,8 @@ public class AdminReviewController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-review/{reviewId}")
@@ -38,7 +39,8 @@ public class AdminReviewController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited review successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-review/{reviewId}")
@@ -47,7 +49,8 @@ public class AdminReviewController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted review successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

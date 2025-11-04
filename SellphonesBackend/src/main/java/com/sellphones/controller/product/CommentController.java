@@ -31,7 +31,8 @@ public class CommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("comments", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/child-comments")
@@ -44,25 +45,28 @@ public class CommentController {
         Map<String, Object> map = new HashMap<>();
         map.put("comments", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
-    @PostMapping("/product/add-comment")
+    @PostMapping("/add-comment")
     public ResponseEntity<CommonResponse> addComment(@RequestBody NewCommentRequest newCommentRequest){
-        commentService.addNewComment(newCommentRequest);
+        CommentResponse response = commentService.addNewComment(newCommentRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added new comment successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
-    @PostMapping("/product/reply-comment")
+    @PostMapping("/reply-comment")
     public ResponseEntity<CommonResponse> replyComment(@RequestBody ReplyCommentRequest replyCommentRequest){
-        commentService.replyComment(replyCommentRequest);
+        CommentResponse response = commentService.replyComment(replyCommentRequest);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Replied comment successfully");
+        map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

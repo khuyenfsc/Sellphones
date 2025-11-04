@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Star, Image as ImageIcon } from "lucide-react";
 import ReviewService from "../../../../service/ReviewService";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // đảm bảo có dòng này (hoặc trong App.jsx)
 
 export default function ReviewModal({ variantId, onClose, onReviewSuccess }) {
     const [rating, setRating] = useState(0);
@@ -19,37 +20,50 @@ export default function ReviewModal({ variantId, onClose, onReviewSuccess }) {
         setImages(previews);
     };
 
+    // ✅ Hàm submit có xử lý lỗi & popup
     const handleSubmit = async () => {
         if (!rating || !text.trim()) {
-            toast.warn("Vui lòng nhập nội dung và chọn số sao!");
+            toast.warn("⚠️ Vui lòng nhập nội dung và chọn số sao!");
             return;
         }
 
         setSubmitting(true);
 
-        const reviewData = {
-            productVariantId: variantId,
-            ratingScore: rating,
-            content: text.trim(),
-        };
+        try {
+            const reviewData = {
+                productVariantId: variantId,
+                ratingScore: rating,
+                content: text.trim(),
+            };
 
-        const files = images.map(img => img.file);
+            const files = images.map(img => img.file);
 
-        const result = await ReviewService.createReview(reviewData, files);
+            // 🧠 Gọi API
+            const result = await ReviewService.createReview(reviewData, files);
 
-        setSubmitting(false);
+            if (result.success) {
+                toast.success("🎉 Gửi đánh giá thành công!");
 
-        if (result.success) {
-            toast.success("🎉 Gửi đánh giá thành công!");
+                // ✅ Gọi callback cập nhật review ở component cha
+                if (typeof onReviewSuccess === "function") {
+                    onReviewSuccess(result.result);
+                }
 
-            // ✅ Gọi callback cập nhật review ở component cha
-            if (typeof onReviewSuccess === "function") {
-                onReviewSuccess(result.result);
+                // ✅ Reset form sau khi gửi thành công
+                setRating(0);
+                setText("");
+                setImages([]);
+
+                onClose();
+            } else {
+                toast.error(result.message || "❌ Không thể gửi đánh giá. Vui lòng thử lại!");
             }
-
-            onClose();
-        } else {
-            toast.error(result.message || "Không thể gửi đánh giá");
+        } catch (error) {
+            console.error("Lỗi khi gửi đánh giá:", error);
+            toast.error("🚫 Đã xảy ra lỗi khi gửi đánh giá. Kiểm tra kết nối mạng!");
+        } finally {
+            // ✅ Dù lỗi hay thành công đều dừng loading
+            setSubmitting(false);
         }
     };
 

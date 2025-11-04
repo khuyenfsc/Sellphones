@@ -27,7 +27,8 @@ public class AdminGiftProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/create-gift-product")
@@ -40,7 +41,8 @@ public class AdminGiftProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-gift-product/{id}")
@@ -53,7 +55,8 @@ public class AdminGiftProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-gift-product/{id}")
@@ -62,6 +65,7 @@ public class AdminGiftProductController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted gift product successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

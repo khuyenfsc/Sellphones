@@ -3,27 +3,19 @@ import { Edit2 } from "lucide-react";
 import { parse, format, isValid } from "date-fns";
 import EditProfileModal from "./EditProfileModal";
 import UserService from "../../../../service/UserService";
+import { toast } from "react-toastify";
+
 
 export default function UserProfile({ user, setUser }) {
     const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [dobInput, setDobInput] = useState(""); // giá trị hiển thị trong input
     const [errors, setErrors] = useState({});
-    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [profileFormData, setProfileFormData] = useState({
         fullName: "",
         dateOfBirth: "",
         gender: "",
     });
-
-    
-    const showToast = (message, type = "success") => {
-        setToast({ show: true, message, type });
-
-        // 3 giây tự ẩn
-        setTimeout(() => {
-            setToast({ show: false, message: "", type });
-        }, 3000);
-    };
 
 
     useEffect(() => {
@@ -104,23 +96,22 @@ export default function UserProfile({ user, setUser }) {
         try {
             if (!validate()) return; // kiểm tra validate trước
 
-            // Gọi hàm updateProfile
+            setIsSaving(true); // bật hiệu ứng "đang lưu"
+
             const res = await UserService.updateProfile(profileFormData);
 
             if (res.success) {
-                showToast("Cập nhật thông tin thành công!", "success");
-
+                toast.success("Cập nhật thông tin thành công!");
                 setUser(res.user);
-
-
-                // Cập nhật state nếu cần
                 setIsEditing(false);
             } else {
-                alert(res.message || "Đã xảy ra lỗi khi lưu. Vui lòng thử lại!");
+                toast.error(res.message || "Đã xảy ra lỗi khi lưu. Vui lòng thử lại!");
             }
         } catch (error) {
             console.error("❌ Lỗi khi cập nhật thông tin:", error);
-            alert("Đã xảy ra lỗi khi lưu. Vui lòng thử lại!");
+            toast.error("Đã xảy ra lỗi khi lưu. Vui lòng thử lại!");
+        } finally {
+            setIsSaving(false); // tắt hiệu ứng dù thành công hay thất bại
         }
     };
 
@@ -196,6 +187,7 @@ export default function UserProfile({ user, setUser }) {
                 handleChange={handleChange}
                 handleDateChange={handleDateChange}
                 handleSave={handleSave}
+                isSaving={isSaving}
             />
 
             {toast.show && (

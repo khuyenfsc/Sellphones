@@ -177,6 +177,7 @@ export default function LoginPage() {
                         <div className="flex justify-center mb-8">
                             <button
                                 type="button"
+                                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
                                 className="flex items-center justify-center gap-2 w-72 px-6 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300"
                             >
                                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -199,11 +200,12 @@ export default function LoginPage() {
                                 </svg>
                                 <span className="font-medium text-gray-700">Google</span>
                             </button>
+
                         </div>
 
                         <div className="text-center text-gray-600">
                             Bạn chưa có tài khoản?{' '}
-                            <a href="#" className="text-red-600 font-medium hover:underline">
+                            <a href="/register" className="text-red-600 font-medium hover:underline">
                                 Đăng ký ngay
                             </a>
                         </div>

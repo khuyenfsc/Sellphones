@@ -85,7 +85,7 @@ const CustomerInfoService = {
             // Nếu token hết hạn → thử refresh token
             if (error.response?.status === 401) {
                 try {
-                    const refreshResult = await AuthService.refreshToken(); // 👈 gọi sang AuthService
+                    const refreshResult = await UserService.refreshToken(); // 👈 gọi sang AuthService
                     if (refreshResult.success) {
                         // Retry lại với token mới
                         const retryRes = await AxiosClient.post("/customers/create-customer-info", customerData, {
@@ -148,7 +148,7 @@ const CustomerInfoService = {
             // Nếu token hết hạn → thử refresh token
             if (error.response?.status === 401) {
                 try {
-                    const refreshResult = await AuthService.refreshToken(); // 👈 gọi sang AuthService
+                    const refreshResult = await UserService.refreshToken(); // 👈 gọi sang AuthService
                     if (refreshResult.success) {
                         // Retry lại với token mới
                         const retryRes = await AxiosClient.put(`/customers/update-customer-info/${id}`, customerData, {

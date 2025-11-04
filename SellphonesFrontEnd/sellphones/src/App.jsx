@@ -11,8 +11,13 @@ import OrderHistory from "./components/pages/UserDashboard/components/OrderHisto
 import LogoutConfirm from "./components/pages/UserDashboard/components/LogoutConfirm";
 import CartPage from "./components/pages/CartPage/CartPage";
 import CheckoutPage from "./components/pages/CartPage/components/CheckoutPage";
+import RegisterPage from "./components/pages/LoginPage/RegisterPage";
+import ActiveProfilePage from "./components/pages/LoginPage/ActiveProfilePage";
+import OAuth2UpdatePage from "./components/pages/LoginPage/OAuth2UpdatePage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   return (
@@ -26,6 +31,9 @@ export default function App() {
             <Route path="/product/:slug" element={<ProductDetailsPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/active-profile" element={<ActiveProfilePage />} />
+            <Route path="/oauth2/complete-register" element={<OAuth2UpdatePage />} />
 
             {/* ✅ Nested routes (Protected) */}
             <Route
@@ -42,12 +50,38 @@ export default function App() {
               <Route path="account/logout" element={<LogoutConfirm />} />
             </Route>
 
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <CartPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <CheckoutPage />
+                </ProtectedRoute>
+              }
+            />
 
 
           </Routes>
         </MainLayout>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </Router>
     </AuthProvider>
   );

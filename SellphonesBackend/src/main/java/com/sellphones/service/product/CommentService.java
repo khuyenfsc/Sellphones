@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 public interface CommentService {
     PageResponse<CommentResponse> getCommentByProduct(Long productId, Integer page, Integer size);
     PageResponse<CommentResponse> getCommentsByParentCommentId(Long parentId, Integer page, Integer size);
-    void addNewComment(NewCommentRequest newCommentRequest);
-    void replyComment(ReplyCommentRequest replyCommentRequest);
+    CommentResponse addNewComment(NewCommentRequest newCommentRequest);
+    CommentResponse replyComment(ReplyCommentRequest replyCommentRequest);
 }

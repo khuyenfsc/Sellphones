@@ -3,12 +3,13 @@ import { Check, Gift, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ProductService from "../../../../service/ProductService";
 import CartService from "../../../../service/CartService";
+import { toast } from "react-toastify";
+
 
 const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) => {
     const [disabledValues, setDisabledValues] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState({});
     const [currentVariant, setCurrentVariant] = useState(null);
-    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const skipEffectRef = useRef(false); // 🧠 flag để tránh loop
@@ -56,32 +57,42 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
         setDisabledValues(toDisable);
     }, [selectedOptions]);
 
-  
+
 
 
     const handleAddToCart = async () => {
         if (isAdding) return;
         setIsAdding(true);
 
-        const result = await CartService.addCartItem(currentVariant?.id);
-        setIsAdding(false);
+        try {
+            const result = await CartService.addCartItem(currentVariant?.id);
 
-        if (result.success) {
-            // Hiển thị toast
-            setToast({ show: true, message: result.result, type: "success" });
+            if (result.success) {
+                // ✅ Hiển thị toast thành công
+                toast.success(result.result || "Đã thêm sản phẩm vào giỏ hàng!", {
+                    position: "top-right",
+                    autoClose: 1500,
+                });
 
-            // Sau 1.5s, ẩn toast và chuyển hướng
-            setTimeout(() => {
-                setToast({ show: false, message: "", type: "success" });
-                navigate("/cart");
-            }, 1500);
-        } else {
-            setToast({ show: true, message: result.message || "Thêm sản phẩm thất bại", type: "error" });
-
-            // Ẩn toast sau 1.5s
-            setTimeout(() => {
-                setToast({ show: false, message: "", type: "error" });
-            }, 1500);
+                // ✅ Chuyển hướng sau 1.5s
+                setTimeout(() => {
+                    navigate("/cart");
+                }, 1500);
+            } else {
+                // ❌ Hiển thị toast lỗi
+                toast.error(result.message || "Thêm sản phẩm thất bại!", {
+                    position: "top-right",
+                    autoClose: 1500,
+                });
+            }
+        } catch (error) {
+            console.error("❌ Lỗi khi thêm vào giỏ hàng:", error);
+            toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!", {
+                position: "top-right",
+                autoClose: 1500,
+            });
+        } finally {
+            setIsAdding(false);
         }
     };
 
@@ -362,30 +373,7 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
             </div>
 
             {/* Toast */}
-            {toast.show && (
-                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500">
-                    <div
-                        className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${
-                            toast.type === "success"
-                                ? "bg-green-500 text-white"
-                                : "bg-red-500 text-white"
-                        }`}
-                    >
-                        {toast.type === "success" && (
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                        )}
-                        <span>{toast.message}</span>
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 };

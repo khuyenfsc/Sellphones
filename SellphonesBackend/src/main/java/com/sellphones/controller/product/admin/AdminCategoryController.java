@@ -29,7 +29,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-category")
@@ -41,7 +42,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added category value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-category/{id}")
@@ -54,7 +56,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited category successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-category/{categoryId}")
@@ -63,7 +66,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted category successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{categoryId}/category-options")
@@ -72,7 +76,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/{categoryId}/add-category-option")
@@ -81,7 +86,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added category option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-category-option/{categoryOptionId}")
@@ -90,7 +96,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited category option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-category-option/{categoryOptionId}")
@@ -99,7 +106,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted category option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/category-option/{categoryOptionId}/category-option-values")
@@ -108,7 +116,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/category-option/{categoryOptionId}/add-category-option-value")
@@ -117,7 +126,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added category option value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-category-option-value/{categoryOptionId}")
@@ -126,7 +136,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited category option value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-category-option-value/{categoryOptionValueId}")
@@ -135,7 +146,8 @@ public class AdminCategoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted category option value successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

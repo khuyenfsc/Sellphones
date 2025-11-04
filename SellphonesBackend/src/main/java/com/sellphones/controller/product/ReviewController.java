@@ -29,7 +29,8 @@ public class ReviewController {
         PageResponse<ReviewResponse> reviews = reviewService.getReviewsByConditions(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", reviews);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/product-variants/{variantId}/rating-stats")
@@ -37,7 +38,8 @@ public class ReviewController {
         Map<Integer, Long> response = reviewService.getRatingStatsByProductVariantId(variantId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-review")
@@ -49,7 +51,8 @@ public class ReviewController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", review);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

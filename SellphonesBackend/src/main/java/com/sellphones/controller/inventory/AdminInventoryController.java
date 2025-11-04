@@ -27,7 +27,7 @@ public class AdminInventoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-inventory")
@@ -36,7 +36,7 @@ public class AdminInventoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added inventory successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/edit-inventory/{id}")
@@ -45,7 +45,7 @@ public class AdminInventoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited inventory successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-inventory/{id}")
@@ -54,7 +54,7 @@ public class AdminInventoryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted inventory successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
 }

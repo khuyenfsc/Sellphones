@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import CustomerInfoForm from "./CustomerInfoForm";
+import { toast } from "react-toastify";
+import { is } from "date-fns/locale";
 
-const CustomerInfoFormModal = ({ visible, onClose, title, formData, setFormData, errors, setErrors, onSubmit, mode }) => {
+const CustomerInfoFormModal = ({ visible, onClose, title, formData, setFormData, errors, setErrors, onSubmit, isSubmitting,mode }) => {
     if (!visible) return null;
 
     return (
@@ -35,6 +37,7 @@ const CustomerInfoFormModal = ({ visible, onClose, title, formData, setFormData,
                     errors={errors}
                     setErrors={setErrors}
                     onSubmit={onSubmit}
+                    isSubmitting={isSubmitting}
                     mode={mode}
                 />
             </motion.div>

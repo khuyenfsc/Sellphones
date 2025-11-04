@@ -26,7 +26,8 @@ public class CategoryController {
         List<CategoryResponse> categories = categoryService.getAllCategories();
         Map<String, Object> map = new HashMap<>();
         map.put("result", categories);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/featured-categories")
@@ -34,7 +35,8 @@ public class CategoryController {
         List<FeaturedCategoryResponse> categories = categoryService.getFeaturedCategories();
         Map<String, Object> map = new HashMap<>();
         map.put("result", categories);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{categoryName}/filters")
@@ -44,6 +46,7 @@ public class CategoryController {
         List<ProductFilterResponse> filterOptions = categoryService.getProductFiltersByCategoryName(categoryName);
         Map<String, Object> map = new HashMap<>();
         map.put("result", filterOptions);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

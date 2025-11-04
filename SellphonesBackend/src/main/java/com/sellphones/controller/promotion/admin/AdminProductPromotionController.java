@@ -27,7 +27,8 @@ public class AdminProductPromotionController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/create-product-promotion")
@@ -36,7 +37,8 @@ public class AdminProductPromotionController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created product promotion successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-product-promotion/{id}")
@@ -48,7 +50,8 @@ public class AdminProductPromotionController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product promotion successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-product-promotion/{id}")
@@ -57,7 +60,8 @@ public class AdminProductPromotionController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product promotion successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 }

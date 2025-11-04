@@ -27,7 +27,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/add-product-filter")
@@ -36,7 +37,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added product filter successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-product-filter/{id}")
@@ -45,7 +47,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product filter successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-product-filter/{id}")
@@ -54,7 +57,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product filter successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/{filterId}/filter-options")
@@ -63,7 +67,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 
@@ -73,7 +78,8 @@ public class AdminProductFilterController {
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("result", responses);
 //
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
 //    }
 
     @PostMapping("/{filterId}/add-filter-option")
@@ -82,7 +88,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added filter option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-filter-option/{optionId}")
@@ -91,7 +98,8 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited filter option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-filter-option/{optionId}")
@@ -100,6 +108,7 @@ public class AdminProductFilterController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted filter option successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

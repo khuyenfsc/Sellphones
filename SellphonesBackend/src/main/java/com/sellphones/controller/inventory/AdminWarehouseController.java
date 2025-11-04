@@ -27,7 +27,7 @@ public class AdminWarehouseController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-warehouse")
@@ -36,7 +36,7 @@ public class AdminWarehouseController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added warehouse successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/edit-warehouse/{id}")
@@ -45,7 +45,7 @@ public class AdminWarehouseController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited warehouse successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-warehouse/{id}")
@@ -54,7 +54,7 @@ public class AdminWarehouseController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted warehouse successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
 }

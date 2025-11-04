@@ -27,7 +27,8 @@ public class AdminPromotionBannerController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/create-promotion-banner")
@@ -40,7 +41,8 @@ public class AdminPromotionBannerController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created promotion banner successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/edit-promotion-banner/{id}")
@@ -53,7 +55,8 @@ public class AdminPromotionBannerController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited promotion banner successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @DeleteMapping("/delete-promotion-banner/{id}")
@@ -62,6 +65,7 @@ public class AdminPromotionBannerController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted promotion banner successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 }

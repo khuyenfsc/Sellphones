@@ -29,7 +29,7 @@ public class OrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", total);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping()
@@ -37,7 +37,7 @@ public class OrderController {
         orderService.order(orderRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Order successfully");
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @GetMapping
@@ -46,7 +46,7 @@ public class OrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("orders", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @GetMapping("/{id}")
@@ -55,7 +55,7 @@ public class OrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", orderDetailResponse);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/cancel/{id}")
@@ -64,6 +64,6 @@ public class OrderController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Canceled order failed");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 }

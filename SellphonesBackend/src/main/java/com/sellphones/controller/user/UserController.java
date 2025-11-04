@@ -7,6 +7,7 @@ import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.service.authentication.AuthenticationService;
 import com.sellphones.service.authentication.GoogleAuthenticationAction;
 import com.sellphones.service.user.UserService;
+import com.sellphones.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class UserController {
         BasicUserResponse userResponse = userService.getUserProfileBasic();
         Map<String, Object> map = new HashMap<>();
         map.put("basic_user", userResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @GetMapping("/profile")
@@ -44,7 +46,8 @@ public class UserController {
         UserProfileResponse userProfileResponse = userService.getUserProfile();
         Map<String, Object> map = new HashMap<>();
         map.put("result", userProfileResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/update-profile")
@@ -53,7 +56,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PutMapping("/change-password")
@@ -62,7 +66,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Changed password successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/register")
@@ -71,7 +76,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", activeProfileResponse);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/send-register-otp")
@@ -80,7 +86,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Sent otp successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/verify-register-otp")
@@ -89,7 +96,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Registered user successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 //    @PostMapping("/check-existing-user")
@@ -98,7 +106,8 @@ public class UserController {
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("result", "Validated user successfully");
 //
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
 //    }
 
     @PostMapping("/send-forgot-password-otp")
@@ -107,7 +116,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Sent otp successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/verify-forgot-password-otp")
@@ -116,7 +126,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("token", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/reset-password")
@@ -125,26 +136,20 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Reset password successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/register-with-google")
     public ResponseEntity<CommonResponse> registerWithGoogle(@RequestBody @Valid GoogleRegisterRequest request, HttpServletResponse response){
         AuthenticationToken authenticationToken = userService.registerWithGoogle(request);
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", authenticationToken.getRefreshToken())
-                .httpOnly(true)
-                .domain("localhost")
-                .maxAge(Duration.ofDays(14))
-                .sameSite("Strict")
-                .secure(false)
-                .path("/")
-                .build();
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken());
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", new AuthenticationResponse(authenticationToken.getAccessToken()));
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
     @PostMapping("/test-create-user")
@@ -153,7 +158,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Registered user successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
     }
 
 

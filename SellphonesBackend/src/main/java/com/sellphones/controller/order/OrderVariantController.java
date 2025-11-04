@@ -25,6 +25,6 @@ public class OrderVariantController {
         boolean purchased = orderVariantService.hasPurchasedVariant(variantId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", purchased);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 }

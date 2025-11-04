@@ -3,7 +3,6 @@ package com.sellphones.controller.cart;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartResponse;
-import com.sellphones.dto.cart.DeletedItemRequest;
 import com.sellphones.dto.cart.ItemQuantityRequest;
 import com.sellphones.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class CartController {
         CartResponse cartResponse = cartService.getCart();
         Map<String, Object> map = new HashMap<>();
         map.put("result", cartResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-item")
@@ -34,7 +33,7 @@ public class CartController {
         cartService.addItemsToCart(cartItemRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Successfully to add item to cart");
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/update-quantity")
@@ -42,7 +41,7 @@ public class CartController {
         cartService.updateItemQuantity(itemQuantityRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Updated quantity successfully");
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-cart-item/{itemId}")
@@ -50,7 +49,7 @@ public class CartController {
         cartService.deleteCartItem(itemId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted cart item successfully");
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
 }

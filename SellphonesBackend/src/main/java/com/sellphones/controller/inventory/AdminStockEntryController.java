@@ -29,7 +29,7 @@ public class AdminStockEntryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/add-stock-entry")
@@ -38,7 +38,7 @@ public class AdminStockEntryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added stock entry successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PutMapping("/edit-stock-entry/{id}")
@@ -47,7 +47,7 @@ public class AdminStockEntryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited stock entry successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @DeleteMapping("/delete-stock-entry/{id}")
@@ -56,6 +56,6 @@ public class AdminStockEntryController {
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted stock entry successfully");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(map));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 }

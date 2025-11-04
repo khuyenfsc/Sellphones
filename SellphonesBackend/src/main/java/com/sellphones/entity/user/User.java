@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.sellphones.entity.BaseEntity;
+import com.sellphones.entity.cart.Cart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -68,5 +69,8 @@ public class User extends BaseEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
 
 }
