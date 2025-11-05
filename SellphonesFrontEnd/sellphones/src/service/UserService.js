@@ -44,7 +44,7 @@ const UserService = {
 
             // ✅ Xử lý lỗi 409: người dùng đã tồn tại
             if (error.response?.status === 409) {
-                const msg = error.response?.data?.errors?.message || 'Người dùng đã tồn tại.';
+                const msg = 'Người dùng đã tồn tại.';
                 return { success: false, message: msg };
             }
 
@@ -61,18 +61,18 @@ const UserService = {
     async registerWithGoogle(userData) {
         try {
             const res = await AxiosClient.post(
-                "/users/register/google",
+                "/users/register-with-google",
                 userData,
                 { withCredentials: true }
             );
 
-            // ✅ Kiểm tra phản hồi trả về từ server
-            if (res?.status === 200 && res?.data?.success) {
-                return {
-                    success: true,
-                    message: res.data?.message || "Đăng ký bằng Google thành công!",
-                    user: res.data?.result || null,
-                };
+            const accessToken = res?.data?.result?.accessToken;
+
+            if (accessToken) {
+                // ✅ Lưu token vào localStorage giống như login
+                localStorage.setItem("accessToken", accessToken);
+
+                return { success: true, accessToken };
             }
 
             return {
@@ -175,6 +175,121 @@ const UserService = {
         }
     },
 
+    async sendForgotPasswordOtp(email) {
+        try {
+            const res = await AxiosClient.post(
+                '/users/send-forgot-password-otp',
+                { email },
+                { withCredentials: true }
+            );
+
+            if (res?.status === 200) {
+                return { success: true, message: res.data.result || 'Mã OTP đặt lại mật khẩu đã được gửi đến email.' };
+            }
+
+            return { success: false, message: res.data?.result || 'Gửi OTP thất bại, vui lòng thử lại!' };
+        } catch (error) {
+            console.error('❌ Lỗi gửi OTP quên mật khẩu:', error);
+
+            // ✅ Xử lý lỗi email không hợp lệ
+            if (error.response?.status === 400) {
+                const msg = error.response?.data?.errors?.message || 'Email không hợp lệ hoặc không tồn tại.';
+                return { success: false, message: msg };
+            }
+
+            // ✅ Các lỗi khác
+            const fallbackMsg =
+                error.response?.data?.message ||
+                error.response?.data?.errors?.message ||
+                'Không thể gửi mã OTP. Vui lòng thử lại sau.';
+
+            return { success: false, message: fallbackMsg };
+        }
+    },
+
+    async verifyForgotPasswordOtp(email, otp) {
+        try {
+            const res = await AxiosClient.post(
+                '/users/verify-forgot-password-otp',
+                { email, otp },
+                { withCredentials: true }
+            );
+
+            if (res?.status === 200) {
+                return {
+                    success: true,
+                    message: 'Xác minh OTP thành công!',
+                    data: res.data?.result, // đề phòng server trả thêm dữ liệu
+                };
+            }
+
+            return {
+                success: false,
+                message: res.data?.result || 'Xác minh OTP thất bại, vui lòng thử lại!',
+            };
+        } catch (error) {
+            console.error('❌ Lỗi xác minh OTP quên mật khẩu:', error);
+
+            // ✅ Xử lý lỗi OTP sai, hết hạn hoặc dữ liệu không hợp lệ
+            if (error.response?.status === 400) {
+                const msg =
+                    error.response?.data?.errors?.message ||
+                    error.response?.data?.message ||
+                    'Mã OTP không hợp lệ hoặc đã hết hạn.';
+                return { success: false, message: msg };
+            }
+
+            // ✅ Các lỗi khác (server, mạng, v.v.)
+            const fallbackMsg =
+                error.response?.data?.message ||
+                error.response?.data?.errors?.message ||
+                'Không thể xác minh mã OTP. Vui lòng thử lại sau.';
+
+            return { success: false, message: fallbackMsg };
+        }
+    },
+
+    async resetPassword(token, newPassword) {
+        try {
+            const res = await AxiosClient.post(
+                '/users/reset-password',
+                { token, newPassword },
+                { withCredentials: true }
+            );
+
+            if (res?.status === 200) {
+                return {
+                    success: true,
+                    message: res.data?.result || 'Đặt lại mật khẩu thành công!',
+                    data: res.data, // phòng trường hợp server trả thêm dữ liệu
+                };
+            }
+
+            return {
+                success: false,
+                message: res.data?.result || 'Đặt lại mật khẩu thất bại, vui lòng thử lại!',
+            };
+        } catch (error) {
+            console.error('❌ Lỗi đặt lại mật khẩu:', error);
+
+            // ✅ Xử lý lỗi dữ liệu không hợp lệ hoặc token hết hạn
+            if (error.response?.status === 400) {
+                const msg =
+                    error.response?.data?.errors?.message ||
+                    error.response?.data?.message ||
+                    'Token không hợp lệ hoặc đã hết hạn.';
+                return { success: false, message: msg };
+            }
+
+            // ✅ Các lỗi khác (server, mạng, v.v.)
+            const fallbackMsg =
+                error.response?.data?.message ||
+                error.response?.data?.errors?.message ||
+                'Không thể đặt lại mật khẩu. Vui lòng thử lại sau.';
+
+            return { success: false, message: fallbackMsg };
+        }
+    },
 
     async refreshToken() {
         try {
@@ -324,7 +439,7 @@ const UserService = {
             }
 
             console.error('❌ Lỗi đổi mật khẩu:', err);
-            return { success: false, message: 'Không thể đổi mật khẩu' };
+            return { success: false, message: err?.response?.data?.errors?.message || err.message || 'Không thể đổi mật khẩu' };
         }
     },
 

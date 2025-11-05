@@ -3,19 +3,23 @@ import { Calendar, X } from "lucide-react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { vi } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import UserService from "../../../service/UserService";
 
 registerLocale("vi", vi);
 
 export default function OAuth2UpdatePage() {
   const [formData, setFormData] = useState({
     fullName: "",
-    birthDate: null,
+    dateOfBirth: null,
     gender: "",
-    phone: "",
+    phoneNumber: "",
     email: "",
   });
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeToken, setActiveToken] = useState("");
 
   // Lấy dữ liệu từ URL khi trang load
@@ -41,8 +45,8 @@ export default function OAuth2UpdatePage() {
   };
 
   const handleDateChange = (date) => {
-    setFormData((prev) => ({ ...prev, birthDate: date }));
-    setErrors((prev) => ({ ...prev, birthDate: "" }));
+    setFormData((prev) => ({ ...prev, dateOfBirth: date }));
+    setErrors((prev) => ({ ...prev, dateOfBirth: "" }));
   };
 
 
@@ -50,29 +54,75 @@ export default function OAuth2UpdatePage() {
     setFormData((prev) => ({ ...prev, fullName: "" }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+
+    if (isSubmitting) return;
     let newErrors = {};
 
+    // 🔹 Kiểm tra họ tên
     if (!formData.fullName.trim()) {
       newErrors.fullName = "Vui lòng nhập họ và tên.";
     }
-    if (!formData.birthDate) {
-      newErrors.birthDate = "Vui lòng chọn ngày sinh.";
+
+    // 🔹 Kiểm tra ngày sinh
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = "Vui lòng chọn ngày sinh.";
     }
+
+    // 🔹 Kiểm tra giới tính
     if (!formData.gender) {
       newErrors.gender = "Vui lòng chọn giới tính.";
     }
 
+    // 🔹 Kiểm tra số điện thoại (chỉ khi không rỗng)
+    const phoneRegex = /^\+?[0-9]{8,15}$/;
+    if (formData.phoneNumber && formData.phoneNumber.trim() !== "") {
+      if (!phoneRegex.test(formData.phoneNumber.trim())) {
+        newErrors.phoneNumber = "Số điện thoại không hợp lệ.";
+      }
+    }
+
+    // ❌ Nếu có lỗi thì dừng lại
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
+    setIsSubmitting(true);
+
+    // ✅ Format lại ngày sinh
+    const formattedDate = formData.dateOfBirth
+      ? formData.dateOfBirth.toISOString().split("T")[0]
+      : null;
+
     const { email, ...dataToSend } = formData;
-    const payload = { ...dataToSend, activeToken: "example-token" };
-    console.log("Payload gửi đi:", payload);
-    // TODO: Gọi API gửi dữ liệu ở đây
+
+    const payload = {
+      ...dataToSend,
+      dateOfBirth: formattedDate,
+      activeToken: activeToken,
+    };
+
+    try {
+      console.log("📤 Payload gửi đi:", payload);
+      const res = await UserService.registerWithGoogle(payload);
+
+      if (res.success) {
+        toast.success("🎉 Đăng ký bằng Google thành công!");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(res.message || "Đăng ký bằng Google thất bại!");
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi gọi API đăng ký:", error);
+      toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
+      setIsSubmitting(false);
+    }
   };
+
 
 
   const handleBack = () => {
@@ -84,7 +134,7 @@ export default function OAuth2UpdatePage() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-red-600 text-center mb-8">
+        <h1 className="text-3xl font-bold text-blue-600 text-center mb-8">
           Cập nhật thông tin
         </h1>
 
@@ -131,12 +181,12 @@ export default function OAuth2UpdatePage() {
                 </label>
                 <div className="relative">
                   <DatePicker
-                    selected={formData.birthDate}
+                    selected={formData.dateOfBirth}
                     onChange={handleDateChange}
                     dateFormat="dd/MM/yyyy"
                     locale={vi}
                     placeholderText="dd/mm/yyyy"
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all pr-10 ${errors.birthDate ? "border-red-500" : "border-gray-300"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all pr-10 ${errors.dateOfBirth ? "border-red-500" : "border-gray-300"
                       }`}
                     showMonthDropdown
                     showYearDropdown
@@ -144,8 +194,8 @@ export default function OAuth2UpdatePage() {
                   />
                   <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 </div>
-                {errors.birthDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>
+                {errors.dateOfBirth && (
+                  <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>
                 )}
               </div>
 
@@ -194,7 +244,7 @@ export default function OAuth2UpdatePage() {
               </div>
 
 
-              {/* Phone */}
+              {/* phoneNumber */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Số điện thoại{" "}
@@ -202,12 +252,16 @@ export default function OAuth2UpdatePage() {
                 </label>
                 <input
                   type="tel"
-                  name="phone"
-                  value={formData.phone}
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
                   onChange={handleInputChange}
                   placeholder="Nhập số điện thoại"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
                 />
+
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
+                )}
               </div>
 
               {/* Email */}
@@ -246,7 +300,7 @@ export default function OAuth2UpdatePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
             <button
-              onClick={() => console.log("Quay lại")}
+              onClick={() => navigate("/login")}
               className="py-3 px-6 bg-white border-2 border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
             >
               <span className="text-lg">←</span>
@@ -254,9 +308,13 @@ export default function OAuth2UpdatePage() {
             </button>
             <button
               onClick={handleSubmit}
-              className="py-3 px-6 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+              disabled={isSubmitting}
+              className={`py-3 px-6 rounded-lg font-medium transition-colors ${isSubmitting
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
             >
-              Hoàn tất đăng ký
+              {isSubmitting ? "Đang xử lý..." : "Hoàn tất đăng ký"}
             </button>
           </div>
         </div>

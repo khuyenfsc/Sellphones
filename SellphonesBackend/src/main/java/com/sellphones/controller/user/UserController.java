@@ -4,20 +4,15 @@ import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.authentication.AuthenticationResponse;
 import com.sellphones.dto.user.*;
 import com.sellphones.entity.authentication.AuthenticationToken;
-import com.sellphones.service.authentication.AuthenticationService;
-import com.sellphones.service.authentication.GoogleAuthenticationAction;
 import com.sellphones.service.user.UserService;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +22,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
-    private final AuthenticationService authenticationService;
-
-    private final GoogleAuthenticationAction googleAuthenticationAction;
 
     @GetMapping("/user-profile-basic")
     public ResponseEntity<CommonResponse> getUserProfileBasic(){
@@ -124,7 +115,7 @@ public class UserController {
     public ResponseEntity<CommonResponse> verifyForgotPasswordOtp(@RequestBody @Valid ForgotPasswordOtpRequest forgotPasswordOtpRequest) {
         ResetPasswordTokenResponse response = userService.verifyForgotPasswordOtp(forgotPasswordOtpRequest);
         Map<String, Object> map = new HashMap<>();
-        map.put("token", response);
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 

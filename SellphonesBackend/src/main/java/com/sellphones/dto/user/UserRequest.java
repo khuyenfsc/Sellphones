@@ -16,4 +16,8 @@ public class UserRequest {
     @NotBlank
     private String password;
 
+    public UserRequest(String email){
+        this.email = email;
+    }
+
 }

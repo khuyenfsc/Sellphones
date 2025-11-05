@@ -3,6 +3,7 @@ package com.sellphones.filter;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.sellphones.configuration.CustomUserDetails;
+import com.sellphones.configuration.JwtAuthenticationToken;
 import com.sellphones.constant.AppConstants;
 import com.sellphones.entity.user.Permission;
 import com.sellphones.entity.user.Role;
@@ -22,8 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +32,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -87,7 +86,8 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                     .authorities(authorities)
                     .build();
 
-            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
+//            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
+            Authentication authentication = new JwtAuthenticationToken(userDetails, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AppException ex) {
             writeErrorResponse(response,

@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -73,9 +72,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String email = attributes.get("email").toString();
         User user = userRepository.findByEmail(email).orElse(null);
         if(user != null){
-            AuthenticationToken authenticationToken = authenticationService.authenticate(googleAuthenticationAction, new UserRequest(attributes.get("email").toString(), null), RoleName.CUSTOMER);
-            user.setProvider(Provider.GOOGLE);
-            userRepository.save(user);
+
+            if(user.getProvider() != Provider.GOOGLE){
+                user.setProvider(Provider.GOOGLE);
+                userRepository.save(user);
+            }
+
+            AuthenticationToken authenticationToken = authenticationService.authenticate(googleAuthenticationAction, new UserRequest(attributes.get("email").toString()), RoleName.CUSTOMER);;
             ResponseCookie cookie = ResponseCookie.from("refreshToken", authenticationToken.getRefreshToken())
                     .httpOnly(true)
                     .domain("localhost")
@@ -89,7 +92,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             //Đổi thành url front end ví dụ:  response.sendRedirect("http://localhost:3000/oauth2/success");
-            response.sendRedirect("http://localhost:3000/oauth2/success");
+            response.sendRedirect("http://localhost:3000");
         }else{
             String familyName = (String) attributes.get("family_name");
             String givenName = (String) attributes.get("given_name");

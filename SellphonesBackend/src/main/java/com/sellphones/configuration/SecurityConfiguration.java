@@ -28,12 +28,8 @@ public class SecurityConfiguration {
 
     private final CustomOAuth2UserService oAuth2UserService;
 
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
-
-    private final JwtValidatorFilter jwtValidatorFilter;
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtValidatorFilter jwtValidatorFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtValidatorFilter jwtValidatorFilter, OAuth2SuccessHandler oAuth2SuccessHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AppConstants.ADMIN_ENDPOINTS).hasAuthority("ADMIN")
@@ -79,8 +75,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UsernamePasswordAuthenticationProvider authenticationProvider){
-        return new ProviderManager(authenticationProvider);
+    public AuthenticationManager authenticationManager(
+            UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider,
+            GoogleAuthenticationProvider googleAuthenticationProvider
+    ){
+        return new ProviderManager(usernamePasswordAuthenticationProvider, googleAuthenticationProvider);
     }
 
 }

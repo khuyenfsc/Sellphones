@@ -16,10 +16,10 @@ export default function RightSidebar({ promos }) {
               <>
                 <div className="font-semibold text-gray-800">Đang tải...</div>
               </>
-            ) : user && user?.user?.fullName ? (
+            ) : user ? (
               <>
                 <div className="font-semibold text-gray-800">
-                  Chào mừng {user?.user.fullName?.split(" ").slice(-1)[0]} đến với SellphoneS 🎉
+                  Chào mừng {user?.fullName?.split(" ").slice(-1)[0]} đến với SellphoneS 🎉
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
                   Rất vui khi bạn quay lại!

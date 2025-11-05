@@ -3,6 +3,7 @@ package com.sellphones.service.authentication;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.sellphones.configuration.CustomUserDetails;
+import com.sellphones.configuration.JwtAuthenticationToken;
 import com.sellphones.dto.authentication.LogoutRequest;
 import com.sellphones.dto.user.BasicUserResponse;
 import com.sellphones.dto.user.UserRequest;
@@ -19,7 +20,6 @@ import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -65,7 +65,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .authorities(authorities)
                 .build();
 
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
+//        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
+        Authentication authentication = new JwtAuthenticationToken(userDetails, authorities);
         String newAccessToken = jwtService.generateToken(authentication, TokenType.ACCESS, jwtClaimsSet.getClaim("role").toString());
         String newRefreshToken = jwtService.generateToken(authentication, TokenType.REFRESH, jwtClaimsSet.getClaim("role").toString());
         return new AuthenticationToken(newAccessToken, newRefreshToken);

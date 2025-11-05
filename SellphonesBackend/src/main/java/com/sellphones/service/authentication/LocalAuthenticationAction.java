@@ -18,19 +18,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LocalAuthenticationAction implements AuthenticationAction{
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
+    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @Override
     public AuthenticationToken authenticate(UserRequest userRequest, RoleName roleName) {
-
-        AuthenticationManager authenticationManager = null;
-        try {
-            authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.GET_AUTHENTICATION_MANAGER_FAILED);
-        }
 
         Authentication unauthentication = UsernamePasswordAuthenticationToken.unauthenticated(userRequest.getEmail(), userRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(unauthentication);

@@ -158,9 +158,13 @@ export default function LoginPage() {
                         </button>
 
                         <div className="text-center mb-6">
-                            <a href="#" className="text-blue-600 hover:underline">
+                            <button
+                                type="button"
+                                onClick={() => navigate("/reset-password")}
+                                className="text-blue-600 hover:underline"
+                            >
                                 Quên mật khẩu?
-                            </a>
+                            </button>
                         </div>
 
                         <div className="relative my-8">
@@ -205,9 +209,13 @@ export default function LoginPage() {
 
                         <div className="text-center text-gray-600">
                             Bạn chưa có tài khoản?{' '}
-                            <a href="/register" className="text-red-600 font-medium hover:underline">
+                            <button
+                                type="button"
+                                onClick={() => navigate("/register")}
+                                className="text-red-600 font-medium hover:underline"
+                            >
                                 Đăng ký ngay
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

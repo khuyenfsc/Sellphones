@@ -3,10 +3,7 @@ package com.sellphones.service.user;
 import com.sellphones.dto.user.*;
 import com.sellphones.entity.authentication.AuthenticationToken;
 import com.sellphones.entity.cart.Cart;
-import com.sellphones.entity.user.Provider;
-import com.sellphones.entity.user.Role;
-import com.sellphones.entity.user.RoleName;
-import com.sellphones.entity.user.User;
+import com.sellphones.entity.user.*;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.redis.Otp;
@@ -98,6 +95,11 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if(user.getPassword() == null){
+            throw new AppException(ErrorCode.GOOGLE_ACCOUNT_NO_PASSWORD);
+        }
+
         if(!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())){
             throw new AppException(ErrorCode.INVALID_PASSWORD);
         }
@@ -195,6 +197,7 @@ public class UserServiceImpl implements UserService{
 
         User user = redisUserService.getUser(registerOtpRequest.getActiveToken());
         user.setRole(getCustomerRole());
+        user.setStatus(UserStatus.ACTIVE);
         User savedUser = userRepository.save(user);
 
         Cart cart = new Cart();
@@ -283,7 +286,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResetPasswordTokenResponse verifyForgotPasswordOtp(ForgotPasswordOtpRequest forgotPasswordOtpRequest) {
         Otp otp = redisOtpService.getForgotPasswordOtp(forgotPasswordOtpRequest.getEmail());
-        if(!otp.getOtp().equals(forgotPasswordOtpRequest.getOtp())){
+        if(otp == null || !otp.getOtp().equals(forgotPasswordOtpRequest.getOtp())){
             throw new AppException(ErrorCode.INVALID_OTP);
         }
 
@@ -315,11 +318,18 @@ public class UserServiceImpl implements UserService{
                 .dateOfBirth(request.getDateOfBirth())
                 .phoneNumber(request.getPhoneNumber())
                 .gender(request.getGender())
+                .status(UserStatus.ACTIVE)
                 .role(role)
                 .provider(Provider.GOOGLE)
                 .createdAt(LocalDateTime.now())
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        Cart cart = new Cart();
+        cart.setUser(savedUser);
+        cart.setUpdatedAt(LocalDateTime.now());
+        cartRepository.save(cart);
+
         redisAuthService.deleteRegisterEmail(email);
         return authenticationService.authenticate(googleAuthenticationAction, new UserRequest(email, null), RoleName.CUSTOMER);
     }

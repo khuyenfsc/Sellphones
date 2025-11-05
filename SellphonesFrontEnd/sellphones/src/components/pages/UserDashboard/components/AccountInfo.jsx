@@ -63,13 +63,9 @@ export default function AccountInfo() {
                                         {user.provider === "GOOGLE" ? (
                                             <p className="text-sm text-green-600">Đã liên kết</p>
                                         ) : (
-                                            <a
-                                                href="/auth/google"
-                                                className="text-sm text-blue-600 hover:underline"
-                                            >
-                                                Liên kết ngay
-                                            </a>
+                                            <p className="text-sm text-red-600">Chưa liên kết</p>
                                         )}
+
                                     </div>
                                 </div>
                             </div>

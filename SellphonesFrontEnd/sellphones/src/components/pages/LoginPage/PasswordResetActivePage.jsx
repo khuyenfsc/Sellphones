@@ -1,31 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UserService from '../../../service/UserService';
+import CreateNewPasswordPage from './CreateNewPasswordPage';
 import { toast } from "react-toastify";
 
-export default function ActiveProfilePage() {
+export default function PasswordResetActivePage({ email }) {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [countdown, setCountdown] = useState(60);
     const [isResending, setIsResending] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+    const [token, setToken] = useState(null);
     const inputRefs = useRef([]);
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const activeToken = searchParams.get('activeToken');
-    const email = searchParams.get('email') ? decodeURIComponent(searchParams.get('email')) : null;
-
-    // ✅ Nếu thiếu activeToken hoặc email → quay lại login
+    // ✅ Gửi OTP ngay khi load trang
     useEffect(() => {
-        if (!activeToken || !email) {
-            navigate('/login');
-            return;
-        }
-
-        // ✅ Gửi OTP ngay khi load trang
         const sendInitialOtp = async () => {
             try {
-                const res = await UserService.sendRegisterOtp(activeToken, email);
+                const res = await UserService.sendForgotPasswordOtp(email);
                 if (res.success) {
                     console.log('✅ OTP sent:', res.message);
                     setCountdown(60);
@@ -37,9 +30,14 @@ export default function ActiveProfilePage() {
             }
         };
 
-        sendInitialOtp();
-    }, [activeToken, email, navigate]);
+        if (email) {
+            sendInitialOtp();
+        } else {
+            navigate("/forgot-password"); // nếu thiếu email thì quay lại
+        }
+    }, [email, navigate]);
 
+    // ✅ Đếm ngược 60 giây
     useEffect(() => {
         let timer;
         if (countdown > 0) {
@@ -48,10 +46,9 @@ export default function ActiveProfilePage() {
         return () => clearInterval(timer);
     }, [countdown]);
 
-    // ✅ Xử lý nhập OTP
+    // ✅ Nhập OTP
     const handleInputChange = (index, value) => {
         if (value && !/^\d$/.test(value)) return;
-
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
@@ -77,6 +74,7 @@ export default function ActiveProfilePage() {
         }
     };
 
+    // ✅ Xác thực OTP
     const handleVerify = async () => {
         const otpCode = otp.join('');
 
@@ -89,10 +87,8 @@ export default function ActiveProfilePage() {
         }
 
         setIsVerifying(true);
-
         try {
-            // ✅ Gọi API xác thực OTP
-            const res = await UserService.verifyRegisterOtp(activeToken, email, otpCode);
+            const res = await UserService.verifyForgotPasswordOtp(email, otpCode);
 
             if (res.success) {
                 toast.success("Xác thực OTP thành công!", {
@@ -100,12 +96,23 @@ export default function ActiveProfilePage() {
                     autoClose: 2000,
                 });
 
-                // ✅ Chuyển hướng về trang đăng nhập sau 2s
+                const receivedToken = res.data?.token;
+
+                if (!receivedToken) {
+                    toast.error("Không nhận được token từ server!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                    setIsVerifying(false);
+                    return;
+                }
+
                 setTimeout(() => {
-                    navigate("/login");
-                }, 2000);
+                    setToken(receivedToken);
+                    setIsVerified(true);
+                }, 1500);
             } else {
-                toast.error("Mã OTP không hợp lệ, vui lòng thử lại!", {
+                toast.error(res.message || "Mã OTP không hợp lệ, vui lòng thử lại!", {
                     position: "top-right",
                     autoClose: 3000,
                 });
@@ -119,20 +126,22 @@ export default function ActiveProfilePage() {
         } finally {
             setIsVerifying(false);
         }
+
+        
     };
 
-    // ✅ Gửi lại mã OTP
+    // ✅ Gửi lại OTP
     const handleResend = async () => {
-        if (countdown > 0 || isResending) return; // tránh spam
+        if (countdown > 0 || isResending) return;
 
         setIsResending(true);
         console.log("🔁 Resending OTP...");
 
-        const res = await UserService.sendRegisterOtp(activeToken, email);
+        const res = await UserService.sendForgotPasswordOtp(email);
 
         if (res.success) {
             console.log("✅ OTP resent:", res.message);
-            setCountdown(60); // reset lại 60s sau khi gửi
+            setCountdown(60);
         } else {
             console.warn("⚠️ Resend failed:", res.message);
         }
@@ -143,8 +152,12 @@ export default function ActiveProfilePage() {
     };
 
     const handleBack = () => {
-        navigate('/login');
+        navigate('/forgot-password');
     };
+
+    if(isVerified){
+        return <CreateNewPasswordPage email={email} token={token} />
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -164,18 +177,16 @@ export default function ActiveProfilePage() {
                     </div>
                 </div>
 
-                {/* Title */}
                 <h1 className="text-3xl font-bold text-blue-600 text-center mb-4">
-                    Kích hoạt tài khoản
+                    Xác minh mã OTP
                 </h1>
 
-                {/* Instructions */}
                 <p className="text-center text-gray-600 mb-8">
-                    Vui lòng nhập mã OTP đã được gửi đến <br />
+                    Mã OTP đã được gửi đến: <br />
                     <span className="font-semibold text-gray-800">{email}</span>
                 </p>
 
-                {/* OTP Input Boxes (6 ô) */}
+                {/* OTP Input */}
                 <div className="flex justify-center gap-3 mb-8 text-black">
                     {otp.map((digit, index) => (
                         <input
@@ -188,12 +199,12 @@ export default function ActiveProfilePage() {
                             onChange={(e) => handleInputChange(index, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
                             onPaste={handlePaste}
-                            className="w-12 h-14 text-center text-2xl font-semibold border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
+                            className="w-12 h-14 text-center text-2xl font-semibold border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                         />
                     ))}
                 </div>
 
-                {/* Action Buttons */}
+                {/* Buttons */}
                 <div className="flex gap-3 mb-8">
                     <button
                         onClick={handleBack}
@@ -209,7 +220,6 @@ export default function ActiveProfilePage() {
                     >
                         {isVerifying ? "Đang xác thực..." : "Xác nhận"}
                     </button>
-
                 </div>
 
                 {/* Resend OTP */}

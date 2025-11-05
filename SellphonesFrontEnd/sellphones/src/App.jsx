@@ -14,6 +14,7 @@ import CheckoutPage from "./components/pages/CartPage/components/CheckoutPage";
 import RegisterPage from "./components/pages/LoginPage/RegisterPage";
 import ActiveProfilePage from "./components/pages/LoginPage/ActiveProfilePage";
 import OAuth2UpdatePage from "./components/pages/LoginPage/OAuth2UpdatePage";
+import PasswordResetPage from "./components/pages/LoginPage/PasswordResetPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/active-profile" element={<ActiveProfilePage />} />
             <Route path="/oauth2/complete-register" element={<OAuth2UpdatePage />} />
+            <Route path="/reset-password" element={<PasswordResetPage />} />
 
             {/* ✅ Nested routes (Protected) */}
             <Route

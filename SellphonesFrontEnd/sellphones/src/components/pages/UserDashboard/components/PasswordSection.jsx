@@ -59,7 +59,7 @@ const PasswordSection = () => {
                 });
                 setErrors({});
             } else {
-                toast.error("Đổi mật khẩu thất bại! Vui lòng thử lại.");
+                toast.error(res.message);
             }
         } catch (err) {
             console.error("❌ Lỗi khi đổi mật khẩu:", err);

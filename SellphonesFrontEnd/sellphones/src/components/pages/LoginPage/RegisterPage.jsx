@@ -5,6 +5,7 @@ import { vi } from "date-fns/locale";
 import { toast } from "react-toastify";
 import "react-datepicker/dist/react-datepicker.css";
 import UserService from "../../../service/UserService";
+import { useNavigate } from "react-router-dom";
 
 registerLocale("vi", vi);
 
@@ -13,6 +14,7 @@ export default function RegisterPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -42,17 +44,22 @@ export default function RegisterPage() {
     const validateForm = () => {
         const newErrors = {};
 
+        // 🔹 Họ và tên
         if (!formData.fullName.trim())
             newErrors.fullName = "Vui lòng nhập họ và tên";
 
-        if (!formData.birthDate) newErrors.birthDate = "Vui lòng chọn ngày sinh";
+        // 🔹 Ngày sinh
+        if (!formData.birthDate)
+            newErrors.birthDate = "Vui lòng chọn ngày sinh";
 
+        // 🔹 Email
         if (!formData.email.trim()) {
             newErrors.email = "Vui lòng nhập email";
         } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
             newErrors.email = "Email không hợp lệ";
         }
 
+        // 🔹 Mật khẩu
         if (!formData.password) {
             newErrors.password = "Vui lòng nhập mật khẩu";
         } else if (
@@ -64,17 +71,29 @@ export default function RegisterPage() {
                 "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt";
         }
 
+        // 🔹 Nhập lại mật khẩu
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = "Vui lòng nhập lại mật khẩu";
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Mật khẩu nhập lại không khớp";
         }
 
-        if (!formData.gender) newErrors.gender = "Vui lòng chọn giới tính";
+        // 🔹 Giới tính
+        if (!formData.gender)
+            newErrors.gender = "Vui lòng chọn giới tính";
+
+        // 🔹 Số điện thoại (nếu có nhập thì phải hợp lệ)
+        const phoneRegex = /^\+?[0-9]{8,15}$/;
+        if (formData.phoneNumber && formData.phoneNumber.trim() !== "") {
+            if (!phoneRegex.test(formData.phoneNumber.trim())) {
+                newErrors.phoneNumber = "Số điện thoại không hợp lệ";
+            }
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -365,20 +384,20 @@ export default function RegisterPage() {
 
                     {/* Action Buttons */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                        <a
-                            href="/login"
+                        <button
+                            onClick={() => navigate("/login")}
                             className="py-3 px-6 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
                         >
                             <span>←</span>
                             <span>Quay lại đăng nhập</span>
-                        </a>
+                        </button>
 
                         <button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
                             className={`py-3 px-6 rounded-lg font-medium transition-colors ${isSubmitting
-                                    ? "bg-red-400 cursor-not-allowed text-white"
-                                    : "bg-red-600 hover:bg-red-700 text-white"
+                                ? "bg-red-400 cursor-not-allowed text-white"
+                                : "bg-blue-600 hover:bg-blue-700 text-white"
                                 }`}
                         >
                             {isSubmitting ? "Đang xử lý..." : "Hoàn tất đăng ký"}
