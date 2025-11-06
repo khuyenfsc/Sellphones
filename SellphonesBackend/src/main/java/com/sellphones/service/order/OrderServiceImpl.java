@@ -9,6 +9,7 @@ import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.entity.order.OrderVariant;
+import com.sellphones.entity.order.Payment;
 import com.sellphones.entity.payment.*;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
@@ -53,10 +54,6 @@ public class OrderServiceImpl implements OrderService{
 
     private final UserRepository userRepository;
 
-    private final PaymentMethodRepository paymentMethodRepository;
-
-    private final ProductPromotionRepository productPromotionRepository;
-
     private final CustomerInfoRepository customerInfoRepository;
 
     private final ProductPromotionService productPromotionService;
@@ -84,7 +81,6 @@ public class OrderServiceImpl implements OrderService{
         List<OrderProductRequest> orderProducts = request.getOrderProducts();
 
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        PaymentMethod paymentMethod = paymentMethodRepository.findById(request.getPaymentMethodId()).orElseThrow(() -> new AppException(ErrorCode.PAYMENT_METHOD_NOT_FOUND));
 
         CustomerInfo customerInfo;
         if(user.getRole().getRoleName() != RoleName.ADMIN){
@@ -93,12 +89,13 @@ public class OrderServiceImpl implements OrderService{
             customerInfo = customerInfoRepository.findById(request.getCustomerInfoId()).orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
         }
 
+        Payment payment = paymentService.initPayment(request.getPaymentMethodId());
+
         Order order = Order.builder()
                 .user(user)
                 .orderStatus(OrderStatus.PENDING)
-                .paymentMethod(paymentMethod)
-                .paymentStatus(PaymentStatus.PENDING)
                 .orderedAt(LocalDateTime.now())
+                .payment(payment)
                 .customerInfo(customerInfo)
                 .build();
 
@@ -107,7 +104,7 @@ public class OrderServiceImpl implements OrderService{
 
         calculateTotalPriceForOrder(order);
 
-        paymentService.pay(order);
+//        paymentService.pay(order);
 
         orderRepository.save(order);
 

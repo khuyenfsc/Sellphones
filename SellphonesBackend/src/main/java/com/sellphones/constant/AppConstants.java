@@ -25,7 +25,7 @@ public class AppConstants {
             "/api/v1/users/verify-forgot-password-otp",
             "/api/v1/users/reset-password",
             "/api/v1/users/register-with-google",
-
+            "/api/v1/payment/vnpay-callback",
             "/oauth2/**"
     };
 

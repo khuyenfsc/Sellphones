@@ -48,13 +48,16 @@ public class Order extends BaseEntity<Long> {
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_method_id")
-    private PaymentMethod paymentMethod;
+    @OneToOne(mappedBy = "order")
+    private Payment payment;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus paymentStatus;
+//    @ManyToOne
+//    @JoinColumn(name = "payment_method_id")
+//    private PaymentMethod paymentMethod;
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private PaymentStatus paymentStatus;
 
     private String note;
 

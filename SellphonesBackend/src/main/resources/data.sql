@@ -1190,16 +1190,16 @@ VALUES (1, 'Cash Payment', 'Thanh toán tiền mặt tại cửa hàng hoặc kh
 INSERT INTO payment_method (id, name, description, payment_method_type)
 VALUES (2, 'VNPay', 'Thanh toán trực tuyến thông qua cổng VNPay', 'VNPAY');
 
-INSERT INTO customer_order (code, user_id, ordered_at, total_price, order_status, payment_method_id, payment_status, customer_info_id)
+INSERT INTO customer_order (code, user_id, ordered_at, total_price, order_status, customer_info_id)
 VALUES
-('SPS1', 5, '2025-09-01 10:00:00', 1500000, 'DELIVERED',   1, 'PENDING',   1),
-('SPS2', 5, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',  2, 'COMPLETED', 2),
-('SPS3', 5, '2025-09-03 14:15:00', 450000,  'SHIPPING',  1, 'COMPLETED', 3),
-('SPS4', 5, '2025-09-04 09:45:00', 7800000, 'DELIVERED', 2, 'COMPLETED', 4),
-('SPS5', 5, '2025-09-05 16:00:00', 2300000, 'CANCELED',  1, 'PENDING',    5),
-('SPS6', 5, '2025-09-06 19:20:00', 990000,  'PENDING',   2, 'PENDING',   6),
-('SPS7', 5, '2025-09-07 12:40:00', 11000000,'SHIPPING',  1, 'COMPLETED', 7),
-('SPS8', 5, '2025-09-08 08:30:00', 560000,  'DELIVERED', 2, 'REFUNDED',  8);
+('SPS1', 5, '2025-09-01 10:00:00', 1500000, 'DELIVERED', 1),
+('SPS2', 5, '2025-09-02 11:30:00', 3200000, 'CONFIRMED',   2),
+('SPS3', 5, '2025-09-03 14:15:00', 450000,  'SHIPPING',   3),
+('SPS4', 5, '2025-09-04 09:45:00', 7800000, 'DELIVERED',  4),
+('SPS5', 5, '2025-09-05 16:00:00', 2300000, 'CANCELED',   5),
+('SPS6', 5, '2025-09-06 19:20:00', 990000,  'PENDING',    6),
+('SPS7', 5, '2025-09-07 12:40:00', 11000000,'SHIPPING',   7),
+('SPS8', 5, '2025-09-08 08:30:00', 560000,  'DELIVERED',  8);
 
 INSERT INTO order_variant
 (order_id, product_variant_id, quantity, added_at, total_price, warranty_id, discount_amount)

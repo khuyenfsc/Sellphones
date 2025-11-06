@@ -160,9 +160,9 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             variant.setStock(variant.getStock() + ov.getQuantity());
         }
         ;
-        if(order.getPaymentStatus() == PaymentStatus.COMPLETED){
-            paymentService.refund(order);
-            order.setPaymentStatus(PaymentStatus.REFUNDED);
+        if(order.getPayment().getStatus() == PaymentStatus.COMPLETED){
+//            paymentService.refund(order);
+            order.getPayment().setStatus(PaymentStatus.REFUNDED);
         }
     }
 

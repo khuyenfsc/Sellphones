@@ -17,6 +17,18 @@ spring:
           auth: true
           starttls:
             enable: true
+  payment:
+    vnpay:
+      hashSecret: ""
+      url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+      command : "pay"
+      currCode : "VND"
+      locale : "vn"
+      orderInfo : "Thanh toan don hang"
+      orderType : 110000
+      returnUrl : "http://localhost:8080/api/v1/payment/vnpay-callback"
+      tmnCode : ""
+      version : "2.1.0"
   security:
     oauth2:
       client:
