@@ -1,24 +1,27 @@
 package com.sellphones.service.payment;
 
-import com.nimbusds.jose.crypto.impl.HMAC;
 import com.sellphones.configuration.VnPayConfiguration;
 import com.sellphones.dto.payment.PaymentRequest;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.Payment;
-import com.sellphones.entity.payment.PaymentMethod;
 import com.sellphones.entity.payment.PaymentStatus;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.order.OrderRepository;
 import com.sellphones.repository.payment.PaymentMethodRepository;
+import com.sellphones.repository.payment.PaymentRepository;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -26,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +39,8 @@ public class VnPayPaymentService implements VnPayService{
 
     private final OrderRepository orderRepository;
 
+    private final PaymentRepository paymentRepository;
+
     private final VnPayConfiguration vnPayConfiguration;
 
     @Override
@@ -43,19 +49,34 @@ public class VnPayPaymentService implements VnPayService{
     }
 
     @Override
+    @Transactional
     public Map<String, String> pay(PaymentRequest request, HttpServletRequest servletRequest) {
         Order order = orderRepository.findByUser_EmailAndId(
                 SecurityUtils.extractNameFromAuthentication(),
                 request.getOrderId()
         ).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
+        Payment payment = order.getPayment();
+
+        if(payment.getStatus() == PaymentStatus.COMPLETED){
+            throw new AppException(ErrorCode.PAYMENT_ALREADY_COMPLETED);
+        }
+
+        String txnRef = getRandomRef();
+        payment.setTxnRef(txnRef);
+        payment.setAmount(order.getTotalPrice());
+
         String timePattern = "yyyyMMddHHmmss";
         Map<String, Object> params = vnPayConfiguration.getParams();
-        params.put("vnp_Amount", order.getTotalPrice());
+        params.put("vnp_Amount", order.getTotalPrice()
+                .setScale(0, RoundingMode.DOWN)
+                .multiply(BigDecimal.valueOf(100))
+                .toBigInteger()
+                .toString());
         params.put("vnp_CreateDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern(timePattern)));
         params.put("vnp_ExpireDate", LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern(timePattern)));
         params.put("vnp_IpAddr", getClientIp(servletRequest));
-        params.put("vnp_TxnRef", getRandomRef());
+        params.put("vnp_TxnRef", txnRef);
 
         String query = buildQuery(params);
         String hashedQuery = hashByHMACSha512(query);
@@ -64,6 +85,63 @@ public class VnPayPaymentService implements VnPayService{
         result.put("url", vnPayConfiguration.getUrl() + "?" + query + "&vnp_SecureHash=" + hashedQuery);
         return result;
     }
+
+    @Override
+    public String handleVnPayCallback(HttpServletRequest request) {
+        System.out.println(request.getQueryString());
+
+        Map<String, Object> params = extractParams(request);
+        String query = buildQuery(params);
+        String hashedStr = hashByHMACSha512(query);
+        if(!hashedStr.equalsIgnoreCase(request.getParameter("vnp_SecureHash"))){
+            throw new AppException(ErrorCode.INVALID_VNPAY_SIGNATURE);
+        }
+
+        Payment payment = paymentRepository.findByTxnRef(request.getParameter("vnp_TxnRef")).orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
+        if(payment.getStatus() == PaymentStatus.COMPLETED){
+            throw new AppException(ErrorCode.PAYMENT_ALREADY_COMPLETED);
+        }
+
+        String redirectUrl;
+
+        if ("00".equals(request.getParameter("vnp_ResponseCode"))) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+            payment.setStatus(PaymentStatus.COMPLETED);
+            payment.setCode("VNP" + "_" + request.getParameter("vnp_TransactionNo"));
+            payment.setPaymentDate(
+                    LocalDateTime.parse(request.getParameter("vnp_PayDate"), formatter)
+            );
+            paymentRepository.save(payment);
+            redirectUrl = vnPayConfiguration.getSuccessRedirectUrl();
+        } else {
+            redirectUrl = vnPayConfiguration.getFailRedirectUrl();
+        }
+
+        return redirectUrl;
+    }
+
+    private Map<String, Object> extractParams(HttpServletRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        request.getParameterMap().forEach((key, values) -> {
+            if (values.length > 0) params.put(key, values[0]);
+        });
+        return params;
+    }
+
+    private String buildDataToHash(Map<String, String> params) {
+        // Loại bỏ vnp_SecureHash và vnp_SecureHashType
+        Map<String, String> filtered = params.entrySet().stream()
+                .filter(e -> !"vnp_SecureHash".equals(e.getKey()) && !"vnp_SecureHashType".equals(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Sắp xếp theo tên trường alphabet
+        return filtered.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(e -> e.getKey() + "=" + URLEncoder.encode(e.getValue(), StandardCharsets.US_ASCII))
+                .collect(Collectors.joining("&"));
+    }
+
 
     private String getRandomRef(){
         String result = "";
@@ -116,10 +194,12 @@ public class VnPayPaymentService implements VnPayService{
 
         StringBuilder query = new StringBuilder();
         for(String k : paramKeys){
-            query.append(k);
-            query.append("=");
-            query.append(URLEncoder.encode(params.get(k).toString(), StandardCharsets.US_ASCII));
-            query.append("&");
+            if(!"vnp_SecureHash".equals(k)){
+                query.append(k);
+                query.append("=");
+                query.append(URLEncoder.encode(params.get(k).toString(), StandardCharsets.US_ASCII));
+                query.append("&");
+            }
         }
 
         String queryStr = query.toString();

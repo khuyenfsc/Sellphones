@@ -69,40 +69,40 @@ public class ProductController {
 
     }
 
-    @GetMapping("/{id}/similar-products")
-    public ResponseEntity<CommonResponse> getSimilarProducts(@PathVariable Long id){
-        List<ProductListResponse> product = productService.getSimilarProducts(id);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", product);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//    @GetMapping("/{id}/similar-products")
+//    public ResponseEntity<CommonResponse> getSimilarProducts(@PathVariable Long id){
+//        List<ProductListResponse> product = productService.getSimilarProducts(id);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", product);
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
-    }
+//    @GetMapping("/quick_search")
+//    public ResponseEntity<CommonResponse> getSuggestedProducts(
+//            @RequestParam String keyword
+//    ){
+//        System.out.println("Keyword is " + keyword);
+//        List<ProductDocumentResponse> products = productService.getSuggestedProducts(keyword);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", products);
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
-    @GetMapping("/quick_search")
-    public ResponseEntity<CommonResponse> getSuggestedProducts(
-            @RequestParam String keyword
-    ){
-        System.out.println("Keyword is " + keyword);
-        List<ProductDocumentResponse> products = productService.getSuggestedProducts(keyword);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-
-    }
-
-    @GetMapping("/advanced-search")
-    public ResponseEntity<CommonResponse> searchProductsByKeyword(
-            @RequestParam String keyword,
-            @RequestParam Integer page,
-            @RequestParam Integer size,
-            @RequestParam(required = false, name = "sort_type") String sortType
-    ){
-        PageResponse<ProductListResponse> products = productService.searchProductsByKeyword(keyword, page, size, sortType);
-        Map<String, Object> map = new HashMap<>();
-        map.put("products", products);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-
-    }
+//    @GetMapping("/advanced-search")
+//    public ResponseEntity<CommonResponse> searchProductsByKeyword(
+//            @RequestParam String keyword,
+//            @RequestParam Integer page,
+//            @RequestParam Integer size,
+//            @RequestParam(required = false, name = "sort_type") String sortType
+//    ){
+//        PageResponse<ProductListResponse> products = productService.searchProductsByKeyword(keyword, page, size, sortType);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("products", products);
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
 
 }

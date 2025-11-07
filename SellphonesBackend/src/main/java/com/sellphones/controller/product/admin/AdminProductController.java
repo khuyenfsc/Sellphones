@@ -8,7 +8,7 @@ import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
 import com.sellphones.dto.product.ProductListResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
-import com.sellphones.elasticsearch.AdminProductDocumentService;
+//import com.sellphones.elasticsearch.AdminProductDocumentService;
 import com.sellphones.service.product.admin.AdminProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,19 +25,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminProductController {
 
-    private final AdminProductDocumentService adminProductDocumentService;
+//    private final AdminProductDocumentService adminProductDocumentService;
 
     private final AdminProductService adminProductService;
 
-    @GetMapping
-    public ResponseEntity<CommonResponse> getProducts(AdminProductFilter_Request request){
-        List<ProductListResponse> products = adminProductDocumentService.getProducts(request);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", products);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-
-    }
+//    @GetMapping
+//    public ResponseEntity<CommonResponse> getProducts(AdminProductFilter_Request request){
+//        List<ProductListResponse> products = adminProductDocumentService.getProducts(request);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", products);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
     @PostMapping("/add-product")
     public ResponseEntity<CommonResponse> addProduct(
@@ -69,18 +69,18 @@ public class AdminProductController {
 
     }
 
-    @DeleteMapping("/delete-product/{productId}")
-    public ResponseEntity<CommonResponse> deleteProduct(
-            @PathVariable Long productId
-    ){
-        adminProductService.deleteProduct(productId);
-        adminProductDocumentService.deleteProduct(productId);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", "Deleted product successfully");
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-
-    }
+//    @DeleteMapping("/delete-product/{productId}")
+//    public ResponseEntity<CommonResponse> deleteProduct(
+//            @PathVariable Long productId
+//    ){
+//        adminProductService.deleteProduct(productId);
+//        adminProductDocumentService.deleteProduct(productId);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", "Deleted product successfully");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<CommonResponse> getProductDetails(@PathVariable Long productId){

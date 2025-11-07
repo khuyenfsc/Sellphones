@@ -10,11 +10,15 @@ import AccountInfo from "./components/pages/UserDashboard/components/AccountInfo
 import OrderHistory from "./components/pages/UserDashboard/components/OrderHistory";
 import LogoutConfirm from "./components/pages/UserDashboard/components/LogoutConfirm";
 import CartPage from "./components/pages/CartPage/CartPage";
-import CheckoutPage from "./components/pages/CartPage/components/CheckoutPage";
+import CheckoutPage from "./components/pages/CartPage/CheckoutPage";
 import RegisterPage from "./components/pages/LoginPage/RegisterPage";
 import ActiveProfilePage from "./components/pages/LoginPage/ActiveProfilePage";
 import OAuth2UpdatePage from "./components/pages/LoginPage/OAuth2UpdatePage";
 import PasswordResetPage from "./components/pages/LoginPage/PasswordResetPage";
+import OrderSuccessPage from "./components/pages/OrderPage/OrderSuccessPage";
+import VNPaySuccessPage from "./components/pages/OrderPage/VNPaySuccessPage";
+import VNPayFailedPage from "./components/pages/OrderPage/VNPayFailedPage";
+import NotFoundPage from "./components/pages/NotFoundPage/NotFoundPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
@@ -70,7 +74,34 @@ export default function App() {
               }
             />
 
+            <Route
+              path="/order/success"
+              element={
+                <ProtectedRoute>
+                  <OrderSuccessPage />
+                </ProtectedRoute>
+              }
+            />
 
+            <Route
+              path="/payment/vnpay/success"
+              element={
+                <ProtectedRoute>
+                  <VNPaySuccessPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/payment/vnpay/fail"
+              element={
+                <ProtectedRoute>
+                  <VNPayFailedPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </MainLayout>
 

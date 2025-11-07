@@ -34,9 +34,9 @@ public class OrderController {
 
     @PostMapping()
     public ResponseEntity<CommonResponse> order(@RequestBody OrderRequest orderRequest){
-        orderService.order(orderRequest);
+        OrderResponse response = orderService.order(orderRequest);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Order successfully");
+        map.put("result", response);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
@@ -62,7 +62,7 @@ public class OrderController {
     public ResponseEntity<CommonResponse> cancelOrder(@PathVariable Long id){
         orderService.cancelOrder(id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Canceled order failed");
+        map.put("result", "Canceled order successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }

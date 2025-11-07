@@ -48,7 +48,7 @@ public class Order extends BaseEntity<Long> {
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
-    @OneToOne(mappedBy = "order")
+    @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Payment payment;
 
 //    @ManyToOne

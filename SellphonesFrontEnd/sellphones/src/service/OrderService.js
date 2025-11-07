@@ -150,6 +150,40 @@ const OrderService = {
         }
     },
 
+    async cancelOrder(orderId) {
+    try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) return { success: false, message: "Chưa đăng nhập" };
+        if (!orderId) return { success: false, message: "Thiếu ID đơn hàng" };
+
+        // Gọi API hủy đơn hàng
+        const res = await AxiosClient.post(`/orders/cancel/${orderId}`, null, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const result = res.data?.result || {};
+        return { success: true, result };
+
+    } catch (err) {
+        // Token hết hạn → thử refresh token rồi gọi lại
+        if (err.response?.status === 401) {
+            const refreshResult = await UserService.refreshToken();
+            if (refreshResult.success) {
+                const retryRes = await AxiosClient.post(`/orders/cancel/${orderId}`, null, {
+                    headers: {
+                        Authorization: `Bearer ${refreshResult.accessToken}`,
+                    },
+                });
+                const result = retryRes.data?.result || {};
+                return { success: true, result };
+            }
+        }
+
+        console.error("❌ Lỗi hủy đơn hàng:", err);
+        return { success: false, message: "Không thể hủy đơn hàng" };
+    }
+},
+
     async checkUserPurchasedVariant(productVariantId) {
         try {
             const token = localStorage.getItem("accessToken");

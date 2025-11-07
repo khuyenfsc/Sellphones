@@ -18,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDetailResponse {
 
+    private Long id;
+
     private String code;
 
     private List<OrderVariantDetailsResponse> orderVariants;
@@ -28,9 +30,7 @@ public class OrderDetailResponse {
 
     private OrderStatus orderStatus;
 
-    private PaymentMethodResponse paymentMethod;
-
-    private PaymentStatus paymentStatus;
+    private PaymentResponse payment;
 
     private CustomerInfoResponse customerInfo;
 

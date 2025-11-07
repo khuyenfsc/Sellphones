@@ -28,6 +28,11 @@ public class VnPayConfiguration {
     private String tmnCode;
     private String version;
 
+    @Getter
+    private String successRedirectUrl;
+
+    @Getter
+    private  String failRedirectUrl;
     public Map<String, Object> getParams() {
         Map<String, Object> params = new LinkedHashMap<>();
 

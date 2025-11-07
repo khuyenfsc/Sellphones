@@ -1,6 +1,6 @@
 package com.sellphones.dto.user;
 
-import com.sellphones.entity.user.Role;
+import com.sellphones.entity.user.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BasicUserResponse {
-    private Long id;
-
-    private String fullName;
-
-    private BasicRoleResponse role;
+public class BasicRoleResponse {
+    private RoleName roleName;
 }

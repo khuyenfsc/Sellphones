@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public void order(OrderRequest request) {
+    public OrderResponse order(OrderRequest request) {
         List<OrderProductRequest> orderProducts = request.getOrderProducts();
 
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -88,28 +88,29 @@ public class OrderServiceImpl implements OrderService{
         }else{
             customerInfo = customerInfoRepository.findById(request.getCustomerInfoId()).orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
         }
-
-        Payment payment = paymentService.initPayment(request.getPaymentMethodId());
-
         Order order = Order.builder()
                 .user(user)
                 .orderStatus(OrderStatus.PENDING)
                 .orderedAt(LocalDateTime.now())
-                .payment(payment)
                 .customerInfo(customerInfo)
                 .build();
 
+        Payment payment = paymentService.initPayment(request.getPaymentMethodId());
+        payment.setOrder(order);
+
         List<OrderVariant> orderVariants = makeOrderVariants(orderProducts, order);
         order.setOrderVariants(orderVariants);
-
+        order.setPayment(payment);
         calculateTotalPriceForOrder(order);
 
 //        paymentService.pay(order);
 
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
 
         List<Long> cartItemIds = orderProducts.stream().map(OrderProductRequest::getCartItemId).toList();
         cartItemRepository.deleteByCart_User_EmailAndIdIn(SecurityUtils.extractNameFromAuthentication(), cartItemIds);
+
+        return modelMapper.map(savedOrder, OrderResponse.class);
     }
 
     @Override

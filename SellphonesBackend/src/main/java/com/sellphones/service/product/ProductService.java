@@ -11,7 +11,7 @@ public interface ProductService {
     PageResponse<ProductListResponse> getProductByFilter(FilterRequest filter);
     ProductDetailsResponse getProductById(Long id);
     ProductVariantResponse getProductVariantById(Long id);
-    List<ProductDocumentResponse> getSuggestedProducts(String keyword);
-    List<ProductListResponse> getSimilarProducts(Long productId);
-    PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType);
+//    List<ProductDocumentResponse> getSuggestedProducts(String keyword);
+//    List<ProductListResponse> getSimilarProducts(Long productId);
+//    PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType);
 }

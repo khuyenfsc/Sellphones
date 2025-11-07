@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import OrderService from "../../../../service/OrderService";
 import OrderDetails from "./OrderDetails";
+import { toast } from "react-toastify";
 
 export default function OrderHistory() {
   const tabs = [
@@ -81,17 +82,15 @@ export default function OrderHistory() {
   const handleViewDetails = async (orderId) => {
     setLoadingDetails(true);
     try {
-      // Gọi API fetch chi tiết đơn hàng theo id
       const res = await OrderService.getOrderById(orderId);
       if (res.success) {
-        console.log(res);
-        setSelectedOrder(res.result); // set dữ liệu vào state
+        setSelectedOrder(res.result);
       } else {
-        alert("Không thể lấy chi tiết đơn hàng!");
+        toast.error("Không thể lấy chi tiết đơn hàng!");
       }
     } catch (err) {
       console.error("Lỗi fetch chi tiết đơn hàng:", err);
-      alert("Đã xảy ra lỗi khi lấy chi tiết đơn hàng!");
+      toast.error("Đã xảy ra lỗi khi lấy chi tiết đơn hàng!");
     } finally {
       setLoadingDetails(false);
     }

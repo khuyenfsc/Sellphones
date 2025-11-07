@@ -26,6 +26,7 @@ public class Payment extends BaseEntity<Long> {
 
     private String code;
 
+    @Column(name = "txn_ref")
     private String txnRef;
 
     @Column(precision = 19, scale = 0)
@@ -33,6 +34,7 @@ public class Payment extends BaseEntity<Long> {
 
     private LocalDateTime paymentDate;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
     @ManyToOne

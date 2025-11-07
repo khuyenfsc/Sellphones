@@ -12,7 +12,7 @@ public interface OrderService {
 
     Map<String, Object> getTotalOrders();
 
-    void order(OrderRequest orderRequest);
+    OrderResponse order(OrderRequest orderRequest);
 
     PageResponse<OrderResponse> getOrders(OrderFilterRequest request);
 

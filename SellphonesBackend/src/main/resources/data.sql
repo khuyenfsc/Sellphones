@@ -1199,7 +1199,18 @@ VALUES
 ('SPS5', 5, '2025-09-05 16:00:00', 2300000, 'CANCELED',   5),
 ('SPS6', 5, '2025-09-06 19:20:00', 990000,  'PENDING',    6),
 ('SPS7', 5, '2025-09-07 12:40:00', 11000000,'SHIPPING',   7),
-('SPS8', 5, '2025-09-08 08:30:00', 560000,  'DELIVERED',  8);
+('SPS8', 5, '2025-09-08 08:30:00', 560000,  'PENDING',  8);
+
+INSERT INTO payment (order_id, status, payment_method_id, created_at)
+VALUES
+(1, 'PENDING', 2, '2025-09-01 10:00:00'),
+(2, 'PENDING', 2, '2025-09-02 11:30:00'),
+(3, 'PENDING', 2, '2025-09-03 14:15:00'),
+(4, 'PENDING', 2, '2025-09-04 09:45:00'),
+(5, 'PENDING', 2, '2025-09-05 16:00:00'),
+(6, 'PENDING', 2, '2025-09-06 19:20:00'),
+(7, 'PENDING', 2, '2025-09-07 12:40:00'),
+(8, 'PENDING', 2, '2025-09-08 08:30:00');
 
 INSERT INTO order_variant
 (order_id, product_variant_id, quantity, added_at, total_price, warranty_id, discount_amount)

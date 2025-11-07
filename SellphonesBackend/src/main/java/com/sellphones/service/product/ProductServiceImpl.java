@@ -2,8 +2,8 @@ package com.sellphones.service.product;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.*;
-import com.sellphones.elasticsearch.CustomProductDocumentRepository;
-import com.sellphones.elasticsearch.ProductDocument;
+//import com.sellphones.elasticsearch.CustomProductDocumentRepository;
+//import com.sellphones.elasticsearch.ProductDocument;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.ProductVariantStatus;
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
 
-    private final CustomProductDocumentRepository customProductDocumentRepository;
+//    private final CustomProductDocumentRepository customProductDocumentRepository;
 
     private final ProductVariantRepository productVariantRepository;
 
@@ -118,42 +118,42 @@ public class ProductServiceImpl implements ProductService{
         return modelMapper.map(productVariant, ProductVariantResponse.class);
     }
 
-    @Override
-    public List<ProductDocumentResponse> getSuggestedProducts(String keyword) {
-        List<ProductDocument> products = customProductDocumentRepository.getSuggestedProducts(keyword);
-        return products.stream()
-                .map(p -> modelMapper.map(p, ProductDocumentResponse.class))
-                .toList();
-    }
-
-    @Override
-    public List<ProductListResponse> getSimilarProducts(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        List<ProductDocument> products =  customProductDocumentRepository.getSimilarProducts(product);
-        return products.stream()
-                .map(p ->{
-                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
-                            return modelMapper.map(p, ProductListResponse.class);
-                        }
-                ).toList();
-    }
-
-    @Override
-    public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
-        List<ProductListResponse> response = products.getContent().stream()
-                .map(p ->{
-                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
-                            return modelMapper.map(p, ProductListResponse.class);
-                        }
-                ).toList();
-        return PageResponse.<ProductListResponse>builder()
-                .result(response)
-                .totalPages(products.getTotalPages())
-                .total(products.getTotalElements())
-                .build();
-    }
+//    @Override
+//    public List<ProductDocumentResponse> getSuggestedProducts(String keyword) {
+//        List<ProductDocument> products = customProductDocumentRepository.getSuggestedProducts(keyword);
+//        return products.stream()
+//                .map(p -> modelMapper.map(p, ProductDocumentResponse.class))
+//                .toList();
+//    }
+//
+//    @Override
+//    public List<ProductListResponse> getSimilarProducts(Long productId) {
+//        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+//        List<ProductDocument> products =  customProductDocumentRepository.getSimilarProducts(product);
+//        return products.stream()
+//                .map(p ->{
+//                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+//                            return modelMapper.map(p, ProductListResponse.class);
+//                        }
+//                ).toList();
+//    }
+//
+//    @Override
+//    public PageResponse<ProductListResponse> searchProductsByKeyword(String keyword, Integer page, Integer size, String sortType) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<ProductDocument> products = customProductDocumentRepository.getProductsByKeyword(keyword, pageable, sortType);
+//        List<ProductListResponse> response = products.getContent().stream()
+//                .map(p ->{
+//                            p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+//                            return modelMapper.map(p, ProductListResponse.class);
+//                        }
+//                ).toList();
+//        return PageResponse.<ProductListResponse>builder()
+//                .result(response)
+//                .totalPages(products.getTotalPages())
+//                .total(products.getTotalElements())
+//                .build();
+//    }
 
     private ProductListResponse mapToProductListResponse(Product product){
         ProductListResponse res = modelMapper.map(product, ProductListResponse.class);

@@ -1,45 +1,45 @@
-package com.sellphones.elasticsearch;
-
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import java.math.BigDecimal;
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Document(indexName = "products")
-public class ProductDocument {
-
-    @Id
-    private Long id;
-
-    @Field(type = FieldType.Text)
-    private String name;
-
-    @Field(name = "thumbnail", type = FieldType.Text)
-    private String thumbnail;
-
-    @Field(type = FieldType.Text)
-    private String description;
-
-    @Field(name = "average_rating", type = FieldType.Double)
-    private Double averageRating;
-
-    @Field(name ="root_price", type = FieldType.Long)
-    private Long rootPrice;
-
-    @Field(name ="current_price", type = FieldType.Long)
-    private Long currentPrice;
-
-    @Field(name ="category_name", type = FieldType.Text)
-    private String categoryName;
-
-    @Field(name ="brand_name", type = FieldType.Text)
-    private String brandName;
-}
+//package com.sellphones.elasticsearch;
+//
+//import jakarta.persistence.Id;
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
+//import org.springframework.data.elasticsearch.annotations.Document;
+//import org.springframework.data.elasticsearch.annotations.Field;
+//import org.springframework.data.elasticsearch.annotations.FieldType;
+//
+//import java.math.BigDecimal;
+//
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Data
+//@Document(indexName = "products")
+//public class ProductDocument {
+//
+//    @Id
+//    private Long id;
+//
+//    @Field(type = FieldType.Text)
+//    private String name;
+//
+//    @Field(name = "thumbnail", type = FieldType.Text)
+//    private String thumbnail;
+//
+//    @Field(type = FieldType.Text)
+//    private String description;
+//
+//    @Field(name = "average_rating", type = FieldType.Double)
+//    private Double averageRating;
+//
+//    @Field(name ="root_price", type = FieldType.Long)
+//    private Long rootPrice;
+//
+//    @Field(name ="current_price", type = FieldType.Long)
+//    private Long currentPrice;
+//
+//    @Field(name ="category_name", type = FieldType.Text)
+//    private String categoryName;
+//
+//    @Field(name ="brand_name", type = FieldType.Text)
+//    private String brandName;
+//}
