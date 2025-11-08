@@ -34,8 +34,8 @@ public class SecurityUtils {
         return userDetails.getUsername();
     }
 
-    public static void setRefreshTokenToCookie(HttpServletResponse response, String refreshToken){
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+    public static void setRefreshTokenToCookie(HttpServletResponse response, String refreshToken, String refreshTokenName){
+        ResponseCookie cookie = ResponseCookie.from(refreshTokenName, refreshToken)
                 .httpOnly(true)
                 .domain("localhost")
                 .maxAge(Duration.ofDays(14))

@@ -19,103 +19,131 @@ import OrderSuccessPage from "./components/pages/OrderPage/OrderSuccessPage";
 import VNPaySuccessPage from "./components/pages/OrderPage/VNPaySuccessPage";
 import VNPayFailedPage from "./components/pages/OrderPage/VNPayFailedPage";
 import NotFoundPage from "./components/pages/NotFoundPage/NotFoundPage";
+import AdminLoginPage from "./components/admin/components/LoginPage/AdminLoginPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
+import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
+import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
 import { AuthProvider } from "./context/AuthContext";
+import { AdminAuthProvider } from "./components/admin/context/AdminAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   return (
-    // ✅ Bọc AuthProvider ngoài Router
-    <AuthProvider>
-      <Router>
-        <MainLayout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/category/:slug" element={<ProductsByCategoryPage />} />
-            <Route path="/product/:slug" element={<ProductDetailsPage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/active-profile" element={<ActiveProfilePage />} />
-            <Route path="/oauth2/complete-register" element={<OAuth2UpdatePage />} />
-            <Route path="/reset-password" element={<PasswordResetPage />} />
+    <Router>
+      <Routes>
+        {/* ---------------- USER / PUBLIC ROUTES ---------------- */}
+        <Route
+          element={
+            <AuthProvider>
+              <MainLayout />
+            </AuthProvider>
+          }
+        >
+          <Route path="/" element={<HomePage />} />
+          <Route path="/category/:slug" element={<ProductsByCategoryPage />} />
+          <Route path="/product/:slug" element={<ProductDetailsPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/active-profile" element={<ActiveProfilePage />} />
+          <Route path="/oauth2/complete-register" element={<OAuth2UpdatePage />} />
+          <Route path="/reset-password" element={<PasswordResetPage />} />
 
-            {/* ✅ Nested routes (Protected) */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <UserDashboard />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AccountInfo />} />
-              <Route path="account/info" element={<AccountInfo />} />
-              <Route path="account/history" element={<OrderHistory />} />
-              <Route path="account/logout" element={<LogoutConfirm />} />
-            </Route>
+          {/* Protected user routes */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AccountInfo />} />
+            <Route path="account/info" element={<AccountInfo />} />
+            <Route path="account/history" element={<OrderHistory />} />
+            <Route path="account/logout" element={<LogoutConfirm />} />
+          </Route>
 
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <CartPage />
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order/success"
+            element={
+              <ProtectedRoute>
+                <OrderSuccessPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payment/vnpay/success"
+            element={
+              <ProtectedRoute>
+                <VNPaySuccessPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payment/vnpay/fail"
+            element={
+              <ProtectedRoute>
+                <VNPayFailedPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
 
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute>
-                  <CheckoutPage />
-                </ProtectedRoute>
-              }
-            />
 
-            <Route
-              path="/order/success"
-              element={
-                <ProtectedRoute>
-                  <OrderSuccessPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/payment/vnpay/success"
-              element={
-                <ProtectedRoute>
-                  <VNPaySuccessPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/payment/vnpay/fail"
-              element={
-                <ProtectedRoute>
-                  <VNPayFailedPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </MainLayout>
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          draggable
-          pauseOnHover
-          theme="colored"
+        {/* ---------------- ADMIN ROUTES ---------------- */}
+        <Route
+          path="/admin/login"
+          element={
+            <AdminAuthProvider>
+              <AdminLoginPage />
+            </AdminAuthProvider>
+          }
         />
-      </Router>
-    </AuthProvider>
+
+        <Route
+          path="/admin/*"
+          element={
+            <AdminAuthProvider>
+              <AdminProtectedRoute>
+                <AdminMainLayout />
+              </AdminProtectedRoute>
+            </AdminAuthProvider>
+          }
+        >
+          {/* <Route index element={<AdminDashboard />} /> */}
+          {/* Các admin sub-routes khác */}
+        </Route>
+      </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </Router>
   );
 }

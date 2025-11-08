@@ -53,7 +53,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     private final FileStorageService fileStorageService;
 
     @Override
-    @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.BANNERS.VIEW')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.VIEW')")
     public PageResponse<AdminPromotionBannerResponse> getBanners(AdminPromotionBannerFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -81,7 +81,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.BANNERS.CREATE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.CREATE')")
     public void createBanner(String bannerJson, MultipartFile imageFile) {
         AdminPromotionBannerRequest request = JsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class, objectMapper, validator);
 
@@ -112,7 +112,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     }
 
     @Override
-    @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.BANNERS.EDIT')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.EDIT')")
     public void editBanner(String bannerJson, MultipartFile imageFile, Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
         AdminPromotionBannerRequest request = JsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class, objectMapper, validator);
@@ -138,7 +138,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     }
 
     @Override
-    @PreAuthorize("hasAuthority('MARKETING.PROMOTIONS.BANNERS.DELETE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.DELETE')")
     public void deleteBanner(Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
         String imageName = banner.getImage();

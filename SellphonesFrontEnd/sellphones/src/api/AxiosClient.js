@@ -9,18 +9,6 @@ const axiosClient = axios.create({
   },
 });
 
-axiosClient.interceptors.request.use(
-  (config) => {
-    // Lấy token (nếu có)
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
 axiosClient.interceptors.response.use(
   (response) => {
     // Trả về dữ liệu chính

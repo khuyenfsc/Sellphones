@@ -84,7 +84,6 @@ public class ProductSpecificationBuilder {
     }
 
     public static Specification<Product> hasAttributeEqual(Long id, BigDecimal attributeVal){
-        System.out.println( "equal " + id + " " + attributeVal);
         return (root, query, cb) -> {
             query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");

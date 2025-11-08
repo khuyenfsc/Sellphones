@@ -82,9 +82,11 @@ export default function LoginPage() {
                 <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
                     {/* Left Section */}
                     <div className="bg-white rounded-lg shadow-sm p-8">
-                        <div className="bg-blue-600 text-white px-6 py-3 font-bold text-xl rounded inline-block mb-6">
-                            Sellphones
-                        </div>
+                        <a href="/">
+                            <div className="bg-blue-600 text-white px-6 py-3 font-bold text-xl rounded inline-block mb-6">
+                                Sellphones
+                            </div>
+                        </a>
                         <h1 className="text-2xl font-bold text-gray-800 mb-2">
                             Nhập hội khách hàng thành viên{' '}
                             <span className="text-blue-600">SMEMBER</span>

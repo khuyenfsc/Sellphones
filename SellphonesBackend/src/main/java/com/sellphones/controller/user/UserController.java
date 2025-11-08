@@ -1,5 +1,6 @@
 package com.sellphones.controller.user;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.authentication.AuthenticationResponse;
 import com.sellphones.dto.user.*;
@@ -135,7 +136,7 @@ public class UserController {
     public ResponseEntity<CommonResponse> registerWithGoogle(@RequestBody @Valid GoogleRegisterRequest request, HttpServletResponse response){
         AuthenticationToken authenticationToken = userService.registerWithGoogle(request);
 
-        SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken());
+        SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken(), AppConstants.USER_REFRESH_TOKEN_NAME);
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", new AuthenticationResponse(authenticationToken.getAccessToken()));

@@ -17,8 +17,6 @@ public class JsonParser {
             T obj = objectMapper.readValue(json, clazz);
 
             // Validate tương tự @Valid
-            System.out.println("violation empty");
-
             Set<ConstraintViolation<T>> violations = validator.validate(obj);
 
             if (!violations.isEmpty()) {

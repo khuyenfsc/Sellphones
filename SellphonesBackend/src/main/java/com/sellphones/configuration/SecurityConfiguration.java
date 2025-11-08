@@ -32,9 +32,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtValidatorFilter jwtValidatorFilter, OAuth2SuccessHandler oAuth2SuccessHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(AppConstants.PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(AppConstants.ADMIN_ENDPOINTS).hasAuthority("ADMIN")
                         .requestMatchers(AppConstants.CUSTOMER_ENDPOINTS).hasAuthority("CUSTOMER")
-                        .requestMatchers(AppConstants.PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionConfig -> sessionConfig

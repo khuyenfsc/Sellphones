@@ -23,10 +23,11 @@ public class AdminPermissionServiceImpl implements AdminPermissionService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Set<AdminPermissionResponse> getAllAdminPermissions() {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Set<Permission> permissions = user.getRole().getPermissions();
+        System.out.println(permissions);
         return buildPermissionTree(permissions);
     }
 
@@ -37,7 +38,6 @@ public class AdminPermissionServiceImpl implements AdminPermissionService{
 
         for(Permission permission : permissions){
             String[] parts = permission.getCode().split("\\.");
-            System.out.println(Arrays.toString(parts));
             String path = "";
             AdminPermissionResponse parent = null;
             for(String part : parts){

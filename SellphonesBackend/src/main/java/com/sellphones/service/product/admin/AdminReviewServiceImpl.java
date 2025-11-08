@@ -71,7 +71,6 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.EDIT')")
     public void editReview(AdminReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
-        System.out.println("status " + request.getStatus());
         review.setStatus(request.getStatus());
     }
 

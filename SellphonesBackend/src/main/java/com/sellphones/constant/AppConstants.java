@@ -11,6 +11,7 @@ public class AppConstants {
             "/api/v1/brands/**",
             "/api/v1/reviews",
             "/api/v1/reviews/product-variants/**",
+            "/api/v1/admin/auth/login",
             "/api/v1/auth/login",
             "/api/v1/auth/admin-login",
             "/api/v1/auth/refresh",
@@ -26,7 +27,8 @@ public class AppConstants {
             "/api/v1/users/reset-password",
             "/api/v1/users/register-with-google",
             "/api/v1/payment/vnpay-callback",
-            "/oauth2/**"
+            "/oauth2/**",
+            "/login/**"
     };
 
     public final static String[] CUSTOMER_ENDPOINTS = {
@@ -38,6 +40,10 @@ public class AppConstants {
     };
 
     public final static String BASE_URL = "http://localhost:8080/";
+
+    public final static String ADMIN_REFRESH_TOKEN_NAME = "adminRefreshToken";
+
+    public final static String USER_REFRESH_TOKEN_NAME = "refreshToken";
 
     public static String JWT_HEADER = "Authorization";
 

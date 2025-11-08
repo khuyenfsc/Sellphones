@@ -71,6 +71,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         String email = attributes.get("email").toString();
         User user = userRepository.findByEmail(email).orElse(null);
+        System.out.println("Oauth2 thanh cong");
+
         if(user != null){
 
             if(user.getProvider() != Provider.GOOGLE){

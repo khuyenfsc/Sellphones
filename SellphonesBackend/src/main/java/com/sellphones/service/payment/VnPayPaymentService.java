@@ -88,8 +88,6 @@ public class VnPayPaymentService implements VnPayService{
 
     @Override
     public String handleVnPayCallback(HttpServletRequest request) {
-        System.out.println(request.getQueryString());
-
         Map<String, Object> params = extractParams(request);
         String query = buildQuery(params);
         String hashedStr = hashByHMACSha512(query);

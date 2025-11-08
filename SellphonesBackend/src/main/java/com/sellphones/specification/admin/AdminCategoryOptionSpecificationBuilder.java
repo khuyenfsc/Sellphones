@@ -30,7 +30,6 @@ public class AdminCategoryOptionSpecificationBuilder {
     }
 
     public static Specification<CategoryOption> containsKeyword(String keyword){
-        System.out.println("keyword " + keyword);
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
     }
 

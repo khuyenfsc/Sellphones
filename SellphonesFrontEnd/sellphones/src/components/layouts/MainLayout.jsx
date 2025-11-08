@@ -1,8 +1,9 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
-const MainLayout = ({ children }) => {
+const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -10,7 +11,7 @@ const MainLayout = ({ children }) => {
 
       {/* Nội dung chính */}
       <main className="flex-grow container mx-auto px-4 py-6">
-        {children}
+         <Outlet />
       </main>
 
       <Footer

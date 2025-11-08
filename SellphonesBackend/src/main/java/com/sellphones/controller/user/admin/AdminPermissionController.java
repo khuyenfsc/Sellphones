@@ -23,7 +23,6 @@ public class AdminPermissionController {
 
     @GetMapping("/all")
     public ResponseEntity<CommonResponse> getPermissions(){
-        System.out.println("Get all permissions");
         Set<AdminPermissionResponse> response = adminPermissionService.getAllAdminPermissions();
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);

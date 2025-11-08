@@ -63,7 +63,6 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public PageResponse<ReviewResponse> getReviewsByConditions(ReviewFilterRequest request) {
-        System.out.println("page " + request.getPage() + " size " + request.getSize());
         Specification<Review> spec = ReviewSpecificationBuilder.build(request);
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt")
