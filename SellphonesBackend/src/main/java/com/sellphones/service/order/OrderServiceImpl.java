@@ -174,6 +174,11 @@ public class OrderServiceImpl implements OrderService{
 
         List<Long> cartItemIds = orderProducts.stream().map(OrderProductRequest::getCartItemId).toList();
         List<CartItem> cartItems = cartItemRepository.findByCart_User_EmailAndIdIn(SecurityUtils.extractNameFromAuthentication(), cartItemIds);
+
+        if(cartItems == null || cartItems.isEmpty()){
+            throw new AppException(ErrorCode.CART_EMPTY);
+        }
+
         Map<Long, Long> warrantyIdMap =  orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
 
         for(CartItem cartItem : cartItems){

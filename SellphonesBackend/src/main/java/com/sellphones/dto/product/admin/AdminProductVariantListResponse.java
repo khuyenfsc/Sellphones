@@ -16,12 +16,14 @@ public class AdminProductVariantListResponse {
 
     private String productVariantName;
 
-    private BigDecimal price;
+//    private BigDecimal price;
 
     private ProductVariantStatus status;
 
     private String sku;
 
     private String variantImage;
+
+    private Long stock;
 
 }

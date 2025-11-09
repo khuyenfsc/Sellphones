@@ -20,6 +20,7 @@ import VNPaySuccessPage from "./components/pages/OrderPage/VNPaySuccessPage";
 import VNPayFailedPage from "./components/pages/OrderPage/VNPayFailedPage";
 import NotFoundPage from "./components/pages/NotFoundPage/NotFoundPage";
 import AdminLoginPage from "./components/admin/components/LoginPage/AdminLoginPage";
+import AdminDashboardPage from "./components/admin/components/DashboardPage/AdminDashboardPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -120,7 +121,7 @@ export default function App() {
         />
 
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <AdminAuthProvider>
               <AdminProtectedRoute>
@@ -129,9 +130,10 @@ export default function App() {
             </AdminAuthProvider>
           }
         >
-          {/* <Route index element={<AdminDashboard />} /> */}
+          <Route path="dashboard" element={<AdminDashboardPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
+
       </Routes>
 
       <ToastContainer

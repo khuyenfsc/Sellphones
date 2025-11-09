@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
 
     PRODUCT_NOT_FOUND("Không tìm thấy sản phẩm", HttpStatus.NOT_FOUND),
+    MOST_SELLING_VARIANT_NOT_FOUND("Không tìm thấy sản phẩm bán chạy", HttpStatus.NOT_FOUND),
+    CART_EMPTY("Giỏ hàng trống, không thể tạo đơn hàng", HttpStatus.BAD_REQUEST),
     PRODUCT_VARIANT_NOT_FOUND("Không tìm thấy biến thể sản phẩm", HttpStatus.NOT_FOUND),
     PRODUCT_VARIANT_ID_NULL_EXCEPTION("ID biến thể sản phẩm bị trống", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("Không tìm thấy người dùng", HttpStatus.BAD_REQUEST),

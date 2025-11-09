@@ -24,16 +24,15 @@ public class AdminPermissionServiceImpl implements AdminPermissionService{
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Set<AdminPermissionResponse> getAllAdminPermissions() {
+    public List<AdminPermissionResponse> getAllAdminPermissions() {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        Set<Permission> permissions = user.getRole().getPermissions();
-        System.out.println(permissions);
+        List<Permission> permissions = user.getRole().getPermissions();
         return buildPermissionTree(permissions);
     }
 
-    private Set<AdminPermissionResponse> buildPermissionTree(Set<Permission> permissions){
+    private List<AdminPermissionResponse> buildPermissionTree(List<Permission> permissions){
         Map<String, AdminPermissionResponse> cache = new HashMap<>();
-        Set<AdminPermissionResponse> roots = new HashSet<>();
+        List<AdminPermissionResponse> roots = new ArrayList<>();
 
 
         for(Permission permission : permissions){

@@ -6,6 +6,7 @@ class AdminService extends BaseAuthService {
     super({ basePath: "/admin", tokenKey: "adminAccessToken" });
   }
 
+  
 
 }
 

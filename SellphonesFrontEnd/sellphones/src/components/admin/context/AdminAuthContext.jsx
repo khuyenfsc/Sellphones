@@ -11,9 +11,8 @@ export const AdminAuthProvider = ({ children }) => {
     const fetchAdmin = async () => {
       try {
         const res = await AdminService.getCurrentUser();
-        console.log(res);
-        if (res.success) setAdmin(res.admin);
-      } catch {
+        if (res) setAdmin(res.user);
+      } catch (error) {
         setAdmin(null);
       } finally {
         setLoading(false);

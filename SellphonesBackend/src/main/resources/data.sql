@@ -266,6 +266,10 @@ VALUES
 
 INSERT INTO permission (name, code, created_at)
 VALUES
+('Dashboard', 'DASHBOARD', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code, created_at)
+VALUES
 ('Create', 'SALES.ORDERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit', 'SALES.ORDERS.EDIT', CURRENT_TIMESTAMP),
 ('View',   'SALES.ORDERS.VIEW', CURRENT_TIMESTAMP),
@@ -400,6 +404,8 @@ VALUES
 
 
 -- ADMIN -> all permissions
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, id FROM permission WHERE code like 'DASHBOARD%';
 INSERT INTO role_permission (role_id, permission_id)
 SELECT 1, id FROM permission WHERE code like 'SALES%';
 INSERT INTO role_permission (role_id, permission_id)

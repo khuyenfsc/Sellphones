@@ -70,7 +70,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.ROLES.CREATE')")
     public void createRole(AdminRoleRequest request) {
-        Set<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
+        List<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
         Role role = Role.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -87,7 +87,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @PreAuthorize("hasAuthority('SETTINGS.ROLES.EDIT')")
     public void editRole(AdminRoleRequest request, Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-        Set<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
+        List<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
         role.setName(request.getName());
         role.setRoleName(request.getRoleName());
         role.setDescription(request.getDescription());

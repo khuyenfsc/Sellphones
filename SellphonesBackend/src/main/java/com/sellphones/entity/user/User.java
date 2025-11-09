@@ -73,4 +73,5 @@ public class User extends BaseEntity<Long> {
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
+
 }

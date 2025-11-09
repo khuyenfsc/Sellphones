@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class AdminPermissionController {
 
     @GetMapping("/all")
     public ResponseEntity<CommonResponse> getPermissions(){
-        Set<AdminPermissionResponse> response = adminPermissionService.getAllAdminPermissions();
+        List<AdminPermissionResponse> response = adminPermissionService.getAllAdminPermissions();
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

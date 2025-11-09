@@ -15,6 +15,7 @@ public class AppConstants {
             "/api/v1/auth/login",
             "/api/v1/auth/admin-login",
             "/api/v1/auth/refresh",
+            "/api/v1/admin/auth/refresh",
             "/api/v1/auth/logout",
             "/h2-console/**",
             "/uploads/**",
@@ -28,7 +29,8 @@ public class AppConstants {
             "/api/v1/users/register-with-google",
             "/api/v1/payment/vnpay-callback",
             "/oauth2/**",
-            "/login/**"
+            "/login/**",
+            "/api/v1/payment/vnpay-callback"
     };
 
     public final static String[] CUSTOMER_ENDPOINTS = {

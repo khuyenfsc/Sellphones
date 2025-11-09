@@ -15,6 +15,7 @@ export default function CheckoutPage() {
 
     const [customerInfos, setCustomerInfos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [paymentError, setPaymentError] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
 
     const [creatingOrder, setCreatingOrder] = useState(false);
@@ -59,34 +60,45 @@ export default function CheckoutPage() {
             setCreatingOrder(true);
             const result = await OrderService.createOrder(orderData);
 
-            if (result.success) {
-                toast.success("Tạo đơn hàng thành công!");
-
-                // Nếu thanh toán khi nhận hàng
-                if (selectedPaymentMethod.type === "CASH") {
-                    navigate("/order/success");
-                } 
-                // Nếu thanh toán qua VNPAY
-                else if (selectedPaymentMethod.type === "VNPAY") {
-                    const orderId = result.result?.id;
-                    if (!orderId) {
-                        toast.error("Không tìm thấy ID đơn hàng để thanh toán.");
-                        return;
-                    }
-
-                    const paymentRes = await VnPayService.createPayment(orderId);
-                    if (paymentRes.success && paymentRes.result?.url) {
-                        window.location.href = paymentRes.result.url; // chuyển hướng sang URL thanh toán
-                    } else {
-                        toast.error("Không thể khởi tạo thanh toán VNPAY.");
-                    }
-                }
-            } else {
+            if (!result.success) {
                 toast.error(result.message || "Tạo đơn hàng thất bại");
+                return;
+            }
+
+            toast.success("Tạo đơn hàng thành công!");
+
+            if (selectedPaymentMethod.type === "CASH") {
+                navigate("/order/success");
+                return;
+            }
+
+            if (selectedPaymentMethod.type === "VNPAY") {
+                const orderId = result.result?.id;
+                if (!orderId) {
+                    toast.error("Không tìm thấy ID đơn hàng để thanh toán.");
+                    return;
+                }
+
+                try {
+                    const paymentRes = await VnPayService.createPayment(orderId);
+
+                    if (paymentRes.success && paymentRes.result?.url) {
+                        window.location.href = paymentRes.result.url;
+                    } else {
+                        toast.error(paymentRes.message || "Không thể khởi tạo thanh toán VNPAY.");
+                        setPaymentError(true); // ⚡ thêm dòng này
+                    }
+                } catch (paymentErr) {
+                    console.error("❌ Lỗi khi tạo thanh toán:", paymentErr);
+                    toast.error(
+                        "Đơn hàng đã được tạo thành công nhưng xảy ra lỗi trong quá trình khởi tạo thanh toán VNPAY. Vui lòng thanh toán lại sau."
+                    );
+                    setPaymentError(true); // ⚡ set trạng thái lỗi
+                }
             }
         } catch (err) {
-            console.error(err);
-            toast.error("Đã có lỗi xảy ra khi tạo đơn hàng");
+            console.error("❌ Lỗi khi tạo đơn hàng:", err);
+            toast.error("Đã có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
         } finally {
             setCreatingOrder(false);
         }
@@ -198,18 +210,21 @@ export default function CheckoutPage() {
                             !selectedCustomer ||
                             selectedItems.length === 0 ||
                             !selectedPaymentMethod ||
-                            creatingOrder
+                            creatingOrder ||
+                            paymentError // ⚡ disable khi lỗi thanh toán
                         }
-                        className={`mt-4 w-full py-4 rounded-lg font-semibold text-lg transition ${
-                            selectedCustomer &&
-                            selectedItems.length > 0 &&
-                            selectedPaymentMethod
+                        className={`mt-4 w-full py-4 rounded-lg font-semibold text-lg transition ${selectedCustomer && selectedItems.length > 0 && selectedPaymentMethod && !paymentError
                                 ? "bg-red-600 text-white hover:bg-red-700"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        }`}
+                            }`}
                     >
-                        {creatingOrder ? "Đang tạo đơn..." : "Xác nhận mua hàng"}
+                        {paymentError
+                            ? "Đơn hàng đã được tạo thành công nhưng xảy ra lỗi trong quá trình khởi tạo thanh toán VNPAY. Vui lòng thanh toán lại sau."
+                            : creatingOrder
+                                ? "Đang tạo đơn..."
+                                : "Xác nhận mua hàng"}
                     </button>
+
 
                     {selectedItems.length > 0 && (
                         <p className="text-right font-semibold text-gray-700">

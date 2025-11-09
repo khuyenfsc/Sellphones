@@ -8,6 +8,8 @@ import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface AdminProductService {
     AdminProductDetailResponse getProductDetails(Long productId);
     void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
