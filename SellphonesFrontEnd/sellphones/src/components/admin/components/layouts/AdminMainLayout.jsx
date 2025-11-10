@@ -21,7 +21,6 @@ export default function AdminMainLayout() {
             overflow: "hidden",
           }}
           onWheel={(e) => {
-            // nếu chuột không trên main → ngăn scroll
             const main = e.currentTarget.querySelector("main");
             if (!main.contains(e.target)) {
               e.preventDefault();

@@ -5,6 +5,7 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
 import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
+import com.sellphones.dto.order.admin.AdminOrderListResponse;
 import com.sellphones.dto.order.admin.AdminShipmentRequest;
 import com.sellphones.service.order.OrderService;
 import com.sellphones.service.order.admin.AdminOrderService;
@@ -29,9 +30,9 @@ public class AdminOrderController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getOrders(AdminOrderFilterRequest request){
-        PageResponse<OrderResponse> response = adminOrderService.getOrders(request);
+        PageResponse<AdminOrderListResponse> response = adminOrderService.getOrders(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("orders", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }

@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -128,13 +129,11 @@ public class DashboardServiceImpl implements DashboardService{
 
         Object[] row = topCustomer.get(0);
         User user = (User) row[0];
-        Long totalOrders = (Long) row[1];
-        BigDecimal totalSales = (BigDecimal) row[2];
+        BigDecimal totalSales = (BigDecimal) row[1];
 
         Map<String, Object> map = new HashMap<>();
         map.put("user_id", user.getId());
         map.put("full_name", user.getFullName());
-        map.put("total_orders", totalOrders);
         map.put("total_sales", totalSales);
 
         return map;
@@ -160,7 +159,7 @@ public class DashboardServiceImpl implements DashboardService{
     @Override
     public Map<String, Object> getTotalOrdersByMonthInYear(Integer year) {
         List<Object[]> result = orderRepository.countOrdersByMonthInYear(year);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         for(Object[] objs : result){
             map.put(objs[0].toString(), (long)objs[1]);
         }

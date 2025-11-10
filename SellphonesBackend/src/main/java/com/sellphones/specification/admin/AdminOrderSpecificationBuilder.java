@@ -62,7 +62,7 @@ public class AdminOrderSpecificationBuilder {
     }
 
     public static Specification<Order> hasPaymentMethodType(PaymentMethodType paymentMethodType){
-        return (root, query, cb) -> cb.equal(root.get("paymentMethod").get("PaymentMethodType"), paymentMethodType);
+        return (root, query, cb) -> cb.equal(root.get("payment").get("paymentMethod").get("paymentMethodType"), paymentMethodType);
     }
 
     public static Specification<Order> hasCustomerNameContain(String customerName){
@@ -70,11 +70,11 @@ public class AdminOrderSpecificationBuilder {
     }
 
     public static Specification<Order> hasPaymentStatus(PaymentStatus paymentStatus){
-        return (root, query, cb) -> cb.equal(root.get("paymentStatus"), paymentStatus);
+        return (root, query, cb) -> cb.equal(root.get("payment").get("status"), paymentStatus);
     }
 
     public static Specification<Order> hasEmail(String email){
-        return (root, query, cb) -> cb.equal(root.get("user").get("email"), email);
+        return (root, query, cb) -> cb.like(root.get("user").get("email"), "%" +  email + "%");
     }
 
 }

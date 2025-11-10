@@ -19,8 +19,9 @@ import OrderSuccessPage from "./components/pages/OrderPage/OrderSuccessPage";
 import VNPaySuccessPage from "./components/pages/OrderPage/VNPaySuccessPage";
 import VNPayFailedPage from "./components/pages/OrderPage/VNPayFailedPage";
 import NotFoundPage from "./components/pages/NotFoundPage/NotFoundPage";
-import AdminLoginPage from "./components/admin/components/LoginPage/AdminLoginPage";
-import AdminDashboardPage from "./components/admin/components/DashboardPage/AdminDashboardPage";
+import AdminLoginPage from "./components/admin/components/pages/LoginPage/AdminLoginPage";
+import AdminDashboardPage from "./components/admin/components/pages/DashboardPage/AdminDashboardPage";
+import AdminOrderPage from "./components/admin/components/pages/OrderPage/AdminOrderPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -131,6 +132,7 @@ export default function App() {
           }
         >
           <Route path="dashboard" element={<AdminDashboardPage />} />
+          <Route path="orders" element={<AdminOrderPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

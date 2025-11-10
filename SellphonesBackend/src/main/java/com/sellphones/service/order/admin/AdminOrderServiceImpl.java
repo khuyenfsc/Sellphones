@@ -4,6 +4,7 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.dashboard.DashboardRequest;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
+import com.sellphones.dto.order.admin.AdminOrderListResponse;
 import com.sellphones.dto.order.admin.AdminShipmentInventoryItem;
 import com.sellphones.dto.order.admin.AdminShipmentRequest;
 import com.sellphones.entity.address.Address;
@@ -63,18 +64,18 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     @Override
     @PreAuthorize("hasAuthority('SALES.ORDERS.VIEW')")
-    public PageResponse<OrderResponse> getOrders(AdminOrderFilterRequest request) {
+    public PageResponse<AdminOrderListResponse> getOrders(AdminOrderFilterRequest request) {
         Specification<Order> spec = AdminOrderSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.DESC, "orderedAt");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
         List<Order> orders = orderPage.getContent();
-        List<OrderResponse> response = orders.stream()
-                .map(o -> modelMapper.map(o, OrderResponse.class))
+        List<AdminOrderListResponse> response = orders.stream()
+                .map(o -> modelMapper.map(o, AdminOrderListResponse.class))
                 .toList();
 
-        return PageResponse.<OrderResponse>builder()
+        return PageResponse.<AdminOrderListResponse>builder()
                 .result(response)
                 .total(orderPage.getTotalElements())
                 .totalPages(orderPage.getTotalPages())

@@ -16,7 +16,7 @@ public class AdminProductVariantListResponse {
 
     private String productVariantName;
 
-//    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     private ProductVariantStatus status;
 

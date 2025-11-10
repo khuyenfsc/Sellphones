@@ -28,7 +28,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
     @Query("""
         SELECT u,
-                COUNT(o)AS totalOrders,
                 COALESCE(SUM(p.amount), 0) AS totalSales
         FROM Order o
         JOIN  o.user u

@@ -73,7 +73,7 @@ public class DashboardController {
 
     }
 
-    @GetMapping("/most-total-orders-by-day")
+    @GetMapping("/total-orders-by-day")
     public ResponseEntity<CommonResponse> getTotalOrdersByDayInMonth(@Valid DashboardRequest request){
         Map<String, Object> response = dashboardService.getTotalOrdersByDayInMonth(request);
         Map<String, Object> map = new HashMap<>();
@@ -82,7 +82,7 @@ public class DashboardController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @GetMapping("/most-total-orders-by-month/{year}")
+    @GetMapping("/total-orders-by-month/{year}")
     public ResponseEntity<CommonResponse> getTotalOrdersByMonthInYear(@PathVariable Integer year){
         Map<String, Object> response = dashboardService.getTotalOrdersByMonthInYear(year);
         Map<String, Object> map = new HashMap<>();

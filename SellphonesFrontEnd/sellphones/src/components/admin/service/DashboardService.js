@@ -2,7 +2,7 @@ import AxiosClient from "../../../api/AxiosClient";
 import AdminService from "./AdminService";
 
 const DashboardService = {
-    async getOverallDetails(month = 11, year = 2025) {
+    async getOverallDetails(month, year) {
         try {
             //Lấy token hiện tại
             let token = localStorage.getItem("adminAccessToken");
@@ -100,7 +100,7 @@ const DashboardService = {
         }
     },
 
-    async getMostSellingVariant() {
+    async getMostSellingVariant(month, year) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -112,6 +112,7 @@ const DashboardService = {
 
             const res = await AxiosClient.get(`/admin/dashboard/most-selling-variant`, {
                 headers: { Authorization: `Bearer ${token}` },
+                params: { month, year },
             });
 
             const data = res?.data?.result || res?.data?.data?.result || {};
@@ -124,6 +125,7 @@ const DashboardService = {
                     try {
                         const retryRes = await AxiosClient.get(`/admin/dashboard/most-selling-variant`, {
                             headers: { Authorization: `Bearer ${newToken}` },
+                            params: { month, year },
                         });
                         const data = retryRes?.data?.result || retryRes?.data?.data?.result || {};
                         return { success: true, data };
@@ -147,6 +149,7 @@ const DashboardService = {
 
             const res = await AxiosClient.get(`/admin/dashboard/most-stocked-variants`, {
                 headers: { Authorization: `Bearer ${token}` },
+                
             });
 
             const data = res?.data?.result || {};
@@ -170,7 +173,7 @@ const DashboardService = {
         }
     },
 
-    async getMostSalesUser() {
+    async getMostSalesUser(month, year) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -182,6 +185,7 @@ const DashboardService = {
 
             const res = await AxiosClient.get(`/admin/dashboard/most-sales-user`, {
                 headers: { Authorization: `Bearer ${token}` },
+                params: { month, year },
             });
 
             const data = res?.data?.result || res?.data?.data?.result || {};
@@ -194,6 +198,7 @@ const DashboardService = {
                     try {
                         const retryRes = await AxiosClient.get(`/admin/dashboard/most-sales-user`, {
                             headers: { Authorization: `Bearer ${newToken}` },
+                            params: { month, year },
                         });
                         const data = retryRes?.data?.result || retryRes?.data?.data?.result || {};
                         return { success: true, data };
@@ -205,7 +210,7 @@ const DashboardService = {
         }
     },
 
-    async getTotalOrdersByDayInMonth() {
+    async getTotalOrdersByDayInMonth(month, year) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -215,8 +220,9 @@ const DashboardService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get(`/admin/dashboard/most-total-orders-by-day`, {
+            const res = await AxiosClient.get(`/admin/dashboard/total-orders-by-day`, {
                 headers: { Authorization: `Bearer ${token}` },
+                params: { month, year },
             });
 
             const data = res?.data?.result || res?.data?.data?.result || {};
@@ -227,8 +233,9 @@ const DashboardService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.get(`/admin/dashboard/most-total-orders-by-day`, {
+                        const retryRes = await AxiosClient.get(`/admin/dashboard/total-orders-by-day`, {
                             headers: { Authorization: `Bearer ${newToken}` },
+                            params: { month, year },
                         });
                         const data = retryRes?.data?.result || retryRes?.data?.data?.result || {};
                         return { success: true, data };
@@ -250,7 +257,7 @@ const DashboardService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get(`/admin/dashboard/most-total-orders-by-month/${year}`, {
+            const res = await AxiosClient.get(`/admin/dashboard/total-orders-by-month/${year}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -262,7 +269,7 @@ const DashboardService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.get(`/admin/dashboard/most-total-orders-by-month/${year}`, {
+                        const retryRes = await AxiosClient.get(`/admin/dashboard/total-orders-by-month/${year}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         const data = retryRes?.data?.result || {};

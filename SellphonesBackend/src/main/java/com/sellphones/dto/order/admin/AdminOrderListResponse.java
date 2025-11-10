@@ -1,7 +1,8 @@
-package com.sellphones.dto.order;
+package com.sellphones.dto.order.admin;
 
 import com.sellphones.dto.customer.CustomerInfoResponse;
-import com.sellphones.entity.customer.CustomerInfo;
+import com.sellphones.dto.order.OrderVariantListResponse;
+import com.sellphones.dto.order.PaymentResponse;
 import com.sellphones.entity.order.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,20 +15,21 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponse {
+public class AdminOrderListResponse {
 
     private Long id;
 
     private String code;
 
-    private List<OrderVariantListResponse> orderVariants;
-
     private LocalDateTime orderedAt;
-
-    private String createBy;
 
     private OrderStatus orderStatus;
 
     private BigDecimal totalPrice;
 
+    private PaymentResponse payment;
+
+    private String createBy;
+
+    private CustomerInfoResponse customer;
 }

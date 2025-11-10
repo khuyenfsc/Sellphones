@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
-import { AdminAuthContext } from '../../context/AdminAuthContext';
-import AdminService from '../../service/AdminService';
+import { AdminAuthContext } from '../../../context/AdminAuthContext';
+import AdminService from '../../../service/AdminService';
 
 export default function AdminLoginPage() {
     const [username, setUsername] = useState('');
