@@ -16,6 +16,10 @@ public class AdminOrderSpecificationBuilder {
     public static Specification<Order> build(AdminOrderFilterRequest request){
         Specification<Order> spec = (root, query, cb) -> cb.conjunction();
 
+        if(request.getCustomerId() != null){
+            spec = spec.and(hasCustomerId(request.getCustomerId()));
+        }
+
         if(request.getCode() != null){
             spec = spec.and(containsCode(request.getCode()));
         }
@@ -75,6 +79,10 @@ public class AdminOrderSpecificationBuilder {
 
     public static Specification<Order> hasEmail(String email){
         return (root, query, cb) -> cb.like(root.get("user").get("email"), "%" +  email + "%");
+    }
+
+    public static Specification<Order> hasCustomerId(Long customerId){
+        return (root, query, cb) -> cb.equal(root.get("customerInfo").get("id"), customerId);
     }
 
 }

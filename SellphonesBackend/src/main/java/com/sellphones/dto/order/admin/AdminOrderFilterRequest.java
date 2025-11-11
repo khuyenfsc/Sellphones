@@ -22,6 +22,7 @@ public class AdminOrderFilterRequest {
     private String customerName;
     private String email;
     private PaymentStatus paymentStatus;
+    private Long customerId;
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)

@@ -22,6 +22,10 @@ import NotFoundPage from "./components/pages/NotFoundPage/NotFoundPage";
 import AdminLoginPage from "./components/admin/components/pages/LoginPage/AdminLoginPage";
 import AdminDashboardPage from "./components/admin/components/pages/DashboardPage/AdminDashboardPage";
 import AdminOrderPage from "./components/admin/components/pages/OrderPage/AdminOrderPage";
+import AdminCustomerPage from "./components/admin/components/pages/CustomerInfoPage/AdminCustomerInfoPage";
+import CustomerDetailsPage from "./components/admin/components/pages/CustomerInfoPage/CustomerDetailsPage";
+import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
+import AttributeDetailsPage from "./components/admin/components/pages/AttributePage/AttributeDetailsPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -133,6 +137,10 @@ export default function App() {
         >
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="orders" element={<AdminOrderPage />} />
+          <Route path="customers" element={<AdminCustomerPage />} />
+          <Route path="customers/view/:customerId" element={<CustomerDetailsPage />} />
+          <Route path="attributes" element={<AdminAttributePage />} />
+          <Route path="attributes/view/:attributeId" element={<AttributeDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

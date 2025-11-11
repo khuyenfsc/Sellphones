@@ -13,8 +13,8 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
     const [paymentMethodType, setPaymentMethodType] = useState(""); 
     const [paymentStatus, setPaymentStatus] = useState(""); 
     const [email, setEmail] = useState("");
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const statusOptions = {
         PENDING: "Chờ xác nhận",
@@ -56,8 +56,9 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
         if (startDate) filters.startDate = formatDate(startDate);
         if (endDate) filters.endDate = formatDate(endDate);
 
-        onApply(filters);
         onClose();
+        onApply(filters);
+        
     };
 
     const removeFilter = (key) => {

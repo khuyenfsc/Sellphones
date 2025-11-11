@@ -29,7 +29,7 @@ public class Shipment extends BaseEntity<Long> {
 
     private LocalDate deliveryDate;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address pickupAddress;
 

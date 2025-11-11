@@ -44,8 +44,8 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
     public PageResponse<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "name");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Attribute> spec = AdminAttributeSpecificationBuilder.build(request);
@@ -66,6 +66,10 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
     public void addAttribute(AdminAttributeRequest request) {
+        if (attributeRepository.existsByName(request.getName())) {
+            throw new AppException(ErrorCode.ATTRIBUTE_NAME_EXISTED);
+        }
+
         Attribute attribute = Attribute.builder()
                 .name(request.getName())
                 .createdAt(LocalDateTime.now())
@@ -89,10 +93,18 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
+    public AdminAttributeResponse getAttributeById(Long id) {
+        Attribute attribute = attributeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
+        return modelMapper.map(attribute, AdminAttributeResponse.class);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
     public PageResponse<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<AttributeValue> spec = AdminAttributeValueSpecificationBuilder.build(request, attributeId);

@@ -26,6 +26,7 @@ public enum ErrorCode {
     CART_ITEM_ALREADY_EXISTS("Sản phẩm đã tồn tại trong giỏ hàng", HttpStatus.CONFLICT),
     CART_ITEM_NOT_FOUND("Không tìm thấy sản phẩm trong giỏ hàng", HttpStatus.NOT_FOUND),
     ROLE_NOT_FOUND("Không tìm thấy vai trò", HttpStatus.NOT_FOUND),
+    ATTRIBUTE_NAME_EXISTED( "Tên thuộc tính đã tồn tại", HttpStatus.CONFLICT),
     PAYMENT_METHOD_TYPE_NOT_FOUND("Không tìm thấy loại phương thức thanh toán", HttpStatus.NOT_FOUND),
     PAYMENT_METHOD_NOT_FOUND("Không tìm thấy phương thức thanh toán", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND("Không tìm thấy đơn hàng", HttpStatus.NOT_FOUND),

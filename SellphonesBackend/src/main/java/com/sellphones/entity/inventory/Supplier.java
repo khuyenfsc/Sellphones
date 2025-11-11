@@ -33,7 +33,7 @@ public class Supplier extends BaseEntity<Long> {
 
     private String email;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 

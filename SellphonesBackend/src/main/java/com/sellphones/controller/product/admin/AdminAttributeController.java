@@ -25,14 +25,14 @@ public class AdminAttributeController {
     public ResponseEntity<CommonResponse> getAttributes(@Valid AdminAttributeFilterRequest request){
         PageResponse<AdminAttributeResponse> response = adminAttributeService.getAttributes(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("attributes", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PostMapping("/add-attribute")
-    public ResponseEntity<CommonResponse> addAttribute(@RequestBody @Valid AdminAttributeRequest request) {
+    @PostMapping("/create-attribute")
+    public ResponseEntity<CommonResponse> createAttribute(@RequestBody @Valid AdminAttributeRequest request) {
         adminAttributeService.addAttribute(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added attribute successfully");
@@ -61,11 +61,21 @@ public class AdminAttributeController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse> getAttributeById(@PathVariable Long id){
+        AdminAttributeResponse response = adminAttributeService.getAttributeById(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
+
     @GetMapping("/{attributeId}/attribute-values")
     public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminAttributeValueFilterRequest request,@PathVariable Long attributeId){
         PageResponse<AdminAttributeValueResponse> response = adminAttributeService.getAttributeValues(request, attributeId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("values", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 

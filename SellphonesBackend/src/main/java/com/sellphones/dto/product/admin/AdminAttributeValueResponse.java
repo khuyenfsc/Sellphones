@@ -13,8 +13,6 @@ public class AdminAttributeValueResponse {
 
     private Long id;
 
-
-
     private String strVal;
 
     private BigDecimal numericVal;

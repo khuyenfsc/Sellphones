@@ -27,6 +27,15 @@ public class AdminCustomerController {
     public ResponseEntity<CommonResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request){
         PageResponse<AdminCustomerInfoResponse> response = adminCustomerService.getCustomerInfos(request);
         Map<String, Object> map = new HashMap<>();
+        map.put("customers", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse> getCustomerInfoById(@PathVariable Long id){
+        AdminCustomerInfoResponse  response = adminCustomerService.getCustomerInfoById(id);
+        Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
@@ -40,6 +49,16 @@ public class AdminCustomerController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
+
+    @PutMapping("/update-customer-info/{id}")
+    public ResponseEntity<CommonResponse> updateCustomerInfo(@RequestBody @Valid CustomerInfoRequest request, @PathVariable Long id){
+        adminCustomerService.updateCustomerInfo(request, id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Updated customer successfully!");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+    }
+
 
     @DeleteMapping("/delete-customer-info/{id}")
     public ResponseEntity<CommonResponse> deleteCustomerInfos(@PathVariable Long id){
