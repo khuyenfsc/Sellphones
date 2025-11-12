@@ -71,7 +71,7 @@ public class AdminAttributeController {
 
     }
 
-    @GetMapping("/{attributeId}/attribute-values")
+    @GetMapping("/{attributeId}/values")
     public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminAttributeValueFilterRequest request,@PathVariable Long attributeId){
         PageResponse<AdminAttributeValueResponse> response = adminAttributeService.getAttributeValues(request, attributeId);
         Map<String, Object> map = new HashMap<>();
@@ -81,7 +81,7 @@ public class AdminAttributeController {
 
     }
 
-    @PostMapping("/{attributeId}/add-attribute-value")
+    @PostMapping("/{attributeId}/create-value")
     public ResponseEntity<CommonResponse> addAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeId) {
         adminAttributeService.addAttributeValue(request, attributeId);
         Map<String, Object> map = new HashMap<>();
@@ -91,7 +91,7 @@ public class AdminAttributeController {
 
     }
 
-    @PutMapping("/edit-attribute-value/{attributeValueId}")
+    @PutMapping("/edit-value/{attributeValueId}")
     public ResponseEntity<CommonResponse> editAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeValueId) {
         adminAttributeService.editAttributeValue(request, attributeValueId);
         Map<String, Object> map = new HashMap<>();
@@ -101,7 +101,7 @@ public class AdminAttributeController {
 
     }
 
-    @DeleteMapping("/delete-attribute-value/{attributeValueId}")
+    @DeleteMapping("/delete-value/{attributeValueId}")
     public ResponseEntity<CommonResponse> editAttributeValue(@PathVariable Long attributeValueId) {
         adminAttributeService.deleteAttributeValue(attributeValueId);
         Map<String, Object> map = new HashMap<>();

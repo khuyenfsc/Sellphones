@@ -3,7 +3,7 @@ import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import FilterModal from "./FilterModal";
 import AdminOrderService from "../../../../service/AdminOrderService";
 
-export default function OrderList({customerId}) {
+export default function OrderList({ customerId }) {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -16,8 +16,9 @@ export default function OrderList({customerId}) {
     const [searchTerm, setSearchTerm] = useState('');
     const [perPage, setPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
+    const [inputValue, setInputValue] = useState(currentPage);
     const [totalPages, setTotalPages] = useState(1);
-
+    const [total, setTotal] = useState(0);
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -31,6 +32,7 @@ export default function OrderList({customerId}) {
         if (res.success) {
             setOrders(res.data.result);
             setTotalPages(res.data.totalPages);
+            setTotal(res.data?.total || 0);
         }
         setLoading(false);
     };
@@ -44,6 +46,9 @@ export default function OrderList({customerId}) {
         setCurrentPage(1);
     };
 
+    useEffect(() => {
+        setInputValue(currentPage);
+    }, [currentPage]);
 
     useEffect(() => {
         fetchOrders({
@@ -109,6 +114,9 @@ export default function OrderList({customerId}) {
                         />
                         <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                     </div>
+                    <span className="text-slate-400 text-sm">
+                        Tổng số kết quả: {total}
+                    </span>
                 </div>
 
                 {/* Bộ lọc + phân trang */}
@@ -136,8 +144,24 @@ export default function OrderList({customerId}) {
                     <span className="text-slate-400">Đơn hàng / Trang</span>
 
                     <div className="flex items-center gap-2">
-                        <span className="text-slate-400">
-                            {currentPage} of {totalPages}
+                        <span className="text-slate-400 flex items-center gap-1">
+                            <input
+                                type="number"
+                                value={inputValue} // dùng state tạm
+                                onChange={(e) => setInputValue(e.target.value)} // cho phép gõ
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        const newPage = Number(inputValue);
+                                        if (newPage >= 1 && newPage <= totalPages) {
+                                            setCurrentPage(newPage); // chỉ cập nhật currentPage khi Enter
+                                        } else {
+                                            setInputValue(currentPage); // reset nếu nhập sai
+                                        }
+                                    }
+                                }}
+                                className="w-16 text-center bg-gray-800 rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            / {totalPages}
                         </span>
                         <button
                             onClick={handlePrevPage}

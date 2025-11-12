@@ -26,6 +26,7 @@ import AdminCustomerPage from "./components/admin/components/pages/CustomerInfoP
 import CustomerDetailsPage from "./components/admin/components/pages/CustomerInfoPage/CustomerDetailsPage";
 import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
 import AttributeDetailsPage from "./components/admin/components/pages/AttributePage/AttributeDetailsPage";
+import AdminBrandPage from "./components/admin/components/pages/BrandPage/AdminBrandPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -141,6 +142,7 @@ export default function App() {
           <Route path="customers/view/:customerId" element={<CustomerDetailsPage />} />
           <Route path="attributes" element={<AdminAttributePage />} />
           <Route path="attributes/view/:attributeId" element={<AttributeDetailsPage />} />
+          <Route path="brands" element={<AdminBrandPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

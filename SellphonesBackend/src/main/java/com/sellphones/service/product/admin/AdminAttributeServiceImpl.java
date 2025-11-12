@@ -123,7 +123,6 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
     public void addAttributeValue(AdminAttributeValueRequest request, Long attributeId) {
         Attribute attribute = attributeRepository.findById(attributeId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
@@ -134,7 +133,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        attribute.getAttributeValues().add(attributeValue);
+        attributeValueRepository.save(attributeValue);
     }
 
     @Override

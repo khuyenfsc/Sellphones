@@ -5,16 +5,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AdminAttributeService from "../../../service/AdminAttributeService";
 import AttributeValueTable from "./components/AttributeValueTable";
-// import EditAttributeModal from "./components/EditAttributeModal";
+import EditAttributeModal from "./components/EditAttributeModal";
+import CreateAttributeValueModal from "./components/CreateAttirbuteValueModal";
 
 const AttributeDetailsPage = () => {
+    const [isCreateValueModalOpen, setIsCreateValueModalOpen] = useState(false);
     const navigate = useNavigate();
     const { attributeId } = useParams();
+    const [isReloaded, setIsReloaded] = useState(true);
 
     const [attribute, setAttribute] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    // Lấy thông tin attribute
     const fetchAttribute = async () => {
         try {
             const res = await AdminAttributeService.getAttributeById(attributeId);
@@ -37,28 +39,12 @@ const AttributeDetailsPage = () => {
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     };
 
-
-
-    // Lấy danh sách attribute values
-    // const fetchAttributeValues = async () => {
-    //     setLoadingValues(true);
-    //     try {
-    //         const res = await AdminAttributeService.getAttributeValues(attributeId);
-    //         if (res.success) setAttributeValues(res.data);
-    //     } catch (err) {
-    //         console.error(err);
-    //         toast.error("Lỗi khi tải danh sách giá trị attribute");
-    //     }
-    //     setLoadingValues(false);
-    // };
-
-    const handleUpdate = async (updatedData) => {
-        if (!attributeId) return;
+    const handleUpdate = async (name) => {
 
         try {
-            const res = await AdminAttributeService.updateAttribute(attributeId, updatedData);
+            const res = await AdminAttributeService.updateAttribute(attributeId, { name });
             if (res.success) {
-                toast.success("Cập nhật attribute thành công!");
+                toast.success("Cập nhật thuộc tính thành công!");
                 setIsEditModalOpen(false);
                 fetchAttribute();
             } else {
@@ -66,7 +52,7 @@ const AttributeDetailsPage = () => {
             }
         } catch (err) {
             console.error(err);
-            toast.error("Đã xảy ra lỗi khi cập nhật attribute");
+            toast.error("Đã xảy ra lỗi khi cập nhật thuộc tính");
         }
     };
 
@@ -103,6 +89,30 @@ const AttributeDetailsPage = () => {
         }
     };
 
+    const handleCreateValue = async (valueData) => {
+        const { strVal, numericVal } = valueData;
+
+        if (!strVal?.trim()) {
+            toast.error("Giá trị chuỗi (valueString) không được để trống");
+            return;
+        }
+
+        try {
+            const res = await AdminAttributeService.createValue(attributeId, valueData);
+
+            if (res.success) {
+                toast.success("Tạo giá trị thuộc tính thành công");
+                setIsReloaded(!isReloaded);
+            } else {
+                toast.error(res.message || "Lỗi khi tạo giá trị thuộc tính");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi tạo giá trị thuộc tính");
+        }
+    };
+
+
     useEffect(() => {
         fetchAttribute();
         // fetchAttributeValues();
@@ -116,6 +126,7 @@ const AttributeDetailsPage = () => {
                     {attribute ? attribute.name : "Chi tiết Attribute"}
                 </h1>
                 <div className="flex gap-3">
+                    {/* Nút xóa attribute */}
                     <button
                         className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
                         onClick={handleDelete}
@@ -123,7 +134,16 @@ const AttributeDetailsPage = () => {
                         <XCircle size={20} />
                         <span className="text-sm font-medium">Xóa Attribute</span>
                     </button>
+
+                    {/* Nút tạo giá trị cho thuộc tính */}
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition text-white"
+                        onClick={() => setIsCreateValueModalOpen(true)}
+                    >
+                        <span>Thêm giá trị mới</span>
+                    </button>
                 </div>
+
             </div>
 
             <div className="flex gap-6">
@@ -131,6 +151,7 @@ const AttributeDetailsPage = () => {
                 <div className="flex-1 flex flex-col gap-6">
                     <AttributeValueTable
                         attributeId={attributeId}
+                        isReloaded={isReloaded}
                     />
                 </div>
 
@@ -163,12 +184,18 @@ const AttributeDetailsPage = () => {
                 </div>
             </div>
 
-            {/* <EditAttributeModal
+            <EditAttributeModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 attribute={attribute}
                 onUpdate={handleUpdate}
-            /> */}
+            />
+
+            <CreateAttributeValueModal
+                isOpen={isCreateValueModalOpen}
+                onClose={() => setIsCreateValueModalOpen(false)}
+                onCreate={handleCreateValue}
+            />
         </div>
     );
 };

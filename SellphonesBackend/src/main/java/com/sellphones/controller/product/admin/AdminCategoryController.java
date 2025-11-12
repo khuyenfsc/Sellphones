@@ -33,7 +33,7 @@ public class AdminCategoryController {
 
     }
 
-    @PostMapping("/add-category")
+    @PostMapping("/create-category")
     public ResponseEntity<CommonResponse> addCategory(
         @RequestPart("category") String categoryJson,
         @RequestPart(name = "file", required = false) MultipartFile iconFile
@@ -46,7 +46,7 @@ public class AdminCategoryController {
 
     }
 
-    @PutMapping("/edit-category/{id}")
+    @PutMapping("/update-category/{id}")
     public ResponseEntity<CommonResponse> editCategory(
         @RequestPart("category") String categoryJson,
         @RequestPart(name = "file", required = false) MultipartFile iconFile,
@@ -70,8 +70,8 @@ public class AdminCategoryController {
 
     }
 
-    @GetMapping("/{categoryId}/category-options")
-    public ResponseEntity<CommonResponse> getCategoriesOptions(AdminCategoryOptionFilterRequest request, @PathVariable Long categoryId){
+    @GetMapping("/{categoryId}/options")
+    public ResponseEntity<CommonResponse> getCategoriesOptions(@Valid AdminCategoryOptionFilterRequest request, @PathVariable Long categoryId){
         PageResponse<AdminCategoryOptionResponse> response = adminCategoryService.getCategoryOptions(request, categoryId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
@@ -80,7 +80,7 @@ public class AdminCategoryController {
 
     }
 
-    @PostMapping("/{categoryId}/add-category-option")
+    @PostMapping("/{categoryId}/create-option")
     public ResponseEntity<CommonResponse> addCategoryOption(@RequestBody @Valid AdminCategoryOptionRequest request, @PathVariable Long categoryId){
         adminCategoryService.addCategoryOption(request, categoryId);
         Map<String, Object> map = new HashMap<>();
@@ -90,7 +90,7 @@ public class AdminCategoryController {
 
     }
 
-    @PutMapping("/edit-category-option/{categoryOptionId}")
+    @PutMapping("/update-option/{categoryOptionId}")
     public ResponseEntity<CommonResponse> editCategoryOption(@RequestBody @Valid AdminCategoryOptionRequest request, @PathVariable Long categoryOptionId){
         adminCategoryService.editCategoryOption(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
@@ -100,7 +100,7 @@ public class AdminCategoryController {
 
     }
 
-    @DeleteMapping("/delete-category-option/{categoryOptionId}")
+    @DeleteMapping("/delete-option/{categoryOptionId}")
     public ResponseEntity<CommonResponse> deleteCategoryOption(@PathVariable Long categoryOptionId){
         adminCategoryService.deleteCategoryOption(categoryOptionId);
         Map<String, Object> map = new HashMap<>();
@@ -110,8 +110,8 @@ public class AdminCategoryController {
 
     }
 
-    @GetMapping("/category-option/{categoryOptionId}/category-option-values")
-    public ResponseEntity<CommonResponse> getCategoriesOptionValues(AdminCategoryOptionValueFilterRequest request, @PathVariable Long categoryOptionId){
+    @GetMapping("/options/{categoryOptionId}/values")
+    public ResponseEntity<CommonResponse> getCategoriesOptionValues(@Valid AdminCategoryOptionValueFilterRequest request, @PathVariable Long categoryOptionId){
         PageResponse<AdminCategoryOptionValueResponse> response = adminCategoryService.getCategoryOptionValues(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
@@ -120,7 +120,7 @@ public class AdminCategoryController {
 
     }
 
-    @PostMapping("/category-option/{categoryOptionId}/add-category-option-value")
+    @PostMapping("/options/{categoryOptionId}/create-value")
     public ResponseEntity<CommonResponse> addCategoryOptionValue(@RequestBody @Valid AdminCategoryOptionValueRequest request, @PathVariable Long categoryOptionId){
         adminCategoryService.addCategoryOptionValue(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
@@ -130,7 +130,7 @@ public class AdminCategoryController {
 
     }
 
-    @PutMapping("/edit-category-option-value/{categoryOptionId}")
+    @PutMapping("/options/update-value/{categoryOptionId}")
     public ResponseEntity<CommonResponse> editCategoryOptionValue(@RequestBody @Valid AdminCategoryOptionValueRequest request, @PathVariable Long categoryOptionId){
         adminCategoryService.editCategoryOptionValue(request, categoryOptionId);
         Map<String, Object> map = new HashMap<>();
@@ -140,7 +140,7 @@ public class AdminCategoryController {
 
     }
 
-    @DeleteMapping("/delete-category-option-value/{categoryOptionValueId}")
+    @DeleteMapping("/options/delete-value/{categoryOptionValueId}")
     public ResponseEntity<CommonResponse> deleteCategoryOptionValue(@PathVariable Long categoryOptionValueId){
         adminCategoryService.deleteCategoryOptionValue(categoryOptionValueId);
         Map<String, Object> map = new HashMap<>();

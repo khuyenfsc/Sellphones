@@ -26,13 +26,13 @@ public class AdminBrandController {
     public ResponseEntity<CommonResponse> getBrands(@Valid AdminBrandFilterRequest request){
         PageResponse<AdminBrandResponse> response = adminBrandService.getBrands(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("brands", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PostMapping("/add-brand")
+    @PostMapping("/create-brand")
     public ResponseEntity<CommonResponse> addBrand(
             @RequestPart("brand")String brandJson,
             @RequestPart(name = "file", required = false) MultipartFile file
@@ -45,7 +45,7 @@ public class AdminBrandController {
 
     }
 
-    @PutMapping("/edit-brand/{id}")
+    @PutMapping("/update-brand/{id}")
     public ResponseEntity<CommonResponse> editBrand(
             @RequestPart("brand")String brandJson,
             @PathVariable Long id,
@@ -59,7 +59,7 @@ public class AdminBrandController {
 
     }
 
-    @PostMapping("/delete-brand/{id}")
+    @DeleteMapping("/delete-brand/{id}")
     public ResponseEntity<CommonResponse> deleteBrand(
             @PathVariable Long id
     ){

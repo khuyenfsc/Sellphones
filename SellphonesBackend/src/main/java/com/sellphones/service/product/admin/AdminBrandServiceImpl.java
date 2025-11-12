@@ -50,14 +50,14 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     private final BrandMapper brandMapper;
 
-    private final String folderName = "brands";
+    private final String folderName = "brand_icons";
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.VIEW')")
     public PageResponse<AdminBrandResponse> getBrands(AdminBrandFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "name");
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
@@ -119,7 +119,6 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.EDIT')")
     public void editBrand(String brandJson, MultipartFile file, Long id) {
         AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper, validator);
@@ -142,8 +141,8 @@ public class AdminBrandServiceImpl implements AdminBrandService{
         }
 
         Brand editedBrand = brandMapper.mapToBranEntity(request, iconName);
-        brand.setId(id);
-        brand.setCreatedAt(brand.getCreatedAt());
+        editedBrand.setId(id);
+        editedBrand.setCreatedAt(brand.getCreatedAt());
 
         brandRepository.save(editedBrand);
     }
@@ -156,6 +155,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
         String fileName = brand.getBrandIcon();
         brandRepository.delete(brand);
+        System.out.println("AdminBrandServiceImpl deleteBrand " + fileName);
         if(fileName != null && !fileName.isEmpty()){
             fileStorageService.delete(fileName, folderName);
         }

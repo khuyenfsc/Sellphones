@@ -1,5 +1,6 @@
 package com.sellphones.dto.product.admin;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdminAttributeValueRequest {
 
+    @NotBlank
     private String strVal;
 
     private Long numericVal;

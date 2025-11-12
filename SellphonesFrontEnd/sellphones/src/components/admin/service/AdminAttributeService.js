@@ -127,6 +127,113 @@ const AdminAttributeService = {
         }
     },
 
+    async updateAttribute(attributeId, attributeData) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // Gọi API cập nhật attribute
+            const res = await AxiosClient.put(
+                `/admin/attributes/edit-attribute/${attributeId}`,
+                attributeData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            // Nếu token hết hạn → refresh token rồi gọi lại
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.put(
+                            `/admin/attributes/edit-attribute/${attributeId}`,
+                            attributeData,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json"
+                                },
+                            }
+                        );
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            console.error(err);
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi cập nhật attribute",
+            };
+        }
+    },
+
+    async deleteAttribute(attributeId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // Gọi API xóa attribute
+            const res = await AxiosClient.delete(
+                `/admin/attributes/delete-attribute/${attributeId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            // Nếu token hết hạn → refresh token rồi thử lại
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.delete(
+                            `/admin/attributes/delete-attribute/${attributeId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json"
+                                },
+                            }
+                        );
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            console.error(err);
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi xóa attribute",
+            };
+        }
+    },
+
+
     async getAttributeValues(filterRequest) {
         try {
             let token = localStorage.getItem("adminAccessToken");
@@ -140,7 +247,7 @@ const AdminAttributeService = {
             const { attributeId, ...params } = filterRequest;
 
 
-            const res = await AxiosClient.get(`/admin/attributes/${attributeId}/attribute-values`, {
+            const res = await AxiosClient.get(`/admin/attributes/${attributeId}/values`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params, // keyword, sortType, page, size
             });
@@ -155,7 +262,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const { attributeId, ...params } = filterRequest;
-                        const retryRes = await AxiosClient.get(`/admin/attributes/${attributeId}/attribute-values`, {
+                        const retryRes = await AxiosClient.get(`/admin/attributes/${attributeId}/values`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                             params,
                         });
@@ -170,7 +277,170 @@ const AdminAttributeService = {
                 message: err?.response?.data?.message || "Lỗi khi lấy danh sách giá trị thuộc tính",
             };
         }
+    },
+
+    async createValue(attributeId, valueData) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // Gọi API tạo value
+            const res = await AxiosClient.post(
+                `/admin/attributes/${attributeId}/create-value`,
+                valueData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            // Nếu token hết hạn, thử refresh và gọi lại
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.post(
+                            `/admin/attributes/${attributeId}/create-value`,
+                            valueData,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json"
+                                },
+                            }
+                        );
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            console.error(err);
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi tạo giá trị thuộc tính",
+            };
+        }
+    },
+
+    async updateValue(valueId, valueData) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // Gọi API cập nhật value
+            const res = await AxiosClient.put(
+                `/admin/attributes/edit-value/${valueId}`,
+                valueData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            // Nếu token hết hạn → refresh token rồi gọi lại
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.put(
+                            `/admin/attributes/edit-value/${valueId}`,
+                            valueData,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json",
+                                },
+                            }
+                        );
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            console.error(err);
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi cập nhật value",
+            };
+        }
+    },
+
+    async deleteValue(valueId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            // Gọi API xóa value
+            const res = await AxiosClient.delete(
+                `/admin/attributes/delete-value/${valueId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            // Nếu token hết hạn → refresh token rồi gọi lại
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.delete(
+                            `/admin/attributes/delete-value/${valueId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json",
+                                },
+                            }
+                        );
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            console.error(err);
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi xóa value",
+            };
+        }
     }
+
+
+
 
 
 

@@ -18,4 +18,7 @@ public class AdminCategoryResponse {
     private String code;
 
     private LocalDateTime createdAt;
+
+    private Boolean featuredOnHomepage = false;
+
 }

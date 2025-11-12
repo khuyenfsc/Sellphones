@@ -188,25 +188,26 @@ INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
 
 
 
-INSERT INTO brand(name, brand_icon) VALUES ('Apple', 'frame_59.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Google', 'sq-google-g-logo-update_dezeen_2364_col_0.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ('Samsung', 'frame_60.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'OnePlus', 'frame_65.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Xiaomi', 'frame_61.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Oppo', 'frame_62.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Vivo', 't_i_xu_ng_67_.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Sony', 'brand-icon-sony_2.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Asus', 'frame_67.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Realme', 'frame_63.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Huawei', 'huawei.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Nothing', 'nothing-phone.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Dell', 'Dell.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'HP', 'HP.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Lenovo', 'Lenovo.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'MSI', 'MSI.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Acer', 'acer.jpg');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Razer', 'razer.png');
-INSERT INTO brand(name, brand_icon) VALUES ( 'Microsoft', 'microsoft.png');
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Apple', 'frame_59.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Google', 'sq-google-g-logo-update_dezeen_2364_col_0.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Samsung', 'frame_60.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('OnePlus', 'frame_65.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Xiaomi', 'frame_61.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Oppo', 'frame_62.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Vivo', 't_i_xu_ng_67_.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Sony', 'brand-icon-sony_2.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Asus', 'frame_67.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Realme', 'frame_63.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Huawei', 'huawei.png', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Nothing', 'nothing-phone.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Dell', 'Dell.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('HP', 'HP.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Lenovo', 'Lenovo.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('MSI', 'MSI.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Acer', 'acer.jpg', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Razer', 'razer.png', CURRENT_TIMESTAMP);
+INSERT INTO brand(name, brand_icon, created_at) VALUES ('Microsoft', 'microsoft.png', CURRENT_TIMESTAMP);
+
 
 -- Điện thoại (category_id = 1)
 INSERT INTO brand_category (brand_id, category_id) VALUES
@@ -296,6 +297,12 @@ VALUES
 ('Edit',   'CATALOG.ATTRIBUTES.EDIT', CURRENT_TIMESTAMP),
 ('Delete', 'CATALOG.ATTRIBUTES.DELETE', CURRENT_TIMESTAMP);
 
+INSERT INTO permission (name, code,  created_at)
+VALUES
+('View', 'CATALOG.BRANDS.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CATALOG.BRANDS.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.BRANDS.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.BRANDS.DELETE', CURRENT_TIMESTAMP);
 
 INSERT INTO permission (name, code,  created_at)
 VALUES

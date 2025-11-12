@@ -1,25 +1,29 @@
-// CreateAttributeModal.jsx
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-export default function CreateAttributeModal({ isOpen, onClose, onCreate }) {
-  const [name, setName] = useState("");
+export default function CreateAttributeValueModal({ isOpen, onClose, onCreate }) {
+  const [stringValue, setStringValue] = useState("");
+  const [numericValue, setNumericValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); // state lưu lỗi
 
   const handleCreate = async () => {
     // Validate
-    if (!name.trim()) {
-      setError("Tên thuộc tính không được để trống");
+    if (!stringValue.trim()) {
+      setError("Giá trị string không được để trống");
       return;
     }
 
     setLoading(true);
     setError(""); // reset lỗi
-    await onCreate(name); // gọi hàm tạo
+    await onCreate({
+      strVal: stringValue.trim(),
+      numericVal: numericValue ? Number(numericValue) : null,
+    });
     setLoading(false);
     onClose();
-    setName(""); // reset input sau khi đóng
+    setStringValue(""); // reset input
+    setNumericValue("");
   };
 
   return (
@@ -43,29 +47,51 @@ export default function CreateAttributeModal({ isOpen, onClose, onCreate }) {
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <h2 className="text-xl font-semibold mb-6 text-white">Tạo thuộc tính mới</h2>
+            <h2 className="text-xl font-semibold mb-6 text-white">
+              Thêm giá trị mới cho thuộc tính
+            </h2>
 
             <div className="space-y-4">
+              {/* Giá trị string */}
               <div>
-                <label className="text-gray-300 block mb-1">Tên thuộc tính</label>
+                <label className="text-gray-300 block mb-1">Giá trị (string)</label>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={stringValue}
+                  onChange={(e) => {
+                    setStringValue(e.target.value);
+                    if (error) setError(""); // xóa lỗi khi người dùng nhập
+                  }}
                   className="w-full px-3 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nhập tên thuộc tính"
+                  placeholder="Nhập giá trị string"
                 />
                 {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               </div>
 
+              {/* Giá trị numeric (optional) */}
+              <div>
+                <label className="text-gray-300 block mb-1">
+                  Giá trị (numeric) <span className="text-gray-500">(Tùy chọn)</span>
+                </label>
+                <input
+                  type="number"
+                  value={numericValue}
+                  onChange={(e) => setNumericValue(e.target.value)}
+                  className="w-full px-3 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Nhập giá trị số (nếu có)"
+                />
+              </div>
+
+              {/* Nút tạo */}
               <button
                 onClick={handleCreate}
                 disabled={loading}
                 className="mt-6 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50"
               >
-                {loading ? "Đang tạo..." : "Tạo thuộc tính"}
+                {loading ? "Đang tạo..." : "Thêm giá trị"}
               </button>
 
+              {/* Nút đóng */}
               <button
                 onClick={onClose}
                 className="mt-2 w-full px-4 py-2 bg-slate-800 text-white rounded hover:bg-slate-700 transition"

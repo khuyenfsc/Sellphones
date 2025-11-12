@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
-import AdminAttributeTable from "./components/AdminAttributeTable";
 import CreateAttributeModal from "./components/CreateAttributeModal";
 import { is } from "date-fns/locale";
 import { toast } from "react-toastify";
 import AdminAttributeService from "../../../service/AdminAttributeService";
+import AttributeTable from "./components/AttributeTable";
 
 const AdminAttributePage = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -46,7 +46,7 @@ const AdminAttributePage = () => {
             </div>
 
             {/* Table */}
-            <AdminAttributeTable isReloaded={isReloaded}/>
+            <AttributeTable isReloaded={isReloaded}/>
 
             <CreateAttributeModal
                 isOpen={isCreateModalOpen}

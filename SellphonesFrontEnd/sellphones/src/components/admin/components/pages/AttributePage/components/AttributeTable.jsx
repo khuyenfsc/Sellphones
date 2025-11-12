@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import AdminAttributeService from "../../../../service/AdminAttributeService";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminAttributeTable({isReloaded}) {
+export default function AttributeTable({ isReloaded }) {
     const navigate = useNavigate();
     const [attributes, setAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -13,12 +13,15 @@ export default function AdminAttributeTable({isReloaded}) {
     // Phân trang + tìm kiếm
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [inputValue, setInputValue] = useState(currentPage);
     const [perPage, setPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [sortType, setSortType] = useState("ASC");
 
     const [filterRequest, setFilterRequest] = useState({
-        keyword: "",
-        sortType: "DESC",
+        keyword: null,
+        sortType: sortType,
         page: 0,
         size: perPage,
     });
@@ -27,13 +30,15 @@ export default function AdminAttributeTable({isReloaded}) {
         setLoading(true);
         const res = await AdminAttributeService.getAttributes({
             ...filterRequest,
-            keyword: searchTerm,
+            keyword: searchTerm.trim() || null,
             page: currentPage - 1,
             size: perPage,
+            sortType: sortType
         });
         if (res.success) {
             setAttributes(res.data.result || []);
             setTotalPages(res.data.totalPages || 1);
+            setTotal(res.data?.total || 0);
         } else {
             toast.error(res.message || "Không thể tải danh sách thuộc tính");
         }
@@ -41,33 +46,13 @@ export default function AdminAttributeTable({isReloaded}) {
     };
 
     useEffect(() => {
+        setInputValue(currentPage);
+    }, [currentPage]);
+
+    useEffect(() => {
         fetchAttributes();
-    }, [currentPage, perPage, filterRequest, isReloaded]);
+    }, [currentPage, perPage, filterRequest, isReloaded, sortType]);
 
-    const handleDelete = async (id) => {
-        const confirm = await Swal.fire({
-            title: "Xác nhận xóa",
-            text: "Bạn có chắc muốn xóa thuộc tính này không?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Xóa",
-            cancelButtonText: "Hủy",
-        });
-
-        if (confirm.isConfirmed) {
-            try {
-                const res = await AdminAttributeService.deleteAttribute(id);
-                if (res.success) {
-                    toast.success("Đã xóa thuộc tính thành công");
-                    fetchAttributes();
-                } else {
-                    toast.error(res.message);
-                }
-            } catch {
-                toast.error("Lỗi khi xóa thuộc tính");
-            }
-        }
-    };
 
     const handleSearchKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -104,7 +89,13 @@ export default function AdminAttributeTable({isReloaded}) {
                         />
                         <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                     </div>
+
+                    {/* Tổng số kết quả */}
+                    <span className="text-slate-400 text-sm">
+                        Tổng số kết quả: {total}
+                    </span>
                 </div>
+
 
                 {/* Phân trang */}
                 <div className="flex items-center gap-4">
@@ -133,21 +124,16 @@ export default function AdminAttributeTable({isReloaded}) {
 
                     {/* Chọn sắp xếp theo tên */}
                     <select
-                        value={filterRequest.sortType}
+                        value={sortType}
                         onChange={(e) => {
-                            const newSort = e.target.value;
-                            setFilterRequest({
-                                ...filterRequest,
-                                sortType: newSort,
-                                page: 0,
-                            });
+                            setSortType(e.target.value);
                             setCurrentPage(1);
-                            // Gọi lại API fetchAttributes
-                            fetchAttributes({
-                                ...filterRequest,
-                                sortType: newSort,
-                                page: 0,
-                            });
+                            // // Gọi lại API fetchAttributes
+                            // fetchAttributes({
+                            //     ...filterRequest,
+                            //     sortType: newSort,
+                            //     page: 0,
+                            // });
                         }}
                         className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
                     >
@@ -157,9 +143,28 @@ export default function AdminAttributeTable({isReloaded}) {
 
                     {/* Phân trang */}
                     <div className="flex items-center gap-2">
-                        <span className="text-slate-400">
-                            {currentPage} / {totalPages}
+                        <span className="text-slate-400 flex items-center gap-1">
+                            <input
+                                type="number"
+                                value={inputValue} // dùng state tạm
+                                onChange={(e) => setInputValue(e.target.value)} // cho phép gõ
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        const newPage = Number(inputValue);
+                                        if (newPage >= 1 && newPage <= totalPages) {
+                                            setCurrentPage(newPage); // chỉ cập nhật currentPage khi Enter
+                                        } else {
+                                            setInputValue(currentPage); // reset nếu nhập sai
+                                        }
+                                    }
+                                }}
+                                className="w-16 text-center bg-gray-800 rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            / {totalPages}
                         </span>
+
+
+
                         <button
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
