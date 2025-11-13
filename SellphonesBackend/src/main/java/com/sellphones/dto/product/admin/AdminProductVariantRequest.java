@@ -1,6 +1,6 @@
 package com.sellphones.dto.product.admin;
 
-import com.sellphones.entity.product.ProductVariantStatus;
+import com.sellphones.entity.product.ProductStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class AdminProductVariantRequest {
 
     private BigDecimal currentPrice;
 
-    private ProductVariantStatus status;
+    private ProductStatus status;
 
     private List<Long> promotionIds;
 

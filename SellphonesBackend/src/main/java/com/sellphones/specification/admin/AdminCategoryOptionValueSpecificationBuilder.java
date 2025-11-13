@@ -15,9 +15,9 @@ public class AdminCategoryOptionValueSpecificationBuilder {
             spec = spec.and(containsKeyword(request.getKeyword()));
         }
 
-        if(request.getStartDate() != null && request.getEndDate() != null){
-            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
-        }
+//        if(request.getStartDate() != null && request.getEndDate() != null){
+//            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
+//        }
 
         spec = spec.and(hasCategoryId(categoryOptionid));
 

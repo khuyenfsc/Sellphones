@@ -281,7 +281,7 @@ const ProductsByCategoryPage = () => {
                   className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-full px-3 py-1 text-sm text-gray-800"
                 >
                   <span className="font-medium">
-                    {filterName}: {option.name}
+                    {filterName}: {option.optionName}
                   </span>
                   <button
                     onClick={() => handleRemoveFilter(filterName)}

@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
-
+    VARIANT_INACTIVE("Phiên bản hiện đang ngừng hoạt động", HttpStatus.BAD_REQUEST),
+    PRODUCT_INACTIVE("Sản phẩm hiện đang ngừng hoạt động", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND("Không tìm thấy sản phẩm", HttpStatus.NOT_FOUND),
     MOST_SELLING_VARIANT_NOT_FOUND("Không tìm thấy sản phẩm bán chạy", HttpStatus.NOT_FOUND),
     CART_EMPTY("Giỏ hàng trống, không thể tạo đơn hàng", HttpStatus.BAD_REQUEST),
@@ -26,7 +27,10 @@ public enum ErrorCode {
     CART_ITEM_ALREADY_EXISTS("Sản phẩm đã tồn tại trong giỏ hàng", HttpStatus.CONFLICT),
     CART_ITEM_NOT_FOUND("Không tìm thấy sản phẩm trong giỏ hàng", HttpStatus.NOT_FOUND),
     ROLE_NOT_FOUND("Không tìm thấy vai trò", HttpStatus.NOT_FOUND),
-    ATTRIBUTE_NAME_EXISTED( "Tên thuộc tính đã tồn tại", HttpStatus.CONFLICT),
+    ATTRIBUTE_NAME_ALREADY_EXISTS( "Tên thuộc tính đã tồn tại", HttpStatus.CONFLICT),
+    CATEGORY_NAME_ALREADY_EXISTS("Tên danh mục đã tồn tại", HttpStatus.CONFLICT),
+    CATEGORY_CODE_ALREADY_EXISTS("Mã danh mục đã tồn tại", HttpStatus.CONFLICT),
+    DATABASE_ERROR("Lỗi cơ sở dữ liệu", HttpStatus.INTERNAL_SERVER_ERROR),
     PAYMENT_METHOD_TYPE_NOT_FOUND("Không tìm thấy loại phương thức thanh toán", HttpStatus.NOT_FOUND),
     PAYMENT_METHOD_NOT_FOUND("Không tìm thấy phương thức thanh toán", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND("Không tìm thấy đơn hàng", HttpStatus.NOT_FOUND),
@@ -69,6 +73,7 @@ public enum ErrorCode {
     INVALID_ACTIVE_TOKEN("Token kích hoạt không hợp lệ", HttpStatus.UNAUTHORIZED),
     INVALID_ROLE("Vai trò không hợp lệ", HttpStatus.UNAUTHORIZED),
     USER_INACTIVE("Người dùng chưa được kích hoạt", HttpStatus.BAD_REQUEST),
+    USER_HAS_NOT_PURCHASED("Người dùng chưa mua sản phẩm", HttpStatus.BAD_REQUEST),
     NOT_CUSTOMER("Người dùng không được phép đăng nhập với vai trò khách hàng", HttpStatus.FORBIDDEN),
     EMPTY_FILE("Tệp rỗng", HttpStatus.BAD_REQUEST),
     INVALID_OTP("Mã OTP không hợp lệ", HttpStatus.BAD_REQUEST),

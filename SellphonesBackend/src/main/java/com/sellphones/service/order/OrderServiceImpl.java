@@ -11,6 +11,7 @@ import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.entity.order.OrderVariant;
 import com.sellphones.entity.order.Payment;
 import com.sellphones.entity.payment.*;
+import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
 import com.sellphones.entity.promotion.*;
@@ -173,7 +174,8 @@ public class OrderServiceImpl implements OrderService{
         List<OrderVariant> orderVariants = new ArrayList<>();
 
         List<Long> cartItemIds = orderProducts.stream().map(OrderProductRequest::getCartItemId).toList();
-        List<CartItem> cartItems = cartItemRepository.findByCart_User_EmailAndIdIn(SecurityUtils.extractNameFromAuthentication(), cartItemIds);
+        List<CartItem> cartItems = cartItemRepository.findByCart_User_EmailAndProductVariant_StatusAndIdIn(
+                SecurityUtils.extractNameFromAuthentication(), ProductStatus.ACTIVE, cartItemIds);
 
         if(cartItems == null || cartItems.isEmpty()){
             throw new AppException(ErrorCode.CART_EMPTY);

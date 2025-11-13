@@ -437,11 +437,170 @@ const AdminAttributeService = {
                 message: err?.response?.data?.errors?.message || "Lỗi khi xóa value",
             };
         }
-    }
+    },
 
+    async getProductVariants(productId, filterRequest) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
 
+            const res = await AxiosClient.get(`/admin/products/${productId}/variants`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: filterRequest,
+            });
+            return { success: true, data: res?.data?.variants || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const retryRes = await AxiosClient.get(`/admin/products/${productId}/variants`, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}` },
+                            params: filterRequest,
+                        });
+                        return { success: true, data: retryRes?.data?.variants || {} };
+                    } catch { }
+                }
+            }
+            return { success: false, message: err?.response?.data?.message || "Lỗi khi lấy danh sách biến thể" };
+        }
+    },
 
+    async getProductVariantDetails(variantId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
 
+            const res = await AxiosClient.get(`/admin/products/variants/${variantId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const retryRes = await AxiosClient.get(`/admin/products/variants/${variantId}`, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}` },
+                        });
+                        return { success: true, data: retryRes?.data?.result || {} };
+                    } catch { }
+                }
+            }
+            return { success: false, message: err?.response?.data?.message || "Lỗi khi lấy chi tiết biến thể" };
+        }
+    },
+
+    async createProductVariant(productId, variantData, file) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const formData = new FormData();
+            formData.append("product_variant", JSON.stringify(variantData));
+            if (file) formData.append("file", file);
+
+            const res = await AxiosClient.post(`/admin/products/${productId}/create-variant`, formData, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+            });
+            return { success: true, data: res?.data };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const formData = new FormData();
+                        formData.append("product_variant", JSON.stringify(variantData));
+                        if (file) formData.append("file", file);
+
+                        const retryRes = await AxiosClient.post(`/admin/products/${productId}/create-variant`, formData, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}`, "Content-Type": "multipart/form-data" },
+                        });
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+            return { success: false, message: err?.response?.data?.errors?.message || "Lỗi khi tạo biến thể sản phẩm" };
+        }
+    },
+
+    async updateProductVariant(variantId, variantData, file) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const formData = new FormData();
+            formData.append("product_variant", JSON.stringify(variantData));
+            if (file) formData.append("file", file);
+
+            const res = await AxiosClient.put(`/admin/products/update-variant/${variantId}`, formData, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+            });
+            return { success: true, data: res?.data };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const formData = new FormData();
+                        formData.append("product_variant", JSON.stringify(variantData));
+                        if (file) formData.append("file", file);
+
+                        const retryRes = await AxiosClient.put(`/admin/products/update-variant/${variantId}`, formData, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}`, "Content-Type": "multipart/form-data" },
+                        });
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+            return { success: false, message: err?.response?.data?.message || "Lỗi khi cập nhật biến thể sản phẩm" };
+        }
+    },
+
+    async deleteProductVariant(variantId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.delete(`/admin/products/delete-variant/${variantId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return { success: true, data: res?.data };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const retryRes = await AxiosClient.delete(`/admin/products/delete-variant/${variantId}`, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}` },
+                        });
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+            return { success: false, message: err?.response?.data?.message || "Lỗi khi xóa biến thể sản phẩm" };
+        }
+    },
 
 
 }

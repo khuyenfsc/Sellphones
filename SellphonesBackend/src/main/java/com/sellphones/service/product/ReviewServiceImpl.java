@@ -18,8 +18,10 @@ import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.repository.product.ReviewRepository;
 import com.sellphones.repository.user.UserRepository;
 import com.sellphones.service.file.FileStorageService;
+import com.sellphones.service.order.OrderVariantService;
 import com.sellphones.specification.ReviewSpecificationBuilder;
 import com.sellphones.utils.JsonParser;
+import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
@@ -49,6 +51,8 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final ProductVariantRepository productVariantRepository;
 
+    private final OrderVariantService orderVariantService;
+
     private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
@@ -59,14 +63,20 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final FileStorageService fileStorageService;
 
+    private final ProductUtils productUtils;
+
     private final String reviewFolderName = "reviews";
 
     @Override
     public PageResponse<ReviewResponse> getReviewsByConditions(ReviewFilterRequest request) {
+        if(!productUtils.isActiveVariant(request.getProductVariantId())){
+            throw new AppException(ErrorCode.VARIANT_INACTIVE);
+        }
+
         Specification<Review> spec = ReviewSpecificationBuilder.build(request);
-        Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt")
-                .and(Sort.by(Sort.Direction.DESC, "id"));        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+                .and(Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
         List<Review> reviews = reviewPage.getContent();
         List<ReviewResponse> response = reviews.stream().map(r -> modelMapper.map(r, ReviewResponse.class)).toList();
@@ -79,6 +89,10 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public Map<Integer, Long> getRatingStatsByProductVariantId(Long id) {
+        if(!productUtils.isActiveVariant(id)){
+            throw new AppException(ErrorCode.VARIANT_INACTIVE);
+        }
+
         List<RatingStats> stats = reviewRepository.findRatingStatsByVariantId(id);
         Map<Integer, Long> statsMap = stats.stream()
                 .collect(Collectors.toMap(
@@ -97,10 +111,18 @@ public class ReviewServiceImpl implements ReviewService{
     public ReviewResponse addReview(String reviewJson, MultipartFile[] files) {
         ReviewRequest reviewRequest = JsonParser.parseRequest(reviewJson, ReviewRequest.class, objectMapper, validator);
 
+        if(!productUtils.isActiveVariant(reviewRequest.getProductVariantId())){
+            throw new AppException(ErrorCode.VARIANT_INACTIVE);
+        }
+
+        if(!orderVariantService.hasPurchasedVariant(reviewRequest.getProductVariantId())){
+            throw new AppException(ErrorCode.USER_HAS_NOT_PURCHASED);
+        }
+
         List<String> imageNames = new ArrayList<>();
 
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        ProductVariant productVariant =productVariantRepository.findById(reviewRequest.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+        ProductVariant productVariant = productVariantRepository.findById(reviewRequest.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
 
         if(files != null){
             Arrays.asList(files).forEach(f -> {

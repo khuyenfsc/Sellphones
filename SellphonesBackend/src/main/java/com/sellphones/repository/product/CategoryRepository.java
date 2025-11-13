@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
     List<Category> findByFeaturedOnHomepage(Boolean featuredOnHomepage);
+    boolean existsByName(String name);
+
 }

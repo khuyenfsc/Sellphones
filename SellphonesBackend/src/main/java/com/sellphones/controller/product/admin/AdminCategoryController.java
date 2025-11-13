@@ -27,6 +27,17 @@ public class AdminCategoryController {
     public ResponseEntity<CommonResponse> getCategories(AdminCategoryFilterRequest request){
         PageResponse<AdminCategoryResponse> response = adminCategoryService.getCategories(request);
         Map<String, Object> map = new HashMap<>();
+        map.put("categories", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
+
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CommonResponse> getCategoryById(@PathVariable Long categoryId){
+        AdminCategoryResponse response = adminCategoryService.getCategoryById( categoryId);
+        Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
@@ -70,6 +81,7 @@ public class AdminCategoryController {
 
     }
 
+
     @GetMapping("/{categoryId}/options")
     public ResponseEntity<CommonResponse> getCategoriesOptions(@Valid AdminCategoryOptionFilterRequest request, @PathVariable Long categoryId){
         PageResponse<AdminCategoryOptionResponse> response = adminCategoryService.getCategoryOptions(request, categoryId);
@@ -77,7 +89,15 @@ public class AdminCategoryController {
         map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+    }
 
+    @GetMapping("/options/{id}")
+    public ResponseEntity<CommonResponse> getCategoryOptionById(@PathVariable Long id){
+        AdminCategoryOptionResponse response = adminCategoryService.getCategoryOptionById(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @PostMapping("/{categoryId}/create-option")

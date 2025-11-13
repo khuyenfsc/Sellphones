@@ -20,12 +20,14 @@ import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminCategoryOptionSpecificationBuilder;
 import com.sellphones.specification.admin.AdminCategoryOptionValueSpecificationBuilder;
 import com.sellphones.specification.admin.AdminCategorySpecificationBuilder;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,8 +72,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
     public PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC); // default
+        Sort sort = Sort.by(direction, "name");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Category> spec = AdminCategorySpecificationBuilder.build(request);
@@ -79,7 +81,10 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         Page<Category> categoryPage = categoryRepository.findAll(spec, pageable);
         List<Category> categories = categoryPage.getContent();
         List<AdminCategoryResponse> response = categories.stream()
-                .map(c -> modelMapper.map(c, AdminCategoryResponse.class))
+                .map(c -> {
+                    c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), categoryIconFolderName));
+                    return modelMapper.map(c, AdminCategoryResponse.class);
+                })
                 .toList();
 
         return PageResponse.<AdminCategoryResponse>builder()
@@ -90,9 +95,20 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
+    public AdminCategoryResponse getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(()-> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        category.setIcon(ImageNameToImageUrlConverter.convert(category.getIcon(), categoryIconFolderName));
+        return modelMapper.map(category, AdminCategoryResponse.class);
+    }
+
+    @Override
+    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
     public void addCategory(String categoryJson, MultipartFile iconFile) {
         AdminCategoryRequest request = JsonParser.parseRequest(categoryJson, AdminCategoryRequest.class, objectMapper, validator);
+
         String iconName = "";
         if (iconFile != null) {
             try {
@@ -105,7 +121,26 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
         Category category = categoryMapper.mapToCategoryEntity(request, iconName);
 
-        categoryRepository.save(category);
+        try {
+            categoryRepository.save(category);
+        } catch (DataIntegrityViolationException ex) {
+            String message = ex.getMostSpecificCause().getMessage();
+            System.out.println("Lỗi: " + message);
+
+            // Bắt lỗi trùng tên
+            if (message.contains("CATEGORY(NAME") ) {
+                throw new AppException(ErrorCode.CATEGORY_NAME_ALREADY_EXISTS);
+            }
+            // Bắt lỗi trùng code
+            else if (message.contains("CATEGORY(CODE")) {
+                throw new AppException(ErrorCode.CATEGORY_CODE_ALREADY_EXISTS);
+            }
+            // Mặc định
+            else {
+                throw new AppException(ErrorCode.DATABASE_ERROR);
+            }
+        }
+
 
         String finalIconName = iconName;
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -141,10 +176,11 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
             }
         }
 
-        Category editedCategory = categoryMapper.mapToCategoryEntity(request, iconName);
-        editedCategory.setId(id);
-        editedCategory.setCreatedAt(category.getCreatedAt());
-        categoryRepository.save(editedCategory);
+        category.setName(request.getName());
+        category.setCode(request.getCode());
+        category.setIcon(iconName);
+        category.setFeaturedOnHomepage(request.getFeaturedOnHomepage());
+        categoryRepository.save(category);
     }
 
     @Override
@@ -181,6 +217,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
                 .total(optionPage.getTotalElements())
                 .totalPages(optionPage.getTotalPages())
                 .build();
+    }
+
+    @Override
+    public AdminCategoryOptionResponse getCategoryOptionById(Long id) {
+        CategoryOption option = categoryOptionRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
+        return modelMapper.map(option, AdminCategoryOptionResponse.class);
     }
 
     @Override

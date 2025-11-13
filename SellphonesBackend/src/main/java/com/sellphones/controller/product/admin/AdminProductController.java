@@ -3,7 +3,7 @@ package com.sellphones.controller.product.admin;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
-import com.sellphones.dto.product.admin.AdminProductFilter_Request;
+import com.sellphones.dto.product.admin.AdminProduct_FilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
 import com.sellphones.dto.product.ProductListResponse;
@@ -29,17 +29,17 @@ public class AdminProductController {
 
     private final AdminProductService adminProductService;
 
-//    @GetMapping
-//    public ResponseEntity<CommonResponse> getProducts(AdminProductFilter_Request request){
-//        List<ProductListResponse> products = adminProductDocumentService.getProducts(request);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("result", products);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-//
-//    }
+    @GetMapping
+    public ResponseEntity<CommonResponse> getProducts(AdminProduct_FilterRequest request){
+        PageResponse<ProductListResponse> products = adminProductService.getProducts(request);
+        Map<String, Object> map = new HashMap<>();
+        map.put("products", products);
 
-    @PostMapping("/add-product")
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
+
+    @PostMapping("/create-product")
     public ResponseEntity<CommonResponse> addProduct(
             @RequestPart("product") String productJson,
             @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
@@ -54,7 +54,7 @@ public class AdminProductController {
 
     }
 
-    @PutMapping("/edit-product/{productId}")
+    @PutMapping("/update-product/{productId}")
     public ResponseEntity<CommonResponse> editProduct(
             @RequestPart("product") String productJson,
             @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
@@ -69,18 +69,17 @@ public class AdminProductController {
 
     }
 
-//    @DeleteMapping("/delete-product/{productId}")
-//    public ResponseEntity<CommonResponse> deleteProduct(
-//            @PathVariable Long productId
-//    ){
-//        adminProductService.deleteProduct(productId);
-//        adminProductDocumentService.deleteProduct(productId);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("result", "Deleted product successfully");
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-//
-//    }
+    @DeleteMapping("/delete-product/{productId}")
+    public ResponseEntity<CommonResponse> deleteProduct(
+            @PathVariable Long productId
+    ){
+        adminProductService.deleteProduct(productId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Deleted product successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<CommonResponse> getProductDetails(@PathVariable Long productId){
@@ -92,7 +91,7 @@ public class AdminProductController {
 
     }
 
-    @GetMapping("/{productId}/product-variants")
+    @GetMapping("/{productId}/variants")
     public ResponseEntity<CommonResponse> getProductVariants(AdminProductVariantFilterRequest request, @PathVariable Long productId){
         PageResponse<AdminProductVariantListResponse> products = adminProductService.getProductVariants(request, productId);
         Map<String, Object> map = new HashMap<>();
@@ -102,9 +101,9 @@ public class AdminProductController {
 
     }
 
-    @GetMapping("/product-variants/{productVariantId}")
-    public ResponseEntity<CommonResponse> getProductVariantDetails(@PathVariable Long productVariantId){
-        ProductVariantResponse response = adminProductService.getProductVariantDetail(productVariantId);
+    @GetMapping("/variants/{id}")
+    public ResponseEntity<CommonResponse> getProductVariantDetails(@PathVariable Long id){
+        ProductVariantResponse response = adminProductService.getProductVariantDetail(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
@@ -112,7 +111,7 @@ public class AdminProductController {
 
     }
 
-    @PostMapping("/{productId}/add-product-variant")
+    @PostMapping("/{productId}/create-variant")
     public ResponseEntity<CommonResponse> addProductVariant(
             @RequestPart("product_variant") String productVariantJson,
             @RequestPart(name = "file", required = false) MultipartFile file,
@@ -126,13 +125,13 @@ public class AdminProductController {
 
     }
 
-    @PutMapping("/edit-product-variant/{productVariantId}")
+    @PutMapping("/update-variant/{id}")
     public ResponseEntity<CommonResponse> editProductVariant(
             @RequestPart("product_variant") String productVariantJson,
             @RequestPart(name = "file", required = false) MultipartFile file,
-            @PathVariable Long productVariantId
+            @PathVariable Long id
     ){
-        adminProductService.editProductVariant(productVariantJson, file, productVariantId);
+        adminProductService.editProductVariant(productVariantJson, file, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product variant successfully");
 
@@ -140,11 +139,11 @@ public class AdminProductController {
 
     }
 
-    @DeleteMapping("/delete-product-variant/{productVariantId}")
+    @DeleteMapping("/delete-variant/{id}")
     public ResponseEntity<CommonResponse> deleteProductVariant(
-            @PathVariable Long productVariantId
+            @PathVariable Long id
     ){
-        adminProductService.deleteProductVariant(productVariantId);
+        adminProductService.deleteProductVariant(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product variant successfully");
 

@@ -17,9 +17,13 @@ public class AdminCategorySpecificationBuilder {
             spec = spec.and(containsKeyword(request.getKeyword()));
         }
 
-        if(request.getStartDate() != null && request.getEndDate() != null){
-            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
+        if(request.getFeaturedOnHomepage() != null){
+            spec = spec.and(isFeatured(request.getFeaturedOnHomepage()));
         }
+
+//        if(request.getStartDate() != null && request.getEndDate() != null){
+//            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
+//        }
 
         return spec;
     }
@@ -27,7 +31,14 @@ public class AdminCategorySpecificationBuilder {
 
 
     public static Specification<Category> containsKeyword(String keyword){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
+        return (root, query, cb) -> cb.or(
+                cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%"),
+                cb.like(cb.lower(root.get("code")), "%" + keyword.toLowerCase() + "%")
+        );
+    }
+
+    public static Specification<Category> isFeatured(Boolean isFeatured){
+        return (root, query, cb) -> cb.equal(root.get("featuredOnHomepage"), isFeatured);
     }
 
     public static Specification<Category> hasDateBetween(LocalDate startDate, LocalDate endDate){

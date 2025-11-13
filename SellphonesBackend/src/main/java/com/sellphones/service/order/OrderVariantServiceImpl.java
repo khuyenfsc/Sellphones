@@ -1,23 +1,11 @@
 package com.sellphones.service.order;
 
-import com.sellphones.dto.dashboard.DashboardRequest;
-import com.sellphones.dto.product.OrderVariant_ProductVariantRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
 import com.sellphones.entity.order.OrderStatus;
-import com.sellphones.entity.product.ProductVariant;
-import com.sellphones.exception.AppException;
-import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.order.OrderVariantRepository;
 import com.sellphones.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.util.List;
 
 
 @Service
@@ -30,7 +18,7 @@ public class OrderVariantServiceImpl implements OrderVariantService{
 
     @Override
     public boolean hasPurchasedVariant(Long variantId) {
-        return orderVariantRepository.countUserPurchasedVariant(
+        return orderVariantRepository.countPurchasedVariant(
                 SecurityUtils.extractNameFromAuthentication(),
                 variantId,
                 OrderStatus.DELIVERED

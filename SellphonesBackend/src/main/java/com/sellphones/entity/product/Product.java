@@ -26,6 +26,9 @@ public class Product extends BaseEntity<Long> {
 
     private String thumbnail = "";
 
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

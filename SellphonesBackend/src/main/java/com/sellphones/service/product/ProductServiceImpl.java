@@ -6,7 +6,7 @@ import com.sellphones.dto.product.*;
 //import com.sellphones.elasticsearch.ProductDocument;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
-import com.sellphones.entity.product.ProductVariantStatus;
+import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -23,11 +23,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -61,11 +58,15 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductListResponse> getFeaturedProductsByCategory(String categoryName) {
         Boolean isFeatured = true;
-        List<Product> featuredProducts = productRepository.findFirst10ByCategory_NameAndIsFeatured(categoryName, isFeatured);
+        List<Product> featuredProducts = productRepository.findFirst10ByCategory_NameAndIsFeaturedAndStatus(
+                categoryName, isFeatured, ProductStatus.ACTIVE
+        );
 
         return featuredProducts.stream()
-                .map(this::mapToProductListResponse)
-                .collect(Collectors.toList());
+                .map(p -> {
+                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+                    return modelMapper.map(p, ProductListResponse.class);
+                }).toList();
     }
 
     @Override
@@ -80,8 +81,10 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productPage = productRepository.findAll(productSpec, pageable);
         List<Product> products = productPage.getContent();
         List<ProductListResponse> response = products.stream()
-                .map(this::mapToProductListResponse)
-                .collect(Collectors.toList());
+                .map(p -> {
+                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
+                    return modelMapper.map(p, ProductListResponse.class);
+                }).toList();
 
         return PageResponse.<ProductListResponse>builder()
                 .result(response)
@@ -92,11 +95,12 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDetailsResponse getProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow( () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findById(id).
+                orElseThrow( () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
         List<ProductVariant> variants = product.getProductVariants();
         product.setProductVariants(
-                variants.stream().filter(v -> v.getStatus() == ProductVariantStatus.ACTIVE).toList()
+                variants.stream().filter(v -> v.getStatus() == ProductStatus.ACTIVE).toList()
         );
 
         List<String> images = new ArrayList<>();
@@ -110,7 +114,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductVariantResponse getProductVariantById(Long id) {
-        ProductVariant productVariant = productVariantRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+        ProductVariant productVariant = productVariantRepository
+                .findByIdAndStatus(id, ProductStatus.ACTIVE)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         productVariant.setVariantImage(ImageNameToImageUrlConverter.convert(productVariant.getVariantImage(), productVariantImageFolder));
         for(GiftProduct giftProduct : productVariant.getGiftProducts()){
             giftProduct.setThumbnail(ImageNameToImageUrlConverter.convert(giftProduct.getThumbnail(), giftProductThumbnailFolder));
@@ -154,18 +160,18 @@ public class ProductServiceImpl implements ProductService{
 //                .total(products.getTotalElements())
 //                .build();
 //    }
-
-    private ProductListResponse mapToProductListResponse(Product product){
-        ProductListResponse res = modelMapper.map(product, ProductListResponse.class);
-        res.setThumbnail(ImageNameToImageUrlConverter.convert(res.getThumbnail(), thumbnailFolderName));
-
-        ProductVariant thumbnailProduct = product.getThumbnailProduct();
-        if(thumbnailProduct != null){
-            res.setRootPrice(product.getThumbnailProduct().getRootPrice());
-            res.setCurrentPrice(product.getThumbnailProduct().getCurrentPrice());
-        }
-
-        return res;
-    }
+//
+//    private ProductListResponse mapToProductListResponse(Product product){
+//        ProductListResponse res = modelMapper.map(product, ProductListResponse.class);
+//        res.setThumbnail(ImageNameToImageUrlConverter.convert(res.getThumbnail(), thumbnailFolderName));
+//
+//        ProductVariant thumbnailProduct = product.getThumbnailProduct();
+//        if(thumbnailProduct != null){
+//            res.setRootPrice(product.getThumbnailProduct().getRootPrice());
+//            res.setCurrentPrice(product.getThumbnailProduct().getCurrentPrice());
+//        }
+//
+//        return res;
+//    }
 
 }

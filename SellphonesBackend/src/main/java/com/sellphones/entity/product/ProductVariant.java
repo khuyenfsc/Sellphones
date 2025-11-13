@@ -33,7 +33,7 @@ public class ProductVariant extends BaseEntity<Long> {
     private BigDecimal currentPrice;
 
     @Enumerated(EnumType.STRING)
-    private ProductVariantStatus status;
+    private ProductStatus status;
 
     @Column(nullable = false, unique = true)
     private String sku;

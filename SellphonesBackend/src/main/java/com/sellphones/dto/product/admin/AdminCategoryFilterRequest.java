@@ -25,6 +25,8 @@ public class AdminCategoryFilterRequest {
 //    @JsonDeserialize(using = LocalDateDeserializer.class)
 //    private LocalDate endDate;
 
+    private Boolean featuredOnHomepage;
+
     private String sortType;
 
     @Min(0)

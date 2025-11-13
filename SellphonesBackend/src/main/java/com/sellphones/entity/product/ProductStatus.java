@@ -1,5 +1,5 @@
 package com.sellphones.entity.product;
 
-public enum ProductVariantStatus {
+public enum ProductStatus {
     ACTIVE, INACTIVE
 }

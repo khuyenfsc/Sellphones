@@ -19,6 +19,7 @@ export const labelMap = {
     PRODUCTS: "Sản phẩm",
     ATTRIBUTES : "Thuộc tính sản phẩm",
     BRANDS : "Nhãn hàng",
+    CATEGORIES : "Danh mục",
     PRODUCT_FILTERS: "Bộ lọc sản phẩm",
     WARRANTIES: "Bảo hành",
 

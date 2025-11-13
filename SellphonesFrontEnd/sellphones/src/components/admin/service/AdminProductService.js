@@ -1,23 +1,22 @@
 import AxiosClient from "../../../api/AxiosClient";
 import AdminService from "./AdminService";
 
-const AdminBrandService = {
-    async getBrands(filterRequest) {
+const AdminProductService = {
+    async getProducts(filterRequest) {
         try {
             let token = localStorage.getItem("adminAccessToken");
-
             if (!token) {
-                const refresh = await this.refreshToken();
+                const refresh = await AdminService.refreshToken();
                 if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get("/admin/brands", {
+            const res = await AxiosClient.get("/admin/products", {
                 headers: { Authorization: `Bearer ${token}` },
-                params: filterRequest, // gồm name, sortType, page, size
+                params: filterRequest, 
             });
 
-            const data = res?.data?.brands || {};
+            const data = res?.data?.products || {};
             return { success: true, data };
         } catch (err) {
             if (err.response?.status === 401) {
@@ -25,11 +24,11 @@ const AdminBrandService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.get("/admin/brands", {
+                        const retryRes = await AxiosClient.get("/admin/products", {
                             headers: { Authorization: `Bearer ${newToken}` },
                             params: filterRequest,
                         });
-                        const data = retryRes?.data?.brands || {};
+                        const data = retryRes?.data?.products || {};
                         return { success: true, data };
                     } catch { }
                 }
@@ -37,12 +36,12 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.errors?.message || "Lỗi khi lấy danh sách thương hiệu",
+                message: err?.response?.data?.errors?.message || "Lỗi khi lấy danh sách sản phẩm",
             };
         }
     },
 
-    async createCategory(categoryData, file) {
+    async getProductById(productId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -51,57 +50,7 @@ const AdminBrandService = {
                 token = refresh.accessToken;
             }
 
-            const formData = new FormData();
-            formData.append("category", JSON.stringify(categoryData));
-            if (file) formData.append("file", file);
-
-            const res = await AxiosClient.post("/admin/categories/create-category", formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-
-            return { success: true, data: res?.data };
-        } catch (err) {
-            if (err.response?.status === 401) {
-                const refresh = await AdminService.refreshToken();
-                if (refresh.success) {
-                    const newToken = refresh.accessToken;
-                    try {
-                        const formData = new FormData();
-                        formData.append("category", JSON.stringify(categoryData));
-                        if (file) formData.append("file", file);
-
-                        const retryRes = await AxiosClient.post("/admin/categories/create-category", formData, {
-                            headers: {
-                                Authorization: `Bearer ${newToken}`,
-                                "Content-Type": "multipart/form-data",
-                            },
-                        });
-                        return { success: true, data: retryRes?.data };
-                    } catch { }
-                }
-            }
-
-            return {
-                success: false,
-                message: err?.response?.data?.errors?.message || "Lỗi khi tạo category",
-            };
-        }
-    },
-
-    async getBrandById(brandId) {
-        try {
-            let token = localStorage.getItem("adminAccessToken");
-
-            if (!token) {
-                const refresh = await this.refreshToken();
-                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
-                token = refresh.accessToken;
-            }
-
-            const res = await AxiosClient.get(`/admin/brands/${brandId}`, {
+            const res = await AxiosClient.get(`/admin/products/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -113,7 +62,7 @@ const AdminBrandService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.get(`/admin/brands/${brandId}`, {
+                        const retryRes = await AxiosClient.get(`/admin/products/${productId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         const data = retryRes?.data?.result || {};
@@ -124,12 +73,12 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết thương hiệu",
+                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết sản phẩm",
             };
         }
     },
 
-    async updateCategory(categoryId, categoryData, file) {
+    async createProduct(productData, thumbnailFile, imageFiles) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -139,10 +88,13 @@ const AdminBrandService = {
             }
 
             const formData = new FormData();
-            formData.append("category", JSON.stringify(categoryData));
-            if (file) formData.append("file", file);
+            formData.append("product", JSON.stringify(productData));
+            if (thumbnailFile) formData.append("file", thumbnailFile);
+            if (imageFiles && imageFiles.length > 0) {
+                imageFiles.forEach((file) => formData.append("files", file));
+            }
 
-            const res = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+            const res = await AxiosClient.post("/admin/products/create-product", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -157,10 +109,13 @@ const AdminBrandService = {
                     const newToken = refresh.accessToken;
                     try {
                         const formData = new FormData();
-                        formData.append("category", JSON.stringify(categoryData));
-                        if (file) formData.append("file", file);
+                        formData.append("product", JSON.stringify(productData));
+                        if (thumbnailFile) formData.append("file", thumbnailFile);
+                        if (imageFiles && imageFiles.length > 0) {
+                            imageFiles.forEach((file) => formData.append("files", file));
+                        }
 
-                        const retryRes = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+                        const retryRes = await AxiosClient.post("/admin/products/create-product", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -173,22 +128,76 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật category",
+                message: err?.response?.data?.errors?.message || "Lỗi khi tạo sản phẩm",
             };
         }
     },
 
-    async deleteBrand(brandId) {
+    async updateProduct(productId, productData, thumbnailFile, imageFiles) {
         try {
             let token = localStorage.getItem("adminAccessToken");
-
             if (!token) {
-                const refresh = await this.refreshToken();
+                const refresh = await AdminService.refreshToken();
                 if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.delete(`/admin/brands/delete-brand/${brandId}`, {
+            const formData = new FormData();
+            formData.append("product", JSON.stringify(productData));
+            if (thumbnailFile) formData.append("file", thumbnailFile);
+            if (imageFiles && imageFiles.length > 0) {
+                imageFiles.forEach((file) => formData.append("files", file));
+            }
+
+            const res = await AxiosClient.put(`/admin/products/update-product/${productId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            return { success: true, data: res?.data };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const formData = new FormData();
+                        formData.append("product", JSON.stringify(productData));
+                        if (thumbnailFile) formData.append("file", thumbnailFile);
+                        if (imageFiles && imageFiles.length > 0) {
+                            imageFiles.forEach((file) => formData.append("files", file));
+                        }
+
+                        const retryRes = await AxiosClient.put(`/admin/products/update-product/${productId}`, formData, {
+                            headers: {
+                                Authorization: `Bearer ${newToken}`,
+                                "Content-Type": "multipart/form-data",
+                            },
+                        });
+                        return { success: true, data: retryRes?.data };
+                    } catch { }
+                }
+            }
+
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi khi cập nhật sản phẩm",
+            };
+        }
+    },
+
+    async deleteProduct(productId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.delete(`/admin/products/delete-product/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -199,7 +208,7 @@ const AdminBrandService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.delete(`/admin/brands/delete-brand/${brandId}`, {
+                        const retryRes = await AxiosClient.delete(`/admin/products/delete-product/${productId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -209,10 +218,12 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa thương hiệu",
+                message: err?.response?.data?.message || "Lỗi khi xóa sản phẩm",
             };
         }
     },
+
+    
 };
 
-export default AdminBrandService;
+export default AdminProductService;

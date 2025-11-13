@@ -19,12 +19,12 @@ import java.util.List;
 @Entity
 @SuperBuilder
 @Table(name = "category")
-public class Category extends BaseEntity<Long> {
+public class        Category extends BaseEntity<Long> {
 
     @Column(unique = true)
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String code;
 
     private String icon;

@@ -16,4 +16,6 @@ public class AdminCategoryRequest {
     @NotBlank
     @Pattern(regexp = "\\S+", message = "Code must not contain spaces")
     private String code;
+
+    private Boolean featuredOnHomepage;
 }

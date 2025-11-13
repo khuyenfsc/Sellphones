@@ -13,6 +13,7 @@ import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.product.CommentRepository;
 import com.sellphones.repository.product.ProductRepository;
 import com.sellphones.repository.user.UserRepository;
+import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +37,21 @@ public class CommentServiceImpl implements CommentService{
 
     private final ProductRepository productRepository;
 
+    private final ProductUtils productUtils;
+
     private final ModelMapper modelMapper;
 
     @Override
     public PageResponse<CommentResponse> getCommentByProduct(Long productId, Integer page, Integer size) {
+        if(!productUtils.isActiveProduct(productId)){
+            throw new AppException(ErrorCode.PRODUCT_INACTIVE);
+        }
+
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Comment> commentPage = commentRepository.findByProductId(productId, pageable);
+        Page<Comment> commentPage = commentRepository.findStatusByProductId(
+                CommentStatus.APPROVED, productId, pageable);
         List<CommentResponse> response = commentPage.getContent().stream()
                 .map(c -> modelMapper.map(c, CommentResponse.class))
                 .toList();
@@ -57,6 +65,12 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public PageResponse<CommentResponse> getCommentsByParentCommentId(Long parentId, Integer page, Integer size) {
+        Comment parentComment = commentRepository.findById(parentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
+        if(!productUtils.isActiveProduct(parentComment.getProduct())){
+            throw new AppException(ErrorCode.PRODUCT_INACTIVE);
+        }
+
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -75,6 +89,11 @@ public class CommentServiceImpl implements CommentService{
     public CommentResponse addNewComment(NewCommentRequest newCommentRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Product product = productRepository.findById(newCommentRequest.getProductId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if(!productUtils.isActiveProduct(product)){
+            throw new AppException(ErrorCode.PRODUCT_INACTIVE);
+        }
+
         Comment comment = Comment.builder()
                 .user(user)
                 .product(product)
@@ -94,6 +113,10 @@ public class CommentServiceImpl implements CommentService{
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Comment parentComment = commentRepository.findById(replyCommentRequest.getParentId()).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         Product product = productRepository.findById(parentComment.getProduct().getId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if(!productUtils.isActiveProduct(product)){
+            throw new AppException(ErrorCode.PRODUCT_INACTIVE);
+        }
 
         Comment comment = Comment.builder()
                 .user(user)

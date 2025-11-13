@@ -306,6 +306,13 @@ VALUES
 
 INSERT INTO permission (name, code,  created_at)
 VALUES
+('View', 'CATALOG.CATEGORIES.VIEW', CURRENT_TIMESTAMP),
+('Create', 'CATALOG.CATEGORIES.CREATE', CURRENT_TIMESTAMP),
+('Edit',   'CATALOG.CATEGORIES.EDIT', CURRENT_TIMESTAMP),
+('Delete', 'CATALOG.CATEGORIES.DELETE', CURRENT_TIMESTAMP);
+
+INSERT INTO permission (name, code,  created_at)
+VALUES
 ('View', 'CATALOG.PRODUCT_FILTERS.VIEW', CURRENT_TIMESTAMP),
 ('Create', 'CATALOG.PRODUCT_FILTERS.CREATE', CURRENT_TIMESTAMP),
 ('Edit',   'CATALOG.PRODUCT_FILTERS.EDIT', CURRENT_TIMESTAMP),
@@ -577,136 +584,135 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 -- ======================
 -- CATEGORY 1: ĐIỆN THOẠI
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
-('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true),
-('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true),
+-- CATEGORY 1: ĐIỆN THOẠI
+-- ======================
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
+('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true, 'ACTIVE'),
+('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true, 'ACTIVE'),
 
-('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 3, 1, true, true),
-('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 3, 1, true, true),
+('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 3, 1, true, true, 'ACTIVE'),
+('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 3, 1, true, true, 'ACTIVE'),
 
-('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 2, 1, true, true),
+('Google Pixel 8 Pro', 'google-pixel-8-pro_7_.jpg', 'Camera AI và hệ điều hành Android gốc', 2, 1, true, true, 'ACTIVE'),
 
-('OnePlus 12', 'oneplus-12.jpg', 'Điện thoại hiệu năng cao, sạc nhanh 100W', 4, 1, true, true),
+('OnePlus 12', 'oneplus-12.jpg', 'Điện thoại hiệu năng cao, sạc nhanh 100W', 4, 1, true, true, 'ACTIVE'),
 
-('Xiaomi 14 Ultra', 'xiaomi-14-ultra_3_1_1_1.jpg', 'Camera Leica, cấu hình mạnh mẽ', 5, 1, true, true),
+('Xiaomi 14 Ultra', 'xiaomi-14-ultra_3_1_1_1.jpg', 'Camera Leica, cấu hình mạnh mẽ', 5, 1, true, true, 'ACTIVE'),
 
-('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false),
+('Oppo Find X7 Pro', 'oppo-find-x7_1.jpg', 'Thiết kế cong viền đẹp mắt, camera Sony LYT', 6, 1, true, false, 'ACTIVE'),
 
-('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false),
+('Vivo X100 Pro', 'dien-thoai-vivo-x100-pro_1__2.jpg', 'Cụm camera Zeiss đẳng cấp', 7, 1, true, false, 'ACTIVE'),
 
-('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true),
+('Sony Xperia 1 VI', '10_1_.jpg', 'Màn hình 4K OLED, chống nước IP68', 8, 1, true, true, 'ACTIVE'),
 
-('Asus ROG Phone 8', 'asus-rog-phone-8.jpg', 'Điện thoại gaming cực mạnh', 9, 1, true, true),
+('Asus ROG Phone 8', 'asus-rog-phone-8.jpg', 'Điện thoại gaming cực mạnh', 9, 1, true, true, 'ACTIVE'),
 
-('Realme GT 6', 'realme-gt-neo-6_1_.jpg', 'Snapdragon 8s Gen 3, giá cực tốt', 10, 1, false, true),
+('Realme GT 6', 'realme-gt-neo-6_1_.jpg', 'Snapdragon 8s Gen 3, giá cực tốt', 10, 1, false, true, 'ACTIVE'),
 
-('Huawei P70 Pro', '_ter3434_3_.jpg', 'Siêu camera và thiết kế sang trọng', 11, 1, true, true),
-('Huawei Nova 12', 'huawei-nova-12-pro.jpg', 'Thiết kế mỏng nhẹ, camera selfie tốt', 11, 1, false, true),
+('Huawei P70 Pro', '_ter3434_3_.jpg', 'Siêu camera và thiết kế sang trọng', 11, 1, true, true, 'ACTIVE'),
+('Huawei Nova 12', 'huawei-nova-12-pro.jpg', 'Thiết kế mỏng nhẹ, camera selfie tốt', 11, 1, false, true, 'ACTIVE'),
 
-('Nothing Phone 2', 'dien-thoai-nothing-phone-2a-plus_1_.jpg', 'Thiết kế trong suốt độc đáo', 12, 1, false, true),
+('Nothing Phone 2', 'dien-thoai-nothing-phone-2a-plus_1_.jpg', 'Thiết kế trong suốt độc đáo', 12, 1, false, true, 'ACTIVE'),
 
-('Nokia X30 5G', 'nokia_8.3_3.jpg', 'Thiết kế bền vững, hỗ trợ 5G', NULL, 1, false, true); -- Nokia chưa có trong bảng brand
+('Nokia X30 5G', 'nokia_8.3_3.jpg', 'Thiết kế bền vững, hỗ trợ 5G', NULL, 1, false, true, 'ACTIVE');
 
 -- ======================
 -- CATEGORY 2: LAPTOP
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
-('MacBook Pro 14 M3', 'macbook-pro-14-m3.jpg', 'Laptop cao cấp của Apple với chip M3 Pro', 1, 3, true, true),
-('MacBook Air 13 M2', 'macbook-air-13-m2.jpg', 'Siêu mỏng nhẹ, pin lâu 18 tiếng', 1, 3, true, false),
-('Dell XPS 13', 'dell-xps-13.jpg', 'Ultrabook đẳng cấp với viền màn hình siêu mỏng', 13, 3, true, true),
-('Dell Inspiron 16', 'dell-inspiron-16.jpg', 'Laptop học tập và văn phòng', 13, 3, false, true),
-('HP Spectre x360', 'hp-spectre-x360.jpg', 'Laptop 2-trong-1 sang trọng', 14, 3, true, true),
-('HP Envy 16', 'hp-envy-16.jpg', 'Màn hình 16 inch, GPU RTX 4060', 14, 2, true, false),
-('Lenovo ThinkPad X1 Carbon', 'thinkpad-x1-carbon.jpg', 'Laptop doanh nhân bền bỉ', 15, 3, true, true),
-('Lenovo Yoga 9i', 'lenovo-yoga-9i.jpg', 'Laptop xoay gập cảm ứng', 15, 3, false, true),
-('MSI Stealth 16 Studio', 'msi-stealth-16.jpg', 'Laptop gaming mỏng nhẹ', 16, 3, true, true),
-('MSI Katana 15', 'msi-katana-15.jpg', 'Laptop gaming phổ thông hiệu năng cao', 16, 3, false, true),
-('Acer Swift X', 'acer-swift-x.jpg', 'Mỏng nhẹ, GPU RTX 4050', 17, 3, false, true),
-('Acer Nitro 17', 'acer-nitro-17.jpg', 'Laptop gaming giá tốt', 17, 3, true, true),
-('Asus ROG Zephyrus G14', 'rog-zephyrus-g14.jpg', 'Laptop gaming nhỏ gọn mạnh mẽ', 9, 3, true, true),
-('Asus TUF Gaming F15', 'asus-tuf-f15.jpg', 'Laptop gaming bền bỉ', 9, 3, false, true),
-('Razer Blade 16', 'razer-blade-16.jpg', 'Laptop gaming cao cấp', 18, 3, true, true),
-('Microsoft Surface Laptop 6', 'surface-laptop-6.jpg', 'Thiết kế tối giản, pin lâu', 19, 3, true, true),
-('HP Pavilion 15', 'hp-pavilion-15.jpg', 'Giải pháp tốt cho học sinh sinh viên', 14, 3, false, true),
-('Dell Latitude 7450', 'dell-latitude-7450.jpg', 'Laptop doanh nghiệp mỏng nhẹ', 13, 3, false, true),
-('Lenovo Legion 7i', 'legion-7i.jpg', 'Laptop gaming cực mạnh', 15, 3, true, true),
-('Asus Vivobook 15 OLED', 'vivobook-15-oled.jpg', 'Màn hình OLED, giá hợp lý', 9, 3, false, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
+('MacBook Pro 14 M3', 'macbook-pro-14-m3.jpg', 'Laptop cao cấp của Apple với chip M3 Pro', 1, 3, true, true, 'ACTIVE'),
+('MacBook Air 13 M2', 'macbook-air-13-m2.jpg', 'Siêu mỏng nhẹ, pin lâu 18 tiếng', 1, 3, true, false, 'ACTIVE'),
+('Dell XPS 13', 'dell-xps-13.jpg', 'Ultrabook đẳng cấp với viền màn hình siêu mỏng', 13, 3, true, true, 'ACTIVE'),
+('Dell Inspiron 16', 'dell-inspiron-16.jpg', 'Laptop học tập và văn phòng', 13, 3, false, true, 'ACTIVE'),
+('HP Spectre x360', 'hp-spectre-x360.jpg', 'Laptop 2-trong-1 sang trọng', 14, 3, true, true, 'ACTIVE'),
+('HP Envy 16', 'hp-envy-16.jpg', 'Màn hình 16 inch, GPU RTX 4060', 14, 2, true, false, 'ACTIVE'),
+('Lenovo ThinkPad X1 Carbon', 'thinkpad-x1-carbon.jpg', 'Laptop doanh nhân bền bỉ', 15, 3, true, true, 'ACTIVE'),
+('Lenovo Yoga 9i', 'lenovo-yoga-9i.jpg', 'Laptop xoay gập cảm ứng', 15, 3, false, true, 'ACTIVE'),
+('MSI Stealth 16 Studio', 'msi-stealth-16.jpg', 'Laptop gaming mỏng nhẹ', 16, 3, true, true, 'ACTIVE'),
+('MSI Katana 15', 'msi-katana-15.jpg', 'Laptop gaming phổ thông hiệu năng cao', 16, 3, false, true, 'ACTIVE'),
+('Acer Swift X', 'acer-swift-x.jpg', 'Mỏng nhẹ, GPU RTX 4050', 17, 3, false, true, 'ACTIVE'),
+('Acer Nitro 17', 'acer-nitro-17.jpg', 'Laptop gaming giá tốt', 17, 3, true, true, 'ACTIVE'),
+('Asus ROG Zephyrus G14', 'rog-zephyrus-g14.jpg', 'Laptop gaming nhỏ gọn mạnh mẽ', 9, 3, true, true, 'ACTIVE'),
+('Asus TUF Gaming F15', 'asus-tuf-f15.jpg', 'Laptop gaming bền bỉ', 9, 3, false, true, 'ACTIVE'),
+('Razer Blade 16', 'razer-blade-16.jpg', 'Laptop gaming cao cấp', 18, 3, true, true, 'ACTIVE'),
+('Microsoft Surface Laptop 6', 'surface-laptop-6.jpg', 'Thiết kế tối giản, pin lâu', 19, 3, true, true, 'ACTIVE'),
+('HP Pavilion 15', 'hp-pavilion-15.jpg', 'Giải pháp tốt cho học sinh sinh viên', 14, 3, false, true, 'ACTIVE'),
+('Dell Latitude 7450', 'dell-latitude-7450.jpg', 'Laptop doanh nghiệp mỏng nhẹ', 13, 3, false, true, 'ACTIVE'),
+('Lenovo Legion 7i', 'legion-7i.jpg', 'Laptop gaming cực mạnh', 15, 3, true, true, 'ACTIVE'),
+('Asus Vivobook 15 OLED', 'vivobook-15-oled.jpg', 'Màn hình OLED, giá hợp lý', 9, 3, false, true, 'ACTIVE');
 
 -- ======================
 -- CATEGORY 3: TABLET
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
-('iPad Pro M3', 'ipad-pro-m3.jpg', 'Máy tính bảng mạnh nhất của Apple', 1, 2, true, true),
-('iPad Air M2', 'ipad-air-m2.jpg', 'Thiết kế mỏng nhẹ, hiệu năng cao', 1, 2, true, false),
-('Samsung Galaxy Tab S9 Ultra', 'tab-s9-ultra.jpg', 'Màn hình AMOLED 14.6 inch, S Pen', 2, 2, true, true),
-('Samsung Galaxy Tab S9 FE', 'tab-s9-fe.jpg', 'Giá mềm, pin khủng 10,000mAh', 2, 2, false, true),
-('Xiaomi Pad 6 Pro', 'xiaomi-pad-6-pro.jpg', 'Hiệu năng cao, giá dễ tiếp cận', 5, 2, true, true),
-('Huawei MatePad 11', 'matepad-11.jpg', 'Hỗ trợ bút M-Pencil, HarmonyOS', 11, 2, false, true),
-('Lenovo Tab P12 Pro', 'lenovo-tab-p12-pro.jpg', 'Tablet Android cao cấp', 15, 2, true, true),
-('Realme Pad 2', 'realme-pad-2.jpg', 'Giá rẻ, pin khỏe 8000mAh', 10, 2, false, true),
-('Asus ROG Flow Z13', 'rog-flow-z13.jpg', 'Tablet gaming mạnh mẽ nhất', 9, 2, true, false),
-('Microsoft Surface Pro 10', 'surface-pro-10.jpg', 'Thiết bị 2-trong-1 mạnh mẽ', 19, 2, true, true),
-('Oppo Pad 2', 'oppo-pad-2.jpg', 'Màn hình 11.6 inch, sạc nhanh 67W', 6, 2, false, true),
-('Vivo Pad 2', 'vivo-pad-2.jpg', 'Cấu hình mạnh, màn hình 2.8K', 7, 2, false, true),
-('Sony Xperia Tablet Z6', 'xperia-tablet-z6.jpg', 'Chống nước, mỏng nhẹ', 8, 2, false, true),
-('Huawei MatePad Pro 13.2', 'matepad-pro-13.2.jpg', 'Tablet màn lớn, pin cực trâu', 11, 2, true, true),
-('Xiaomi Pad SE', 'xiaomi-pad-se.jpg', 'Máy tính bảng giá rẻ', 5, 2, false, true),
-('Realme Pad X', 'realme-pad-x.jpg', 'Thiết kế đẹp, hiệu năng ổn', 10, 2, false, true),
-('Lenovo Tab M10', 'lenovo-tab-m10.jpg', 'Tablet phổ thông dành cho học sinh', 15, 2, false, true),
-('Samsung Galaxy Tab A9', 'tab-a9.jpg', 'Tablet giá rẻ, hỗ trợ học online', 2, 2, false, true),
-('Apple iPad Mini 6', 'ipad-mini-6.jpg', 'Máy nhỏ gọn, hiệu năng mạnh', 1, 2, true, true),
-('Nothing Tab 1', 'nothing-tab-1.jpg', 'Thiết kế trong suốt độc đáo', 12, 2, false, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
+('iPad Pro M3', 'ipad-pro-m3.jpg', 'Máy tính bảng mạnh nhất của Apple', 1, 2, true, true, 'ACTIVE'),
+('iPad Air M2', 'ipad-air-m2.jpg', 'Thiết kế mỏng nhẹ, hiệu năng cao', 1, 2, true, false, 'ACTIVE'),
+('Samsung Galaxy Tab S9 Ultra', 'tab-s9-ultra.jpg', 'Màn hình AMOLED 14.6 inch, S Pen', 2, 2, true, true, 'ACTIVE'),
+('Samsung Galaxy Tab S9 FE', 'tab-s9-fe.jpg', 'Giá mềm, pin khủng 10,000mAh', 2, 2, false, true, 'ACTIVE'),
+('Xiaomi Pad 6 Pro', 'xiaomi-pad-6-pro.jpg', 'Hiệu năng cao, giá dễ tiếp cận', 5, 2, true, true, 'ACTIVE'),
+('Huawei MatePad 11', 'matepad-11.jpg', 'Hỗ trợ bút M-Pencil, HarmonyOS', 11, 2, false, true, 'ACTIVE'),
+('Lenovo Tab P12 Pro', 'lenovo-tab-p12-pro.jpg', 'Tablet Android cao cấp', 15, 2, true, true, 'ACTIVE'),
+('Realme Pad 2', 'realme-pad-2.jpg', 'Giá rẻ, pin khỏe 8000mAh', 10, 2, false, true, 'ACTIVE'),
+('Asus ROG Flow Z13', 'rog-flow-z13.jpg', 'Tablet gaming mạnh mẽ nhất', 9, 2, true, false, 'ACTIVE'),
+('Microsoft Surface Pro 10', 'surface-pro-10.jpg', 'Thiết bị 2-trong-1 mạnh mẽ', 19, 2, true, true, 'ACTIVE'),
+('Oppo Pad 2', 'oppo-pad-2.jpg', 'Màn hình 11.6 inch, sạc nhanh 67W', 6, 2, false, true, 'ACTIVE'),
+('Vivo Pad 2', 'vivo-pad-2.jpg', 'Cấu hình mạnh, màn hình 2.8K', 7, 2, false, true, 'ACTIVE'),
+('Sony Xperia Tablet Z6', 'xperia-tablet-z6.jpg', 'Chống nước, mỏng nhẹ', 8, 2, false, true, 'ACTIVE'),
+('Huawei MatePad Pro 13.2', 'matepad-pro-13.2.jpg', 'Tablet màn lớn, pin cực trâu', 11, 2, true, true, 'ACTIVE'),
+('Xiaomi Pad SE', 'xiaomi-pad-se.jpg', 'Máy tính bảng giá rẻ', 5, 2, false, true, 'ACTIVE'),
+('Realme Pad X', 'realme-pad-x.jpg', 'Thiết kế đẹp, hiệu năng ổn', 10, 2, false, true, 'ACTIVE'),
+('Lenovo Tab M10', 'lenovo-tab-m10.jpg', 'Tablet phổ thông dành cho học sinh', 15, 2, false, true, 'ACTIVE'),
+('Samsung Galaxy Tab A9', 'tab-a9.jpg', 'Tablet giá rẻ, hỗ trợ học online', 2, 2, false, true, 'ACTIVE'),
+('Apple iPad Mini 6', 'ipad-mini-6.jpg', 'Máy nhỏ gọn, hiệu năng mạnh', 1, 2, true, true, 'ACTIVE'),
+('Nothing Tab 1', 'nothing-tab-1.jpg', 'Thiết kế trong suốt độc đáo', 12, 2, false, true, 'ACTIVE');
 
 -- ======================
 -- CATEGORY 4: PHỤ KIỆN
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
-('Apple AirPods Pro 2', 'airpods-pro-2.jpg', 'Tai nghe chống ồn chủ động của Apple', 1, 4, true, true),
-('Apple MagSafe Charger', 'magsafe-charger.jpg', 'Sạc nhanh không dây chính hãng', 1, 4, false, true),
-('Samsung Galaxy Buds3 Pro', 'buds3-pro.jpg', 'Tai nghe chất lượng cao, pin trâu', 2, 4, true, true),
-('Samsung 45W Super Charger', 'samsung-45w.jpg', 'Sạc nhanh 45W USB-C', 2, 4, false, true),
-('Logitech MX Master 3S', 'mx-master-3s.jpg', 'Chuột không dây cao cấp', 17, 4, true, true),
-('Logitech K380 Keyboard', 'k380-keyboard.jpg', 'Bàn phím Bluetooth mini tiện dụng', 17, 4, false, true),
-('Anker PowerCore 20000', 'anker-powercore-20000.jpg', 'Sạc dự phòng 20,000mAh', 17, 4, true, true),
-('Sony WH-1000XM5', 'wh-1000xm5.jpg', 'Tai nghe chống ồn đỉnh cao', 8, 4, true, true),
-('Razer DeathAdder V3', 'deathadder-v3.jpg', 'Chuột gaming chính xác cao', 18, 4, true, true),
-('MSI GH30 Headset', 'msi-gh30.jpg', 'Tai nghe gaming MSI', 16, 4, false, true),
-('Dell USB-C Hub', 'dell-usb-hub.jpg', 'Bộ chia cổng kết nối Dell', 13, 4, false, true),
-('HP Wireless Mouse 250', 'hp-wireless-250.jpg', 'Chuột không dây tiện lợi', 14, 4, false, true),
-('Lenovo 65W Charger', 'lenovo-65w-charger.jpg', 'Sạc nhanh USB-C chính hãng', 15, 4, false, true),
-('Apple Pencil 2', 'apple-pencil-2.jpg', 'Bút cảm ứng chính xác cho iPad', 1, 4, true, true),
-('Samsung SmartTag 2', 'smarttag-2.jpg', 'Thiết bị định vị thông minh', 2, 4, false, true),
-('Xiaomi Mi Band 8', 'mi-band-8.jpg', 'Vòng đeo tay thông minh đa tính năng', 5, 4, true, true),
-('Huawei FreeBuds 5', 'freebuds-5.jpg', 'Tai nghe không dây thiết kế đẹp', 11, 4, false, true),
-('Nothing Ear 2', 'nothing-ear-2.jpg', 'Tai nghe trong suốt độc đáo', 12, 4, false, true),
-('Anker Soundcore Liberty 4', 'soundcore-liberty-4.jpg', 'Tai nghe âm thanh sống động', 17, 4, true, true),
-('Sony SRS-XE300 Speaker', 'srs-xe300.jpg', 'Loa Bluetooth di động chống nước', 8, 4, true, true);
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
+('Apple AirPods Pro 2', 'airpods-pro-2.jpg', 'Tai nghe chống ồn chủ động của Apple', 1, 4, true, true, 'ACTIVE'),
+('Apple MagSafe Charger', 'magsafe-charger.jpg', 'Sạc nhanh không dây chính hãng', 1, 4, false, true, 'ACTIVE'),
+('Samsung Galaxy Buds3 Pro', 'buds3-pro.jpg', 'Tai nghe chất lượng cao, pin trâu', 2, 4, true, true, 'ACTIVE'),
+('Samsung 45W Super Charger', 'samsung-45w.jpg', 'Sạc nhanh 45W USB-C', 2, 4, false, true, 'ACTIVE'),
+('Logitech MX Master 3S', 'mx-master-3s.jpg', 'Chuột không dây cao cấp', 17, 4, true, true, 'ACTIVE'),
+('Logitech K380 Keyboard', 'k380-keyboard.jpg', 'Bàn phím Bluetooth mini tiện dụng', 17, 4, false, true, 'ACTIVE'),
+('Anker PowerCore 20000', 'anker-powercore-20000.jpg', 'Sạc dự phòng 20,000mAh', 17, 4, true, true, 'ACTIVE'),
+('Sony WH-1000XM5', 'wh-1000xm5.jpg', 'Tai nghe chống ồn đỉnh cao', 8, 4, true, true, 'ACTIVE'),
+('Razer DeathAdder V3', 'deathadder-v3.jpg', 'Chuột gaming chính xác cao', 18, 4, true, true, 'ACTIVE'),
+('MSI GH30 Headset', 'msi-gh30.jpg', 'Tai nghe gaming MSI', 16, 4, false, true, 'ACTIVE'),
+('Dell USB-C Hub', 'dell-usb-hub.jpg', 'Bộ chia cổng kết nối Dell', 13, 4, false, true, 'ACTIVE'),
+('HP Wireless Mouse 250', 'hp-wireless-250.jpg', 'Chuột không dây tiện lợi', 14, 4, false, true, 'ACTIVE'),
+('Lenovo 65W Charger', 'lenovo-65w-charger.jpg', 'Sạc nhanh USB-C chính hãng', 15, 4, false, true, 'ACTIVE'),
+('Apple Pencil 2', 'apple-pencil-2.jpg', 'Bút cảm ứng chính xác cho iPad', 1, 4, true, true, 'ACTIVE'),
+('Samsung SmartTag 2', 'smarttag-2.jpg', 'Thiết bị định vị thông minh', 2, 4, false, true, 'ACTIVE'),
+('Xiaomi Mi Band 8', 'mi-band-8.jpg', 'Vòng đeo tay thông minh đa tính năng', 5, 4, true, true, 'ACTIVE'),
+('Huawei FreeBuds 5', 'freebuds-5.jpg', 'Tai nghe không dây thiết kế đẹp', 11, 4, false, true, 'ACTIVE'),
+('Nothing Ear 2', 'nothing-ear-2.jpg', 'Tai nghe trong suốt độc đáo', 12, 4, false, true, 'ACTIVE'),
+('Anker Soundcore Liberty 4', 'soundcore-liberty-4.jpg', 'Tai nghe âm thanh sống động', 17, 4, true, true, 'ACTIVE'),
+('Sony SRS-XE300 Speaker', 'srs-xe300.jpg', 'Loa Bluetooth di động chống nước', 8, 4, true, true, 'ACTIVE');
 
 -- ======================
 -- CATEGORY 5: ĐỒNG HỒ THÔNG MINH
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new) VALUES
-('Apple Watch Series 10', 'apple-watch-s10.jpg', 'Đồng hồ thông minh mới nhất từ Apple', 1, 5, true, true),
-('Apple Watch SE 2', 'apple-watch-se-2.jpg', 'Phiên bản tiết kiệm, đầy đủ tính năng cơ bản', 1, 5, false, true),
-('Samsung Galaxy Watch 7', 'galaxy-watch-7.jpg', 'Theo dõi sức khỏe toàn diện', 2, 5, true, true),
-('Samsung Galaxy Fit 3', 'galaxy-fit-3.jpg', 'Vòng đeo tay nhỏ gọn, pin lâu', 2, 5, false, true),
-('Huawei Watch GT 5', 'watch-gt-5.jpg', 'Pin trâu, hỗ trợ GPS chính xác', 11, 5, true, true),
-('Xiaomi Watch 3 Pro', 'xiaomi-watch-3-pro.jpg', 'Thiết kế sang trọng, hỗ trợ eSIM', 5, 5, true, true),
-('Amazfit GTR 5', 'amazfit-gtr-5.jpg', 'Đồng hồ thể thao thông minh', 5, 5, false, true),
-('Garmin Venu 3', 'garmin-venu-3.jpg', 'Theo dõi thể thao và giấc ngủ chuyên sâu', 8, 5, true, true),
-('Nothing Watch 1', 'nothing-watch-1.jpg', 'Thiết kế trong suốt ấn tượng', 12, 5, false, true),
-('Oppo Watch X', 'oppo-watch-x.jpg', 'Hỗ trợ eSIM, sạc nhanh 80%', 6, 5, false, true),
-('Vivo Watch 3', 'vivo-watch-3.jpg', 'Theo dõi sức khỏe và SpO2', 7, 5, false, true),
-('Sony SmartWatch 6', 'sony-smartwatch-6.jpg', 'Chống nước IP68, NFC thanh toán', 8, 5, false, true),
-('MSI Watch Gaming', 'msi-watch-gaming.jpg', 'Phong cách gaming, đèn RGB', 16, 5, true, true),
-('Razer Nabu X2', 'razer-nabu-x2.jpg', 'Đồng hồ thông minh cho game thủ', 18, 5, false, true),
-('Huawei Band 9', 'huawei-band-9.jpg', 'Giá rẻ, pin trâu', 11, 5, false, true),
-('Xiaomi Smart Band 9', 'mi-band-9.jpg', 'Vòng tay thể thao thế hệ mới', 5, 5, true, true),
-('Realme Watch 4', 'realme-watch-4.jpg', 'Đồng hồ trẻ trung, chống nước 5ATM', 10, 5, false, true),
-('Asus VivoWatch 6', 'vivowatch-6.jpg', 'Đo nhịp tim, SpO2 chính xác', 9, 5, false, true),
-('HP Smart Watch', 'hp-smartwatch.jpg', 'Đồng hồ thông minh pin 7 ngày', 14, 5, false, true),
-('Lenovo Smart Band 8', 'lenovo-band-8.jpg', 'Vòng tay nhẹ, chống nước IP68', 15, 5, false, true);
-
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
+('Apple Watch Series 10', 'apple-watch-s10.jpg', 'Đồng hồ thông minh mới nhất từ Apple', 1, 5, true, true, 'ACTIVE'),
+('Apple Watch SE 2', 'apple-watch-se-2.jpg', 'Phiên bản tiết kiệm, đầy đủ tính năng cơ bản', 1, 5, false, true, 'ACTIVE'),
+('Samsung Galaxy Watch 7', 'galaxy-watch-7.jpg', 'Theo dõi sức khỏe toàn diện', 2, 5, true, true, 'ACTIVE'),
+('Samsung Galaxy Fit 3', 'galaxy-fit-3.jpg', 'Vòng đeo tay nhỏ gọn, pin lâu', 2, 5, false, true, 'ACTIVE'),
+('Huawei Watch GT 5', 'watch-gt-5.jpg', 'Pin trâu, hỗ trợ GPS chính xác', 11, 5, true, true, 'ACTIVE'),
+('Xiaomi Watch 3 Pro', 'xiaomi-watch-3-pro.jpg', 'Thiết kế sang trọng, hỗ trợ eSIM', 5, 5, true, true, 'ACTIVE'),
+('Amazfit GTR 5', 'amazfit-gtr-5.jpg', 'Đồng hồ thể thao thông minh', 5, 5, false, true, 'ACTIVE'),
+('Garmin Venu 3', 'garmin-venu-3.jpg', 'Theo dõi thể thao và giấc ngủ chuyên sâu', 8, 5, true, true, 'ACTIVE'),
+('Nothing Watch 1', 'nothing-watch-1.jpg', 'Thiết kế trong suốt ấn tượng', 12, 5, false, true, 'ACTIVE'),
+('Oppo Watch X', 'oppo-watch-x.jpg', 'Hỗ trợ eSIM, sạc nhanh 80%', 6, 5, false, true, 'ACTIVE'),
+('Vivo Watch 3', 'vivo-watch-3.jpg', 'Theo dõi sức khỏe và SpO2', 7, 5, false, true, 'ACTIVE'),
+('Sony SmartWatch 6', 'sony-smartwatch-6.jpg', 'Chống nước IP68, NFC thanh toán', 8, 5, false, true, 'ACTIVE'),
+('MSI Watch Gaming', 'msi-watch-gaming.jpg', 'Phong cách gaming, đèn RGB', 16, 5, true, true, 'ACTIVE'),
+('Razer Nabu X2', 'razer-nabu-x2.jpg', 'Đồng hồ thông minh cho game thủ', 18, 5, false, true, 'ACTIVE'),
+('Huawei Band 9', 'huawei-band-9.jpg', 'Giá rẻ, pin trâu', 11, 5, false, true, 'ACTIVE'),
+('Xiaomi Smart Band 9', 'mi-band-9.jpg', 'Vòng tay thể thao thế hệ mới', 5, 5, true, true, 'ACTIVE'),
+('Realme Watch 4', 'realme-watch-4.jpg', 'Đồng hồ trẻ trung, chống nước 5ATM', 10, 5, false, true, 'ACTIVE'),
+('Asus VivoWatch 6', 'vivowatch-6.jpg', 'Đo nhịp tim, SpO2 chính xác', 9, 5, false, true, 'ACTIVE');
 -- ======================
 -- BẢNG PRODUCT_IMAGE (ảnh phụ cho từng sản phẩm)
 -- ======================
@@ -725,24 +731,27 @@ INSERT INTO product_image (product_id, image) VALUES
 -- ======================
 
 -- Variants for iPhone 15 Pro Max
+-- Variants for iPhone 15 Pro Max (product_id = 1)
 INSERT INTO product_variant
 (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status, variant_attributes)
 VALUES
 -- 128GB
 ('iPhone 15 Pro Max - 6GB - 128GB - Black', 29990000, 28990000, 'IP15PM-6-128-BLK', 'iphone-15-128-gbden.jpg', 1, 50, 'ACTIVE', '6GB-128GB'),
-
 -- 256GB
 ('iPhone 15 Pro Max - 6GB - 256GB - Black', 32990000, 31990000, 'IP15PM-6-256-BLK', 'iphone-15-256-gbden.jpg', 1, 40, 'ACTIVE', '6GB-256GB'),
-
 -- 512GB
 ('iPhone 15 Pro Max - 8GB - 512GB - Black', 36990000, 35990000, 'IP15PM-8-512-BLK', 'iphone-15-512-gbden.jpg', 1, 30, 'ACTIVE', '8GB-512GB');
 
--- iPhone 15
+---
+
+-- iPhone 15 (product_id = 2)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 2, 50, 'ACTIVE');
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES ('iPhone 15 - 256GB - White', 27990000, 26590000, 'IP15-256-WHT', 'https://example.com/images/ip15-256-wht.jpg', 2, 30, 'ACTIVE');
+
+---
 
 -- Variants for Samsung Galaxy S24 Ultra (product_id = 3)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
@@ -750,30 +759,27 @@ VALUES
 ('Samsung Galaxy S24 Ultra - 256GB - Gray', 27990000, 26990000, 'SGS24U-256-GRY', 'https://example.com/images/sgs24u-256-gry.jpg', 3, 60, 'ACTIVE'),
 ('Samsung Galaxy S24 Ultra - 512GB - Gray', 30990000, 29990000, 'SGS24U-512-GRY', 'https://example.com/images/sgs24u-512-gry.jpg', 3, 50, 'ACTIVE'),
 ('Samsung Galaxy S24 Ultra - 1TB - Gray', 35990000, 34990000, 'SGS24U-1TB-GRY', 'https://example.com/images/sgs24u-1tb-gry.jpg', 3, 30, 'ACTIVE'),
-
 ('Samsung Galaxy S24 Ultra - 256GB - Titanium Blue', 27990000, 26990000, 'SGS24U-256-BLU', 'https://example.com/images/sgs24u-256-blu.jpg', 3, 55, 'ACTIVE'),
 ('Samsung Galaxy S24 Ultra - 512GB - Titanium Blue', 30990000, 29990000, 'SGS24U-512-BLU', 'https://example.com/images/sgs24u-512-blu.jpg', 3, 45, 'ACTIVE'),
-
 ('Samsung Galaxy S24 Ultra - 256GB - Violet', 27990000, 26990000, 'SGS24U-256-VIO', 'https://example.com/images/sgs24u-256-vio.jpg', 3, 50, 'ACTIVE'),
 ('Samsung Galaxy S24 Ultra - 512GB - Violet', 30990000, 29990000, 'SGS24U-512-VIO', 'https://example.com/images/sgs24u-512-vio.jpg', 3, 40, 'ACTIVE'),
-
 ('Samsung Galaxy S24 Ultra - 512GB - Black', 30990000, 29990000, 'SGS24U-512-BLK', 'https://example.com/images/sgs24u-512-blk.jpg', 3, 45, 'ACTIVE');
 
+---
 
 -- Variants for Samsung Galaxy S24+ (product_id = 4)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Samsung Galaxy S24+ - 256GB - Purple', 23990000, 22990000, 'SGS24P-256-PUR', 'https://example.com/images/sgs24p-256-pur.jpg', 4, 60, 'ACTIVE'),
 ('Samsung Galaxy S24+ - 512GB - Purple', 26990000, 25990000, 'SGS24P-512-PUR', 'https://example.com/images/sgs24p-512-pur.jpg', 4, 45, 'ACTIVE'),
-
 ('Samsung Galaxy S24+ - 256GB - Gray', 23990000, 22990000, 'SGS24P-256-GRY', 'https://example.com/images/sgs24p-256-gry.jpg', 4, 55, 'ACTIVE'),
 ('Samsung Galaxy S24+ - 512GB - Gray', 26990000, 25990000, 'SGS24P-512-GRY', 'https://example.com/images/sgs24p-512-gry.jpg', 4, 40, 'ACTIVE'),
-
 ('Samsung Galaxy S24+ - 256GB - Blue', 23990000, 22990000, 'SGS24P-256-BLU', 'https://example.com/images/sgs24p-256-blu.jpg', 4, 50, 'ACTIVE'),
 ('Samsung Galaxy S24+ - 512GB - Blue', 26990000, 25990000, 'SGS24P-512-BLU', 'https://example.com/images/sgs24p-512-blu.jpg', 4, 35, 'ACTIVE'),
-
 ('Samsung Galaxy S24+ - 256GB - Black', 23990000, 22990000, 'SGS24P-256-BLK', 'https://example.com/images/sgs24p-256-blk.jpg', 4, 60, 'ACTIVE'),
 ('Samsung Galaxy S24+ - 512GB - Black', 26990000, 25990000, 'SGS24P-512-BLK', 'https://example.com/images/sgs24p-512-blk.jpg', 4, 45, 'ACTIVE');
+
+---
 
 -- Variants for Google Pixel 8 Pro (product_id = 5)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
@@ -781,28 +787,28 @@ VALUES
 ('Google Pixel 8 Pro - 128GB - Obsidian Black', 22990000, 21990000, 'GP8P-128-BLK', 'https://example.com/images/gp8p-128-blk.jpg', 5, 60, 'ACTIVE'),
 ('Google Pixel 8 Pro - 256GB - Obsidian Black', 24990000, 23990000, 'GP8P-256-BLK', 'https://example.com/images/gp8p-256-blk.jpg', 5, 50, 'ACTIVE'),
 ('Google Pixel 8 Pro - 512GB - Obsidian Black', 27990000, 26990000, 'GP8P-512-BLK', 'https://example.com/images/gp8p-512-blk.jpg', 5, 40, 'ACTIVE'),
-
 ('Google Pixel 8 Pro - 128GB - Bay Blue', 22990000, 21990000, 'GP8P-128-BLU', 'https://example.com/images/gp8p-128-blu.jpg', 5, 55, 'ACTIVE'),
 ('Google Pixel 8 Pro - 256GB - Bay Blue', 24990000, 23990000, 'GP8P-256-BLU', 'https://example.com/images/gp8p-256-blu.jpg', 5, 45, 'ACTIVE'),
 ('Google Pixel 8 Pro - 512GB - Bay Blue', 27990000, 26990000, 'GP8P-512-BLU', 'https://example.com/images/gp8p-512-blu.jpg', 5, 35, 'ACTIVE'),
-
 ('Google Pixel 8 Pro - 128GB - Porcelain', 22990000, 21990000, 'GP8P-128-POR', 'https://example.com/images/gp8p-128-por.jpg', 5, 50, 'ACTIVE'),
 ('Google Pixel 8 Pro - 256GB - Porcelain', 24990000, 23990000, 'GP8P-256-POR', 'https://example.com/images/gp8p-256-por.jpg', 5, 40, 'ACTIVE'),
 ('Google Pixel 8 Pro - 512GB - Porcelain', 27990000, 26990000, 'GP8P-512-POR', 'https://example.com/images/gp8p-512-por.jpg', 5, 30, 'ACTIVE');
+
+---
 
 -- Variants for OnePlus 12 (product_id = 6)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('OnePlus 12 - 256GB - Flowy Emerald', 19990000, 18990000, 'OP12-256-GRN', 'https://example.com/images/op12-256-grn.jpg', 6, 60, 'ACTIVE'),
 ('OnePlus 12 - 512GB - Flowy Emerald', 21990000, 20990000, 'OP12-512-GRN', 'https://example.com/images/op12-512-grn.jpg', 6, 45, 'ACTIVE'),
-
 ('OnePlus 12 - 256GB - Silky Black', 19990000, 18990000, 'OP12-256-BLK', 'https://example.com/images/op12-256-blk.jpg', 6, 55, 'ACTIVE'),
 ('OnePlus 12 - 512GB - Silky Black', 21990000, 20990000, 'OP12-512-BLK', 'https://example.com/images/op12-512-blk.jpg', 6, 40, 'ACTIVE'),
-
 ('OnePlus 12 - 256GB - Glacier White', 19990000, 18990000, 'OP12-256-WHT', 'https://example.com/images/op12-256-wht.jpg', 6, 50, 'ACTIVE'),
 ('OnePlus 12 - 512GB - Glacier White', 21990000, 20990000, 'OP12-512-WHT', 'https://example.com/images/op12-512-wht.jpg', 6, 35, 'ACTIVE');
 
+---
 
+-- Variants for Xiaomi 14 Ultra (product_id = 7)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Xiaomi 14 Ultra - 256GB - Black', 24990000, 23990000, 'XM14U-256-BLK', 'https://example.com/images/xiaomi-14-ultra-256-blk.jpg', 7, 50, 'ACTIVE'),
@@ -810,6 +816,9 @@ VALUES
 ('Xiaomi 14 Ultra - 1TB - Blue', 28990000, 27990000, 'XM14U-1T-BLU', 'https://example.com/images/xiaomi-14-ultra-1t-blu.jpg', 7, 25, 'ACTIVE'),
 ('Xiaomi 14 Ultra - 512GB - Titanium Gray', 27490000, 26490000, 'XM14U-512-GRY', 'https://example.com/images/xiaomi-14-ultra-512-gry.jpg', 7, 30, 'ACTIVE');
 
+---
+
+-- Variants for Oppo Find X7 Pro (product_id = 8)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Oppo Find X7 Pro - 256GB - Black', 21990000, 20990000, 'OPFX7P-256-BLK', 'https://example.com/images/oppo-find-x7-pro-256-blk.jpg', 8, 60, 'ACTIVE'),
@@ -817,6 +826,9 @@ VALUES
 ('Oppo Find X7 Pro - 1TB - Orange', 25990000, 24990000, 'OPFX7P-1T-ORG', 'https://example.com/images/oppo-find-x7-pro-1t-org.jpg', 8, 30, 'ACTIVE'),
 ('Oppo Find X7 Pro - 512GB - Blue', 23990000, 22990000, 'OPFX7P-512-BLU', 'https://example.com/images/oppo-find-x7-pro-512-blu.jpg', 8, 40, 'ACTIVE');
 
+---
+
+-- Variants for Vivo X100 Pro (product_id = 9)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Vivo X100 Pro - 256GB - Black', 23990000, 22990000, 'VX100P-256-BLK', 'https://example.com/images/vivo-x100-pro-256-blk.jpg', 9, 55, 'ACTIVE'),
@@ -824,6 +836,9 @@ VALUES
 ('Vivo X100 Pro - 512GB - White', 25990000, 24990000, 'VX100P-512-WHT', 'https://example.com/images/vivo-x100-pro-512-wht.jpg', 9, 40, 'ACTIVE'),
 ('Vivo X100 Pro - 1TB - Orange', 27990000, 26990000, 'VX100P-1T-ORG', 'https://example.com/images/vivo-x100-pro-1t-org.jpg', 9, 25, 'ACTIVE');
 
+---
+
+-- Variants for Sony Xperia 1 VI (product_id = 10)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Sony Xperia 1 VI - 256GB - Black', 28990000, 27990000, 'SX1VI-256-BLK', 'https://example.com/images/sony-xperia-1vi-256-blk.jpg', 10, 40, 'ACTIVE'),
@@ -831,6 +846,9 @@ VALUES
 ('Sony Xperia 1 VI - 512GB - White', 30990000, 29990000, 'SX1VI-512-WHT', 'https://example.com/images/sony-xperia-1vi-512-wht.jpg', 10, 30, 'ACTIVE'),
 ('Sony Xperia 1 VI - 1TB - Green', 32990000, 31990000, 'SX1VI-1T-GRN', 'https://example.com/images/sony-xperia-1vi-1t-grn.jpg', 10, 20, 'ACTIVE');
 
+---
+
+-- Variants for Asus ROG Phone 8 (product_id = 11)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Asus ROG Phone 8 - 256GB - Black', 23990000, 22990000, 'ROG8-256-BLK', 'https://example.com/images/rog8-256-blk.jpg', 11, 40, 'ACTIVE'),
@@ -838,6 +856,9 @@ VALUES
 ('Asus ROG Phone 8 - 512GB - Silver', 26990000, 25990000, 'ROG8-512-SLV', 'https://example.com/images/rog8-512-slv.jpg', 11, 25, 'ACTIVE'),
 ('Asus ROG Phone 8 - 1TB - Black', 30990000, 29990000, 'ROG8-1TB-BLK', 'https://example.com/images/rog8-1tb-blk.jpg', 11, 20, 'ACTIVE');
 
+---
+
+-- Variants for Realme GT 6 (product_id = 12)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Realme GT 6 - 256GB - Silver', 13990000, 12990000, 'RGT6-256-SLV', 'https://example.com/images/rgt6-256-slv.jpg', 12, 50, 'ACTIVE'),
@@ -845,6 +866,9 @@ VALUES
 ('Realme GT 6 - 512GB - Green', 15990000, 14990000, 'RGT6-512-GRN', 'https://example.com/images/rgt6-512-grn.jpg', 12, 35, 'ACTIVE'),
 ('Realme GT 6 - 1TB - Silver', 18990000, 17990000, 'RGT6-1TB-SLV', 'https://example.com/images/rgt6-1tb-slv.jpg', 12, 25, 'ACTIVE');
 
+---
+
+-- Variants for Huawei P70 Pro (product_id = 13)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Huawei P70 Pro - 512GB - Black', 28990000, 27990000, 'P70P-512-BLK', 'https://example.com/images/p70p-512-blk.jpg', 13, 35, 'ACTIVE'),
@@ -852,6 +876,9 @@ VALUES
 ('Huawei P70 Pro - 512GB - White', 28990000, 27990000, 'P70P-512-WHT', 'https://example.com/images/p70p-512-wht.jpg', 13, 30, 'ACTIVE'),
 ('Huawei P70 Pro - 1TB - Black', 32990000, 31990000, 'P70P-1TB-BLK', 'https://example.com/images/p70p-1tb-blk.jpg', 13, 20, 'ACTIVE');
 
+---
+
+-- Variants for Huawei Nova 12 (product_id = 14)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Huawei Nova 12 - 128GB - Blue', 10990000, 9990000, 'NOVA12-128-BLU', 'https://example.com/images/nova12-128-blu.jpg', 14, 60, 'ACTIVE'),
@@ -859,6 +886,9 @@ VALUES
 ('Huawei Nova 12 - 256GB - Pink', 11990000, 10990000, 'NOVA12-256-PNK', 'https://example.com/images/nova12-256-pnk.jpg', 14, 40, 'ACTIVE'),
 ('Huawei Nova 12 - 512GB - Blue', 13990000, 12990000, 'NOVA12-512-BLU', 'https://example.com/images/nova12-512-blu.jpg', 14, 30, 'ACTIVE');
 
+---
+
+-- Variants for Nothing Phone 2 (product_id = 15)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Nothing Phone 2 - 128GB - White', 14990000, 13990000, 'NP2-128-WHT', 'https://example.com/images/np2-128-wht.jpg', 15, 60, 'ACTIVE'),
@@ -866,13 +896,15 @@ VALUES
 ('Nothing Phone 2 - 256GB - Black', 16990000, 15990000, 'NP2-256-BLK', 'https://example.com/images/np2-256-blk.jpg', 15, 40, 'ACTIVE'),
 ('Nothing Phone 2 - 512GB - White', 19990000, 18990000, 'NP2-512-WHT', 'https://example.com/images/np2-512-wht.jpg', 15, 25, 'ACTIVE');
 
+---
+
+-- Variants for Nokia X30 5G (product_id = 16)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES
 ('Nokia X30 5G - 128GB - Blue', 9990000, 9490000, 'NX30-128-BLU', 'https://example.com/images/nx30-128-blu.jpg', 16, 55, 'ACTIVE'),
 ('Nokia X30 5G - 256GB - Blue', 10990000, 10490000, 'NX30-256-BLU', 'https://example.com/images/nx30-256-blu.jpg', 16, 45, 'ACTIVE'),
 ('Nokia X30 5G - 256GB - White', 10990000, 10490000, 'NX30-256-WHT', 'https://example.com/images/nx30-256-wht.jpg', 16, 35, 'ACTIVE'),
 ('Nokia X30 5G - 256GB - Green', 10990000, 10490000, 'NX30-256-GRN', 'https://example.com/images/nx30-256-grn.jpg', 16, 25, 'ACTIVE');
-
 
 ---- MacBook Pro 14
 --INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)

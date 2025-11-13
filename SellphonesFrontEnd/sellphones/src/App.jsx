@@ -27,6 +27,10 @@ import CustomerDetailsPage from "./components/admin/components/pages/CustomerInf
 import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
 import AttributeDetailsPage from "./components/admin/components/pages/AttributePage/AttributeDetailsPage";
 import AdminBrandPage from "./components/admin/components/pages/BrandPage/AdminBrandPage";
+import AdminCategoryPage from "./components/admin/components/pages/CategoryPage/AdminCategoryPage";
+import CategoryDetailsPage from "./components/admin/components/pages/CategoryPage/CategoryDetailsPage";
+import OptionDetailsPage from "./components/admin/components/pages/CategoryPage/OptionDetailsPage";
+import AdminProductPage from "./components/admin/components/pages/ProductPage/AdminProductPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -143,6 +147,10 @@ export default function App() {
           <Route path="attributes" element={<AdminAttributePage />} />
           <Route path="attributes/view/:attributeId" element={<AttributeDetailsPage />} />
           <Route path="brands" element={<AdminBrandPage />} />
+          <Route path="categories" element={<AdminCategoryPage />} />
+          <Route path="categories/view/:categoryId" element={<CategoryDetailsPage />} />
+          <Route path="categories/:categoryId/options/view/:optionId" element={<OptionDetailsPage />} />
+          <Route path="products" element={<AdminProductPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

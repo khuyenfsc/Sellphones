@@ -4,8 +4,8 @@ import { Star, Heart } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const current = product.currentPrice;
-  const root = product.rootPrice;
+  const current = product?.productThumbnail?.currentPrice;
+  const root = product?.productThumbnail?.rootPrice;
 
   // 👉 Tính phần trăm giảm giá
   const discountPercent =

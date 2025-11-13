@@ -38,7 +38,7 @@ public class AdminProductVariantSpecificationBuilder {
         return (root, query, cb) -> cb.like(cb.lower(root.get("sku")), "%" + skuKeyword.toLowerCase() + "%");
     }
 
-    public static Specification<ProductVariant> hasStatus(ProductVariantStatus status){
+    public static Specification<ProductVariant> hasStatus(ProductStatus status){
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 

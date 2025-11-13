@@ -3,38 +3,46 @@ package com.sellphones.dto.product.admin;
 import com.sellphones.entity.product.ProductStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminProductVariantFilterRequest {
+public class AdminProduct_FilterRequest {
 
     private String keyword;
 
-    private Long price;
+    private BigDecimal minPrice;
 
-    private String skuKeyword;
+    private BigDecimal maxPrice;
+
+    private String categoryName;
+
+    private String brandName;
 
     private ProductStatus status;
 
-    @NotBlank
-    private String sortType;
+    @Min(1)
+    @Max(5)
+    private Integer minStar;
 
-    @Min(0)
-    private Long minPrice;
+    @Min(1)
+    @Max(5)
+    private Integer maxStar;
 
-    @Min(0)
-    private Long maxPrice;
+    private Boolean isNew;
+
+    private Boolean isFeatured;
 
     @Min(0)
     private Integer page = 0;
 
-    @Max(100)
     @Min(1)
-    private Integer size = 5;
+    private Integer size = 10;
 
+    private String sortType;
 }

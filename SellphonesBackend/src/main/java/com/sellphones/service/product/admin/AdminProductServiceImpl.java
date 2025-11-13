@@ -2,6 +2,7 @@ package com.sellphones.service.product.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.product.ProductListResponse;
 import com.sellphones.dto.product.admin.*;
 import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.entity.product.*;
@@ -14,6 +15,7 @@ import com.sellphones.repository.product.*;
 import com.sellphones.repository.promotion.GiftProductRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.service.file.FileStorageService;
+import com.sellphones.specification.admin.AdminProductSpecificationBuilder;
 import com.sellphones.specification.admin.AdminProductVariantSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
@@ -74,6 +76,35 @@ public class AdminProductServiceImpl implements AdminProductService{
     private final ModelMapper modelMapper;
 
     private final Validator validator;
+
+    @Override
+    public PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request) {
+        Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
+                .orElse(Sort.Direction.DESC);
+        Sort sort = Sort.by(direction, "id");
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+        Specification<Product> spec = AdminProductSpecificationBuilder.build(request);
+
+        Page<Product> productPage = productRepository.findAll(spec, pageable);
+
+        List<Product> products = productPage.getContent();
+
+        List<ProductListResponse> response = products.stream()
+                .map(p -> {
+                    ProductListResponse resp = modelMapper.map(p, ProductListResponse.class);
+                    resp.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), productThumbnailFolder));
+                    return resp;
+                })
+                .toList();
+
+        return PageResponse.<ProductListResponse>builder()
+                .result(response)
+                .total(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .build();
+    }
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")

@@ -1,6 +1,6 @@
 package com.sellphones.dto.product.admin;
 
-import com.sellphones.entity.product.ProductVariantStatus;
+import com.sellphones.entity.product.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class AdminProductVariantListResponse {
 
     private BigDecimal currentPrice;
 
-    private ProductVariantStatus status;
+    private ProductStatus status;
 
     private String sku;
 

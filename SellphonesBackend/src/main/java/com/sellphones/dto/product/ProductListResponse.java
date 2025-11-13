@@ -1,10 +1,12 @@
 package com.sellphones.dto.product;
 
+import com.sellphones.entity.product.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +19,15 @@ public class ProductListResponse {
 
     private String thumbnail;
 
-    private BigDecimal rootPrice;
+    private ProductThumbnailResponse productThumbnail;
 
-    private BigDecimal currentPrice;
+    private ProductStatus status;
 
     private Double averageRating;
+
+    private Boolean isFeatured;
+
+    private Boolean isNew;
+
+    private LocalDateTime createdAt;
 }

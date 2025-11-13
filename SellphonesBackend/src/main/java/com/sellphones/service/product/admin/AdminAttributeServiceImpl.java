@@ -67,7 +67,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
     public void addAttribute(AdminAttributeRequest request) {
         if (attributeRepository.existsByName(request.getName())) {
-            throw new AppException(ErrorCode.ATTRIBUTE_NAME_EXISTED);
+            throw new AppException(ErrorCode.ATTRIBUTE_NAME_ALREADY_EXISTS);
         }
 
         Attribute attribute = Attribute.builder()

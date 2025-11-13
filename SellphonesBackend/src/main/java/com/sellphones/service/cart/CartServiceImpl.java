@@ -13,6 +13,7 @@ import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.cart.CartRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
+import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class CartServiceImpl implements CartService{
     private final ProductVariantRepository productVariantRepository;
 
     private final CartItemRepository cartItemRepository;
+
+    private final ProductUtils productUtils;
 
     private final String variantImageFolderName = "product_variant_images";
 
@@ -61,6 +64,11 @@ public class CartServiceImpl implements CartService{
     @Override
     @Transactional
     public void addItemsToCart(CartItemRequest cartItemRequest) {
+
+        if(productUtils.isActiveVariant(cartItemRequest.getProductVariantId())){
+            throw new AppException(ErrorCode.VARIANT_INACTIVE);
+        }
+
         ProductVariant productVariant = productVariantRepository.findById(cartItemRequest.getProductVariantId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         if(productVariant.getStock() == 0){

@@ -4,6 +4,7 @@ import com.sellphones.dto.product.QueryRequest;
 import com.sellphones.dto.product.StaticFilterRequest;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.AttributeValue;
+import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.product.ProductVariant;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,8 @@ public class ProductSpecificationBuilder {
 
         StaticFilterRequest staticFilter = queryRequest.get_static();
         Map<String, String> dynamicFilter = queryRequest.getDynamic();
+
+        spec = spec.and(hasStatus(ProductStatus.ACTIVE));
 
         if(staticFilter.getCategoryName() != null){
             spec = spec.and(hasCategory(staticFilter.getCategoryName()));
@@ -77,6 +80,11 @@ public class ProductSpecificationBuilder {
 
     }
 
+    public static Specification<Product> hasStatus(ProductStatus status){
+        return (root, query, cb) -> cb.equal(
+                root.get("status"), status
+        );
+    }
 
     public static Specification<Product> hasBrand(Long brandId){
 //        return (root, query, cb) -> cb.equal(root.get("brand").get("id"), brandId);

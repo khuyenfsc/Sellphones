@@ -19,6 +19,8 @@ public class AdminCategoryResponse {
 
     private LocalDateTime createdAt;
 
+    private String icon;
+
     private Boolean featuredOnHomepage = false;
 
 }
