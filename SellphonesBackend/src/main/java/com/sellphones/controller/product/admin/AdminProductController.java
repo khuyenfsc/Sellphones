@@ -5,7 +5,7 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProduct_FilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
+import com.sellphones.dto.product.admin.AdminProductVariantResponse;
 import com.sellphones.dto.product.ProductListResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 //import com.sellphones.elasticsearch.AdminProductDocumentService;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,7 +42,7 @@ public class AdminProductController {
     public ResponseEntity<CommonResponse> addProduct(
             @RequestPart("product") String productJson,
             @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
-            @RequestPart(name = "file", required = false) MultipartFile thumbnailFile
+            @RequestPart(name = "file") MultipartFile thumbnailFile
     ){
 
         adminProductService.addProduct(productJson, imageFiles, thumbnailFile);
@@ -93,9 +92,9 @@ public class AdminProductController {
 
     @GetMapping("/{productId}/variants")
     public ResponseEntity<CommonResponse> getProductVariants(AdminProductVariantFilterRequest request, @PathVariable Long productId){
-        PageResponse<AdminProductVariantListResponse> products = adminProductService.getProductVariants(request, productId);
+        PageResponse<AdminProductVariantResponse> products = adminProductService.getProductVariants(request, productId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", products);
+        map.put("variants", products);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 

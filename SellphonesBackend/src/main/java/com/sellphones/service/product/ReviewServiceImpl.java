@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final ObjectMapper objectMapper;
 
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     private final FileStorageService fileStorageService;
 
@@ -109,7 +109,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     @Transactional
     public ReviewResponse addReview(String reviewJson, MultipartFile[] files) {
-        ReviewRequest reviewRequest = JsonParser.parseRequest(reviewJson, ReviewRequest.class, objectMapper, validator);
+        ReviewRequest reviewRequest = jsonParser.parseRequest(reviewJson, ReviewRequest.class);
 
         if(!productUtils.isActiveVariant(reviewRequest.getProductVariantId())){
             throw new AppException(ErrorCode.VARIANT_INACTIVE);

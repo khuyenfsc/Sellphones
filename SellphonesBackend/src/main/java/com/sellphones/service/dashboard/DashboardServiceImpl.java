@@ -1,7 +1,7 @@
 package com.sellphones.service.dashboard;
 
 import com.sellphones.dto.dashboard.DashboardRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
+import com.sellphones.dto.product.admin.AdminProductVariantResponse;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
@@ -87,7 +87,7 @@ public class DashboardServiceImpl implements DashboardService{
 
     @Override
     @PreAuthorize("hasAuthority('DASHBOARD')")
-    public AdminProductVariantListResponse getMostSellingVariant(DashboardRequest request) {
+    public AdminProductVariantResponse getMostSellingVariant(DashboardRequest request) {
         YearMonth ym = YearMonth.of(request.getYear(), request.getMonth());
         LocalDateTime start = ym.atDay(1).atStartOfDay();
         LocalDateTime end = ym.atEndOfMonth().atTime(23, 59, 59, 999_999_999);
@@ -102,17 +102,17 @@ public class DashboardServiceImpl implements DashboardService{
         ProductVariant variant = variants.getFirst();
         variant.setVariantImage(ImageNameToImageUrlConverter.convert(variant.getVariantImage(), productVariantImageFolder));
 
-        return modelMapper.map(variants.getFirst(), AdminProductVariantListResponse.class);
+        return modelMapper.map(variants.getFirst(), AdminProductVariantResponse.class);
     }
 
     @Override
     @PreAuthorize("hasAuthority('DASHBOARD')")
-    public List<AdminProductVariantListResponse> getMostStockedVariants() {
+    public List<AdminProductVariantResponse> getMostStockedVariants() {
         List<ProductVariant> variants = productVariantRepository.findTop5ByOrderByStockDesc();
         return variants.stream()
                 .map(v -> {
                     v.setVariantImage(ImageNameToImageUrlConverter.convert(v.getVariantImage(), productVariantImageFolder));
-                    return modelMapper.map(v, AdminProductVariantListResponse.class);
+                    return modelMapper.map(v, AdminProductVariantResponse.class);
                 }).toList();
     }
 

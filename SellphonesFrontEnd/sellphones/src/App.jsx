@@ -24,13 +24,14 @@ import AdminDashboardPage from "./components/admin/components/pages/DashboardPag
 import AdminOrderPage from "./components/admin/components/pages/OrderPage/AdminOrderPage";
 import AdminCustomerPage from "./components/admin/components/pages/CustomerInfoPage/AdminCustomerInfoPage";
 import CustomerDetailsPage from "./components/admin/components/pages/CustomerInfoPage/CustomerDetailsPage";
-import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
 import AttributeDetailsPage from "./components/admin/components/pages/AttributePage/AttributeDetailsPage";
 import AdminBrandPage from "./components/admin/components/pages/BrandPage/AdminBrandPage";
 import AdminCategoryPage from "./components/admin/components/pages/CategoryPage/AdminCategoryPage";
 import CategoryDetailsPage from "./components/admin/components/pages/CategoryPage/CategoryDetailsPage";
 import OptionDetailsPage from "./components/admin/components/pages/CategoryPage/OptionDetailsPage";
 import AdminProductPage from "./components/admin/components/pages/ProductPage/AdminProductPage";
+import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
+import AdminProductDetailsPage from "./components/admin/components/pages/ProductPage/AdminProductDetailsPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -151,6 +152,7 @@ export default function App() {
           <Route path="categories/view/:categoryId" element={<CategoryDetailsPage />} />
           <Route path="categories/:categoryId/options/view/:optionId" element={<OptionDetailsPage />} />
           <Route path="products" element={<AdminProductPage />} />
+          <Route path="products/view/:productId" element={<AdminProductDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

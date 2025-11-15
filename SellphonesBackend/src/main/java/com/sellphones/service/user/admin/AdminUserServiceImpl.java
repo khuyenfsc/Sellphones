@@ -52,9 +52,7 @@ public class AdminUserServiceImpl implements AdminUserService{
 
     private final ModelMapper modelMapper;
 
-    private final ObjectMapper objectMapper;
-
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS.VIEW')")
@@ -86,7 +84,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Transactional
     @PreAuthorize("hasAuthority('SETTINGS.USERS.CREATE')")
     public void createUser(String userJson, MultipartFile avatarFile) {
-        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper, validator);
+        AdminUserRequest request = jsonParser.parseRequest(userJson, AdminUserRequest.class);
 
         String avatar = "";
         if (avatarFile != null) {
@@ -119,7 +117,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @PreAuthorize("hasAuthority('SETTINGS.USERS.EDIT')")
     public void editUser(String userJson, MultipartFile avatarFile, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        AdminUserRequest request = JsonParser.parseRequest(userJson, AdminUserRequest.class, objectMapper, validator);
+        AdminUserRequest request = jsonParser.parseRequest(userJson, AdminUserRequest.class);
 
         String avatarName = user.getAvatar();
         if (avatarFile != null) {

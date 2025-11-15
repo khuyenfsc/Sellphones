@@ -6,12 +6,20 @@ import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Component
+@RequiredArgsConstructor
 public class JsonParser {
 
-    public static  <T> T parseRequest(String json, Class<T> clazz, ObjectMapper objectMapper, Validator validator) {
+    private final ObjectMapper objectMapper;
+
+    private final Validator validator;
+
+    public <T> T parseRequest(String json, Class<T> clazz) {
         try {
             // Parse JSON -> Object
             T obj = objectMapper.readValue(json, clazz);

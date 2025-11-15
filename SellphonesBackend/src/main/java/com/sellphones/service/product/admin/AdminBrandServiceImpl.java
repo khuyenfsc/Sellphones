@@ -14,6 +14,7 @@ import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminBrandSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
+import jakarta.json.Json;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     private final ObjectMapper objectMapper;
 
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     private final FileStorageService fileStorageService;
 
@@ -87,7 +88,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.CREATE')")
     public void addBrand(String brandJson, MultipartFile file) {
-        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper, validator);
+        AdminBrandRequest request = jsonParser.parseRequest(brandJson, AdminBrandRequest.class);
         String fileName = "";
 
         if (file != null) {
@@ -121,7 +122,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Override
     @PreAuthorize("hasAuthority('CATALOG.BRANDS.EDIT')")
     public void editBrand(String brandJson, MultipartFile file, Long id) {
-        AdminBrandRequest request = JsonParser.parseRequest(brandJson, AdminBrandRequest.class, objectMapper, validator);
+        AdminBrandRequest request = jsonParser.parseRequest(brandJson, AdminBrandRequest.class);
 
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));

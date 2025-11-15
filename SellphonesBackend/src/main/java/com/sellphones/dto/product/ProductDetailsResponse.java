@@ -14,7 +14,7 @@ public class ProductDetailsResponse {
 
     private String name;
 
-    private ProductDetailsCategoryResponse category;
+    private ProductDetails_CategoryResponse category;
 
     private String description;
 
@@ -24,7 +24,7 @@ public class ProductDetailsResponse {
 
     private ProductDetails_BrandResponse brand;
 
-    private List<ProductVariantAttributeResponse> variantAttributes;
+    private String variantAttributeNames;
 
     private List<String> images;
 

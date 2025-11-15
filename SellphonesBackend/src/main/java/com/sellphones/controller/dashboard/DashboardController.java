@@ -2,12 +2,10 @@ package com.sellphones.controller.dashboard;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.dashboard.DashboardRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
-import com.sellphones.dto.user.admin.AdminPermissionResponse;
+import com.sellphones.dto.product.admin.AdminProductVariantResponse;
 import com.sellphones.service.dashboard.DashboardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +44,7 @@ public class DashboardController {
 
     @GetMapping("/most-selling-variant")
     public ResponseEntity<CommonResponse> getMostSellingVariant(@Valid DashboardRequest request){
-        AdminProductVariantListResponse response = dashboardService.getMostSellingVariant(request);
+        AdminProductVariantResponse response = dashboardService.getMostSellingVariant(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
@@ -55,7 +53,7 @@ public class DashboardController {
 
     @GetMapping("/most-stocked-variants")
     public ResponseEntity<CommonResponse> getMostStockedVariants(){
-        List<AdminProductVariantListResponse> products = dashboardService.getMostStockedVariants();
+        List<AdminProductVariantResponse> products = dashboardService.getMostStockedVariants();
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
 

@@ -18,7 +18,6 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
     const attributeOrder = product?.variantAttributes?.map(a => a.attribute.name) || [];
 
 
-    // --- 1️⃣ Khi tải trang: tự chọn theo thumbnailProduct
     useEffect(() => {
         const variantIdToFetch = initialVariantId || product?.thumbnailProduct?.id;
 
@@ -29,34 +28,59 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
 
 
     useEffect(() => {
-        // ⚠️ Nếu đang reset → bỏ qua logic fetch
         if (isResettingRef.current) {
             isResettingRef.current = false;
-            setDisabledValues([]); // bật lại toàn bộ
-            return;
-        }
-
-        if (!product?.productVariants || Object.keys(selectedOptions).length === 0) {
             setDisabledValues([]);
             return;
         }
 
-        const selectedVals = Object.values(selectedOptions);
-        const allVariants = product.productVariants.map((v) =>
-            v.variantAttributes.split("-")
-        );
-        const allValues = [...new Set(allVariants.flat())];
+        if (!product?.productVariants) return;
 
-        const validVariants = allVariants.filter((v) =>
-            selectedVals.every((val) => v.includes(val))
-        );
+        const attrNames = product.variantAttributeNames.split("-");
+        const selectedKeys = Object.keys(selectedOptions);
 
-        const stillValid = [...new Set(validVariants.flat())];
-        const toDisable = allValues.filter((val) => !stillValid.includes(val));
+        if (selectedKeys.length === 0) {
+            setDisabledValues([]);
+            return;
+        }
 
-        setDisabledValues(toDisable);
+        let disabled = [];
+
+        attrNames.forEach((attr, index) => {
+            const selectedValue = selectedOptions[attr];
+
+            if (!selectedValue) return;
+
+            const validVariants = product.productVariants.filter(v => {
+                const parts = v.variantAttributeValues.split("-");
+                return parts[index] === selectedValue;
+            });
+
+            const possibleValuesByAttr = validVariants.map(v => v.variantAttributeValues.split("-"));
+
+            attrNames.forEach((otherAttr, otherIdx) => {
+                if (otherAttr === attr) return;
+
+                const allValuesThisAttr = [
+                    ...new Set(
+                        product.productVariants.map(v => v.variantAttributeValues.split("-")[otherIdx])
+                    ),
+                ];
+
+                const validValues = [
+                    ...new Set(possibleValuesByAttr.map(v => v[otherIdx])),
+                ];
+
+                allValuesThisAttr.forEach(val => {
+                    if (!validValues.includes(val)) {
+                        disabled.push(`${otherAttr}:${val}`);
+                    }
+                });
+            });
+        });
+
+        setDisabledValues(disabled);
     }, [selectedOptions]);
-
 
 
 
@@ -68,25 +92,22 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
             const result = await CartService.addCartItem(currentVariant?.id);
 
             if (result.success) {
-                // ✅ Hiển thị toast thành công
                 toast.success(result.result || "Đã thêm sản phẩm vào giỏ hàng!", {
                     position: "top-right",
                     autoClose: 1500,
                 });
 
-                // ✅ Chuyển hướng sau 1.5s
                 setTimeout(() => {
                     navigate("/cart");
                 }, 1500);
             } else {
-                // ❌ Hiển thị toast lỗi
                 toast.error(result.message || "Thêm sản phẩm thất bại!", {
                     position: "top-right",
                     autoClose: 1500,
                 });
             }
         } catch (error) {
-            console.error("❌ Lỗi khi thêm vào giỏ hàng:", error);
+            console.error("Lỗi khi thêm vào giỏ hàng:", error);
             toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!", {
                 position: "top-right",
                 autoClose: 1500,
@@ -103,15 +124,12 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
             setCurrentVariant(res);
             onVariantChange(res);
 
-            // 🧠 Cập nhật flag trước khi set state để tránh trigger lại useEffect
             skipEffectRef.current = true;
 
-            // Gán selectedOptions theo attributeValues trả về
             const selected = {};
             res.attributeValues.forEach((att) => {
                 selected[att.attribute.name] = att.strVal;
             });
-            // console.log(selected);
             setSelectedOptions(selected);
         } catch (error) {
             console.error("❌ Lỗi khi tải variant:", error);
@@ -133,39 +151,46 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
         setSelectedOptions({});
     };
 
-    const handleApplySelection = () => {
-        if (!product?.productVariants || Object.keys(selectedOptions).length === 0) {
+const handleApplySelection = () => {
+    if (!product?.productVariants) {
+        return;
+    }
+
+    const attrNames = product.variantAttributeNames.split("-");
+
+    // Kiểm tra xem đã chọn đủ chưa
+    for (let attr of attrNames) {
+        if (!selectedOptions[attr]) {
+            alert(`Vui lòng chọn giá trị cho: ${attr}`);
             return;
         }
+    }
 
-        // ✅ Lấy thứ tự attribute chuẩn
-        const orderedAttributes = product.variantAttributes.map(v => v.attribute.name);
+    // Ghép thành chuỗi theo đúng thứ tự trong variantAttributeNames
+    const selectedStr = attrNames
+        .map(attr => selectedOptions[attr])
+        .join("-");
 
-        // ✅ Tạo chuỗi lựa chọn đúng thứ tự
-        const selectedStr = orderedAttributes
-            .map(attrName => selectedOptions[attrName])
-            .filter(Boolean) // loại bỏ undefined
-            .join("-");
+    console.log("Selected String =", selectedStr);
 
-        // ✅ So khớp đúng variant
-        const matchedVariant = product.productVariants.find(
-            v => v.variantAttributes === selectedStr
-        );
+    // Tìm variant chính xác
+    const matchedVariant = product.productVariants.find(
+        v => v.variantAttributeValues === selectedStr
+    );
 
-        if (matchedVariant) {
-            if (matchedVariant.id !== currentVariant?.id) {
-                fetchVariantDetail(matchedVariant.id);
-                setCurrentVariant(matchedVariant);
-                onVariantChange(matchedVariant);
-            } else {
-                console.log("Đã chọn đúng variant hiện tại, không cần fetch lại.");
-            }
+    if (matchedVariant) {
+        if (matchedVariant.id !== currentVariant?.id) {
+            console.log("Fetching variant:", matchedVariant.id);
+            fetchVariantDetail(matchedVariant.id);
+            setCurrentVariant(matchedVariant);
+            onVariantChange(matchedVariant);
         } else {
-            alert("Không tồn tại biến thể phù hợp với lựa chọn này!");
+            console.log("Đã đúng variant hiện tại, không fetch lại.");
         }
-    };
-
-
+    } else {
+        alert("Không tồn tại biến thể phù hợp với lựa chọn này!");
+    }
+};
 
 
     return (
@@ -193,45 +218,68 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
 
                 {/* Variant Section */}
                 <div className="mb-6">
-                    {product?.variantAttributes?.map((variant) => (
-                        <div key={variant.attribute.name} className="mb-6">
-                            <p className="font-semibold mb-3 text-black">
-                                {variant.attribute.name}
-                            </p>
-                            <div className="flex flex-wrap gap-3">
-                                {variant.allowValues.map((valObj) => {
-                                    const value = valObj.attributeValue.strVal;
-                                    const isSelected =
-                                        selectedOptions[variant.attribute.name] === value;
-                                    const isDisabled = disabledValues.includes(value);
 
-                                    return (
-                                        <button
-                                            key={value}
-                                            onClick={() =>
-                                                !isDisabled &&
-                                                handleSelect(variant.attribute.name, value)
-                                            }
-                                            disabled={isDisabled}
-                                            className={`px-6 py-3 rounded-lg border text-black font-medium relative transition-all
-                ${isSelected
-                                                    ? "border-red-500 bg-red-50"
-                                                    : "border-gray-300 hover:border-gray-500"
-                                                }
-                ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
-                                        >
-                                            {value}
-                                            {isSelected && (
-                                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                                                    <Check className="w-4 h-4 text-white" />
-                                                </div>
-                                            )}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    ))}
+                    {/* --- Sinh giao diện lựa chọn từ variantAttributeNames + productVariants --- */}
+                    {product?.variantAttributeNames && (
+                        <>
+                            {product.variantAttributeNames.split("-").map((attrName, index) => {
+                                // Lấy danh sách giá trị hợp lệ cho từng thuộc tính
+                                const values = [
+                                    ...new Set(
+                                        product.productVariants.map((v) => {
+                                            const parts = v.variantAttributeValues.split("-");
+                                            return parts[index] || "";
+                                        })
+                                    ),
+                                ];
+
+                                return (
+                                    <div key={attrName} className="mb-6">
+                                        <p className="font-semibold mb-3 text-black">
+                                            {attrName}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-3">
+                                            {values.map((value) => {
+                                                const isSelected =
+                                                    selectedOptions[attrName] === value;
+                                                const isDisabled = disabledValues.includes(
+                                                    `${attrName}:${value}`
+                                                );
+
+                                                return (
+                                                    <button
+                                                        key={value}
+                                                        onClick={() =>
+                                                            !isDisabled &&
+                                                            handleSelect(attrName, value)
+                                                        }
+                                                        disabled={isDisabled}
+                                                        className={`px-6 py-3 rounded-lg border text-black font-medium relative transition-all
+                                            ${isSelected
+                                                                ? "border-red-500 bg-red-50"
+                                                                : "border-gray-300 hover:border-gray-500"
+                                                            }
+                                            ${isDisabled
+                                                                ? "opacity-40 cursor-not-allowed"
+                                                                : ""
+                                                            }`}
+                                                    >
+                                                        {value}
+                                                        {isSelected && (
+                                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                                                                <Check className="w-4 h-4 text-white" />
+                                                            </div>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </>
+                    )}
 
                     {/* --- Nút hành động --- */}
                     <div className="mt-4 flex items-center gap-3">
@@ -250,6 +298,7 @@ const ProductPurchaseSection = ({ product, onVariantChange, initialVariantId }) 
                         </button>
                     </div>
                 </div>
+
 
 
                 {/* Promotion Section */}

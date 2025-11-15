@@ -46,9 +46,12 @@ public class Product extends BaseEntity<Long> {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "product_id")
-    private List<ProductVariantAttribute> variantAttributes = new ArrayList<>();
+    @Column(name = "variant_attribute_names")
+    private String variantAttributeNames;
+
+//    @OneToMany
+//    @JoinColumn(name = "product_id")
+//    private List<ProductVariantAttribute> variantAttributes = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "brand_id")

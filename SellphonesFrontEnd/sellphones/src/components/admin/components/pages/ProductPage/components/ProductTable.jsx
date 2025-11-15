@@ -1,12 +1,15 @@
 // ProductTable.jsx
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AdminProductService from "../../../../service/AdminProductService";
+import ProductFilterModal from "./ProductFilterModal";
+
 
 export default function ProductTable({ isReloaded }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [inputValue, setInputValue] = useState(1);
@@ -15,11 +18,20 @@ export default function ProductTable({ isReloaded }) {
   const [total, setTotal] = useState(0);
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [filterRequest, setFilterRequest] = useState({
+    keyword: null,
+    page: 0,
+    size: perPage,
+  });
+
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
     setLoading(true);
+
     const res = await AdminProductService.getProducts({
+      ...filterRequest,
       keyword: searchTerm.trim() || null,
       page: currentPage - 1,
       size: perPage,
@@ -34,13 +46,50 @@ export default function ProductTable({ isReloaded }) {
     setLoading(false);
   };
 
+
   useEffect(() => {
     setInputValue(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, perPage, searchTerm, isReloaded]);
+  }, [currentPage, perPage, filterRequest, isReloaded]);
+
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setFilterRequest({
+        ...filterRequest,
+        keyword: searchTerm,
+      });
+      setCurrentPage(1);
+    }
+  };
+
+  const handleFilter = (filters) => {
+    setFilterRequest((prev) => ({
+      ...prev,
+
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+
+      minStar: filters.minStar,
+      maxStar: filters.maxStar,
+
+      isNew: filters.isNew,
+      isFeatured: filters.isFeatured,
+
+      status: filters.status, 
+
+      sortType: filters.sortType,
+
+      page: 0,
+    }));
+
+    setCurrentPage(1);
+  };
+
+
 
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -52,16 +101,25 @@ export default function ProductTable({ isReloaded }) {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            placeholder="Tìm kiếm sản phẩm"
+            placeholder="Tìm kiếm theo tên/danh mục/thương hiệu"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && setCurrentPage(1)}
-            className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 w-64 focus:outline-none focus:border-blue-500"
+            onKeyDown={handleSearchKeyDown}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 w-80 focus:outline-none focus:border-blue-500"
           />
+
           <span className="text-slate-400 text-sm">Tổng số kết quả: {total}</span>
         </div>
 
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsFilterModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition"
+          >
+            <Filter size={18} />
+            Lọc
+          </button>
+
           <select
             value={perPage}
             onChange={(e) => {
@@ -135,19 +193,24 @@ export default function ProductTable({ isReloaded }) {
             const date = prod.createdAt ? new Date(prod.createdAt) : null;
             const formattedDate = date
               ? `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(
-                  2,
-                  "0"
-                )}/${date.getFullYear()} ${String(date.getHours()).padStart(2, "0")}:${String(
-                  date.getMinutes()
-                ).padStart(2, "0")}`
+                2,
+                "0"
+              )}/${date.getFullYear()} ${String(date.getHours()).padStart(2, "0")}:${String(
+                date.getMinutes()
+              ).padStart(2, "0")}`
               : "-";
 
-            const statusColor =
-              prod.status === "ACTIVE"
-                ? "text-green-400"
-                : prod.status === "INACTIVE"
-                ? "text-red-400"
-                : "text-yellow-400";
+            const getProductStatusColor = (status) => {
+              switch (status) {
+                case "ACTIVE":
+                  return "bg-green-600 text-white";
+                case "INACTIVE":
+                  return "bg-red-600 text-white";
+                default:
+                  return "bg-yellow-600 text-white";
+              }
+            };
+
 
             return (
               <div
@@ -157,7 +220,13 @@ export default function ProductTable({ isReloaded }) {
                 <div>
                   <div className="font-medium">#{prod.id}</div>
                   <div className="text-xs text-slate-400">{formattedDate}</div>
-                  <div className={`text-xs font-semibold ${statusColor}`}>{prod.status}</div>
+                  <div
+                    className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${getProductStatusColor(
+                      prod.status
+                    )}`}>
+                    {prod.status}
+                  </div>
+
                 </div>
                 <div className="flex items-center gap-2">
                   <img src={prod.thumbnail} alt={prod.name} className="w-12 h-12 object-cover rounded" />
@@ -187,6 +256,12 @@ export default function ProductTable({ isReloaded }) {
           })
         )}
       </div>
+
+      <ProductFilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        onApply={handleFilter}
+      />
     </>
   );
 }

@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -71,16 +72,14 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     private final String productVariantImageFolder = "product_variant_images";
 
-    private final ObjectMapper objectMapper;
-
     private final ModelMapper modelMapper;
 
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     @Override
     public PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC);
+                .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
@@ -117,6 +116,10 @@ public class AdminProductServiceImpl implements AdminProductService{
                         .map(i -> ImageNameToImageUrlConverter.convert(i, productImageFolder))
                         .toList()
         );
+        ProductVariant thumbnailProduct = product.getThumbnailProduct();
+        thumbnailProduct.setVariantImage(ImageNameToImageUrlConverter.convert(
+                thumbnailProduct.getVariantImage(), productVariantImageFolder
+        ));
         return modelMapper.map(product, AdminProductDetailResponse.class);
     }
 
@@ -124,7 +127,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
     public void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile) {
-        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper, validator);
+        AdminProductRequest request = jsonParser.parseRequest(productJson, AdminProductRequest.class);
 
         List<String> imageNames = new ArrayList<>();
 
@@ -147,7 +150,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Brand brand = brandRepository.findById(request.getBrandId()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
-        Product product = productMapper.mapToProductEntity(request, brand, category, thumbnailName, imageNames);
+        Product product = productMapper.mapToCreatedProductEntity(request, brand, category, thumbnailName, imageNames);
+        product.setStatus(ProductStatus.INACTIVE);
         productRepository.save(product);
 
         String finalThumbnailName = thumbnailName;
@@ -174,7 +178,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        AdminProductRequest request = JsonParser.parseRequest(productJson, AdminProductRequest.class, objectMapper, validator);
+        AdminUpdateProductRequest request = jsonParser.parseRequest(productJson, AdminUpdateProductRequest.class);
 
         List<String> imageNames = new ArrayList<>();
 
@@ -190,20 +194,27 @@ public class AdminProductServiceImpl implements AdminProductService{
                 log.error("Failed to upload icon file {}", thumbnailFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
             }
+        }else{
+            fileStorageService.delete(thumbnailName, productThumbnailFolder);
+            thumbnailName = "";
         }
 
         if(imageFiles != null){
-            Arrays.asList(imageFiles).forEach(f -> {
+            for(MultipartFile f : imageFiles) {
                 String fileName = fileStorageService.store(f, productImageFolder);
+//                System.out.println("file name " + fileName);
                 imageNames.add(fileName);
-            });
+            }
         }
         product.getImages().forEach(i -> fileStorageService.delete(i, productImageFolder));
 
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Brand brand = brandRepository.findById(request.getBrandId()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
-        Product editedProduct = productMapper.mapToProductEntity(request, brand, category, thumbnailName, imageNames);
-        editedProduct.setId(productId);
+        Product editedProduct = productMapper.mapToEditedProductEntity(
+            product, request, brand, category, thumbnailName, imageNames
+        );
+
+//        System.out.println(editedProduct.getImages());
         productRepository.save(editedProduct);
 
     }
@@ -230,10 +241,10 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
-    public PageResponse<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
+    public PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "currentPrice");
+        Sort sort = Sort.by(direction, "id");
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
@@ -243,15 +254,15 @@ public class AdminProductServiceImpl implements AdminProductService{
 
         List<ProductVariant> variants = productVariantPage.getContent();
 
-        List<AdminProductVariantListResponse> response = variants.stream()
+        List<AdminProductVariantResponse> response = variants.stream()
                 .map(v -> {
-                    AdminProductVariantListResponse resp = modelMapper.map(v, AdminProductVariantListResponse.class);
+                    AdminProductVariantResponse resp = modelMapper.map(v, AdminProductVariantResponse.class);
                     resp.setVariantImage(ImageNameToImageUrlConverter.convert(v.getVariantImage(), productVariantImageFolder));
                     return resp;
                 })
                 .toList();
 
-        return PageResponse.<AdminProductVariantListResponse>builder()
+        return PageResponse.<AdminProductVariantResponse>builder()
                 .result(response)
                 .total(productVariantPage.getTotalElements())
                 .totalPages(productVariantPage.getTotalPages())
@@ -271,7 +282,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
     public void addProductVariant(String productVariantJson, MultipartFile file, Long productId) {
-        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper, validator);
+        AdminProductVariantRequest request = jsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class);
         String variantImage = "";
         if (file != null) {
             try {
@@ -328,7 +339,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        AdminProductVariantRequest request = JsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class, objectMapper, validator);
+        AdminProductVariantRequest request = jsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class);
 
         String variantImage = productVariant.getVariantImage();
         if (file != null) {

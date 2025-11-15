@@ -4,6 +4,8 @@ import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
 import com.sellphones.entity.product.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
+
 
 public class AdminProductVariantSpecificationBuilder {
 
@@ -13,10 +15,6 @@ public class AdminProductVariantSpecificationBuilder {
 
         if(request.getKeyword() != null){
             spec = spec.and(containsKeyword(request.getKeyword()));
-        }
-
-        if(request.getSkuKeyword() != null){
-            spec = spec.and(hasSkuContain(request.getSkuKeyword()));
         }
 
         if(request.getStatus() != null){
@@ -31,18 +29,17 @@ public class AdminProductVariantSpecificationBuilder {
     }
 
     public static Specification<ProductVariant> containsKeyword(String keyword){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
-    }
-
-    public static Specification<ProductVariant> hasSkuContain(String skuKeyword){
-        return (root, query, cb) -> cb.like(cb.lower(root.get("sku")), "%" + skuKeyword.toLowerCase() + "%");
+        return (root, query, cb) -> cb.or(
+                cb.like(cb.lower(root.get("productVariantName")), "%" + keyword.toLowerCase() + "%"),
+                cb.like(cb.lower(root.get("sku")), "%" + keyword.toLowerCase() + "%")
+        );
     }
 
     public static Specification<ProductVariant> hasStatus(ProductStatus status){
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<ProductVariant> priceBetween(Long minPrice, Long maxPrice){
+    public static Specification<ProductVariant> priceBetween(BigDecimal minPrice, BigDecimal maxPrice){
         return (root, query, cb) -> cb.between(root.get("currentPrice"), minPrice, maxPrice);
     }
 

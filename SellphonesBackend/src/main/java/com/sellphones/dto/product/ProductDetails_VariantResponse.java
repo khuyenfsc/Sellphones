@@ -14,6 +14,6 @@ public class ProductDetails_VariantResponse {
 
     private Long id;
 
-    private String variantAttributes;
+    private String variantAttributeValues;
 
 }

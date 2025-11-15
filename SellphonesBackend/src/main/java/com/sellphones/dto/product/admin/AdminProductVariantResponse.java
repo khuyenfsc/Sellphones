@@ -10,13 +10,15 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminProductVariantListResponse {
+public class AdminProductVariantResponse {
 
     private Long id;
 
     private String productVariantName;
 
     private BigDecimal currentPrice;
+
+    private BigDecimal rootPrice;
 
     private ProductStatus status;
 

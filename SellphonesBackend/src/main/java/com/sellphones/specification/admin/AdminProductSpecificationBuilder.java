@@ -32,7 +32,7 @@ public class AdminProductSpecificationBuilder {
         }
 
         if(request.getIsFeatured() != null){
-            spec = spec.and(isNew(request.getIsFeatured()));
+            spec = spec.and(isFeatured(request.getIsFeatured()));
         }
 
         return spec;

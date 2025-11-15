@@ -44,7 +44,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
 
     private final ModelMapper modelMapper;
 
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     private final ObjectMapper objectMapper;
 
@@ -83,7 +83,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     @Transactional
     @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.CREATE')")
     public void createBanner(String bannerJson, MultipartFile imageFile) {
-        AdminPromotionBannerRequest request = JsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class, objectMapper, validator);
+        AdminPromotionBannerRequest request = jsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class);
 
         String imageName = "";
         if (imageFile != null) {
@@ -115,7 +115,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.EDIT')")
     public void editBanner(String bannerJson, MultipartFile imageFile, Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
-        AdminPromotionBannerRequest request = JsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class, objectMapper, validator);
+        AdminPromotionBannerRequest request = jsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class);
 
         String imageName = banner.getImage();
         if (imageFile != null) {

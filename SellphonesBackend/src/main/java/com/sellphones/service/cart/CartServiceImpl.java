@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService{
     @Transactional
     public void addItemsToCart(CartItemRequest cartItemRequest) {
 
-        if(productUtils.isActiveVariant(cartItemRequest.getProductVariantId())){
+        if(!productUtils.isActiveVariant(cartItemRequest.getProductVariantId())){
             throw new AppException(ErrorCode.VARIANT_INACTIVE);
         }
 

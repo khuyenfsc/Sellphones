@@ -38,8 +38,8 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column(nullable = false, unique = true)
     private String sku;
 
-    @Column(name = "variant_attributes")
-    private String variantAttributes;
+    @Column(name = "variant_attribute_values")
+    private String variantAttributeValues;
 
     @Column(name = "variant_image")
     private String variantImage;

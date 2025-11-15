@@ -48,7 +48,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
 
     private final ObjectMapper objectMapper;
 
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     private final String giftProductFolderName = "gift_products";
 
@@ -83,8 +83,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @Transactional
     @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.CREATE')")
     public void createGiftProduct(String giftProductJson, MultipartFile thumbnailFile) {
-        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper, validator);
-
+        AdminGiftProductRequest request = jsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class);
         String thumbnailName = "";
         if (thumbnailFile != null) {
             try {
@@ -115,7 +114,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.EDIT')")
     public void editGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
-        AdminGiftProductRequest request = JsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class, objectMapper, validator);
+        AdminGiftProductRequest request = jsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class);
 
         String thumbnailName = giftProduct.getThumbnail();
         if (thumbnailFile != null) {

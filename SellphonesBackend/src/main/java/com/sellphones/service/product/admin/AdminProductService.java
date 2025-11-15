@@ -5,12 +5,10 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.ProductListResponse;
 import com.sellphones.dto.product.admin.AdminProductDetailResponse;
 import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantListResponse;
+import com.sellphones.dto.product.admin.AdminProductVariantResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.dto.product.admin.AdminProduct_FilterRequest;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface AdminProductService {
     PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request);
@@ -18,7 +16,7 @@ public interface AdminProductService {
     void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
     void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
     void deleteProduct(Long productId);
-    PageResponse<AdminProductVariantListResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
+    PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
     ProductVariantResponse getProductVariantDetail(Long productVariantId);
     void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
     void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId);

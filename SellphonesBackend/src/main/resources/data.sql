@@ -586,10 +586,11 @@ INSERT INTO category_option_value (name, category_option_id, created_at) VALUES 
 -- ======================
 -- CATEGORY 1: ĐIỆN THOẠI
 -- ======================
-INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
-('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true, 'ACTIVE'),
-('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true, 'ACTIVE'),
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status, variant_attribute_names) VALUES
+('iPhone 15 Pro Max', 'iphone-15-pro-max_2__5_2_1_1.jpg', 'Siêu phẩm mới nhất từ Apple, chip A17 Pro cực mạnh', 1, 1, true, true, 'ACTIVE', 'RAM-ROM'),
+('iPhone 15', 'iphone-15-plus_1__1.jpg', 'Màn hình OLED Super Retina, hiệu năng vượt trội', 1, 1, true, true, 'ACTIVE', 'RAM-ROM');
 
+INSERT INTO product (name, thumbnail, description, brand_id, category_id, is_featured, is_new, status) VALUES
 ('Samsung Galaxy S24 Ultra', 'ss-s24-ultra-xam-222.jpg', 'Camera zoom 100x và chip Snapdragon 8 Gen 3', 3, 1, true, true, 'ACTIVE'),
 ('Samsung Galaxy S24+', 'galaxy-s24-plus-tim.jpg', 'Thiết kế sang trọng, pin lớn 5000mAh', 3, 1, true, true, 'ACTIVE'),
 
@@ -733,7 +734,7 @@ INSERT INTO product_image (product_id, image) VALUES
 -- Variants for iPhone 15 Pro Max
 -- Variants for iPhone 15 Pro Max (product_id = 1)
 INSERT INTO product_variant
-(product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status, variant_attributes)
+(product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status, variant_attribute_values)
 VALUES
 -- 128GB
 ('iPhone 15 Pro Max - 6GB - 128GB - Black', 29990000, 28990000, 'IP15PM-6-128-BLK', 'iphone-15-128-gbden.jpg', 1, 50, 'ACTIVE', '6GB-128GB'),
@@ -1641,33 +1642,33 @@ VALUES ('Intel Core i7-1255U', NULL, 5, CURRENT_TIMESTAMP); -- CPU
 INSERT INTO attribute_value (str_val, numeric_val, attribute_id, created_at)
 VALUES ('Intel Iris Xe', NULL, 6, CURRENT_TIMESTAMP); -- GPU
 
-INSERT INTO product_variant_attribute (id, product_id, attribute_id, created_at) VALUES
-(1, 1, 1, '2025-10-27 17:18:25.586400'), -- RAM
-(2, 1, 2, '2025-10-27 17:18:25.586401'); -- ROM
---(3, 1, 3, '2025-10-27 17:18:25.586402'), -- Màn hình
---(4, 1, 4, '2025-10-27 17:18:25.586403'), -- Pin
---(5, 1, 5, '2025-10-27 17:18:25.586404'), -- CPU
---(6, 1, 6, '2025-10-27 17:18:25.586405'); -- GPU
-
-INSERT INTO product_attribute_value_option (id, attribute_value_id, product_variant_attribute_id, created_at) VALUES
-(1, 1, 1, '2025-10-27 17:18:25.577406'),  -- RAM 6GB
-(2, 2, 2, '2025-10-27 17:18:25.578406'),  -- ROM 128GB
-(3, 3, 2, '2025-10-27 17:18:25.578910'),  -- ROM 256GB
-(4, 4, 1, '2025-10-27 17:18:25.578911'), -- RAM 8GB
-(5, 8, 2, '2025-10-27 17:18:25.578911');
---(5, 5, 1, '2025-10-27 17:18:25.579010'),  -- RAM 12GB
---(6, 6, 2, '2025-10-27 17:18:25.579110'),  -- ROM 128GB (Pixel)
---(7, 7, 1, '2025-10-27 17:18:25.579210'),  -- RAM 16GB
---(8, 8, 2, '2025-10-27 17:18:25.579310'),  -- ROM 512GB
---(9, 9, 1, '2025-10-27 17:18:25.579410'),  -- RAM 32GB
---(10, 10, 2, '2025-10-27 17:18:25.579510'), -- ROM 1TB (1024GB)
---(11, 11, 4, '2025-10-27 17:18:25.579610'), -- Pin 5000mAh
---(12, 12, 3, '2025-10-27 17:18:25.579710'), -- Màn hình 6.7 inch AMOLED
---(13, 13, 3, '2025-10-27 17:18:25.579810'), -- Màn hình 6.5 inch 4K OLED
---(14, 14, 5, '2025-10-27 17:18:25.579910'), -- CPU Intel Core i7-1255U
---(15, 15, 6, '2025-10-27 17:18:25.580010'); -- GPU Intel Iris Xe
-
-
+--INSERT INTO product_variant_attribute (id, product_id, attribute_id, created_at) VALUES
+--(1, 1, 1, '2025-10-27 17:18:25.586400'), -- RAM
+--(2, 1, 2, '2025-10-27 17:18:25.586401'); -- ROM
+----(3, 1, 3, '2025-10-27 17:18:25.586402'), -- Màn hình
+----(4, 1, 4, '2025-10-27 17:18:25.586403'), -- Pin
+----(5, 1, 5, '2025-10-27 17:18:25.586404'), -- CPU
+----(6, 1, 6, '2025-10-27 17:18:25.586405'); -- GPU
+--
+--INSERT INTO product_attribute_value_option (id, attribute_value_id, product_variant_attribute_id, created_at) VALUES
+--(1, 1, 1, '2025-10-27 17:18:25.577406'),  -- RAM 6GB
+--(2, 2, 2, '2025-10-27 17:18:25.578406'),  -- ROM 128GB
+--(3, 3, 2, '2025-10-27 17:18:25.578910'),  -- ROM 256GB
+--(4, 4, 1, '2025-10-27 17:18:25.578911'), -- RAM 8GB
+--(5, 8, 2, '2025-10-27 17:18:25.578911');
+----(5, 5, 1, '2025-10-27 17:18:25.579010'),  -- RAM 12GB
+----(6, 6, 2, '2025-10-27 17:18:25.579110'),  -- ROM 128GB (Pixel)
+----(7, 7, 1, '2025-10-27 17:18:25.579210'),  -- RAM 16GB
+----(8, 8, 2, '2025-10-27 17:18:25.579310'),  -- ROM 512GB
+----(9, 9, 1, '2025-10-27 17:18:25.579410'),  -- RAM 32GB
+----(10, 10, 2, '2025-10-27 17:18:25.579510'), -- ROM 1TB (1024GB)
+----(11, 11, 4, '2025-10-27 17:18:25.579610'), -- Pin 5000mAh
+----(12, 12, 3, '2025-10-27 17:18:25.579710'), -- Màn hình 6.7 inch AMOLED
+----(13, 13, 3, '2025-10-27 17:18:25.579810'), -- Màn hình 6.5 inch 4K OLED
+----(14, 14, 5, '2025-10-27 17:18:25.579910'), -- CPU Intel Core i7-1255U
+----(15, 15, 6, '2025-10-27 17:18:25.580010'); -- GPU Intel Iris Xe
+--
+--
 -- ✅ iPhone 15 Pro Max - 128GB - Black (variant_id = 1)
 INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 1);  -- RAM 6GB
 INSERT INTO product_variant_attribute_value (product_variant_id, attribute_value_id) VALUES (1, 2);  -- ROM 128GB

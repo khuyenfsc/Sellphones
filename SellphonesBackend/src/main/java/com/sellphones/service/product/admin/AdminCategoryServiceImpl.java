@@ -54,17 +54,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     private final CategoryOptionValueRepository categoryOptionValueRepository;
 
-    private final ProductRepository productRepository;
-
     private final FileStorageService fileStorageService;
 
     private final CategoryMapper categoryMapper;
 
     private final ModelMapper modelMapper;
 
-    private final ObjectMapper objectMapper;
-
-    private final Validator validator;
+    private final JsonParser jsonParser;
 
     private final String categoryIconFolderName = "category_icons";
 
@@ -107,7 +103,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
     public void addCategory(String categoryJson, MultipartFile iconFile) {
-        AdminCategoryRequest request = JsonParser.parseRequest(categoryJson, AdminCategoryRequest.class, objectMapper, validator);
+        AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
 
         String iconName = "";
         if (iconFile != null) {
@@ -160,7 +156,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.EDIT')")
     public void editCategory(String categoryJson, MultipartFile iconFile, Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
-        AdminCategoryRequest request = JsonParser.parseRequest(categoryJson, AdminCategoryRequest.class, objectMapper, validator);
+        AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
 
         String iconName = category.getIcon();
         if (iconFile != null) {
