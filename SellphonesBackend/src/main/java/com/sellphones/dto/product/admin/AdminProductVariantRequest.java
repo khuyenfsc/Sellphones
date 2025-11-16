@@ -19,15 +19,4 @@ public class AdminProductVariantRequest {
 
     private BigDecimal rootPrice;
 
-    private BigDecimal currentPrice;
-
-    private ProductStatus status;
-
-    private List<Long> promotionIds;
-
-    private List<Long> giftProductIds;
-
-    private List<Long> attributeValueIds;
-
-    private List<Long> warrantyIds;
 }

@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AttributeValueResponse {
 
+    private Long id;
+
     private String strVal;
 
     private BigDecimal numericVal;

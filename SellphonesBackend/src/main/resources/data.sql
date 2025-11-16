@@ -181,11 +181,20 @@ INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
 --DROP FOREIGN KEY fk_user_review;
 --
 -- 2. Thêm lại khóa ngoại mới
---ALTER TABLE customer_info
+--ALTER TABLE review
 --  ADD CONSTRAINT fk_user_review
 --  FOREIGN KEY (user_id) REFERENCES user(id)
 --  ON DELETE SET NULL;
 
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE order_variant
+--DROP FOREIGN KEY fk_order_variant_product_variant;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE order_variant
+--  ADD CONSTRAINT fk_user_review
+--  FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
+--  ON DELETE SET NULL;
 
 
 INSERT INTO brand(name, brand_icon, created_at) VALUES ('Apple', 'frame_59.jpg', CURRENT_TIMESTAMP);

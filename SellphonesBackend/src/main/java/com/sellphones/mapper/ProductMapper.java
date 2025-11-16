@@ -3,6 +3,7 @@ package com.sellphones.mapper;
 import com.sellphones.dto.product.admin.AdminProductRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantRequest;
 import com.sellphones.dto.product.admin.AdminUpdateProductRequest;
+import com.sellphones.dto.product.admin.AdminUpdateProductVariantRequest;
 import com.sellphones.entity.product.*;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
@@ -62,34 +63,46 @@ public class ProductMapper {
         return product;
     }
 
-    public ProductVariant mapToProductVariantEntity(
+    public ProductVariant mapToCreatedVariantEntity(
             AdminProductVariantRequest request,
-            String variantImage, @Nullable Product product,
+            String variantImage,
+            Product product
+    ){
+
+        ProductVariant productVariant = ProductVariant.builder()
+                .productVariantName(request.getProductVariantName())
+                .rootPrice(request.getRootPrice())
+                .status(ProductStatus.ACTIVE)
+                .product(product)
+                .sku(generateSku(product.getCategory().getCode()))
+                .createdAt(LocalDateTime.now())
+                .variantImage(variantImage)
+                .build();
+        return productVariant;
+    }
+
+    public ProductVariant mapToEditedProductVariantEntity(
+            ProductVariant variant,
+            AdminUpdateProductVariantRequest request,
+            String variantImage,
             List<ProductPromotion> promotions,
             List<GiftProduct> giftProducts,
             List<AttributeValue> attributeValues,
             List<Warranty> warranties
     ){
 
-        ProductVariant productVariant = ProductVariant.builder()
-                .productVariantName(request.getProductVariantName())
-                .rootPrice(request.getRootPrice())
-                .currentPrice(request.getCurrentPrice())
-                .status(request.getStatus())
-                .variantImage(variantImage)
-                .promotions(promotions)
-                .giftProducts(giftProducts)
-                .attributeValues(attributeValues)
-                .warranties(warranties)
-                .build();
+        variant.setProductVariantName(request.getProductVariantName());
+        variant.setRootPrice(request.getRootPrice());
+        variant.setCurrentPrice(request.getCurrentPrice());
+        variant.setStatus(request.getStatus());
+        variant.setVariantImage(variantImage);
+        variant.setPromotions(promotions);
+        variant.setGiftProducts(giftProducts);
+        variant.setAttributeValues(attributeValues);
+        variant.setWarranties(warranties);
+        variant.setVariantAttributeValues(request.getVariantAttributeValues());
 
-        if(product != null){
-            productVariant.setProduct(product);
-            productVariant.setSku(generateSku(product.getCategory().getCode()));
-            productVariant.setCreatedAt(LocalDateTime.now());
-        }
-
-        return productVariant;
+        return variant;
     }
 
     private String generateSku(String categoryCode){

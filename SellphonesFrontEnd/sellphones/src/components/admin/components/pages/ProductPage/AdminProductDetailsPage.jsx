@@ -200,6 +200,38 @@ const AdminProductDetailsPage = () => {
     setLoading(false);
   };
 
+  const handleDeleteProduct = async () => {
+    if (!productId) {
+      toast.error("Không tìm thấy sản phẩm để xóa.");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Xác nhận xóa",
+      text: "Bạn có chắc chắn muốn xóa sản phẩm này? Sau khi xóa, tất cả variants và dữ liệu liên quan cũng sẽ bị xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await AdminProductService.deleteProduct(productId);
+        if (res.success) {
+          toast.success("Xóa sản phẩm thành công!");
+          navigate("/admin/products");
+        } else {
+          toast.error(res.message || "Xóa sản phẩm thất bại");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Đã xảy ra lỗi khi xóa sản phẩm");
+      }
+    }
+  };
 
   const handleRemoveImage = (index) => {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
@@ -217,15 +249,30 @@ const AdminProductDetailsPage = () => {
     <div className="min-h-screen bg-slate-950 text-white p-6 flex flex-col gap-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">{productName || "Chi tiết Sản phẩm"}</h1>
-        <button
-          onClick={handleSave}
-          disabled={loading}
-          className="flex items-center gap-2 px-5 py-2 bg-green-600 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
-        >
-          <Save size={20} /> Lưu thay đổi
-        </button>
+        <h1 className="text-2xl font-semibold">
+          {productName || "Chi tiết Sản phẩm"}
+        </h1>
+
+        {/* Group buttons */}
+        <div className="flex items-center gap-4">
+          <button
+            className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
+          onClick={handleDeleteProduct}
+          >
+            <XCircle size={20} />
+            <span className="text-sm font-medium">Xóa sản phẩm</span>
+          </button>
+
+          <button
+            onClick={handleSave}
+            disabled={loading}
+            className="flex items-center gap-2 px-5 py-2 bg-green-600 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+          >
+            <Save size={20} /> Lưu thay đổi
+          </button>
+        </div>
       </div>
+
 
       <div className="flex gap-6">
         {/* Left panel: product info + images */}

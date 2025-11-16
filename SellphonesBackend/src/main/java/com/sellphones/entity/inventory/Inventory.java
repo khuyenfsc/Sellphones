@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true, exclude = {"productVariant", "warehouse"})
 @Data
 @NoArgsConstructor
@@ -22,13 +24,18 @@ import lombok.experimental.SuperBuilder;
 )
 public class Inventory extends BaseEntity<Long> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
+
+    @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StockEntry> stockEntries;
 
     private Long quantity;
 

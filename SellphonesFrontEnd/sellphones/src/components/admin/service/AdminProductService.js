@@ -264,6 +264,43 @@ const AdminProductService = {
         }
     },
 
+    async getProductVariantById(variantId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.get(`/admin/products/variants/${variantId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const data = res?.data?.result || {};
+            return { success: true, data };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.get(`/admin/products/variants/${variantId}`, {
+                            headers: { Authorization: `Bearer ${newToken}` },
+                        });
+                        const data = retryRes?.data?.result || {};
+                        return { success: true, data };
+                    } catch { }
+                }
+            }
+
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết product variant",
+            };
+        }
+    },
+
     async createProductVariant(productId, formData) {
         try {
             let token = localStorage.getItem("adminAccessToken");
@@ -304,7 +341,7 @@ const AdminProductService = {
         }
     },
 
-    async updateProductVariant(variantId, formData) {
+    async updateProductVariant(variantId, productVariant, file) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -313,24 +350,41 @@ const AdminProductService = {
                 token = refresh.accessToken;
             }
 
+            const formData = new FormData();
+            formData.append("product_variant", JSON.stringify(productVariant)); // JSON string
+            if (file) formData.append("file", file); // thêm file nếu có
+
             const res = await AxiosClient.put(
                 `/admin/products/update-variant/${variantId}`,
                 formData,
-                { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
 
             return { success: true, data: res?.data || {} };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
+                        const formData = new FormData();
+                        formData.append("product_variant", JSON.stringify(productVariant));
+                        if (file) formData.append("file", file);
+
                         const retry = await AxiosClient.put(
                             `/admin/products/update-variant/${variantId}`,
                             formData,
-                            { headers: { Authorization: `Bearer ${newToken}`, "Content-Type": "multipart/form-data" } }
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "multipart/form-data",
+                                },
+                            }
                         );
                         return { success: true, data: retry?.data || {} };
                     } catch { }

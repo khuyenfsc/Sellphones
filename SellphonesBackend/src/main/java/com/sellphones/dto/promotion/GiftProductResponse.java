@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GiftProductListResponse {
+public class GiftProductResponse {
+
+    private Long id;
 
     private String name;
 

@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class WarrantyResponse {
 
+    private Long id;
+
     private String name;
 
     private int months;

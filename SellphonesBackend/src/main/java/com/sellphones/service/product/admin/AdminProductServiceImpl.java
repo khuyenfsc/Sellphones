@@ -223,17 +223,29 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<ProductVariant> variants = product.getProductVariants();
+        List<String> variantImages = variants.stream()
+                .map(ProductVariant::getVariantImage)
+                .toList();
+
         String thumbnailName = product.getThumbnail();
         List<String> images = product.getImages();
-        productRepository.deleteById(productId);
 
-        if(thumbnailName != null && !thumbnailName.isEmpty()){
+        productRepository.delete(product);
+
+        if(thumbnailName != null && !thumbnailName.isBlank()){
             fileStorageService.delete(thumbnailName, productThumbnailFolder);
         }
 
-        for(String image : images){
-            if(image != null && !images.isEmpty()){
+        for (String image : images) {
+            if (image != null && !image.isBlank()) {
                 fileStorageService.delete(image, productImageFolder);
+            }
+        }
+
+        for(String image : variantImages){
+            if(image != null && !image.isBlank()){
+                fileStorageService.delete(image, productVariantImageFolder);
             }
         }
     }
@@ -293,33 +305,13 @@ public class AdminProductServiceImpl implements AdminProductService{
             }
         }
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        List<ProductPromotion> promotions = request.getPromotionIds() != null
-                ? productPromotionRepository.findByIdIn(request.getPromotionIds())
-                : new ArrayList<>();
-
-        List<GiftProduct> giftProducts = request.getGiftProductIds() != null
-                ? giftProductRepository.findByIdIn(request.getGiftProductIds())
-                : new ArrayList<>();
-
-        List<AttributeValue> attributeValues = request.getAttributeValueIds() != null
-                ? attributeValueRepository.findByIdIn(request.getAttributeValueIds())
-                : new ArrayList<>();
-
-        List<Warranty> warranties = request.getWarrantyIds() != null
-                ? warrantyRepository.findByIdIn(request.getWarrantyIds())
-                : new ArrayList<>();
-
-        ProductVariant productVariant = productMapper.mapToProductVariantEntity(
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        ProductVariant productVariant = productMapper.mapToCreatedVariantEntity(
                 request,
                 variantImage,
-                product,
-                promotions,
-                giftProducts,
-                attributeValues,
-                warranties
+                product
         );
-        product.getProductVariants().add(productVariant);
 
         String finalVariantImage = variantImage;
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -339,7 +331,8 @@ public class AdminProductServiceImpl implements AdminProductService{
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        AdminProductVariantRequest request = jsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class);
+        AdminUpdateProductVariantRequest request = jsonParser
+                .parseRequest(productVariantJson, AdminUpdateProductVariantRequest.class);
 
         String variantImage = productVariant.getVariantImage();
         if (file != null) {
@@ -371,18 +364,16 @@ public class AdminProductServiceImpl implements AdminProductService{
                 ? warrantyRepository.findByIdIn(request.getWarrantyIds())
                 : new ArrayList<>();
 
-        ProductVariant editedProductVariant = productMapper.mapToProductVariantEntity(
+        ProductVariant editedProductVariant = productMapper.mapToEditedProductVariantEntity(
+                productVariant,
                 request,
                 variantImage,
-                null,
                 promotions,
                 giftProducts,
                 attributeValues,
                 warranties
         );
-        editedProductVariant.setSku(productVariant.getSku());
-        editedProductVariant.setId(productVariantId);
-        editedProductVariant.setProduct(productVariant.getProduct());
+
         productVariantRepository.save(editedProductVariant);
 
     }

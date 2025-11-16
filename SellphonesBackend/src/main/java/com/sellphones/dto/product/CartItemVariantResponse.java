@@ -1,6 +1,6 @@
 package com.sellphones.dto.product;
 
-import com.sellphones.dto.promotion.GiftProductListResponse;
+import com.sellphones.dto.promotion.GiftProductResponse;
 import com.sellphones.dto.promotion.ProductPromotionResponse;
 import com.sellphones.entity.product.Warranty;
 import lombok.AllArgsConstructor;
@@ -33,6 +33,6 @@ public class CartItemVariantResponse {
 
     private List<Warranty> warranties;
 
-    private List<GiftProductListResponse> giftProducts;
+    private List<GiftProductResponse> giftProducts;
 
 }

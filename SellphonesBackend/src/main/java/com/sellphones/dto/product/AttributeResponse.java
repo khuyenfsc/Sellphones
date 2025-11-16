@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AttributeResponse {
 
+    private Long id;
+
     private String name;
 
 }

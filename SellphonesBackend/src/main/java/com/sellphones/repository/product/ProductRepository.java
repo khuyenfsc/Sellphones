@@ -28,4 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     )
     void detachCategoryFromProducts(@Param("categoryId") Long categoryId);
 
+    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.productVariants WHERE p.id = :id")
+    Optional<Product> findByIdWithVariants(@Param("id") Long id);
+
 }

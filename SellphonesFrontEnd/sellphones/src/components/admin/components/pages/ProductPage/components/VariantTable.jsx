@@ -242,7 +242,7 @@ export default function VariantTable({ productId }) {
 
               <div className="text-center">
                 <button
-                  onClick={() => navigate(`/admin/variants/view/${v.id}`)}
+                  onClick={() => navigate(`/admin/products/${productId}/variants/view/${v.id}`)}
                   className="text-slate-400 hover:text-white transition"
                 >
                   <ChevronRight size={20} />

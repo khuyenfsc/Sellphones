@@ -1,7 +1,10 @@
 package com.sellphones.entity.product;
 
 import com.sellphones.entity.BaseEntity;
+import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.inventory.Inventory;
+import com.sellphones.entity.inventory.StockEntry;
+import com.sellphones.entity.order.OrderVariant;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
 import jakarta.persistence.*;
@@ -60,6 +63,9 @@ public class ProductVariant extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "gift_product_id")
     )
     private List<GiftProduct> giftProducts;
+
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "product_variant_attribute_value",
