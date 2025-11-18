@@ -62,7 +62,7 @@ export default function ProductFilterModal({ isOpen, onClose, onApply }) {
             case "maxStar": setMaxStar(""); break;
             case "isNew": setIsNew(""); break;
             case "isFeatured": setIsFeatured(""); break;
-            case "status": setStatus(""); break; // ⭐ reset trạng thái
+            case "status": setStatus(""); break; 
             case "sortType": setSortType(""); break;
         }
     };

@@ -40,10 +40,8 @@ public class Comment extends BaseEntity<Long> {
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
-//    @JsonBackReference
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
-//    @JsonManagedReference
     private List<Comment> childComments = new ArrayList<>();
 }

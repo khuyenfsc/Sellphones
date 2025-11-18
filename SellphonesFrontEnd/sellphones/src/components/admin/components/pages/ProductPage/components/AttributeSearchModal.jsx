@@ -192,9 +192,30 @@ export default function AttributeSearchModal({
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     >
+
                         <h2 className="text-xl font-semibold mb-4 text-white">
                             {selectedAttribute ? `Giá trị của: ${selectedAttribute.name}` : "Tìm kiếm Attribute"}
                         </h2>
+
+                        {/* Nút tạo mới */}
+                        <div className="mb-4 flex justify-end">
+                            {!selectedAttribute ? (
+                                <span
+                                    onClick={() => window.location.href = "/admin/attributes"}
+                                    className="text-blue-400 text-sm hover:underline cursor-pointer"
+                                >
+                                    + Tạo Attribute mới
+                                </span>
+                            ) : (
+                                <span
+                                    onClick={() => window.location.href = `/admin/attributes/view/${selectedAttribute.id}`}
+                                    className="text-blue-400 text-sm hover:underline cursor-pointer"
+                                >
+                                    + Tạo giá trị mới
+                                </span>
+                            )}
+                        </div>
+
 
                         {/* INPUT */}
                         <div className="mb-4 relative">

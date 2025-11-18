@@ -12,8 +12,6 @@ public class CommentUserResponse {
 
     private String fullName;
 
-    private String avatarUrl;
-
     private CommentRoleResponse role;
 
 }

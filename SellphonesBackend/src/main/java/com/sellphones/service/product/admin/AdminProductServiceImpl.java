@@ -283,6 +283,18 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
+    public void setThumbnail(Long productId, Long id) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        ProductVariant variant = productVariantRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+
+        product.setThumbnailProduct(variant);
+        productRepository.save(product);
+    }
+
+    @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
     public ProductVariantResponse getProductVariantDetail(Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
@@ -312,6 +324,8 @@ public class AdminProductServiceImpl implements AdminProductService{
                 variantImage,
                 product
         );
+
+        productVariantRepository.save(productVariant);
 
         String finalVariantImage = variantImage;
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {

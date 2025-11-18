@@ -301,7 +301,7 @@ const AdminProductService = {
         }
     },
 
-    async createProductVariant(productId, formData) {
+    async createProductVariant(productId, productVariant, file) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -309,6 +309,10 @@ const AdminProductService = {
                 if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
                 token = refresh.accessToken;
             }
+
+            const formData = new FormData();
+            formData.append("product_variant", JSON.stringify(productVariant)); // JSON string
+            if (file) formData.append("file", file)
 
             const res = await AxiosClient.post(
                 `/admin/products/${productId}/create-variant`,
@@ -319,6 +323,7 @@ const AdminProductService = {
             return { success: true, data: res?.data || {} };
 
         } catch (err) {
+            console.log(err);
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
@@ -398,6 +403,57 @@ const AdminProductService = {
         }
     },
 
+    async setThumbnail(productId, variantId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.post(
+                `/admin/products/${productId}/variants/${variantId}/set-thumbnail`,
+                {}, // body rỗng
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return { success: true, data: res?.data || {} };
+
+        } catch (err) {
+            // token hết hạn → refresh → retry
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+
+                    try {
+                        const retry = await AxiosClient.post(
+                            `/admin/products/${productId}/variants/${variantId}/set-thumbnail`,
+                            {},
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                },
+                            }
+                        );
+
+                        return { success: true, data: retry?.data || {} };
+                    } catch { }
+                }
+            }
+
+            return {
+                success: false,
+                message: err?.response?.data?.errors?.message || "Lỗi khi đặt thumbnail",
+            };
+        }
+    },
+
     async deleteProductVariant(variantId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
@@ -415,6 +471,7 @@ const AdminProductService = {
             return { success: true, data: res?.data || {} };
 
         } catch (err) {
+            console.log(err);
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {

@@ -17,6 +17,7 @@ public interface AdminProductService {
     void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
     void deleteProduct(Long productId);
     PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
+    void setThumbnail(Long productId, Long id);
     ProductVariantResponse getProductVariantDetail(Long productVariantId);
     void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
     void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId);

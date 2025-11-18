@@ -100,6 +100,16 @@ public class AdminProductController {
 
     }
 
+    @PostMapping("/{productId}/variants/{id}/set-thumbnail")
+    public ResponseEntity<CommonResponse> setThumbnail(@PathVariable Long productId, @PathVariable Long id){
+        adminProductService.setThumbnail(productId, id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Set thumbnail product successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
+
     @GetMapping("/variants/{id}")
     public ResponseEntity<CommonResponse> getProductVariantDetails(@PathVariable Long id){
         ProductVariantResponse response = adminProductService.getProductVariantDetail(id);

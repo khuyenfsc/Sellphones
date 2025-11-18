@@ -47,8 +47,7 @@ public class CommentServiceImpl implements CommentService{
             throw new AppException(ErrorCode.PRODUCT_INACTIVE);
         }
 
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, "createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt", "id");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Comment> commentPage = commentRepository.findStatusByProductId(
                 CommentStatus.APPROVED, productId, pageable);

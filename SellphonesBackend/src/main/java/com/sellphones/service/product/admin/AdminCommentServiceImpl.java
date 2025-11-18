@@ -1,20 +1,15 @@
 package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
-import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.entity.product.CommentStatus;
-import com.sellphones.entity.product.Review;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.product.CommentRepository;
 import com.sellphones.repository.user.UserRepository;
 import com.sellphones.specification.admin.AdminCommentSpecificationBuilder;
-import com.sellphones.specification.admin.AdminReviewSpecificationBuilder;
-import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -64,35 +60,38 @@ public class AdminCommentServiceImpl implements AdminCommentService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.REPLY')")
     public void replyComment(AdminCommentRequest request, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setIsReplied(true);
-        User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Comment replyComment = Comment.builder()
                 .user(user)
                 .product(comment.getProduct())
                 .status(CommentStatus.APPROVED)
-                .isReplied(true)
+                .isReplied(false)
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
                 .build();
 
         if(comment.getParentComment() == null){
-            comment.getChildComments().add(replyComment);
+//            comment.getChildComments().add(replyComment);
             replyComment.setParentComment(comment);
         }else{
             Comment parentComment = comment.getParentComment();
-            parentComment.getChildComments().add(replyComment);
-            replyComment.setParentComment(comment);
+//            parentComment.getChildComments().add(replyComment);
+            replyComment.setParentComment(parentComment);
         }
+
+        commentRepository.saveAll(Arrays.asList(comment, replyComment));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.EDIT')")
-    public void editComment(AdminEditingCommentRequest request, Long commentId) {
+    public void editComment(AdminUpdateCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setStatus(request.getStatus());
     }

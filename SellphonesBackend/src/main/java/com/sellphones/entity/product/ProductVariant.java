@@ -32,7 +32,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column(nullable = false,precision = 19, scale = 0, name = "root_price")
     private BigDecimal rootPrice;
 
-    @Column(nullable = false,precision = 19, scale = 0, name = "current_price")
+    @Column(precision = 19, scale = 0, name = "current_price")
     private BigDecimal currentPrice;
 
     @Enumerated(EnumType.STRING)
@@ -74,8 +74,8 @@ public class ProductVariant extends BaseEntity<Long> {
     )
     private List<AttributeValue> attributeValues;
 
-    @Column(nullable = false)
-    private Long stock;
+    @Column
+    private long stock = 0;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

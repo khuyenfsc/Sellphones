@@ -38,13 +38,23 @@ export default function OrderList({ customerId }) {
     };
 
     const handleApplyFilters = (filtersFromModal) => {
+        const cleanFilters = {};
+        Object.entries(filtersFromModal).forEach(([key, value]) => {
+            if (value !== "" && value != null) {
+                cleanFilters[key] = value;
+            }
+        });
+
         const combinedFilters = {
-            ...filtersFromModal,
-            customerName: searchTerm,
+            ...cleanFilters,
+            customerName: searchTerm, 
+            page: 0, 
         };
+
         setFilterRequest(combinedFilters);
         setCurrentPage(1);
     };
+
 
     useEffect(() => {
         setInputValue(currentPage);

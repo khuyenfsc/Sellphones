@@ -56,7 +56,7 @@ public class AdminCommentSpecificationBuilder {
     }
 
     public static Specification<Comment> hasProductId(Long productId){
-        return (root, query, cb) -> cb.equal(root.get("productVariant").get("id"), productId);
+        return (root, query, cb) -> cb.equal(root.get("product").get("id"), productId);
     }
 
     public static Specification<Comment> hasStatus(CommentStatus status){

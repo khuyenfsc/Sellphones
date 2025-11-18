@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Save, XCircle, Plus, Trash2, PlusCircle, Pencil } from "lucide-react";
 import AdminProductService from "../../../service/AdminProductService";
 import AttributeSearchModal from "./components/AttributeSearchModal";
 
 const AdminVariantDetailsPage = () => {
     const { variantId } = useParams();
+    const { productId } = useParams();
+    const [product, setProduct] = useState(null);
+    const navigate = useNavigate();
+    const [attributes, setAttributes] = useState([]);
+    const [values, setValues] = useState([]);
     const [isAttributeSearchModalOpen, setIsAttributeSearchModalOpen] = useState(false);
     const [modalAttr, setModalAttr] = useState(null);
     const [variant, setVariant] = useState(null);
@@ -22,7 +27,8 @@ const AdminVariantDetailsPage = () => {
         rootPrice: "",
         currentPrice: "",
         stock: "",
-        image: ""
+        image: "",
+        variantAttributes: ""
     });
 
     const fetchVariant = async () => {
@@ -38,16 +44,57 @@ const AdminVariantDetailsPage = () => {
         }
     };
 
+    const fetchProduct = async () => {
+        try {
+            const res = await AdminProductService.getProductById(productId);
+            if (res.success) {
+                setProduct(res.data);
+            }
+        } catch (err) {
+            toast.error("Lỗi tải sản phẩm");
+        }
+    };
+
     useEffect(() => {
         fetchVariant();
     }, [variantId]);
 
     useEffect(() => {
-        if (!variant) return;
-        setPreviewImage(variant.variantImage);
-        const ids = variant.attributeValues.map(a => a.id);
-        setAttributeValueIds(ids);
-    }, [variant]);
+        fetchProduct();
+    }, [productId]);
+
+    useEffect(() => {
+        if (!product) return;
+
+        // Split names từ product
+        const att = product.variantAttributeNames?.split("-") || [];
+        setAttributes(att);
+
+        // Nếu variant tồn tại → điền sẵn giá trị
+        if (variant?.variantAttributeValues) {
+            const defaultValues = variant.variantAttributeValues.split("-");
+            setValues(defaultValues);
+        } else {
+            // Không có variant → để trống
+            setValues(att.map(() => ""));
+        }
+
+        // Các logic khác của variant
+        if (variant) {
+            setPreviewImage(variant.variantImage);
+
+            const ids = variant.attributeValues.map(a => a.id);
+            setAttributeValueIds(ids);
+        }
+
+    }, [product, variant]);
+
+
+    const handleValueChange = (index, value) => {
+        const updated = [...values];
+        updated[index] = value;
+        setValues(updated);
+    };
 
     const handleInputChange = (field, value) => {
         setVariant((prev) => ({
@@ -110,8 +157,14 @@ const AdminVariantDetailsPage = () => {
             rootPrice: "",
             currentPrice: "",
             stock: "",
-            image: ""
+            image: "",
+            variantAttributes: ""
         };
+
+        const hasEmpty = values.some(v => !v || v.trim() === "");
+        if (hasEmpty) {
+            newErrors.variantAttributes = "Không được để trống bất kỳ giá trị thuộc tính nào.";
+        }
 
         if (!variant.productVariantName?.trim()) {
             newErrors.name = "Tên phiên bản không được để trống.";
@@ -171,7 +224,7 @@ const AdminVariantDetailsPage = () => {
                 rootPrice: variant.rootPrice,
                 currentPrice: variant.currentPrice,
                 status: variant.status,
-                variantAttributeValues: variant.variantAttributeValues,
+                variantAttributeValues: values.join("-"),
                 promotionIds: variant.promotions?.map(p => p.id) || [],
                 giftProductIds: variant.giftProducts?.map(g => g.id) || [],
                 attributeValueIds: attributeValueIds,
@@ -199,11 +252,75 @@ const AdminVariantDetailsPage = () => {
     };
 
 
-    const handleDelete = async () => {
-        if (!confirm("Bạn có chắc chắn muốn xóa phiên bản này?")) return;
+    const handleDeleteVariant = async () => {
+        if (!variantId) {
+            toast.error("Không tìm thấy phiên bản để xóa.");
+            return;
+        }
 
-        alert("Đã xóa phiên bản!");
+        const result = await Swal.fire({
+            title: "Xác nhận xóa",
+            text: "Bạn có chắc chắn muốn xóa phiên bản này?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy",
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            const res = await AdminProductService.deleteProductVariant(variantId);
+
+            if (res.success) {
+                toast.success("Xóa phiên bản thành công!");
+                navigate(`/admin/products/view/${productId}`);
+            } else {
+                toast.error(res.message || "Xóa phiên bản thất bại!");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi xóa phiên bản");
+        }
     };
+
+    const handleSetThumbnail = async () => {
+        const result = await Swal.fire({
+            title: "Xác nhận",
+            text: "Bạn có chắc muốn đặt phiên bản này làm phiên bản chính?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy",
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            setLoading(true);
+
+            const res = await AdminProductService.setThumbnail(productId, variantId);
+
+            if (!res.success) {
+                toast.error(res.message || "Không thể đặt làm phiên bản chính");
+                return;
+            }
+
+            toast.success("Đã đặt làm phiên bản chính");
+
+            // Nếu bạn muốn load lại dữ liệu variant
+            if (typeof fetchVariant === "function") {
+                fetchVariant();
+            }
+        } catch (err) {
+            toast.error("Lỗi khi đặt làm phiên bản chính");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     if (!variant) {
         return (
@@ -223,7 +340,7 @@ const AdminVariantDetailsPage = () => {
 
                 <div className="flex items-center gap-4">
                     <button
-                        onClick={handleDelete}
+                        onClick={handleDeleteVariant}
                         className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
                     >
                         <XCircle size={20} />
@@ -236,6 +353,13 @@ const AdminVariantDetailsPage = () => {
                         className="flex items-center gap-2 px-5 py-2 bg-green-600 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
                     >
                         <Save size={20} /> Lưu thay đổi
+                    </button>
+
+                    <button
+                        onClick={handleSetThumbnail}
+                        className="flex items-center gap-2 px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+                    >
+                        <Save size={20} /> Đặt làm phiên bản chính
                     </button>
                 </div>
             </div>
@@ -309,18 +433,30 @@ const AdminVariantDetailsPage = () => {
                             />
                         </div>
 
-                        <div>
-                            <label className="text-slate-400">Giá trị thuộc tính:</label>
-                            <input
-                                type="text"
-                                className="bg-slate-800 p-2 rounded w-full mt-1"
-                                value={variant.variantAttributeValues || ""}
-                                onChange={(e) => handleInputChange("variantAttributeValues", e.target.value)}
-                            />
-                            <p className="text-slate-500 text-sm mt-1">
-                                Ví dụ: 6GB-128GB (ngăn cách bằng dấu -)
-                            </p>
+                        <div className="mt-4 p-3 border border-slate-700 rounded-lg">
+                            <h3 className="text-slate-400 font-semibold mb-2">
+                                Giá trị thuộc tính (dùng để chia các phiên bản)
+                            </h3>
+
+                            {attributes.map((att, index) => (
+                                <div key={index} className="mb-3">
+                                    <label className="text-slate-300">{att}:</label>
+                                    <input
+                                        type="text"
+                                        className={`bg-slate-800 p-2 rounded w-full mt-1 ${errors.variantAttributes ? "border border-red-500" : ""
+                                            }`}
+                                        value={values[index]}
+                                        onChange={(e) => handleValueChange(index, e.target.value)}
+                                    />
+                                </div>
+                            ))}
+
+                            {errors.variantAttributes && (
+                                <p className="text-red-500 text-sm mt-1">{errors.variantAttributes}</p>
+                            )}
                         </div>
+
+
 
                         <div className="mt-4">
                             <label className="text-slate-400">Trạng thái:</label>

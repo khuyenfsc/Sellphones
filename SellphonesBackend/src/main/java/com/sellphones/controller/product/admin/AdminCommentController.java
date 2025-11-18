@@ -5,7 +5,7 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
 import com.sellphones.dto.product.admin.AdminCommentRequest;
 import com.sellphones.dto.product.admin.AdminCommentResponse;
-import com.sellphones.dto.product.admin.AdminEditingCommentRequest;
+import com.sellphones.dto.product.admin.AdminUpdateCommentRequest;
 import com.sellphones.service.product.admin.AdminCommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AdminCommentController {
     public ResponseEntity<CommonResponse> getComments(AdminCommentFilterRequest request){
         PageResponse<AdminCommentResponse> response = adminCommentService.getComments(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("results", response);
+        map.put("comments", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
@@ -43,8 +43,8 @@ public class AdminCommentController {
 
     }
 
-    @PutMapping("/edit-comment/{commentId}")
-    public ResponseEntity<CommonResponse> editComment(@RequestBody @Valid AdminEditingCommentRequest request, @PathVariable Long commentId){
+    @PutMapping("/update-comment/{commentId}")
+    public ResponseEntity<CommonResponse> editComment(@RequestBody @Valid AdminUpdateCommentRequest request, @PathVariable Long commentId){
         adminCommentService.editComment(request, commentId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited comment successfully");

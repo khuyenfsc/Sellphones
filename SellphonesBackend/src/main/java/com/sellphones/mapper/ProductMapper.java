@@ -72,7 +72,7 @@ public class ProductMapper {
         ProductVariant productVariant = ProductVariant.builder()
                 .productVariantName(request.getProductVariantName())
                 .rootPrice(request.getRootPrice())
-                .status(ProductStatus.ACTIVE)
+                .status(ProductStatus.INACTIVE)
                 .product(product)
                 .sku(generateSku(product.getCategory().getCode()))
                 .createdAt(LocalDateTime.now())

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Save, XCircle } from "lucide-react";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AdminProductService from "../../../service/AdminProductService";
 import AdminCategoryService from "../../../service/AdminCategoryService";
 import AdminBrandService from "../../../service/AdminBrandService";
 import VariantTable from "./components/VariantTable";
+import CreateVariantModal from "./components/CreateVariantModal";
 
 const AdminProductDetailsPage = () => {
   const { productId } = useParams();
-
+  const navigate = useNavigate();
+  const [isReloaded, setIsReloaded] = useState(true);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [product, setProduct] = useState(null);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -238,6 +241,22 @@ const AdminProductDetailsPage = () => {
     setNewImages(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleCreateVariant = async (variantData, file) => {
+    try {
+
+      const res = await AdminProductService.createProductVariant(productId, variantData, file);
+
+      if (res.success) {
+        setIsReloaded(!isReloaded); 
+        toast.success("Tạo variant thành công!");
+      } else {
+        toast.error(res.message || "Tạo variant thất bại!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Đã xảy ra lỗi khi tạo variant");
+    }
+  };
 
   async function urlToFile(url, filename) {
     const res = await fetch(url);
@@ -257,7 +276,7 @@ const AdminProductDetailsPage = () => {
         <div className="flex items-center gap-4">
           <button
             className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
-          onClick={handleDeleteProduct}
+            onClick={handleDeleteProduct}
           >
             <XCircle size={20} />
             <span className="text-sm font-medium">Xóa sản phẩm</span>
@@ -546,13 +565,13 @@ const AdminProductDetailsPage = () => {
             <h2 className="text-lg font-semibold">Danh sách các phiên bản</h2>
 
             <button
-              // onClick={onCreateVariant}
+              onClick={() => setIsCreateModalOpen(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
-              Tạo phiên bản mới mới
+              Tạo phiên bản mới
             </button>
           </div>
-          <VariantTable productId={productId} />
+          <VariantTable productId={productId} isReloaded={isReloaded}/>
         </div>
 
         {/* Right panel: thumbnailProduct info (readonly) */}
@@ -601,6 +620,11 @@ const AdminProductDetailsPage = () => {
 
         </div>
       </div>
+      <CreateVariantModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreate={handleCreateVariant}
+      />
     </div>
   );
 };

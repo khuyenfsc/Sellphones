@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import AdminProductService from "../../../../service/AdminProductService";
 import VariantFilterModal from "./VariantFilterModal";
 
-export default function VariantTable({ productId }) {
+export default function VariantTable({ productId, isReloaded }) {
   const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -57,7 +57,7 @@ export default function VariantTable({ productId }) {
 
   useEffect(() => {
     fetchVariants();
-  }, [currentPage, perPage, filterRequest]);
+  }, [currentPage, perPage, filterRequest, isReloaded]);
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -70,12 +70,15 @@ export default function VariantTable({ productId }) {
   };
 
   const handleFilter = (filters) => {
+    const cleanFilters = {};
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== "" && value != null) {
+        cleanFilters[key] = value;
+      }
+    });
+
     setFilterRequest({
-      ...filterRequest,
-      minPrice: filters.minPrice,
-      maxPrice: filters.maxPrice,
-      status: filters.status,
-      sortType: filters.sortType,
+      ...cleanFilters,
       page: 0,
     });
 
@@ -98,10 +101,10 @@ export default function VariantTable({ productId }) {
 
   return (
     <>
-    
+
       {/* Header Controls */}
       <div className="flex justify-between items-center mb-4">
-        
+
         {/* LEFT */}
         <div className="flex items-center gap-3">
           <input
@@ -177,7 +180,7 @@ export default function VariantTable({ productId }) {
               <ChevronRight size={16} />
             </button>
           </div>
-          
+
         </div>
       </div>
 

@@ -67,29 +67,20 @@ export default function ProductTable({ isReloaded }) {
   };
 
   const handleFilter = (filters) => {
-    setFilterRequest((prev) => ({
-      ...prev,
+    const cleanFilters = {};
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== "" && value != null) {
+        cleanFilters[key] = value;
+      }
+    });
 
-      minPrice: filters.minPrice,
-      maxPrice: filters.maxPrice,
-
-      minStar: filters.minStar,
-      maxStar: filters.maxStar,
-
-      isNew: filters.isNew,
-      isFeatured: filters.isFeatured,
-
-      status: filters.status, 
-
-      sortType: filters.sortType,
-
+    setFilterRequest({
+      ...cleanFilters,
       page: 0,
-    }));
+    });
 
     setCurrentPage(1);
   };
-
-
 
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));

@@ -33,6 +33,7 @@ import AdminProductPage from "./components/admin/components/pages/ProductPage/Ad
 import AdminAttributePage from "./components/admin/components/pages/AttributePage/AdminAttributePage";
 import AdminProductDetailsPage from "./components/admin/components/pages/ProductPage/AdminProductDetailsPage";
 import VariantDetailsPage from "./components/admin/components/pages/ProductPage/VariantDetailsPage";
+import AdminCommentPage from "./components/admin/components/pages/CommentPage/AdminCommentPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -155,6 +156,7 @@ export default function App() {
           <Route path="products" element={<AdminProductPage />} />
           <Route path="products/view/:productId" element={<AdminProductDetailsPage />} />
           <Route path="products/:productId/variants/view/:variantId" element={<VariantDetailsPage />} />
+          <Route path="comments" element={<AdminCommentPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 
