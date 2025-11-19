@@ -1,13 +1,13 @@
 package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
-import com.sellphones.entity.inventory.Inventory;
+import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.FilterOption;
 import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.repository.product.CategoryRepository;
 import com.sellphones.repository.product.FilterOptionRepository;
 import com.sellphones.repository.product.ProductFilterRepository;
 import com.sellphones.specification.admin.AdminFilterOptionSpecification;
@@ -33,19 +33,23 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     private final ProductFilterRepository productFilterRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final FilterOptionRepository filterOptionRepository;
 
     private final ModelMapper modelMapper;
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCT_FILTERS.VIEW')")
-    public PageResponse<AdminProductFilterResponse> getProductFilters(AdminProductFilterFilterRequest request) {
+    public PageResponse<AdminProductFilterResponse> getFiltersByCategoryId(
+            AdminProductFilter_FilterRequest request, Long categoryId) {
+
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "name");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<ProductFilter> spec = AdminProductFilterSpecificationBuilder.build(request);
+        Specification<ProductFilter> spec = AdminProductFilterSpecificationBuilder.build(request, categoryId);
 
         Page<ProductFilter> filterPage = productFilterRepository.findAll(spec, pageable);
         List<ProductFilter> filters = filterPage.getContent();
@@ -61,10 +65,22 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCT_FILTERS.VIEW')")
+    public AdminProductFilterResponse getFilterById(Long id) {
+        ProductFilter filter = productFilterRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_FILTER_NOT_FOUND));
+        return modelMapper.map(filter, AdminProductFilterResponse.class);
+    }
+
+    @Override
     @PreAuthorize("hasAuthority('CATALOG.PRODUCT_FILTERS.CREATE')")
-    public void addProductFilter(AdminProductFilterRequest request) {
+    public void addProductFilter(AdminProductFilterRequest request, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
         ProductFilter filter = ProductFilter.builder()
                 .name(request.getName())
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .build();
         productFilterRepository.save(filter);
@@ -89,7 +105,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
     public PageResponse<AdminFilterOptionResponse> getFilterOptions(AdminFilterOptionFilterRequest request, Long filterId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+        Sort sort = Sort.by(direction, "name");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<FilterOption> spec = AdminFilterOptionSpecification.build(request, filterId);

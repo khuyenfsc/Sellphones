@@ -25,13 +25,13 @@ public class AdminWarrantyController {
     public ResponseEntity<CommonResponse> getWarranties(AdminWarrantyFilterRequest request){
         PageResponse<AdminWarrantyResponse> response = adminWarrantyService.getWarranties(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("warranties", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PostMapping("/add-warranty")
+    @PostMapping("/create-warranty")
     public ResponseEntity<CommonResponse> addWarranty(@RequestBody @Valid AdminWarrantyRequest request) {
         adminWarrantyService.addWarranty(request);
         Map<String, Object> map = new HashMap<>();
@@ -41,7 +41,7 @@ public class AdminWarrantyController {
 
     }
 
-    @PutMapping("/edit-warranty/{id}")
+    @PutMapping("/update-warranty/{id}")
     public ResponseEntity<CommonResponse> editWarranty(@RequestBody @Valid AdminWarrantyRequest request, @PathVariable Long id) {
         adminWarrantyService.editWarranty(request, id);
         Map<String, Object> map = new HashMap<>();

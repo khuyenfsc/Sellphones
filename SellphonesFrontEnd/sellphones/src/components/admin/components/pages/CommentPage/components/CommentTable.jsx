@@ -180,11 +180,12 @@ export default function CommentTable() {
             {/* Table */}
             <div className="bg-slate-900 rounded-lg overflow-hidden">
                 {/* Header */}
-                <div className="grid grid-cols-11 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
+                <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
                     <div className="col-span-2"># / Ngày tạo</div>
                     <div className="col-span-3">Tên / Status / Role</div>
                     <div className="col-span-3">Tên sản phẩm</div>
-                    <div className="col-span-3">Nội dung</div>
+                    <div className="col-span-2">Đã phản hồi?</div>
+                    <div className="col-span-2">Nội dung</div>
                 </div>
 
                 {/* Body */}
@@ -204,7 +205,6 @@ export default function CommentTable() {
                             "0"
                         )}:${String(date.getMinutes()).padStart(2, "0")}`;
 
-                        // Hàm trả màu cho status
                         const getStatusColor = (status) => {
                             switch (status) {
                                 case "APPROVED":
@@ -218,7 +218,6 @@ export default function CommentTable() {
                             }
                         };
 
-                        // Hàm trả màu cho role
                         const getRoleColor = (role) => {
                             switch (role) {
                                 case "ADMIN":
@@ -232,6 +231,10 @@ export default function CommentTable() {
                             }
                         };
 
+                        const getReplyColor = (val) =>
+                            val
+                                ? "bg-green-600 text-white px-2 py-0.5 rounded"
+                                : "bg-red-600 text-white px-2 py-0.5 rounded";
 
                         return (
                             <div
@@ -242,6 +245,7 @@ export default function CommentTable() {
                                     <div className="font-medium">#{comment.id}</div>
                                     <div className="text-xs text-slate-400">{formattedDate}</div>
                                 </div>
+
                                 <div className="col-span-3 flex flex-col">
                                     <div className="mb-2 font-medium">{comment.user.fullName}</div>
                                     <div className="mb-2 text-xs">
@@ -253,26 +257,35 @@ export default function CommentTable() {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="col-span-3">{comment.product.name}</div>
-                                <div className="col-span-3">{comment.content}</div>
 
-                                <div className="col-span-1 flex items-center justify-center">
+                                <div className="col-span-3">{comment.product.name}</div>
+
+                                <div className="col-span-2 text-xs">
+                                    <span className={getReplyColor(comment.isReplied)}>
+                                        {comment.isReplied ? "Đã trả lời" : "Chưa trả lời"}
+                                    </span>
+                                </div>
+
+                                {/* CONTENT + BUTTON chung 1 cột */}
+                                <div className="col-span-2 flex items-center justify-between">
+                                    <span>{comment.content}</span>
+
                                     <button
                                         onClick={() => {
-                                            setSelectedComment(comment); 
-                                            setModalOpen(true);           
+                                            setSelectedComment(comment);
+                                            setModalOpen(true);
                                         }}
                                         className="text-slate-400 hover:text-white transition"
                                     >
                                         <ChevronRight size={20} />
                                     </button>
-
                                 </div>
                             </div>
                         );
                     })
                 )}
             </div>
+
 
             <CommentFilterModal
                 isOpen={isFilterModalOpen}

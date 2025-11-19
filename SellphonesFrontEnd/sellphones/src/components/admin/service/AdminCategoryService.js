@@ -211,6 +211,353 @@ const AdminCategoryService = {
         }
     },
 
+    async getFilters(categoryId, filterRequest) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.get(`/admin/categories/${categoryId}/filters`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: filterRequest
+            });
+
+            return { success: true, data: res?.data?.filters || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    try {
+                        const retry = await AxiosClient.get(`/admin/categories/${categoryId}/filters`, {
+                            headers: { Authorization: `Bearer ${refresh.accessToken}` },
+                            params: filterRequest
+                        });
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi getFilters:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi khi lấy danh sách bộ lọc"
+            };
+        }
+    },
+
+    async getFilterById(filterId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.get(`/admin/categories/filters/${filterId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refresh = await AdminService.refreshToken();
+                if (refresh.success) {
+                    const newToken = refresh.accessToken;
+                    try {
+                        const retryRes = await AxiosClient.get(`/admin/categories/filters/${filterId}`, {
+                            headers: { Authorization: `Bearer ${newToken}` },
+                        });
+                        return { success: true, data: retryRes?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi getFilterById:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi khi lấy thông tin filter",
+            };
+        }
+    },
+
+    async createFilter(categoryId, body) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.post(
+                `/admin/categories/${categoryId}/filters/create-filter`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.post(
+                            `/admin/categories/${categoryId}/filters/create-filter`,
+                            body,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi createFilter:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi tạo filter"
+            };
+        }
+    },
+
+
+    async updateFilter(filterId, body) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.put(
+                `/admin/categories/filters/update-filter/${filterId}`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.put(
+                            `/admin/categories/filters/update-filter/${filterId}`,
+                            body,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi updateFilter:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi cập nhật filter"
+            };
+        }
+    },
+
+    async deleteFilter(filterId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.delete(
+                `/admin/categories/filters/delete-filter/${filterId}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.delete(
+                            `/admin/categories/filters/delete-filter/${filterId}`,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi deleteFilter:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi xóa filter"
+            };
+        }
+    },
+
+    async getFilterOptions(filterId, filterRequest) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.get(
+                `/admin/categories/filters/${filterId}/options`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: filterRequest
+                }
+            );
+
+            return { success: true, data: res?.data?.options || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.get(
+                            `/admin/categories/filters/${filterId}/options`,
+                            {
+                                headers: { Authorization: `Bearer ${fresh.accessToken}` },
+                                params: filterRequest
+                            }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi getFilterOptions:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi lấy list options"
+            };
+        }
+    },
+
+    async createFilterOption(filterId, body) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.post(
+                `/admin/categories/filters/${filterId}/create-option`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.post(
+                            `/admin/categories/filters/${filterId}/create-option`,
+                            body,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi createFilterOption:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi tạo option"
+            };
+        }
+    },
+
+    async updateFilterOption(optionId, body) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.put(
+                `/admin/categories/filters/options/update-option/${optionId}`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.put(
+                            `/admin/categories/filters/options/update-option/${optionId}`,
+                            body,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi updateFilterOption:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi update option"
+            };
+        }
+    },
+
+    async deleteFilterOption(optionId) {
+        try {
+            let token = localStorage.getItem("adminAccessToken");
+            if (!token) {
+                const refresh = await AdminService.refreshToken();
+                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+                token = refresh.accessToken;
+            }
+
+            const res = await AxiosClient.delete(
+                `/admin/categories/filters/options/delete-option/${optionId}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return { success: true, data: res?.data?.result || {} };
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const fresh = await AdminService.refreshToken();
+                if (fresh.success) {
+                    try {
+                        const retry = await AxiosClient.delete(
+                            `/admin/categories/filters/options/delete-option/${optionId}`,
+                            { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
+                        );
+                        return { success: true, data: retry?.data?.result || {} };
+                    } catch { }
+                }
+            }
+
+            console.error("❌ Lỗi deleteFilterOption:", err.message);
+            return {
+                success: false,
+                message: err?.response?.data?.message || "Lỗi xóa option"
+            };
+        }
+    },
+
     async getCategoryOptions(categoryId, filterRequest) {
         try {
             let token = localStorage.getItem("adminAccessToken");

@@ -34,6 +34,8 @@ import AdminAttributePage from "./components/admin/components/pages/AttributePag
 import AdminProductDetailsPage from "./components/admin/components/pages/ProductPage/AdminProductDetailsPage";
 import VariantDetailsPage from "./components/admin/components/pages/ProductPage/VariantDetailsPage";
 import AdminCommentPage from "./components/admin/components/pages/CommentPage/AdminCommentPage";
+import AdminReviewPage from "./components/admin/components/pages/ReviewPage/AdminReviewPage";
+import FilterDetailsPage from "./components/admin/components/pages/CategoryPage/FilterDetailsPage";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import AdminProtectedRoute from "./components/Route/AdminProtectedRoute";
 import AdminMainLayout from "./components/admin/components/layouts/AdminMainLayout";
@@ -41,6 +43,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { AdminAuthProvider } from "./components/admin/context/AdminAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AdminWarrantyPage from "./components/admin/components/pages/WarrantyPage/AdminWarrantyPage";
 
 export default function App() {
   return (
@@ -153,10 +156,13 @@ export default function App() {
           <Route path="categories" element={<AdminCategoryPage />} />
           <Route path="categories/view/:categoryId" element={<CategoryDetailsPage />} />
           <Route path="categories/:categoryId/options/view/:optionId" element={<OptionDetailsPage />} />
+          <Route path="categories/:categoryId/filters/view/:filterId" element={<FilterDetailsPage />} />
           <Route path="products" element={<AdminProductPage />} />
           <Route path="products/view/:productId" element={<AdminProductDetailsPage />} />
           <Route path="products/:productId/variants/view/:variantId" element={<VariantDetailsPage />} />
           <Route path="comments" element={<AdminCommentPage />} />
+          <Route path="reviews" element={<AdminReviewPage />} />
+          <Route path="warranties" element={<AdminWarrantyPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

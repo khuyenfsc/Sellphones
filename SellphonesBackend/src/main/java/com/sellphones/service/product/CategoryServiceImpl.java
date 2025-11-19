@@ -40,13 +40,13 @@ public class CategoryServiceImpl implements CategoryService{
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<ProductFilterResponse> getProductFiltersByCategoryName(String categoryName) {
-        List<ProductFilter> filters = productFilterRepository.findByCategoryName(categoryName);
-        return filters.stream()
-                .map(f -> modelMapper.map(f, ProductFilterResponse.class))
-                .toList();
-    }
+//    @Override
+//    public List<ProductFilterResponse> getProductFiltersByCategoryName(String categoryName) {
+//        List<ProductFilter> filters = productFilterRepository.findByCategoryName(categoryName);
+//        return filters.stream()
+//                .map(f -> modelMapper.map(f, ProductFilterResponse.class))
+//                .toList();
+//    }
 
     @Override
     public List<FeaturedCategoryResponse> getFeaturedCategories() {

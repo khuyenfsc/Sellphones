@@ -2,7 +2,7 @@ package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
-import com.sellphones.dto.product.admin.AdminReviewRequest;
+import com.sellphones.dto.product.admin.AdminUpdateReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
 import com.sellphones.entity.product.Review;
 import com.sellphones.exception.AppException;
@@ -37,14 +37,13 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.VIEW')")
     public PageResponse<AdminReviewResponse> getReviews(AdminReviewFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.DESC);
+        Sort sort = Sort.by(direction, "createdAt", "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Review> spec = AdminReviewSpecificationBuilder.build(request);
 
         Page<Review> reviewPage = reviewRepository.findAll(spec, pageable);
-        List<Review> reviews = reviewPage.getContent();
 
         List<AdminReviewResponse> response = reviewPage.getContent().stream()
                 .map(r ->
@@ -69,7 +68,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.EDIT')")
-    public void editReview(AdminReviewRequest request, Long reviewId) {
+    public void editReview(AdminUpdateReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         review.setStatus(request.getStatus());
     }

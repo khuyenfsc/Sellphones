@@ -3,13 +3,11 @@ package com.sellphones.service.product.admin;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 
-import java.util.List;
-
 public interface AdminProductFilterService {
 
-    PageResponse<AdminProductFilterResponse> getProductFilters(AdminProductFilterFilterRequest request);
-
-    void addProductFilter(AdminProductFilterRequest request);
+    PageResponse<AdminProductFilterResponse> getFiltersByCategoryId(AdminProductFilter_FilterRequest request, Long categoryId);
+    AdminProductFilterResponse getFilterById(Long id);
+    void addProductFilter(AdminProductFilterRequest request, Long categoryId);
     void editProductFilter(AdminProductFilterRequest request, Long id);
     void deleteProductFilter(Long id);
     PageResponse<AdminFilterOptionResponse> getFilterOptions(AdminFilterOptionFilterRequest request, Long filterId);

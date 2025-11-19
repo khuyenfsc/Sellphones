@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface CategoryService {
     List<CategoryResponse> getAllCategories();
-    List<ProductFilterResponse> getProductFiltersByCategoryName(String categoryName);
+//    List<ProductFilterResponse> getProductFiltersByCategoryName(String categoryName);
     List<FeaturedCategoryResponse> getFeaturedCategories();
 }

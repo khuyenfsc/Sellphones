@@ -70,8 +70,9 @@ public class CommentServiceImpl implements CommentService{
             throw new AppException(ErrorCode.PRODUCT_INACTIVE);
         }
 
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, "createdAt");
+        Sort.Direction direction = Sort.Direction.ASC
+                ;
+        Sort sort = Sort.by(direction, "createdAt", "id");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Comment> commentPage = commentRepository.findByStatusAndParentComment_Id(CommentStatus.APPROVED, parentId, pageable);
         List<CommentResponse> response = commentPage.getContent().stream()

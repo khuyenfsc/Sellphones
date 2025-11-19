@@ -1,8 +1,4 @@
 // AdminCommentPage.jsx
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { PlusCircle } from "lucide-react";
-import AdminCommentService from "../../../service/AdminCommentService";
 import CommentTable from "./components/CommentTable";
 // import CreateCommentModal from "./components/CreateCommentModal"; 
 
@@ -17,13 +13,6 @@ const AdminCommentPage = () => {
 
             {/* Table */}
             <CommentTable />
-
-            {/* Modal tạo comment */}
-            {/* <CreateCommentModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                onCreate={handleCreate}
-            /> */}
         </div>
     );
 };

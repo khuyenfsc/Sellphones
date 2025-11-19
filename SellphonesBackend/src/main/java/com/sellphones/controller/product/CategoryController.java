@@ -5,6 +5,7 @@ import com.sellphones.dto.product.CategoryResponse;
 import com.sellphones.dto.product.FeaturedCategoryResponse;
 import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.service.product.CategoryService;
+import com.sellphones.service.product.ProductFilterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    private final ProductFilterService productFilterService;
 
     @GetMapping
     public ResponseEntity<CommonResponse> getAllCategories(){
@@ -43,7 +46,7 @@ public class CategoryController {
     public ResponseEntity<CommonResponse> getFiltersByCategory(
             @PathVariable("categoryName") String categoryName
     ){
-        List<ProductFilterResponse> filterOptions = categoryService.getProductFiltersByCategoryName(categoryName);
+        List<ProductFilterResponse> filterOptions = productFilterService.getProductFiltersByCategoryName(categoryName);
         Map<String, Object> map = new HashMap<>();
         map.put("result", filterOptions);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));

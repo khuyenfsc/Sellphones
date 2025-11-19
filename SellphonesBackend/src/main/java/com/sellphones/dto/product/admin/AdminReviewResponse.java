@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,4 +28,6 @@ public class AdminReviewResponse {
     private AdminReviewVariantResponse productVariant;
 
     private List<String> imageNames = new ArrayList<>();
+
+    private LocalDateTime createdAt;
 }

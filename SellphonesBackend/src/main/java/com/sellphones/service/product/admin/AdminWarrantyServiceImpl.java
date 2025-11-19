@@ -38,8 +38,8 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
     @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.VIEW')")
     public PageResponse<AdminWarrantyResponse> getWarranties(AdminWarrantyFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "price");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "price", "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Warranty> spec = AdminWarrantySpecificationBuilder.build(request);

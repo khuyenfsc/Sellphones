@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronRight as ViewIcon, Search, Filter } from "lucide-react";
-import Swal from "sweetalert2";
+import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { toast } from "react-toastify";
-import AdminCategoryService from "../../../../service/AdminCategoryService";
-import CategoryFilterModal from "./CategoryFilterModal";
+import AdminWarrantyService from "../../../../service/AdminWarrantyService";
 import { useNavigate } from "react-router-dom";
+import WarrantiesFilterModal from "./WarrantiesFilterModal";
+import EditWarrantyModal from "./EditWarrantyModal";
 
-export default function CategoryTable({ isReloaded }) {
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [isCreateOptionModalOpen, setIsCreateOptionModalOpen] = useState(false);
-    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+export default function WarrantyTable({ isReloaded }) {
     const navigate = useNavigate();
+    const [warranties, setWarranties] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [selectedWarranty, setSelectedWarranty] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     // Phân trang + tìm kiếm
     const [searchTerm, setSearchTerm] = useState("");
@@ -20,27 +21,29 @@ export default function CategoryTable({ isReloaded }) {
     const [perPage, setPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
+    // const [sortType, setSortType] = useState("ASC");
 
     const [filterRequest, setFilterRequest] = useState({
-        keyword: null,
-        featuredOnHomepage: null,
+        name: null,
         page: 0,
         size: perPage,
     });
 
-    const fetchCategories = async () => {
+    const fetchWarranties = async () => {
         setLoading(true);
-        const res = await AdminCategoryService.getCategories({
+        const res = await AdminWarrantyService.getWarranties({
             ...filterRequest,
-            keyword: searchTerm.trim() || null,
+            name: searchTerm.trim() || null,
             page: currentPage - 1,
             size: perPage,
         });
 
         if (res.success) {
-            setCategories(res.data.result || []);
+            setWarranties(res.data.result || []);
             setTotalPages(res.data.totalPages || 1);
-            setTotal(res.data?.total || 0);
+            setTotal(res.data.total || 0);
+        } else {
+            toast.error(res.message || "Không thể tải danh sách bảo hành");
         }
 
         setLoading(false);
@@ -51,7 +54,7 @@ export default function CategoryTable({ isReloaded }) {
     }, [currentPage]);
 
     useEffect(() => {
-        fetchCategories();
+        fetchWarranties();
     }, [currentPage, perPage, filterRequest, isReloaded]);
 
     const handleFilter = (filters) => {
@@ -64,44 +67,78 @@ export default function CategoryTable({ isReloaded }) {
 
         setFilterRequest({
             ...cleanFilters,
-            keyword, 
+            name, 
             page: 0
         });
 
         setCurrentPage(1);
     };
 
+    
+    const handleEditClick = (warranty) => {
+        setSelectedWarranty(warranty);
+        setIsEditModalOpen(true);
+    };
+
+    const handleUpdateWarranty = async (warrantyId, warrantyData) => {
+        try {
+            const res = await AdminWarrantyService.updateWarranty(warrantyId, warrantyData);
+
+            if (res.success) {
+                toast.success("Cập nhật bảo hành thành công");
+                fetchWarranties();
+            } else {
+                toast.error(res.message || "Lỗi khi cập nhật bảo hành");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi cập nhật bảo hành");
+        }
+    };
+
+    const handleDeleteWarranty = async (warrantyId) => {
+        try {
+            const res = await AdminWarrantyService.deleteWarranty(warrantyId);
+
+            if (res.success) {
+                toast.success("Đã xóa bảo hành thành công");
+                fetchWarranties();
+            } else {
+                toast.error(res.message || "Lỗi khi xóa bảo hành");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi xóa bảo hành");
+        }
+    };
 
     const handleSearchKeyDown = (e) => {
         if (e.key === "Enter") {
             setFilterRequest({
                 ...filterRequest,
-                keyword: searchTerm,
+                name: searchTerm,
             });
             setCurrentPage(1);
         }
     };
 
-    const handlePrevPage = () => {
+    const handlePrevPage = () =>
         setCurrentPage((prev) => Math.max(prev - 1, 1));
-    };
 
-    const handleNextPage = () => {
+    const handleNextPage = () =>
         setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    };
 
     return (
         <>
             {/* Header Controls */}
             <div className="flex justify-between items-center mb-6">
-                
 
-                {/* Ô tìm kiếm */}
+                {/* Tìm kiếm */}
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Tìm kiếm tên hoặc mã"
+                            placeholder="Tìm kiếm bảo hành"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onKeyDown={handleSearchKeyDown}
@@ -110,11 +147,12 @@ export default function CategoryTable({ isReloaded }) {
                         <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                     </div>
 
-                    {/* Tổng số kết quả */}
-                    <span className="text-slate-400 text-sm">Tổng số kết quả: {total}</span>
+                    <span className="text-slate-400 text-sm">
+                        Tổng số kết quả: {total}
+                    </span>
                 </div>
 
-                {/* Bộ lọc + phân trang */}
+                {/* Pagination */}
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => setIsFilterModalOpen(true)}
@@ -124,13 +162,14 @@ export default function CategoryTable({ isReloaded }) {
                         Lọc
                     </button>
 
-                    {/* Chọn số lượng mỗi trang */}
+                    {/* Per page */}
                     <select
                         value={perPage}
                         onChange={(e) => {
                             const newSize = Number(e.target.value);
                             setPerPage(newSize);
                             setCurrentPage(1);
+
                             setFilterRequest({
                                 ...filterRequest,
                                 page: 0,
@@ -143,22 +182,9 @@ export default function CategoryTable({ isReloaded }) {
                         <option>10</option>
                         <option>25</option>
                     </select>
-                    <span className="text-slate-400">Danh mục / Trang</span>
+                    <span className="text-slate-400">Bảo hành / Trang</span>
 
-                    {/* Sắp xếp */}
-                    {/* <select
-                        value={sortType}
-                        onChange={(e) => {
-                            setSortType(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
-                    >
-                        <option value="ASC">Sắp xếp: A → Z</option>
-                        <option value="DESC">Sắp xếp: Z → A</option>
-                    </select> */}
-
-                    {/* Điều hướng trang */}
+                    {/* Page number */}
                     <div className="flex items-center gap-2">
                         <span className="text-slate-400 flex items-center gap-1">
                             <input
@@ -180,6 +206,7 @@ export default function CategoryTable({ isReloaded }) {
                             / {totalPages}
                         </span>
 
+                        {/* Prev / Next */}
                         <button
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
@@ -201,13 +228,13 @@ export default function CategoryTable({ isReloaded }) {
             {/* Table */}
             <div className="bg-slate-900 rounded-lg overflow-hidden">
                 {/* Header */}
-                <div className="grid grid-cols-11 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
-                    <div className="col-span-2"># / Ngày tạo</div>
-                    <div className="col-span-2">Icon</div>
-                    <div className="col-span-3">Tên danh mục</div>
-                    <div className="col-span-1">Mã</div>
-                    <div className="col-span-2">Trang chủ</div>
-                    <div className="col-span-1"></div>
+                <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
+                    <div className="col-span-3">Mã / Ngày tạo</div>
+                    <div className="col-span-2">Tên bảo hành</div>
+                    <div className="col-span-2">Thời hạn (tháng)</div>
+                    <div className="col-span-2">Giá</div>
+                    <div className="col-span-2">Mô tả</div>
+                    <div className="col-span-1 text-center"></div>
                 </div>
 
                 {/* Body */}
@@ -215,48 +242,37 @@ export default function CategoryTable({ isReloaded }) {
                     <div className="flex items-center justify-center py-20">
                         <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
                     </div>
-                ) : categories.length === 0 ? (
-                    <div className="text-center text-slate-400 py-6">Không có danh mục nào</div>
+                ) : warranties.length === 0 ? (
+                    <div className="text-center text-slate-400 py-6">Không có bảo hành nào</div>
                 ) : (
-                    categories.map((cat) => {
-                        const date = new Date(cat.createdAt);
-                        const formattedDate = `${String(date.getDate()).padStart(2, "0")}/${String(
-                            date.getMonth() + 1
-                        ).padStart(2, "0")}/${date.getFullYear()} ${String(date.getHours()).padStart(
-                            2,
-                            "0"
-                        )}:${String(date.getMinutes()).padStart(2, "0")}`;
+                    warranties.map((w) => {
+                        const date = w.createdAt ? new Date(w.createdAt) : null;
+                        const formattedDate = date
+                            ? `${String(date.getDate()).padStart(2, "0")}/${String(
+                                date.getMonth() + 1
+                            ).padStart(2, "0")}/${date.getFullYear()}`
+                            : "—";
 
                         return (
                             <div
-                                key={cat.id}
-                                className="grid grid-cols-11 gap-4 px-6 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition"
+                                key={w.id}
+                                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition"
                             >
-                                <div className="col-span-2">
-                                    <div className="font-medium">#{cat.id}</div>
-                                    <div className="text-xs text-slate-400">{formattedDate}</div>
+                                {/* ID + Date */}
+                                <div className="col-span-3">
+                                    <div className="font-medium">#{w.id}</div>
+                                    <div className="text-slate-400 text-sm">{formattedDate}</div>
                                 </div>
-                                <div className="col-span-2">
-                                    <img
-                                        src={cat.icon}
-                                        alt={cat.name}
-                                        className="w-10 h-10 object-cover rounded"
-                                    />
-                                </div>
-                                <div className="col-span-3">{cat.name}</div>
-                                <div className="col-span-1">{cat.code}</div>
-                                <div className="col-span-2">
-                                    {cat.featuredOnHomepage ? (
-                                        <span className="text-green-400">Có</span>
-                                    ) : (
-                                        <span className="text-red-400">Không</span>
-                                    )}
-                                </div>
-                                {/* Cột nút */}
+
+                                <div className="col-span-2">{w.name}</div>
+                                <div className="col-span-2">{w.months} tháng</div>
+                                <div className="col-span-2">{w.price.toLocaleString()} đ</div>
+                                <div className="col-span-2 truncate">{w.description}</div>
+
                                 <div className="col-span-1 text-center">
                                     <button
-                                        onClick={() => navigate(`/admin/categories/view/${cat.id}`)}
                                         className="text-slate-400 hover:text-white transition"
+                                        onClick={() => handleEditClick(w)}
                                     >
                                         <ChevronRight size={20} />
                                     </button>
@@ -267,12 +283,19 @@ export default function CategoryTable({ isReloaded }) {
                 )}
             </div>
 
-            <CategoryFilterModal
+            <WarrantiesFilterModal
                 isOpen={isFilterModalOpen}
                 onClose={() => setIsFilterModalOpen(false)}
                 onApply={handleFilter}
             />
 
+            <EditWarrantyModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                warranty={selectedWarranty}
+                onUpdate={handleUpdateWarranty}
+                onDelete={handleDeleteWarranty}
+            />
         </>
     );
 }

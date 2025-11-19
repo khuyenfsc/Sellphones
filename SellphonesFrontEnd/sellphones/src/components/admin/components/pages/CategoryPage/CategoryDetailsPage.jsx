@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AdminCategoryService from "../../../service/AdminCategoryService";
 import OptionTable from "./components/OptionTable";
+import FilterTable from "./components/FilterTable";
 import EditCategoryModal from "./components/EditCategoryModal";
 import CreateOptionModal from "./components/CreateOptionModal";
 
@@ -88,25 +89,6 @@ const CategoryDetailsPage = () => {
         }
     };
 
-    const handleCreateOption = async (optionData) => {
-        if (!optionData.name?.trim()) {
-            toast.error("Tên option không được để trống");
-            return;
-        }
-
-        try {
-            const res = await AdminCategoryService.createCategoryOption(categoryId, optionData);
-            if (res.success) {
-                toast.success("Tạo option thành công");
-                setIsReloaded(!isReloaded);
-            } else {
-                toast.error(res.message || "Lỗi khi tạo option");
-            }
-        } catch (err) {
-            console.error(err);
-            toast.error("Đã xảy ra lỗi khi tạo option");
-        }
-    };
 
     useEffect(() => {
         fetchCategory();
@@ -131,18 +113,13 @@ const CategoryDetailsPage = () => {
                         <XCircle size={20} />
                         <span className="text-sm font-medium">Xóa Category</span>
                     </button>
-                    <button
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition text-white"
-                        onClick={() => setIsCreateOptionModalOpen(true)}
-                    >
-                        Thêm Option mới
-                    </button>
                 </div>
             </div>
 
             <div className="flex gap-6">
                 {/* Left: Options Table */}
                 <div className="flex-1 flex flex-col gap-6">
+                    <FilterTable categoryId={categoryId} />
                     <OptionTable categoryId={categoryId} isReloaded={isReloaded} />
                 </div>
 
@@ -202,12 +179,6 @@ const CategoryDetailsPage = () => {
                 onClose={() => setIsEditModalOpen(false)}
                 category={category}
                 onUpdate={handleUpdate}
-            />
-
-            <CreateOptionModal  
-                isOpen={isCreateOptionModalOpen}
-                onClose={() => setIsCreateOptionModalOpen(false)}
-                onCreate={handleCreateOption}
             />
         </div>
     );

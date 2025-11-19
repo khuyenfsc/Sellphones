@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import AdminCommentService from "../../../../service/AdminCommentService";
 
 const statusOptions = ["APPROVED", "PENDING", "DISAPPROVED"];
@@ -15,7 +16,6 @@ export default function CommentDetailModal({ isOpen, onClose, comment, setIsRelo
     const [replyLoading, setReplyLoading] = useState(false);
     const navigate = useNavigate();
 
-    // Lưu trạng thái
     const handleSaveStatus = async () => {
         if (!comment) return;
         setLoading(true);
@@ -36,7 +36,6 @@ export default function CommentDetailModal({ isOpen, onClose, comment, setIsRelo
         }
     };
 
-    // Gửi reply
     const handleReplyComment = async () => {
         if (!replyContent.trim()) {
             toast.warning("Vui lòng nhập nội dung phản hồi!");
@@ -60,6 +59,40 @@ export default function CommentDetailModal({ isOpen, onClose, comment, setIsRelo
             toast.error("Đã có lỗi xảy ra khi reply comment");
         } finally {
             setReplyLoading(false);
+        }
+    };
+
+    const handleDeleteComment = async () => {
+        if (!comment) return;
+
+        const confirmResult = await Swal.fire({
+            title: "Bạn chắc chắn?",
+            text: "Comment sẽ bị xóa và không thể khôi phục!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy",
+            reverseButtons: true
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        setLoading(true);
+        try {
+            const res = await AdminCommentService.deleteComment(comment.id);
+
+            if (res.success) {
+                toast.success("Xóa comment thành công!");
+                onClose();
+                setIsReloaded(!isReloaded);
+            } else {
+                toast.error(res.message || "Xóa comment thất bại!");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã có lỗi xảy ra khi xóa comment");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -101,13 +134,28 @@ export default function CommentDetailModal({ isOpen, onClose, comment, setIsRelo
                             <h2 className="text-xl font-semibold text-white">
                                 Chi tiết Comment #{comment.id}
                             </h2>
-                            <button
-                                className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
-                                onClick={handleSaveStatus}
-                                disabled={loading}
-                            >
-                                {loading ? "Đang lưu..." : "Lưu"}
-                            </button>
+
+                            <div className="flex gap-2">
+                                {/* Nút Xóa */}
+                                <button
+                                    className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-600 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                                        }`}
+                                    onClick={handleDeleteComment}
+                                    disabled={loading}
+                                >
+                                    Xóa
+                                </button>
+
+                                {/* Nút Lưu */}
+                                <button
+                                    className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                                        }`}
+                                    onClick={handleSaveStatus}
+                                    disabled={loading}
+                                >
+                                    {loading ? "Đang lưu..." : "Lưu"}
+                                </button>
+                            </div>
                         </div>
 
                         {/* Grid thông tin */}

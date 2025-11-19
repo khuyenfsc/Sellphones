@@ -1,8 +1,8 @@
 import AxiosClient from "../../../api/AxiosClient";
 import AdminService from "./AdminService";
 
-const AdminCommentService = {
-    async getComments(filterRequest) {
+const AdminWarrantyService = {
+    async getWarranties(filterRequest) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -12,26 +12,24 @@ const AdminCommentService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get("/admin/comments", {
+            const res = await AxiosClient.get("/admin/warranties", {
                 headers: { Authorization: `Bearer ${token}` },
                 params: filterRequest,
             });
 
-            const data = res?.data?.comments || [];
+            const data = res?.data?.warranties || {};
             return { success: true, data };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.get("/admin/comments", {
+                        const retryRes = await AxiosClient.get("/admin/warranties", {
                             headers: { Authorization: `Bearer ${newToken}` },
                             params: filterRequest,
                         });
-                        const data = retry?.data?.comments || [];
+                        const data = retryRes?.data?.warranties || {};
                         return { success: true, data };
                     } catch { }
                 }
@@ -39,12 +37,12 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách comment",
+                message: err?.response?.data?.message || "Lỗi khi lấy danh sách bảo hành",
             };
         }
     },
 
-    async getCommentById(commentId) {
+    async getWarrantyById(warrantyId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -54,25 +52,22 @@ const AdminCommentService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get(`/admin/comments/${commentId}`, {
+            const res = await AxiosClient.get(`/admin/warranties/${warrantyId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            const data = res?.data?.result || {};
+            const data = res?.data?.result || null;
             return { success: true, data };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.get(`/admin/comments/${commentId}`, {
+                        const retryRes = await AxiosClient.get(`/admin/warranties/${warrantyId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
-
-                        const data = retry?.data?.result || {};
+                        const data = retryRes?.data?.result || null;
                         return { success: true, data };
                     } catch { }
                 }
@@ -80,12 +75,12 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy comment",
+                message: err?.response?.data?.message || "Lỗi khi lấy thông tin bảo hành",
             };
         }
     },
 
-    async replyComment(commentId, replyData) {
+    async createWarranty(warrantyData) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -95,50 +90,39 @@ const AdminCommentService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post(
-                `/admin/comments/${commentId}/reply-comment`,
-                replyData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const res = await AxiosClient.post("/admin/warranties/create-warranty", warrantyData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+            });
 
             return { success: true, data: res?.data };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.post(
-                            `/admin/comments/${commentId}/reply-comment`,
-                            replyData,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${newToken}`,
-                                    "Content-Type": "application/json",
-                                },
-                            }
-                        );
-
-                        return { success: true, data: retry?.data };
+                        const retryRes = await AxiosClient.post("/admin/warranties/create-warranty", warrantyData, {
+                            headers: {
+                                Authorization: `Bearer ${newToken}`,
+                                "Content-Type": "application/json"
+                            },
+                        });
+                        return { success: true, data: retryRes?.data };
                     } catch { }
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi reply comment",
+                message: err?.response?.data?.errors?.message || "Lỗi khi tạo bảo hành",
             };
         }
     },
 
-    async updateComment(commentId, commentData) {
+    async updateWarranty(warrantyId, warrantyData) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -149,49 +133,46 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/comments/update-comment/${commentId}`,
-                commentData,
+                `/admin/warranties/update-warranty/${warrantyId}`,
+                warrantyData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    }
+                        "Content-Type": "application/json"
+                    },
                 }
             );
 
             return { success: true, data: res?.data };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.put(
-                            `/admin/comments/update-comment/${commentId}`,
-                            commentData,
+                        const retryRes = await AxiosClient.put(
+                            `/admin/warranties/update-warranty/${warrantyId}`,
+                            warrantyData,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,
-                                    "Content-Type": "application/json",
-                                }
+                                    "Content-Type": "application/json"
+                                },
                             }
                         );
-
-                        return { success: true, data: retry?.data };
+                        return { success: true, data: retryRes?.data };
                     } catch { }
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật comment",
+                message: err?.response?.data?.errors?.message || "Lỗi khi cập nhật bảo hành",
             };
         }
     },
 
-    async deleteComment(commentId) {
+    async deleteWarranty(warrantyId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -202,37 +183,42 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/comments/delete-comment/${commentId}`,
+                `/admin/warranties/delete-warranty/${warrantyId}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
                 }
             );
 
             return { success: true, data: res?.data };
-
         } catch (err) {
             if (err.response?.status === 401) {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.delete(
-                            `/admin/comments/delete-comment/${commentId}`,
-                            { headers: { Authorization: `Bearer ${newToken}` } }
+                        const retryRes = await AxiosClient.delete(
+                            `/admin/warranties/delete-warranty/${warrantyId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                    "Content-Type": "application/json"
+                                },
+                            }
                         );
-
-                        return { success: true, data: retry?.data };
+                        return { success: true, data: retryRes?.data };
                     } catch { }
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa comment",
+                message: err?.response?.data?.errors?.message || "Lỗi khi xóa bảo hành",
             };
         }
     },
 };
 
-export default AdminCommentService;
+export default AdminWarrantyService;

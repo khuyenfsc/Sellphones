@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminReviewRequest {
+public class AdminUpdateReviewRequest {
     private ReviewStatus status;
 }

@@ -1,8 +1,8 @@
 import AxiosClient from "../../../api/AxiosClient";
 import AdminService from "./AdminService";
 
-const AdminCommentService = {
-    async getComments(filterRequest) {
+const AdminReviewService = {
+    async getReviews(filterRequest) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -12,12 +12,12 @@ const AdminCommentService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get("/admin/comments", {
+            const res = await AxiosClient.get("/admin/reviews", {
                 headers: { Authorization: `Bearer ${token}` },
                 params: filterRequest,
             });
 
-            const data = res?.data?.comments || [];
+            const data = res?.data?.reviews || [];
             return { success: true, data };
 
         } catch (err) {
@@ -25,26 +25,26 @@ const AdminCommentService = {
                 const refresh = await AdminService.refreshToken();
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
-
                     try {
-                        const retry = await AxiosClient.get("/admin/comments", {
+                        const retry = await AxiosClient.get("/admin/reviews", {
                             headers: { Authorization: `Bearer ${newToken}` },
                             params: filterRequest,
                         });
-                        const data = retry?.data?.comments || [];
+
+                        const data = retry?.data?.reviews || [];
                         return { success: true, data };
-                    } catch { }
+                    } catch {}
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách comment",
+                message: err?.response?.data?.message || "Lỗi khi lấy danh sách review",
             };
         }
     },
 
-    async getCommentById(commentId) {
+    async getReviewById(reviewId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -54,7 +54,7 @@ const AdminCommentService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.get(`/admin/comments/${commentId}`, {
+            const res = await AxiosClient.get(`/admin/reviews/${reviewId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -68,77 +68,24 @@ const AdminCommentService = {
                     const newToken = refresh.accessToken;
 
                     try {
-                        const retry = await AxiosClient.get(`/admin/comments/${commentId}`, {
+                        const retry = await AxiosClient.get(`/admin/reviews/${reviewId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
 
                         const data = retry?.data?.result || {};
                         return { success: true, data };
-                    } catch { }
+                    } catch {}
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy comment",
+                message: err?.response?.data?.message || "Lỗi khi lấy review",
             };
         }
     },
 
-    async replyComment(commentId, replyData) {
-        try {
-            let token = localStorage.getItem("adminAccessToken");
-
-            if (!token) {
-                const refresh = await AdminService.refreshToken();
-                if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
-                token = refresh.accessToken;
-            }
-
-            const res = await AxiosClient.post(
-                `/admin/comments/${commentId}/reply-comment`,
-                replyData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            return { success: true, data: res?.data };
-
-        } catch (err) {
-            if (err.response?.status === 401) {
-                const refresh = await AdminService.refreshToken();
-                if (refresh.success) {
-                    const newToken = refresh.accessToken;
-
-                    try {
-                        const retry = await AxiosClient.post(
-                            `/admin/comments/${commentId}/reply-comment`,
-                            replyData,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${newToken}`,
-                                    "Content-Type": "application/json",
-                                },
-                            }
-                        );
-
-                        return { success: true, data: retry?.data };
-                    } catch { }
-                }
-            }
-
-            return {
-                success: false,
-                message: err?.response?.data?.message || "Lỗi khi reply comment",
-            };
-        }
-    },
-
-    async updateComment(commentId, commentData) {
+    async updateReview(reviewId, reviewData) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -149,8 +96,8 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/comments/update-comment/${commentId}`,
-                commentData,
+                `/admin/reviews/update-review/${reviewId}`,
+                reviewData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -169,8 +116,8 @@ const AdminCommentService = {
 
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/comments/update-comment/${commentId}`,
-                            commentData,
+                            `/admin/reviews/update-review/${reviewId}`,
+                            reviewData,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,
@@ -180,18 +127,18 @@ const AdminCommentService = {
                         );
 
                         return { success: true, data: retry?.data };
-                    } catch { }
+                    } catch {}
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật comment",
+                message: err?.response?.data?.message || "Lỗi khi cập nhật review",
             };
         }
     },
 
-    async deleteComment(commentId) {
+    async deleteReview(reviewId) {
         try {
             let token = localStorage.getItem("adminAccessToken");
 
@@ -202,10 +149,8 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/comments/delete-comment/${commentId}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
+                `/admin/reviews/delete-review/${reviewId}`,
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
             return { success: true, data: res?.data };
@@ -218,21 +163,21 @@ const AdminCommentService = {
 
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/comments/delete-comment/${commentId}`,
+                            `/admin/reviews/delete-review/${reviewId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
 
                         return { success: true, data: retry?.data };
-                    } catch { }
+                    } catch {}
                 }
             }
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa comment",
+                message: err?.response?.data?.message || "Lỗi khi xóa review",
             };
         }
     },
 };
 
-export default AdminCommentService;
+export default AdminReviewService;
