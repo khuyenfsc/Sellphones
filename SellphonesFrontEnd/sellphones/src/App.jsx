@@ -44,6 +44,7 @@ import { AdminAuthProvider } from "./components/admin/context/AdminAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminWarrantyPage from "./components/admin/components/pages/WarrantyPage/AdminWarrantyPage";
+import AdminGiftProductPage from "./components/admin/components/pages/GiftProductPage/AdminGIftProductPage";
 
 export default function App() {
   return (
@@ -163,6 +164,7 @@ export default function App() {
           <Route path="comments" element={<AdminCommentPage />} />
           <Route path="reviews" element={<AdminReviewPage />} />
           <Route path="warranties" element={<AdminWarrantyPage />} />
+          <Route path="gift_products" element={<AdminGiftProductPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

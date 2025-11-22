@@ -1,6 +1,8 @@
 package com.sellphones.dto.product.admin;
 
+import com.sellphones.entity.product.ConditionKey;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,8 @@ public class AdminFilterOptionRequest {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String key;
+    @NotNull
+    private ConditionKey cond;
 
     @NotBlank
     private String val1;

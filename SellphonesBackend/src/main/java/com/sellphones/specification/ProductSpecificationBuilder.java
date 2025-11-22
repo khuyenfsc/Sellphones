@@ -138,10 +138,11 @@ public class ProductSpecificationBuilder {
             query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
+            System.out.println("hasAttributeContains " + id + " " + attributeVal);
 
             return cb.and(
                     cb.equal(pv_av.get("attribute").get("id"), id),
-                    cb.like(pv_av.get("strVal"), "%" + attributeVal + "%")
+                    cb.like(cb.lower(pv_av.get("strVal")), "%" + attributeVal.toLowerCase() + "%")
             );
         };
 

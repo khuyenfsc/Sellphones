@@ -113,7 +113,6 @@ const ProductService = {
         }
       });
 
-      // 🔹 Bước 2: Format body request
       const filterRequest = {
         query: {
           _static: {

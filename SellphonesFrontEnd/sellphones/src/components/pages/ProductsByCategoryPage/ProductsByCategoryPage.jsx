@@ -36,7 +36,7 @@ const ProductsByCategoryPage = () => {
     setSelectedOptions((prev) => ({
       ...prev,
       [filterGroup.name]: {
-        groupId: filterGroup.id,
+        groupId: filterGroup?.attribute?.id,
         groupName: filterGroup.name,
         optionName: option.name,
         condition: option.condition
@@ -189,7 +189,7 @@ const ProductsByCategoryPage = () => {
                             key={optIdx}
                             onClick={() => {
                               handleSelectOption(filterGroup, option);
-                              setActiveFilterGroup(null); // 👈 đóng popup ngay sau khi chọn
+                              setActiveFilterGroup(null); 
                             }}
                             className={`block w-full text-left px-3 py-1.5 rounded-md text-sm font-medium transition-all ${selectedOptions[filterGroup.name]?.condition === option.condition
                               ? "bg-red-600 text-white"

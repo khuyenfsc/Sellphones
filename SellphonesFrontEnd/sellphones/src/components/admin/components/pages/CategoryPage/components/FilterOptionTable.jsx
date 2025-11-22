@@ -4,13 +4,16 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import AdminCategoryService from "../../../../service/AdminCategoryService";
 import { useNavigate, useParams } from "react-router-dom";
+import EditFilterOptionModal from "./EditFilterOptionModal";
 
-export default function FilterOptionTable({ filterId }) {
+export default function FilterOptionTable({ filterId, isReloaded }) {
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { categoryId } = useParams();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     // Search & Pagination & Sorting
     const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +54,39 @@ export default function FilterOptionTable({ filterId }) {
 
     useEffect(() => {
         fetchOptions();
-    }, [filterId, currentPage, perPage, sortType]);
+    }, [filterId, currentPage, perPage, sortType, isReloaded]);
+
+    const handleUpdateOption = async (optionId, optionData) => {
+        try {
+            const res = await AdminCategoryService.updateFilterOption(optionId, optionData);
+
+            if (res.success) {
+                toast.success("Cập nhật option thành công");
+                fetchOptions();
+            } else {
+                toast.error(res.message || "Lỗi khi cập nhật option");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi cập nhật option");
+        }
+    };
+
+    const handleDeleteOption = async (optionId) => {
+        try {
+            const res = await AdminCategoryService.deleteFilterOption(optionId);
+
+            if (res.success) {
+                toast.success("Đã xóa option thành công");
+                fetchOptions();  
+            } else {
+                toast.error(res.message || "Lỗi khi xóa option");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Đã xảy ra lỗi khi xóa option");
+        }
+    };
 
     const handleSearchKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -189,11 +224,10 @@ export default function FilterOptionTable({ filterId }) {
 
                             <div className="col-span-2 text-center">
                                 <button
-                                    onClick={() =>
-                                        navigate(
-                                            `/admin/categories/${categoryId}/filters/view/${filterId}/options/view/${op.id}`
-                                        )
-                                    }
+                                    onClick={() => {
+                                        setSelectedOption(op);
+                                        setIsEditModalOpen(true);
+                                    }}
                                     className="text-slate-400 hover:text-white"
                                 >
                                     <ChevronRight size={20} />
@@ -203,6 +237,14 @@ export default function FilterOptionTable({ filterId }) {
                     ))
                 )}
             </div>
+
+            <EditFilterOptionModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                option={selectedOption}
+                onUpdate={handleUpdateOption}
+                onDelete={handleDeleteOption}
+            />
         </>
     );
 }

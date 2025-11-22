@@ -15,7 +15,11 @@ public class AdminGiftProductFilterRequest {
 
     private String sortType;
 
+    @Min(0)
     private Long maxStock;
+
+    @Min(0)
+    private Long minStock;
 
     @Min(0)
     private Long minPrice;

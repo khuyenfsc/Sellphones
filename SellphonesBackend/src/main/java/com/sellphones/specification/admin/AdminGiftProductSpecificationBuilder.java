@@ -13,7 +13,7 @@ public class AdminGiftProductSpecificationBuilder {
         }
 
         if(request.getMaxStock() != null){
-            spec = spec.and(hasStockLessOrEqualTo(request.getMaxStock()));
+            spec = spec.and(hasStockBetween(request.getMinStock(), request.getMaxStock()));
         }
 
         if(request.getMinPrice() != null && request.getMaxPrice() != null){
@@ -27,8 +27,10 @@ public class AdminGiftProductSpecificationBuilder {
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
-    public static Specification<GiftProduct> hasStockLessOrEqualTo(Long maxStock){
-        return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("stock"), maxStock);
+    public static Specification<GiftProduct> hasStockBetween(Long minStock, Long maxStock){
+        return (root, query, cb) -> cb.between(
+                root.get("stock"), minStock, maxStock
+        );
     }
 
     public static Specification<GiftProduct> priceBetween(Long minPrice, Long maxPrice){

@@ -56,8 +56,8 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.VIEW')")
     public PageResponse<AdminGiftProductResponse> getGiftProducts(AdminGiftProductFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "price");
+                .orElse(Sort.Direction.DESC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<GiftProduct> spec = AdminGiftProductSpecificationBuilder.build(request);

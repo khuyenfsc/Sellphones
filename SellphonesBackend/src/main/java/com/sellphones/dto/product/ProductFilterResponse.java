@@ -16,5 +16,7 @@ public class ProductFilterResponse {
 
     private String name;
 
+    private AttributeResponse attribute;
+
     private List<FilterOptionResponse> filterOptions = new ArrayList<>();
 }

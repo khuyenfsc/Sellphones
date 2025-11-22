@@ -1,6 +1,7 @@
 package com.sellphones.dto.product.admin;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,6 @@ public class AdminFilterOptionResponse {
 
     private String val1;
 
-    @Nullable
     private String val2;
 
     private LocalDateTime createdAt;

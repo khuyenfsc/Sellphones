@@ -49,14 +49,14 @@ public class FilterOptionToAdminFilterOptionResponseConverter
                 dest.setKey("Chứa");
                 dest.setVal1(parts[1]);
 
-            } else { // trong khoảng
+            } else {
                 dest.setKey("Trong khoảng");
                 dest.setVal1(parts[0]);
                 dest.setVal2(parts[1]);
             }
 
         } catch (NumberFormatException e) {
-            System.err.println("⚠️ Lỗi parse số trong điều kiện: " + condition);
+            System.err.println("Lỗi parse số trong điều kiện: " + condition);
         }
     }
 }

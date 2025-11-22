@@ -325,6 +325,7 @@ const AdminCategoryService = {
 
 
     async updateFilter(filterId, body) {
+        console.log(body);
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -474,7 +475,7 @@ const AdminCategoryService = {
                 }
             }
 
-            console.error("❌ Lỗi createFilterOption:", err.message);
+            console.error("Lỗi createFilterOption:", err.message);
             return {
                 success: false,
                 message: err?.response?.data?.message || "Lỗi tạo option"

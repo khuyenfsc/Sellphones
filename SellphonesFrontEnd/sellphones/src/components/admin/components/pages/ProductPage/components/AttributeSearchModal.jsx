@@ -9,14 +9,12 @@ export default function AttributeSearchModal({
 
 }) {
     const [query, setQuery] = useState("");
-
-    // Attribute
+    
     const [attributes, setAttributes] = useState([]);
     const [attrTotal, setAttrTotal] = useState(0);
     const [attrPage, setAttrPage] = useState(0);
     const attrPageSize = 2;
 
-    // Values
     const [selectedAttribute, setSelectedAttribute] = useState(null);
     const [values, setValues] = useState([]);
     const [totalValues, setTotalValues] = useState(0);
@@ -25,9 +23,6 @@ export default function AttributeSearchModal({
 
     const [loading, setLoading] = useState(false);
 
-    // -----------------------------
-    // RESET
-    // -----------------------------
     const resetAll = () => {
         setQuery("");
         setAttributes([]);
@@ -39,9 +34,6 @@ export default function AttributeSearchModal({
         setCurrentPage(0);
     };
 
-    // -----------------------------
-    // LOAD ATTRIBUTES
-    // -----------------------------
     const loadAttributes = async (page = 0, keyword = null, append = false) => {
         setLoading(true);
         try {
@@ -73,9 +65,6 @@ export default function AttributeSearchModal({
         loadAttributes(attrPage + 1, query.trim() !== "" ? query.trim() : null, true);
     };
 
-    // -----------------------------
-    // LOAD VALUES
-    // -----------------------------
     const loadValues = async (attributeId, page = 0, keyword = null, append = false) => {
         setLoading(true);
         try {
@@ -108,9 +97,6 @@ export default function AttributeSearchModal({
         loadValues(selectedAttribute.id, currentPage + 1, query.trim() !== "" ? query.trim() : null, true);
     };
 
-    // -----------------------------
-    // HANDLERS
-    // -----------------------------
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             if (selectedAttribute) {
@@ -152,27 +138,19 @@ export default function AttributeSearchModal({
         setCurrentPage(0);
     };
 
-    // -----------------------------
-    // AUTO LOAD WHEN OPEN
-    // -----------------------------
     useEffect(() => {
         if (isOpen) {
             resetAll();
 
             if (initialAttributeValue) {
-                // nếu có attribute truyền vào → mở luôn phần values
                 setSelectedAttribute(initialAttributeValue.attribute);
                 loadValues(initialAttributeValue.attribute.id, 0, null, false);
             } else {
-                // mở bình thường → load danh sách attributes
                 loadAttributes(0, null, false);
             }
         }
     }, [isOpen, initialAttributeValue]);
 
-    // -----------------------------
-    // RENDER
-    // -----------------------------
     return (
         <AnimatePresence>
             {isOpen && (
@@ -197,7 +175,6 @@ export default function AttributeSearchModal({
                             {selectedAttribute ? `Giá trị của: ${selectedAttribute.name}` : "Tìm kiếm Attribute"}
                         </h2>
 
-                        {/* Nút tạo mới */}
                         <div className="mb-4 flex justify-end">
                             {!selectedAttribute ? (
                                 <span
@@ -216,8 +193,6 @@ export default function AttributeSearchModal({
                             )}
                         </div>
 
-
-                        {/* INPUT */}
                         <div className="mb-4 relative">
                             <input
                                 type="text"
@@ -237,14 +212,12 @@ export default function AttributeSearchModal({
                             )}
                         </div>
 
-                        {/* BACK BUTTON */}
                         {selectedAttribute && (
                             <div className="mb-2 text-blue-400 text-sm cursor-pointer hover:underline" onClick={handleBackToAttributes}>
                                 ← Quay lại danh sách Attribute
                             </div>
                         )}
 
-                        {/* ATTRIBUTE LIST */}
                         {!selectedAttribute && (
                             <div className="mt-2">
                                 <div className="space-y-1 max-h-[60vh] overflow-auto">
@@ -268,7 +241,6 @@ export default function AttributeSearchModal({
                             </div>
                         )}
 
-                        {/* VALUE LIST */}
                         {selectedAttribute && (
                             <>
                                 <div className="space-y-1 max-h-[60vh] overflow-auto">

@@ -16,6 +16,8 @@ public class AdminProductFilterResponse {
 
     private String name;
 
+    private AdminAttributeResponse attribute;
+
     private LocalDateTime createdAt;
 
 }

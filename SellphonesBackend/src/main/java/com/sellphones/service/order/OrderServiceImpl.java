@@ -190,6 +190,10 @@ public class OrderServiceImpl implements OrderService{
             }
             Warranty warranty = productVariant.getWarranties().stream().filter(w -> w.getId().equals(warrantyIdMap.get(cartItem.getId()))).findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
             productVariant.setStock(productVariant.getStock() - cartItem.getQuantity());
+            for(GiftProduct gf : productVariant.getGiftProducts()){
+                long newGiftStock = gf.getStock() - 1;
+                gf.setStock((newGiftStock >= 0)?newGiftStock:0);
+            }
 
             OrderVariant orderVariant = OrderVariant.builder()
                     .order(order)

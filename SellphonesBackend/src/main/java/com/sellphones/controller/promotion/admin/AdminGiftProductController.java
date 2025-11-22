@@ -25,7 +25,7 @@ public class AdminGiftProductController {
     public ResponseEntity<CommonResponse> getGiftProducts(AdminGiftProductFilterRequest request){
         PageResponse<AdminGiftProductResponse> response = adminGiftProductService.getGiftProducts(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("giftProducts", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 

@@ -6,7 +6,6 @@ export default function EditOptionModal({ isOpen, onClose, onUpdate, option }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // Khi mở modal → tải dữ liệu option
     useEffect(() => {
         if (isOpen && option) {
             setName(option.name || "");
