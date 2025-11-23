@@ -50,5 +50,7 @@ public class AppConstants {
 
     public static String JWT_HEADER = "Authorization";
 
+    public final static String PRODUCT_VARIANT_IMAGE_FOLDER = "product_variant_images";
 
+    public final static String GIFT_PRODUCT_IMAGE_FOLDER = "gift_products";
 }

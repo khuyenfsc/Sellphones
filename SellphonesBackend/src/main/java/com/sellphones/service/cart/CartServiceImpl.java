@@ -1,17 +1,22 @@
 package com.sellphones.service.cart;
 
 import com.sellphones.dto.cart.CartItemRequest;
+import com.sellphones.dto.cart.CartItemResponse;
 import com.sellphones.dto.cart.CartResponse;
 import com.sellphones.dto.cart.ItemQuantityRequest;
+import com.sellphones.dto.product.CartItemVariantResponse;
 import com.sellphones.entity.cart.Cart;
 import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.promotion.GiftProduct;
+import com.sellphones.entity.promotion.ProductPromotion;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.ProductMapper;
 import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.cart.CartRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
+import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
@@ -21,7 +26,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,34 +40,54 @@ public class CartServiceImpl implements CartService{
 
     private final ModelMapper modelMapper;
 
+    private final ProductMapper productMapper;
+
     private final ProductVariantRepository productVariantRepository;
 
     private final CartItemRepository cartItemRepository;
 
+    private final ProductPromotionRepository productPromotionRepository;
+
     private final ProductUtils productUtils;
-
-    private final String variantImageFolderName = "product_variant_images";
-
-    private final String giftProductFolderName = "gift_products";
 
     private final static Long DEFAULT_QUANTITY = 1L;
 
     @Override
     public CartResponse getCart() {
         Cart cart = getCurrentUserCart();
+        CartResponse response = modelMapper.map(cart, CartResponse.class);
+
         List<CartItem> cartItems = cart.getCartItems();
 
-        for(CartItem ci : cartItems){
-            ProductVariant variant = ci.getProductVariant();
-            variant.setVariantImage(ImageNameToImageUrlConverter.convert(variant.getVariantImage(), variantImageFolderName));
+        List<Long> variantIds = cartItems.stream()
+                .map(ci -> ci.getProductVariant().getId())
+                .toList();
+        Set<ProductPromotion> allPromotions = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
 
-            List<GiftProduct> giftProducts = variant.getGiftProducts();
-            for(GiftProduct gp : giftProducts){
-                gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), giftProductFolderName));
-            }
-        }
+        Map<Long, List<ProductPromotion>> promotionMap = allPromotions.stream()
+                .flatMap(p -> p.getProductVariants().stream()
+                    .map(v -> Map.entry(v.getId(), p))
+                )
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                    Collectors.mapping(Map.Entry::getValue, Collectors.toList()))
+                );
 
-        return modelMapper.map(cart, CartResponse.class);
+        response.setCartItems(
+            cartItems.stream()
+                    .map(item -> {
+                        ProductVariant variant = item.getProductVariant();
+                        CartItemResponse resp = modelMapper.map(item, CartItemResponse.class);
+
+                        CartItemVariantResponse itemVariantResponse = productMapper.mapToCartItemVariantResponse(
+                                variant, promotionMap.get(variant.getId()), variant.getGiftProducts()
+                        );
+                        resp.setProductVariant(itemVariantResponse);
+
+                        return resp;
+                    }).toList()
+        );
+
+        return response;
     }
 
     @Override

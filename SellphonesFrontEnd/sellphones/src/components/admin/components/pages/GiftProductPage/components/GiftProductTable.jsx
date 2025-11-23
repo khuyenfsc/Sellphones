@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ChevronRight, ChevronLeft, Search, Filter  } from "lucide-react";
+import { ChevronRight, ChevronLeft, Search, Filter } from "lucide-react";
 import { toast } from "react-toastify";
 import AdminGiftProductService from "../../../../service/AdminGiftProductService";
-// import EditGiftProductModal from "./EditGiftProductModal";
+import GiftProductFilterModal from "./GiftProductFilterModal";
+import EditGiftProductModal from "./EditGiftProductModal";
 
 export default function GiftProductTable({ isReloaded }) {
     const [products, setProducts] = useState([]);
@@ -63,6 +64,23 @@ export default function GiftProductTable({ isReloaded }) {
         } else {
             toast.error(res.message || "Lỗi khi xóa");
         }
+    };
+
+    const handleFilter = (filters) => {
+        const cleanFilters = {};
+
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== "" && value !== null && value !== undefined) {
+                cleanFilters[key] = value;
+            }
+        });
+
+        setFilterRequest({
+            ...cleanFilters,
+            page: 0,
+        });
+
+        setCurrentPage(1);
     };
 
     useEffect(() => setInputValue(currentPage), [currentPage]);
@@ -235,13 +253,19 @@ export default function GiftProductTable({ isReloaded }) {
                 )}
             </div>
 
-            {/* <EditGiftProductModal
+            <GiftProductFilterModal
+                isOpen={isFilterModalOpen}
+                onClose={() => setIsFilterModalOpen(false)}
+                onApply={handleFilter}
+            />
+
+            <EditGiftProductModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
-                product={selectedProduct}
-            /> */}
+                gift={selectedProduct}
+            />
         </>
     );
 }

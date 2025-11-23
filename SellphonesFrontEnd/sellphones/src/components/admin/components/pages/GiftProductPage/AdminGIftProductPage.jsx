@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import GiftProductTable from "./components/GiftProductTable";
-// import CreateGiftProductModal from "./components/CreateGiftProductModal";
+import CreateGiftProductModal from "./components/CreateGiftProductModal";
 import AdminGiftProductService from "../../../service/AdminGiftProductService";
 
 const AdminGiftProductPage = () => {
@@ -49,11 +49,11 @@ const AdminGiftProductPage = () => {
             <GiftProductTable isReloaded={isReloaded} />
 
             {/* Modal tạo sản phẩm quà tặng */}
-            {/* <CreateGiftProductModal
+            <CreateGiftProductModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={handleCreate}
-            /> */}
+            />
         </div>
     );
 };

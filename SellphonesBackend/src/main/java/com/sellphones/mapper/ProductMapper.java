@@ -1,14 +1,22 @@
 package com.sellphones.mapper;
 
+import com.sellphones.constant.AppConstants;
+import com.sellphones.dto.product.CartItemVariantResponse;
+//import com.sellphones.dto.product.ProductPromotionResponse;
+import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.dto.product.admin.AdminProductRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantRequest;
 import com.sellphones.dto.product.admin.AdminUpdateProductRequest;
 import com.sellphones.dto.product.admin.AdminUpdateProductVariantRequest;
+import com.sellphones.dto.promotion.GiftProductResponse;
+import com.sellphones.dto.promotion.ProductPromotionResponse;
 import com.sellphones.entity.product.*;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
+import com.sellphones.utils.ImageNameToImageUrlConverter;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +28,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ProductMapper {
+
+    private final ModelMapper modelMapper;
 
     public Product mapToCreatedProductEntity(
         AdminProductRequest request,
@@ -38,6 +48,63 @@ public class ProductMapper {
                 .images(imageNames)
                 .createdAt(LocalDateTime.now())
                 .build();
+    }
+
+    public ProductVariantResponse mapToProductVariantResponse(
+        ProductVariant productVariant,
+        List<ProductPromotion> promotions,
+        List<GiftProduct> giftProducts
+    ){
+        ProductVariantResponse response = modelMapper.map(productVariant, ProductVariantResponse.class);
+
+        response.setPromotions(
+                promotions.stream()
+                        .map(p -> modelMapper.map(p, ProductPromotionResponse.class))
+                        .toList()
+        );
+
+        response.setVariantImage(ImageNameToImageUrlConverter.convert(
+                productVariant.getVariantImage(), AppConstants.PRODUCT_VARIANT_IMAGE_FOLDER));
+
+        response.setGiftProducts(
+                giftProducts.stream()
+                        .map(gp -> {
+                            GiftProductResponse r = modelMapper.map(gp, GiftProductResponse.class);
+                            r.setThumbnail(ImageNameToImageUrlConverter.convert(r.getThumbnail(), AppConstants.GIFT_PRODUCT_IMAGE_FOLDER));
+                            return r;
+                        }).toList()
+        );
+
+        return  response;
+    }
+
+    public CartItemVariantResponse mapToCartItemVariantResponse(
+            ProductVariant productVariant,
+            List<ProductPromotion> promotions,
+            List<GiftProduct> giftProducts
+    ){
+        CartItemVariantResponse response = modelMapper.map(productVariant, CartItemVariantResponse.class);
+        response.setPromotions(
+                promotions == null
+                        ? List.of()
+                        : promotions.stream()
+                        .map(p -> modelMapper.map(p, ProductPromotionResponse.class))
+                        .toList()
+        );
+
+        response.setVariantImage(ImageNameToImageUrlConverter.convert(
+                productVariant.getVariantImage(), AppConstants.PRODUCT_VARIANT_IMAGE_FOLDER));
+
+        response.setGiftProducts(
+                giftProducts.stream()
+                        .map(gp -> {
+                            GiftProductResponse r = modelMapper.map(gp, GiftProductResponse.class);
+                            r.setThumbnail(ImageNameToImageUrlConverter.convert(r.getThumbnail(), AppConstants.GIFT_PRODUCT_IMAGE_FOLDER));
+                            return r;
+                        }).toList()
+        );
+
+        return  response;
     }
 
     public Product mapToEditedProductEntity(

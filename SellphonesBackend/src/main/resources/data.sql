@@ -196,6 +196,15 @@ INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
 --  FOREIGN KEY (product_variant_id) REFERENCES product_variant(id)
 --  ON DELETE SET NULL;
 
+-- 1. Xóa khóa ngoại cũ nếu tồn tại
+--ALTER TABLE product_variant_gift
+--DROP FOREIGN KEY fk_order_variant_product_variant;
+--
+-- 2. Thêm lại khóa ngoại mới
+--ALTER TABLE product_variant_gift
+--  ADD CONSTRAINT fk_user_review
+--  FOREIGN KEY (gift_product_id) REFERENCES gift_product(id)
+--  ON DELETE SET NULL;
 
 INSERT INTO brand(name, brand_icon, created_at) VALUES ('Apple', 'frame_59.jpg', CURRENT_TIMESTAMP);
 INSERT INTO brand(name, brand_icon, created_at) VALUES ('Google', 'sq-google-g-logo-update_dezeen_2364_col_0.jpg', CURRENT_TIMESTAMP);
@@ -1005,7 +1014,7 @@ VALUES
 ('Giảm 1 triệu iPhone 15 128GB', 'Giảm trực tiếp 1,000,000đ', 'DISCOUNT_AMOUNT',
  '{"amount":1000000}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-01', '2025-09-30'),
 ('Voucher iPhone128-5%', 'Nhập mã IP128 giảm thêm 5%', 'DISCOUNT_PERCENT',
- '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-09-25');
+ '{"percent":5}', '{"paymentMethods":["CASH","VNPAY"]}', '2025-09-05', '2025-11-25');
 
 
 -- iPhone 15 256GB có 3 khuyến mãi

@@ -4,18 +4,23 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.*;
 //import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 //import com.sellphones.elasticsearch.ProductDocument;
+import com.sellphones.dto.promotion.GiftProductResponse;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.promotion.GiftProduct;
+import com.sellphones.entity.promotion.ProductPromotion;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.ProductMapper;
 import com.sellphones.repository.product.ProductRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
+import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.specification.ProductSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.DestinationSetter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,15 +42,16 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductVariantRepository productVariantRepository;
 
+    private final ProductPromotionRepository productPromotionRepository;
+
     private final ModelMapper modelMapper;
+
+    private final ProductMapper productMapper;
 
     private final String thumbnailFolderName = "product_thumbnails";
 
     private final String productImagesFolder = "product_images";
 
-    private final String productVariantImageFolder = "product_variant_images";
-
-    private final String giftProductThumbnailFolder = "gift_products";
 
     @Override
     public List<ProductListResponse> getAllProducts() {
@@ -117,11 +123,15 @@ public class ProductServiceImpl implements ProductService{
         ProductVariant productVariant = productVariantRepository
                 .findByIdAndStatus(id, ProductStatus.ACTIVE)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        productVariant.setVariantImage(ImageNameToImageUrlConverter.convert(productVariant.getVariantImage(), productVariantImageFolder));
-        for(GiftProduct giftProduct : productVariant.getGiftProducts()){
-            giftProduct.setThumbnail(ImageNameToImageUrlConverter.convert(giftProduct.getThumbnail(), giftProductThumbnailFolder));
-        }
-        return modelMapper.map(productVariant, ProductVariantResponse.class);
+
+        ProductVariantResponse response = modelMapper.typeMap(ProductVariant.class, ProductVariantResponse.class)
+                .addMappings(m -> m.skip(ProductVariantResponse::setPromotions))
+                .map(productVariant);
+
+        List<ProductPromotion> promotions = productPromotionRepository.findActivePromotions(id);
+        List<GiftProduct> giftProducts = productVariant.getGiftProducts();
+
+        return productMapper.mapToProductVariantResponse(productVariant, promotions, giftProducts);
     }
 
 //    @Override

@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -51,7 +52,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "product_variant_promotion",
             joinColumns = @JoinColumn(name = "product_variant_id"),
             inverseJoinColumns = @JoinColumn(name = "product_promotion_id"))
@@ -62,6 +63,7 @@ public class ProductVariant extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "product_variant_id"),
             inverseJoinColumns = @JoinColumn(name = "gift_product_id")
     )
+    @BatchSize(size = 50)
     private List<GiftProduct> giftProducts;
 
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -77,7 +79,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @Column
     private long stock = 0;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "variant_warranty",
             joinColumns = @JoinColumn(name = "product_variant_id"),

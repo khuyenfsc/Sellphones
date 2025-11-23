@@ -11,18 +11,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPromotionResponse {
+    private Long id;
 
     private String name;
 
-    private String description;
-
-    private String config;
-
-    private PromotionType type;
-
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+//    private String description;
+//
+//    private String config;
+//
+//    private PromotionType type;
+//
+//    private LocalDate startDate;
+//
+//    private LocalDate endDate;
 
 
 }

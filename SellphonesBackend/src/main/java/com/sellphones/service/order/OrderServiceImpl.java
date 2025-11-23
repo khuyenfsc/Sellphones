@@ -23,6 +23,7 @@ import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.customer.CustomerInfoRepository;
 import com.sellphones.repository.order.OrderRepository;
 import com.sellphones.repository.payment.PaymentMethodRepository;
+import com.sellphones.repository.product.WarrantyRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.repository.user.UserRepository;
 import com.sellphones.service.payment.PaymentService;
@@ -58,6 +59,10 @@ public class OrderServiceImpl implements OrderService{
     private final CustomerInfoRepository customerInfoRepository;
 
     private final ProductPromotionService productPromotionService;
+
+    private final ProductPromotionRepository productPromotionRepository;
+
+    private final WarrantyRepository warrantyRepository;
 
     private final PaymentService paymentService;
 
@@ -174,21 +179,57 @@ public class OrderServiceImpl implements OrderService{
         List<OrderVariant> orderVariants = new ArrayList<>();
 
         List<Long> cartItemIds = orderProducts.stream().map(OrderProductRequest::getCartItemId).toList();
-        List<CartItem> cartItems = cartItemRepository.findByCart_User_EmailAndProductVariant_StatusAndIdIn(
-                SecurityUtils.extractNameFromAuthentication(), ProductStatus.ACTIVE, cartItemIds);
+        List<CartItem> cartItems = cartItemRepository
+                .findCartItems(
+                    SecurityUtils.extractNameFromAuthentication(), ProductStatus.ACTIVE, cartItemIds
+                );
 
         if(cartItems == null || cartItems.isEmpty()){
             throw new AppException(ErrorCode.CART_EMPTY);
         }
 
-        Map<Long, Long> warrantyIdMap =  orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
+        List<ProductVariant> variants = cartItems.stream()
+                .map(CartItem::getProductVariant).toList();
+        List<Long> variantIds = variants.stream()
+                .map(BaseEntity::getId).toList();
+
+        Set<Warranty> warranties = warrantyRepository.findByProductVariantIds(variantIds);
+
+
+        Set<ProductPromotion> promotions = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
+
+
+//        List<Long> warrantyIds = orderProducts.stream()
+//                .map(OrderProductRequest::getWarrantyId).toList();
+//        List<Warranty> warranties = warrantyRepository.findByIdIn(warrantyIds);
+//        Map<Long, Warranty> warrantyById = warranties.stream()
+//                .collect(Collectors.toMap(Warranty::getId, w -> w));
+//        Map<Long, Warranty> warrantyMap = orderProducts.stream()
+//                .collect(Collectors.toMap(
+//                        OrderProductRequest::getCartItemId,
+//                        op -> warrantyById.get(op.getWarrantyId())
+//                ));
+//
+//        Set<Long> promotionsId = orderProducts.stream()
+//                .flatMap(op -> op.getPromotionIds().stream())
+//                .collect(Collectors.toSet());
+//        List<ProductPromotion> promotions = productPromotionRepository.findByIdIn(promotionsId);
+//        Map<Long, List>
+
+
+//        Map<Long, Long> warrantyIdMap = orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
 
         for(CartItem cartItem : cartItems){
-         ProductVariant productVariant = cartItem.getProductVariant();
+            ProductVariant productVariant = cartItem.getProductVariant();
             if(productVariant.getStock() < cartItem.getQuantity()){
                 throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
             }
-            Warranty warranty = productVariant.getWarranties().stream().filter(w -> w.getId().equals(warrantyIdMap.get(cartItem.getId()))).findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
+
+            Warranty warranty = warrantyMap.get(cartItem.getId());
+//            Warranty warranty = productVariant.getWarranties().stream()
+//                    .filter(w -> w.getId().equals(warrantyIdMap.get(cartItem.getId())))
+//                    .findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
+
             productVariant.setStock(productVariant.getStock() - cartItem.getQuantity());
             for(GiftProduct gf : productVariant.getGiftProducts()){
                 long newGiftStock = gf.getStock() - 1;

@@ -1,6 +1,7 @@
 package com.sellphones.dto.product;
 
 import com.sellphones.dto.promotion.GiftProductResponse;
+import com.sellphones.dto.promotion.ProductPromotionResponse;
 import com.sellphones.entity.product.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

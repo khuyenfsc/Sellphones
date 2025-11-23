@@ -45,7 +45,7 @@ public class AdminGiftProductController {
 
     }
 
-    @PutMapping("/edit-gift-product/{id}")
+    @PutMapping("/update-gift-product/{id}")
     public ResponseEntity<CommonResponse> editProduct(
             @RequestPart("gift_product") String giftProductJson,
             @RequestPart(name = "file", required = false) MultipartFile thumbnailFile,

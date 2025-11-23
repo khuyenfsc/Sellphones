@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -29,4 +30,12 @@ public class Warranty extends BaseEntity<Long> {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "variant_warranty",
+            joinColumns = @JoinColumn(name = "warranty_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
+    )
+    private List<ProductVariant> productVariants;
 }
