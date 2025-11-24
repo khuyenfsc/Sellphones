@@ -62,15 +62,25 @@ public class CartServiceImpl implements CartService{
         List<Long> variantIds = cartItems.stream()
                 .map(ci -> ci.getProductVariant().getId())
                 .toList();
-        Set<ProductPromotion> allPromotions = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
+        List<Object[]> promotionRows = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
+        System.out.println("getCart");
+        Map<Long, List<ProductPromotion>> promotionsMap = promotionRows.stream()
+                .collect(Collectors.groupingBy(
+                        r -> (Long)r[0],
+                        Collectors.mapping(
+                                r -> (ProductPromotion)r[1],
+                                Collectors.toList()
+                        )
+                ));
+//        for(Map.Entry<Long, List<ProductPromotion>> m : promotionsMap.entrySet()){
+//            System.out.println(m.getKey());
+//            for(ProductPromotion promotion : m.getValue()){
+//                System.out.println(promotion.getId());
+//                System.out.println(promotion.getName());
+////                System.out.println(promotion.get());
+//            }
+//        }
 
-        Map<Long, List<ProductPromotion>> promotionMap = allPromotions.stream()
-                .flatMap(p -> p.getProductVariants().stream()
-                    .map(v -> Map.entry(v.getId(), p))
-                )
-                .collect(Collectors.groupingBy(Map.Entry::getKey,
-                    Collectors.mapping(Map.Entry::getValue, Collectors.toList()))
-                );
 
         response.setCartItems(
             cartItems.stream()
@@ -79,7 +89,7 @@ public class CartServiceImpl implements CartService{
                         CartItemResponse resp = modelMapper.map(item, CartItemResponse.class);
 
                         CartItemVariantResponse itemVariantResponse = productMapper.mapToCartItemVariantResponse(
-                                variant, promotionMap.get(variant.getId()), variant.getGiftProducts()
+                                variant, promotionsMap.get(variant.getId()), variant.getGiftProducts()
                         );
                         resp.setProductVariant(itemVariantResponse);
 

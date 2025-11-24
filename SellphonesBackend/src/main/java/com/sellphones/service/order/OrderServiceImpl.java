@@ -23,6 +23,7 @@ import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.customer.CustomerInfoRepository;
 import com.sellphones.repository.order.OrderRepository;
 import com.sellphones.repository.payment.PaymentMethodRepository;
+import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.repository.product.WarrantyRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.repository.user.UserRepository;
@@ -59,6 +60,8 @@ public class OrderServiceImpl implements OrderService{
     private final CustomerInfoRepository customerInfoRepository;
 
     private final ProductPromotionService productPromotionService;
+
+    private final ProductVariantRepository productVariantRepository;
 
     private final ProductPromotionRepository productPromotionRepository;
 
@@ -188,52 +191,54 @@ public class OrderServiceImpl implements OrderService{
             throw new AppException(ErrorCode.CART_EMPTY);
         }
 
+        if (cartItems.size() != orderProducts.size()) {
+            throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
+
         List<ProductVariant> variants = cartItems.stream()
                 .map(CartItem::getProductVariant).toList();
         List<Long> variantIds = variants.stream()
                 .map(BaseEntity::getId).toList();
 
-        Set<Warranty> warranties = warrantyRepository.findByProductVariantIds(variantIds);
+        List<Object[]> warrantyRows = warrantyRepository.findByProductVariantIds(variantIds);
+        Map<Long, List<Warranty>> warrantiesMap = warrantyRows.stream()
+                .collect(Collectors.groupingBy(
+                    r -> (Long)r[0],
+                        Collectors.mapping(
+                            r -> (Warranty)r[1],
+                                Collectors.toList()
+                        )
+                ));
 
+        List<Object[]> promotionRows = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
+        Map<Long, List<ProductPromotion>> promotionsMap = promotionRows.stream()
+                .collect(Collectors.groupingBy(
+                    r -> (Long)r[0],
+                        Collectors.mapping(
+                            r -> (ProductPromotion)r[1],
+                                Collectors.toList()
+                        )
+                ));
 
-        Set<ProductPromotion> promotions = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
-
-
-//        List<Long> warrantyIds = orderProducts.stream()
-//                .map(OrderProductRequest::getWarrantyId).toList();
-//        List<Warranty> warranties = warrantyRepository.findByIdIn(warrantyIds);
-//        Map<Long, Warranty> warrantyById = warranties.stream()
-//                .collect(Collectors.toMap(Warranty::getId, w -> w));
-//        Map<Long, Warranty> warrantyMap = orderProducts.stream()
-//                .collect(Collectors.toMap(
-//                        OrderProductRequest::getCartItemId,
-//                        op -> warrantyById.get(op.getWarrantyId())
-//                ));
-//
-//        Set<Long> promotionsId = orderProducts.stream()
-//                .flatMap(op -> op.getPromotionIds().stream())
-//                .collect(Collectors.toSet());
-//        List<ProductPromotion> promotions = productPromotionRepository.findByIdIn(promotionsId);
-//        Map<Long, List>
-
-
-//        Map<Long, Long> warrantyIdMap = orderProducts.stream().collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
+        Map<Long, Long> warrantyIdMap = orderProducts.stream()
+                .collect(Collectors.toMap(OrderProductRequest::getCartItemId, OrderProductRequest::getWarrantyId));
 
         for(CartItem cartItem : cartItems){
             ProductVariant productVariant = cartItem.getProductVariant();
-            if(productVariant.getStock() < cartItem.getQuantity()){
+            int updatedRows = productVariantRepository.deductStock(productVariant.getId(), cartItem.getQuantity());
+
+            if (updatedRows == 0) {
                 throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
             }
 
-            Warranty warranty = warrantyMap.get(cartItem.getId());
-//            Warranty warranty = productVariant.getWarranties().stream()
-//                    .filter(w -> w.getId().equals(warrantyIdMap.get(cartItem.getId())))
-//                    .findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
+            List<Warranty> warranties = warrantiesMap.get(productVariant.getId());
+            Warranty warranty = warranties.stream()
+                    .filter(w -> w.getId().equals(warrantyIdMap.get(cartItem.getId())))
+                    .findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
 
-            productVariant.setStock(productVariant.getStock() - cartItem.getQuantity());
             for(GiftProduct gf : productVariant.getGiftProducts()){
-                long newGiftStock = gf.getStock() - 1;
-                gf.setStock((newGiftStock >= 0)?newGiftStock:0);
+                long newStock = gf.getStock() - cartItem.getQuantity();
+                gf.setStock(Math.max(newStock, 0));
             }
 
             OrderVariant orderVariant = OrderVariant.builder()
@@ -245,7 +250,9 @@ public class OrderServiceImpl implements OrderService{
                     .warranty(warranty)
                     .build();
 
-            List<OrderVariantPromotion> orderVariantPromotions = cartItem.getProductVariant().getPromotions().stream()
+            List<ProductPromotion> variantPromotions =
+                    promotionsMap.getOrDefault(productVariant.getId(), List.of());
+            List<OrderVariantPromotion> orderVariantPromotions = variantPromotions.stream()
                     .map(ovp -> convertToOrderVariantPromotion(ovp, orderVariant))
                     .toList();
             orderVariant.setPromotions(orderVariantPromotions);

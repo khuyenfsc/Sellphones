@@ -17,6 +17,6 @@ public class OrderProductRequest {
 
     private Long warrantyId;
 
-    private List<Long> promotionIds;
+//    private List<Long> promotionIds;
 
 }

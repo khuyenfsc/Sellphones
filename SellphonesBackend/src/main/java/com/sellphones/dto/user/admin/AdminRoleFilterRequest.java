@@ -14,7 +14,7 @@ public class AdminRoleFilterRequest {
 
     private String name;
 
-    private RoleName roleName;
+//    private RoleName roleName;
 
     private String sortType;
 

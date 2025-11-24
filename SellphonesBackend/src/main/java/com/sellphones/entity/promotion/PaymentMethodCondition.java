@@ -6,7 +6,7 @@ import com.sellphones.entity.order.Order;
 public class PaymentMethodCondition implements PromotionCondition{
     @Override
     public boolean isEligible(Order order, PromotionConditionDto cond) {
-        if(cond.getPaymentMethodTypes() == null) return true;
+        if(cond.getPaymentMethodTypes() == null || cond.getPaymentMethodTypes().isEmpty()) return true;
         return cond.getPaymentMethodTypes().contains(order.getPayment().getPaymentMethod().getPaymentMethodType());
     }
 }

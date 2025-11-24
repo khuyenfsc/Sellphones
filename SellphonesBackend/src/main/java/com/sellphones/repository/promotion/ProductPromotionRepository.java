@@ -24,11 +24,12 @@ public interface ProductPromotionRepository extends JpaRepository<ProductPromoti
     List<ProductPromotion> findActivePromotions(@Param("variantId") Long variantId);
 
     @Query("""
-        SELECT p FROM ProductPromotion p
-        JOIN p.productVariants pv
+        SELECT pv.id, p
+        FROM ProductVariant pv
+        JOIN pv.promotions p
         WHERE pv.id IN :variantIds
           AND p.startDate <= CURRENT_TIMESTAMP
           AND p.endDate >= CURRENT_TIMESTAMP
     """)
-    Set<ProductPromotion> findActivePromotionsByVariantIds(@Param("variantIds") List<Long> variantIds);
+    List<Object[]> findActivePromotionsByVariantIds(@Param("variantIds") List<Long> variantIds);
 }

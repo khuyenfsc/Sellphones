@@ -36,8 +36,8 @@ public class AdminProductPromotionServiceImpl implements AdminProductPromotionSe
     @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS.VIEW')")
     public PageResponse<AdminProductPromotionResponse> getProductPromotions(AdminProductPromotionFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC); // default
-        Sort sort = Sort.by(direction, "name");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<ProductPromotion> spec = AdminProductPromotionSpecificationBuilder.build(request);

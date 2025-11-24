@@ -25,13 +25,13 @@ public class AdminProductPromotionController {
     public ResponseEntity<CommonResponse> getGiftProducts(AdminProductPromotionFilterRequest request){
         PageResponse<AdminProductPromotionResponse> response = adminProductPromotionService.getProductPromotions(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("promotions", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PostMapping("/create-product-promotion")
+    @PostMapping("/create-promotion")
     public ResponseEntity<CommonResponse> createProductPromotion(@RequestBody @Valid AdminProductPromotionRequest request){
         adminProductPromotionService.createProductPromotion(request);
         Map<String, Object> map = new HashMap<>();
@@ -41,7 +41,7 @@ public class AdminProductPromotionController {
 
     }
 
-    @PutMapping("/edit-product-promotion/{id}")
+    @PutMapping("/update-promotion/{id}")
     public ResponseEntity<CommonResponse> editProduct(
             @RequestBody @Valid AdminProductPromotionRequest request,
             @PathVariable Long id
@@ -54,7 +54,7 @@ public class AdminProductPromotionController {
 
     }
 
-    @DeleteMapping("/delete-product-promotion/{id}")
+    @DeleteMapping("/delete-promotion/{id}")
     public ResponseEntity<CommonResponse> deleteProductPromotion(@PathVariable Long id){
         adminProductPromotionService.deleteProductPromotion(id);
         Map<String, Object> map = new HashMap<>();

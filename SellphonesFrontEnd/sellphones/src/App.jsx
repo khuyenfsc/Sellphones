@@ -45,6 +45,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminWarrantyPage from "./components/admin/components/pages/WarrantyPage/AdminWarrantyPage";
 import AdminGiftProductPage from "./components/admin/components/pages/GiftProductPage/AdminGIftProductPage";
+import AdminProductPromotionPage from "./components/admin/components/pages/ProductPromotionPage/AdminProductPromotionPage";
+import AdminRolePage from "./components/admin/components/pages/RolePage/AdminRolePage";
+import RoleDetailsPage from "./components/admin/components/pages/RolePage/RoleDetailsPage";
 
 export default function App() {
   return (
@@ -165,6 +168,9 @@ export default function App() {
           <Route path="reviews" element={<AdminReviewPage />} />
           <Route path="warranties" element={<AdminWarrantyPage />} />
           <Route path="gift_products" element={<AdminGiftProductPage />} />
+          <Route path="product_promotions" element={<AdminProductPromotionPage />} />
+          <Route path="roles" element={<AdminRolePage />} />
+          <Route path="roles/view/:roleId" element={<RoleDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

@@ -12,15 +12,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminRoleRequest {
+public class AdminCreateRoleRequest {
     @NotBlank
     private String name;
 
     @NotBlank
     private String description;
 
-    @NotNull
-    private RoleName roleName;
-
-    private List<Long> permissionIds;
+//    @NotNull
+//    private RoleName roleName;
 }

@@ -13,6 +13,11 @@ import java.util.Set;
 public interface WarrantyRepository extends JpaRepository<Warranty, Long>, JpaSpecificationExecutor<Warranty> {
     List<Warranty> findByIdIn(Collection<Long> warrantyIds);
 
-    @Query("SELECT w FROM Warranty w JOIN w.productVariants pv WHERE pv.id IN :variantIds")
-    Set<Warranty> findByProductVariantIds(@Param("variantIds") Collection<Long> variantIds);
+    @Query("""
+        SELECT pv.id, w
+        FROM ProductVariant pv
+        JOIN pv.warranties w
+        WHERE pv.id IN :variantIds
+    """)
+    List<Object[]> findByProductVariantIds(@Param("variantIds") Collection<Long> variantIds);
 }

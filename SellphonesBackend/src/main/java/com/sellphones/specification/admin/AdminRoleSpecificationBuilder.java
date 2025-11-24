@@ -12,15 +12,15 @@ public class AdminRoleSpecificationBuilder {
             spec = spec.and(hasNameContain(request.getName()));
         }
 
-        if(request.getRoleName() != null){
-            spec = spec.and(hasRoleName(request.getRoleName()));
-        }
+//        if(request.getRoleName() != null){
+//            spec = spec.and(hasRoleName(request.getRoleName()));
+//        }
 
         return spec;
     }
 
     public static Specification<Role> hasNameContain(String name){
-        return (root, query, cb) -> cb.like(root.get("name"), "%" + name + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Role> hasRoleName(RoleName roleName){

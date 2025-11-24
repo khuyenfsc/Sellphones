@@ -31,7 +31,7 @@ public class CartItemVariantResponse {
 
     private List<ProductPromotionResponse> promotions;
 
-    private List<Warranty> warranties;
+    private List<WarrantyResponse> warranties;
 
     private List<GiftProductResponse> giftProducts;
 
