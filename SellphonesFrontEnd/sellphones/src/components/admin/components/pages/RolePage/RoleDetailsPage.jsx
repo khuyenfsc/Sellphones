@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { XCircle } from "lucide-react";
+import { XCircle, Save } from "lucide-react";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AdminRoleService from "../../../service/AdminRoleService";
 import RoleInfoPanel from "./components/RoleInfoPanel";
 import PermissionsTree from "./components/PermissionsTree";
-// import EditRoleModal from "./components/EditRoleModal";
 
 export default function RoleDetailsPage() {
     const { roleId } = useParams();
     const navigate = useNavigate();
     const [role, setRole] = useState(null);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedPermissions, setSelectedPermissions] = useState([]);
     const [isReloaded, setIsReloaded] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
 
     const fetchRole = async () => {
         try {
@@ -40,8 +39,28 @@ export default function RoleDetailsPage() {
     };
 
     const handleUpdatePermissions = async () => {
+        const result = await Swal.fire({
+            title: "Xác nhận cập nhật?",
+            text: "Bạn có chắc muốn cập nhật quyền cho Role này?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Có",
+            cancelButtonText: "Hủy",
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
-            const res = await AdminRoleService.updateRolePermissions(roleId, selectedPermissions);
+            setIsSaving(true);
+
+            const roleData = {
+                name: role.name,
+                description: role.description,
+                permissionIds: selectedPermissions,
+            };
+
+            const res = await AdminRoleService.updateRole(roleId, roleData);
+
             if (res.success) {
                 toast.success("Cập nhật quyền thành công!");
                 setIsReloaded(!isReloaded);
@@ -51,6 +70,8 @@ export default function RoleDetailsPage() {
         } catch (err) {
             console.error(err);
             toast.error("Đã xảy ra lỗi khi cập nhật quyền");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -82,6 +103,13 @@ export default function RoleDetailsPage() {
         }
     };
 
+    const updateRoleField = (field, value) => {
+        setRole(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
     return (
         <div className="min-h-screen bg-slate-950 text-white p-6 flex flex-col gap-6">
             {/* Header */}
@@ -97,10 +125,19 @@ export default function RoleDetailsPage() {
                     </button>
 
                     <button
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition text-white"
-                        onClick={() => setIsEditModalOpen(true)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition text-white font-medium 
+        ${isSaving ? "bg-green-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
+                        onClick={handleUpdatePermissions}
+                        disabled={isSaving}
                     >
-                        <span>Sửa Role</span>
+                        {isSaving ? (
+                            <span>Đang lưu...</span>
+                        ) : (
+                            <>
+                                <Save size={18} />
+                                <span>Lưu thay đổi</span>
+                            </>
+                        )}
                     </button>
                 </div>
             </div>
@@ -108,15 +145,14 @@ export default function RoleDetailsPage() {
             <div className="flex gap-6">
                 <div className="flex-1"> {/* Chiếm toàn bộ không gian còn lại */}
                     <PermissionsTree
-                        permissions={role?.permissions}
+                        // permissions={role?.permissions}
                         selectedPermissions={selectedPermissions}
                         togglePermission={togglePermission}
-                        onSave={handleUpdatePermissions}
                     />
                 </div>
 
                 <div className="w-80 flex-shrink-0"> {/* Cố định width, sát phải */}
-                    <RoleInfoPanel role={role} onEdit={() => setIsEditModalOpen(true)} />
+                    <RoleInfoPanel role={role} onChange={updateRoleField} />
                 </div>
             </div>
 

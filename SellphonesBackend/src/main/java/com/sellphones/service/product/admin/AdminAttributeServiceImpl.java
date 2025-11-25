@@ -41,7 +41,13 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'CATALOG.ATTRIBUTES.VIEW',
+        'CATALOG.PRODUCTS.CREATE'
+        'CATALOG.PRODUCTS.EDIT'
+    )
+    """)
     public PageResponse<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);

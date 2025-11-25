@@ -13,6 +13,4 @@ public class ReviewUserResponse {
 
     private String fullName;
 
-    private String avatarUrl;
-
 }

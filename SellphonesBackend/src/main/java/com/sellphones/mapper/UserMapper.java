@@ -16,11 +16,10 @@ public class UserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public User mapToUserEntity(AdminUserRequest request, Role role, String avatar){
+    public User mapToUserEntity(AdminUserRequest request, Role role){
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
-                .avatar(avatar)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .status(request.getStatus())
                 .dateOfBirth(request.getDateOfBirth())

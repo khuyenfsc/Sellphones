@@ -48,6 +48,7 @@ import AdminGiftProductPage from "./components/admin/components/pages/GiftProduc
 import AdminProductPromotionPage from "./components/admin/components/pages/ProductPromotionPage/AdminProductPromotionPage";
 import AdminRolePage from "./components/admin/components/pages/RolePage/AdminRolePage";
 import RoleDetailsPage from "./components/admin/components/pages/RolePage/RoleDetailsPage";
+import AdminUserPage from "./components/admin/components/pages/UserPage/AdminUserPage";
 
 export default function App() {
   return (
@@ -171,6 +172,7 @@ export default function App() {
           <Route path="product_promotions" element={<AdminProductPromotionPage />} />
           <Route path="roles" element={<AdminRolePage />} />
           <Route path="roles/view/:roleId" element={<RoleDetailsPage />} />
+          <Route path="users" element={<AdminUserPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

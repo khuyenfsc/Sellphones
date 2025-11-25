@@ -36,7 +36,7 @@ public class AdminUserSpecificationBuilder {
     }
 
     public static Specification<User> hasFullNameContain(String fullName){
-        return (root, query, cb) -> cb.like(root.get("fullName"), "%" + fullName.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("fullName")), "%" + fullName.toLowerCase() + "%");
     }
 
     public static Specification<User> hasEmailContain(String email){

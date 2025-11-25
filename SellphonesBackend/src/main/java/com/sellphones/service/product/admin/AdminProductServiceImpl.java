@@ -77,6 +77,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     private final JsonParser jsonParser;
 
     @Override
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
     public PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -117,9 +118,11 @@ public class AdminProductServiceImpl implements AdminProductService{
                         .toList()
         );
         ProductVariant thumbnailProduct = product.getThumbnailProduct();
-        thumbnailProduct.setVariantImage(ImageNameToImageUrlConverter.convert(
-                thumbnailProduct.getVariantImage(), productVariantImageFolder
-        ));
+        if(thumbnailProduct != null){
+            thumbnailProduct.setVariantImage(ImageNameToImageUrlConverter.convert(
+                    thumbnailProduct.getVariantImage(), productVariantImageFolder
+            ));
+        }
         return modelMapper.map(product, AdminProductDetailResponse.class);
     }
 

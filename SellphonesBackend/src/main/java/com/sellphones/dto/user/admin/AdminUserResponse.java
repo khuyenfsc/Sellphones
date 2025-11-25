@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +18,6 @@ public class AdminUserResponse {
     private Long id;
 
     private String fullName;
-
-    private String avatar;
 
     private String email;
 
@@ -33,4 +32,6 @@ public class AdminUserResponse {
     private Gender gender;
 
     private Provider provider;
+
+    private LocalDateTime createdAt;
 }

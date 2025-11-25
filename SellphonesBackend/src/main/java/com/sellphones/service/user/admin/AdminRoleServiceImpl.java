@@ -9,10 +9,12 @@ import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.user.PermissionRepository;
 import com.sellphones.repository.user.RoleRepository;
+import com.sellphones.repository.user.UserRepository;
 import com.sellphones.specification.admin.AdminRoleSpecificationBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,8 @@ import java.util.List;
 public class AdminRoleServiceImpl implements AdminRoleService{
 
     private final RoleRepository roleRepository;
+
+    private final UserRepository userRepository;
 
     private final PermissionRepository permissionRepository;
 
@@ -81,6 +85,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('SETTINGS.ROLES.EDIT')")
+    @CacheEvict(value = "rolePermissionsCache", key = "#id")
     public void editRole(AdminUpdateRoleRequest request, Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         List<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
@@ -92,6 +97,9 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.ROLES.DELETE')")
     public void deleteRole(Long id) {
+        if (userRepository.existsByRole_Id(id)) {
+            throw new AppException(ErrorCode.ROLE_IN_USE);
+        }
         roleRepository.deleteById(id);
     }
 }

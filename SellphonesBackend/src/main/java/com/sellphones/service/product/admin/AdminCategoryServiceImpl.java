@@ -65,7 +65,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     private final String categoryIconFolderName = "category_icons";
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'CATALOG.CATEGORIES.VIEW',
+            'CATALOG.PRODUCTS.CREATE',
+            'CATALOG.PRODUCTS.EDIT'
+        )
+    """)
     public PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC); // default

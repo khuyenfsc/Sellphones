@@ -54,7 +54,13 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     private final String folderName = "brand_icons";
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.BRANDS.VIEW')")
+    @PreAuthorize("""
+            hasAnyAuthority(
+                'CATALOG.BRANDS.VIEW',
+                'CATALOG.PRODUCTS.CREATE',
+                'CATALOG.PRODUCTS.EDIT'
+            )
+    """)
     public PageResponse<AdminBrandResponse> getBrands(AdminBrandFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);

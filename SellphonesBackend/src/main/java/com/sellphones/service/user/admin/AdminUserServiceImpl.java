@@ -44,15 +44,9 @@ public class AdminUserServiceImpl implements AdminUserService{
 
     private final RoleRepository roleRepository;
 
-    private final FileStorageService fileStorageService;
-
-    private final String avatarFolderName = "avatars";
-
     private final UserMapper userMapper;
 
     private final ModelMapper modelMapper;
-
-    private final JsonParser jsonParser;
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS.VIEW')")
@@ -67,10 +61,7 @@ public class AdminUserServiceImpl implements AdminUserService{
         Page<User> userPage = userRepository.findAll(spec, pageable);
         List<User> users = userPage.getContent();
         List<AdminUserResponse> response = users.stream()
-                .map(u -> {
-                    u.setAvatar(ImageNameToImageUrlConverter.convert(u.getAvatar(), avatarFolderName));
-                    return modelMapper.map(u, AdminUserResponse.class);
-                })
+                .map(u -> modelMapper.map(u, AdminUserResponse.class))
                 .toList();
 
         return PageResponse.<AdminUserResponse>builder()
@@ -83,58 +74,20 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('SETTINGS.USERS.CREATE')")
-    public void createUser(String userJson, MultipartFile avatarFile) {
-        AdminUserRequest request = jsonParser.parseRequest(userJson, AdminUserRequest.class);
-
-        String avatar = "";
-        if (avatarFile != null) {
-            try {
-                avatar = fileStorageService.store(avatarFile, avatarFolderName);
-            } catch (Exception e) {
-                log.error("Failed to upload avatar file {}", avatarFile.getOriginalFilename(), e);
-                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
-            }
-        }
+    public void createUser(AdminUserRequest request) {
 
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-        User user = userMapper.mapToUserEntity(request, role, avatar);
+        User user = userMapper.mapToUserEntity(request, role);
         userRepository.save(user);
-
-        String finalAvatar = avatar;
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCompletion(int status) {
-                if(status == STATUS_ROLLED_BACK){
-                    if (StringUtils.hasText(finalAvatar)) {
-                        fileStorageService.delete(avatarFolderName, avatarFolderName);
-                    }
-                }
-            }
-        });
     }
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS.EDIT')")
-    public void editUser(String userJson, MultipartFile avatarFile, Long id) {
+    public void editUser(AdminUserRequest request, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        AdminUserRequest request = jsonParser.parseRequest(userJson, AdminUserRequest.class);
-
-        String avatarName = user.getAvatar();
-        if (avatarFile != null) {
-            try {
-                if (avatarName != null && !avatarName.isEmpty()) {
-                    fileStorageService.store(avatarFile, avatarName, avatarFolderName);
-                } else {
-                    avatarName = fileStorageService.store(avatarFile, avatarFolderName);
-                }
-            } catch (Exception e) {
-                log.error("Failed to upload icon file {}", avatarFile.getOriginalFilename(), e);
-                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
-            }
-        }
 
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-        User editedUser = userMapper.mapToUserEntity(request, role, avatarName);
+        User editedUser = userMapper.mapToUserEntity(request, role);
         editedUser.setId(id);
         editedUser.setCreatedAt(user.getCreatedAt());
         userRepository.save(user);
@@ -143,13 +96,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS.DELETE')")
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        String avatarName = user.getAvatar();
-
         userRepository.deleteById(id);
 
-        if(avatarName != null && !avatarName.isEmpty()){
-            fileStorageService.delete(avatarName, avatarFolderName);
-        }
     }
 }

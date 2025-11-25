@@ -3,8 +3,10 @@ package com.sellphones.controller.user.admin;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.user.admin.AdminUserFilterRequest;
+import com.sellphones.dto.user.admin.AdminUserRequest;
 import com.sellphones.dto.user.admin.AdminUserResponse;
 import com.sellphones.service.user.admin.AdminUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class AdminUserController {
     public ResponseEntity<CommonResponse> getUsers(AdminUserFilterRequest request){
         PageResponse<AdminUserResponse> response = adminUserService.getUsers(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("users", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
@@ -33,11 +35,10 @@ public class AdminUserController {
 
     @PostMapping("/create-user")
     public ResponseEntity<CommonResponse> createUser(
-            @RequestPart("user") String userJson,
-            @RequestPart(name = "file", required = false) MultipartFile avatarFile
+        @RequestBody @Valid AdminUserRequest request
     ){
 
-        adminUserService.createUser(userJson, avatarFile);
+        adminUserService.createUser(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Created user successfully");
 
@@ -47,11 +48,10 @@ public class AdminUserController {
 
     @PutMapping("/edit-user/{id}")
     public ResponseEntity<CommonResponse> editUser(
-            @RequestPart("user") String userJson,
-            @RequestPart(name = "file", required = false) MultipartFile avatarFile,
+            @RequestBody @Valid AdminUserRequest request,
             @PathVariable Long id
     ){
-        adminUserService.editUser(userJson, avatarFile, id);
+        adminUserService.editUser(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited user successfully");
 

@@ -272,16 +272,16 @@ VALUES
 ('Shipment Admin', 'Specialized in managing shipments', 'ADMIN', CURRENT_TIMESTAMP),
 ('Customer', 'Regular customer with limited access', 'CUSTOMER', CURRENT_TIMESTAMP);
 
-INSERT INTO app_user (full_name, avatar, email, password, date_of_birth, phone_number, gender, role_id, provider, created_at)
+INSERT INTO app_user (full_name, email, password, date_of_birth, phone_number, gender, role_id, provider, created_at)
 VALUES
-('Nguyen Van A', NULL, 'a@example.com', '{noop}123456', '1985-03-15', '0901234567', 'MALE', 1, 'LOCAL', CURRENT_TIMESTAMP), -- Super Admin
-('Tran Thi B', NULL, 'b@example.com', '{noop}123456', '1990-07-20', '0902345678', 'FEMALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
-('Le Van C', NULL, 'c@example.com', '{noop}123456', '1988-11-02', '0903456789', 'MALE', 3, 'LOCAL', CURRENT_TIMESTAMP), -- Order Admin
-('Pham Thi D', NULL, 'd@example.com', '{noop}123456', '1992-05-12', '0904567890', 'FEMALE', 4, 'LOCAL', CURRENT_TIMESTAMP), -- Shipment Admin
-('Hoang Van E', NULL, 'e@example.com', '{noop}123456', '1995-09-25', '0905678901', 'MALE', 5, 'GOOGLE', CURRENT_TIMESTAMP), -- Customer
-('Vu Thi F', NULL, 'f@example.com', '{noop}123456', '1997-01-08', '0906789012', 'FEMALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
-('Do Van G', NULL, 'g@example.com', '{noop}123456', '1989-12-30', '0907890123', 'MALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
-('Nguyen Thi H', NULL, 'h@example.com', '{noop}123456', '1993-04-18', '0908901234', 'FEMALE', 3, 'LOCAL', CURRENT_TIMESTAMP); -- Order Admin
+('Nguyen Van A', 'a@example.com', '{noop}123456', '1985-03-15', '0901234567', 'MALE', 1, 'LOCAL', CURRENT_TIMESTAMP), -- Super Admin
+('Tran Thi B', 'b@example.com', '{noop}123456', '1990-07-20', '0902345678', 'FEMALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Le Van C', 'c@example.com', '{noop}123456', '1988-11-02', '0903456789', 'MALE', 3, 'LOCAL', CURRENT_TIMESTAMP), -- Order Admin
+('Pham Thi D', 'd@example.com', '{noop}123456', '1992-05-12', '0904567890', 'FEMALE', 4, 'LOCAL', CURRENT_TIMESTAMP), -- Shipment Admin
+('Hoang Van E', 'e@example.com', '{noop}123456', '1995-09-25', '0905678901', 'MALE', 5, 'GOOGLE', CURRENT_TIMESTAMP), -- Customer
+('Vu Thi F', 'f@example.com', '{noop}123456', '1997-01-08', '0906789012', 'FEMALE', 5, 'LOCAL', CURRENT_TIMESTAMP), -- Customer
+('Do Van G', 'g@example.com', '{noop}123456', '1989-12-30', '0907890123', 'MALE', 2, 'LOCAL', CURRENT_TIMESTAMP), -- Sales Manager
+('Nguyen Thi H', 'h@example.com', '{noop}123456', '1993-04-18', '0908901234', 'FEMALE', 3, 'LOCAL', CURRENT_TIMESTAMP); -- Order Admin
 
 INSERT INTO permission (name, code, created_at)
 VALUES
