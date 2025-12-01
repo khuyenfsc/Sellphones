@@ -14,12 +14,23 @@ import java.time.LocalDateTime;
 @Component
 public class StockEntryMapper {
 
-    public StockEntry mapToStockEntryEntity(AdminStockEntryRequest request, Inventory inventory, Supplier supplier){
+    public StockEntry mapToCreatedStockEntryEntity(AdminStockEntryRequest request, Inventory inventory, Supplier supplier){
         StockEntry stockEntry = StockEntry.builder()
                 .inventory(inventory)
                 .purchasePrice(new BigDecimal(request.getPurchasePrice()))
                 .importDate(request.getImportDate())
                 .supplier(supplier)
+                .quantity(request.getQuantity())
+                .createdAt(LocalDateTime.now())
+                .build();
+        return stockEntry;
+    }
+
+    public StockEntry mapToEditedStockEntryEntity(AdminStockEntryRequest request, Inventory inventory){
+        StockEntry stockEntry = StockEntry.builder()
+                .inventory(inventory)
+                .purchasePrice(new BigDecimal(request.getPurchasePrice()))
+                .importDate(request.getImportDate())
                 .quantity(request.getQuantity())
                 .createdAt(LocalDateTime.now())
                 .build();

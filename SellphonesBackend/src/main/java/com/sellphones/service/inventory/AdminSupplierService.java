@@ -8,7 +8,7 @@ import com.sellphones.dto.inventory.admin.AdminSupplierResponse;
 import java.util.List;
 
 public interface AdminSupplierService {
-
+    AdminSupplierResponse getSupplierById(Long id);
     PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request);
     void addSupplier(AdminSupplierRequest request);
     void editSupplier(AdminSupplierRequest request, Long id);

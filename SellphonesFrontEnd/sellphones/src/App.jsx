@@ -49,6 +49,9 @@ import AdminProductPromotionPage from "./components/admin/components/pages/Produ
 import AdminRolePage from "./components/admin/components/pages/RolePage/AdminRolePage";
 import RoleDetailsPage from "./components/admin/components/pages/RolePage/RoleDetailsPage";
 import AdminUserPage from "./components/admin/components/pages/UserPage/AdminUserPage";
+import AdminPromotionBannerPage from "./components/admin/components/pages/PromotionBannerPage/AdminPromotionBannerPage";
+import AdminSupplierPage from "./components/admin/components/pages/SupplierPage/AdminSupplierPage";
+import SupplierDetailsPage from "./components/admin/components/pages/SupplierPage/SupplierDetailsPage";
 
 export default function App() {
   return (
@@ -173,6 +176,9 @@ export default function App() {
           <Route path="roles" element={<AdminRolePage />} />
           <Route path="roles/view/:roleId" element={<RoleDetailsPage />} />
           <Route path="users" element={<AdminUserPage />} />
+          <Route path="banners" element={<AdminPromotionBannerPage />} />
+          <Route path="suppliers" element={<AdminSupplierPage />} />
+          <Route path="suppliers/view/:supplierId" element={<SupplierDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

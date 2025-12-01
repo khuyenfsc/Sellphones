@@ -22,7 +22,7 @@ public class AdminStockEntryResponse {
 
     private LocalDate importDate;
 
-    private AdminStockEntry_SupplierResponse supplier;
+//    private AdminStockEntry_SupplierResponse supplier;
 
 //    private AdminWarehouseResponse warehouse;
 }

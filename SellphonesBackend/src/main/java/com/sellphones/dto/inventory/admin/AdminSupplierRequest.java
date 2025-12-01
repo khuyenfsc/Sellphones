@@ -1,6 +1,8 @@
 package com.sellphones.dto.inventory.admin;
 
+import com.sellphones.dto.address.AddressRequest;
 import com.sellphones.entity.inventory.SupplierStatus;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,14 +24,16 @@ public class AdminSupplierRequest {
     private String phoneNumber;
 
     @NotBlank
+    @Email
     private String email;
-
-    private Long addressId;
+    
+    @NotNull
+    private AddressRequest address;
 
     @NotBlank
     private String taxCode;
 
     @NotNull
-    private SupplierStatus supplierStatus;
+    private SupplierStatus status;
 
 }

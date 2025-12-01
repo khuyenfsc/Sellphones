@@ -25,12 +25,12 @@ public class AdminWarehouseController {
     public ResponseEntity<CommonResponse> getWarehouses(AdminWarehouseFilterRequest request){
         PageResponse<AdminWarehouseResponse> response = adminWarehouseService.getWarehouses(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("warehouses", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PostMapping("/add-warehouse")
+    @PostMapping("/create-warehouse")
     public ResponseEntity<CommonResponse> addWarehouse(@RequestBody @Valid AdminWarehouseRequest request) {
         adminWarehouseService.addWarehouse(request);
         Map<String, Object> map = new HashMap<>();
@@ -39,7 +39,7 @@ public class AdminWarehouseController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PutMapping("/edit-warehouse/{id}")
+    @PutMapping("/update-warehouse/{id}")
     public ResponseEntity<CommonResponse> editWarehouse(@RequestBody @Valid AdminWarehouseRequest request, @PathVariable Long id) {
         adminWarehouseService.editWarehouse(request, id);
         Map<String, Object> map = new HashMap<>();

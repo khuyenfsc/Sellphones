@@ -25,9 +25,9 @@ public class AdminPromotionBannerSpecificationBuilder {
             spec = spec.and(hasStatus(request.getStatus()));
         }
 
-        if(request.getStartDate() != null && request.getEndDate() != null){
-            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
-        }
+//        if(request.getStartDate() != null && request.getEndDate() != null){
+//            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
+//        }
 
         return spec;
     }
@@ -46,9 +46,9 @@ public class AdminPromotionBannerSpecificationBuilder {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<PromotionBanner> hasDateBetween(LocalDate startDate, LocalDate endDate){
-        return (root, query, cb) -> cb.between(root.get("createdAt"), startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
-    }
+//    public static Specification<PromotionBanner> hasDateBetween(LocalDate startDate, LocalDate endDate){
+//        return (root, query, cb) -> cb.between(root.get("createdAt"), startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+//    }
 
 
 }

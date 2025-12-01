@@ -30,7 +30,5 @@ public class AdminStockEntryRequest {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate importDate;
 
-    @NotNull
-    private Long supplierId;
 
 }

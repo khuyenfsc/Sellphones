@@ -24,7 +24,7 @@ public class PromotionBannerServiceImpl implements PromotionBannerService{
 
     @Override
     public List<PromotionBannerResponse> getAllPromotionBanners() {
-        List<PromotionBanner> promotionBanners = promotionBannerRepository.findByStatus(BannerStatus.ACTIVE);
+        List<PromotionBanner> promotionBanners = promotionBannerRepository.findByStatusOrderByIdAsc(BannerStatus.ACTIVE);
         return promotionBanners.stream()
                 .map(promotionBanner -> {
                     promotionBanner.setImage(ImageNameToImageUrlConverter.convert(promotionBanner.getImage(), promotionBannerFolderName));

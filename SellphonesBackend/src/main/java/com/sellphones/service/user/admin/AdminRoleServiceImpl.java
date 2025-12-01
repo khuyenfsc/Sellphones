@@ -40,6 +40,15 @@ public class AdminRoleServiceImpl implements AdminRoleService{
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.ROLES.VIEW')")
+    public List<AdminRoleResponse> getAllRoles() {
+        List<Role> roles = roleRepository.findAll();
+        return roles.stream()
+                .map(r -> modelMapper.map(r, AdminRoleResponse.class))
+                .toList();
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES.VIEW')")
     public PageResponse<AdminRoleResponse> getRoles(AdminRoleFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);

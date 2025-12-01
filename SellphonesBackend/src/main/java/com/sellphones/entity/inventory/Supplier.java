@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,7 +30,6 @@ public class Supplier extends BaseEntity<Long> {
     private String contactName;
 
     @Column(nullable = false, name = "phone_number")
-    @ValidPhoneNumber
     private String phoneNumber;
 
     private String email;
@@ -36,6 +37,9 @@ public class Supplier extends BaseEntity<Long> {
     @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StockEntry> stockEntries = new ArrayList<>();
 
     @Column(name = "tax_code", nullable = false)
     private String taxCode;

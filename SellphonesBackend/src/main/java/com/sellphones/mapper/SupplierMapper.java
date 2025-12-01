@@ -19,7 +19,7 @@ public class SupplierMapper {
                 .address(address)
                 .taxCode(request.getTaxCode())
                 .updatedAt(LocalDateTime.now())
-                .supplierStatus(request.getSupplierStatus())
+                .supplierStatus(request.getStatus())
                 .build();
 
         return supplier;

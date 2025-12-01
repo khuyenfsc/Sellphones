@@ -7,10 +7,12 @@ import com.sellphones.dto.inventory.admin.AdminSupplierRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
+import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.inventory.Supplier;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.AddressMapper;
 import com.sellphones.mapper.SupplierMapper;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.repository.inventory.SupplierRepository;
@@ -40,6 +42,15 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
     private final ModelMapper modelMapper;
 
+    private final AddressMapper addressMapper;
+
+    @Override
+    public AdminSupplierResponse getSupplierById(Long id) {
+        Supplier supplier = supplierRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
+        return modelMapper.map(supplier, AdminSupplierResponse.class);
+    }
+
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
     public PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request) {
@@ -66,9 +77,11 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.CREATE')")
     public void addSupplier(AdminSupplierRequest request) {
-        Address address = addressRepository.findByIdAndAddressType(request.getAddressId(), AddressType.SUPPLIER).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
+        Address address = addressMapper.mapToAddressEntity(request.getAddress());
         Supplier supplier = supplierMapper.mapToSupplierEntity(request, address);
         supplier.setCreatedAt(LocalDateTime.now());
+
+        addressRepository.save(address);
         supplierRepository.save(supplier);
     }
 
@@ -76,11 +89,19 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.EDIT')")
     public void editSupplier(AdminSupplierRequest request, Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
-        Address address = addressRepository.findByIdAndAddressType(request.getAddressId(), AddressType.SUPPLIER).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
-        Supplier newSupplier = supplierMapper.mapToSupplierEntity(request, address);
-        newSupplier.setId(id);
-        newSupplier.setCreatedAt(supplier.getCreatedAt());
-        supplierRepository.save(newSupplier);
+        Address address = supplier.getAddress();
+
+        Supplier editedSupplier = supplierMapper.mapToSupplierEntity(request,address);
+        editedSupplier.setId(id);
+        editedSupplier.setCreatedAt(supplier.getCreatedAt());
+
+        Address editedAddress = addressMapper.mapToAddressEntity(request.getAddress());
+        editedAddress.setAddressType(AddressType.CUSTOMER);
+        editedAddress.setId(address.getId());
+        editedAddress.setCreatedAt(address.getCreatedAt());
+
+        editedSupplier.setAddress(editedAddress);
+        supplierRepository.save(editedSupplier);
     }
 
     @Override

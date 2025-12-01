@@ -45,7 +45,7 @@ public class User extends BaseEntity<Long> {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateOfBirth;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
 //    @OneToOne(cascade = CascadeType.ALL)

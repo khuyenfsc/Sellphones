@@ -46,7 +46,7 @@ public class AdminUserController {
 
     }
 
-    @PutMapping("/edit-user/{id}")
+    @PutMapping("/update-user/{id}")
     public ResponseEntity<CommonResponse> editUser(
             @RequestBody @Valid AdminUserRequest request,
             @PathVariable Long id

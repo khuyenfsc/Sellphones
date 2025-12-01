@@ -51,13 +51,13 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.VIEW')")
-    public PageResponse<AdminStockEntryResponse> getStockEntries(AdminStockEntryFilterRequest request) {
+    public PageResponse<AdminStockEntryResponse> getStockEntries(AdminStockEntryFilterRequest request, Long supplierId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.build(request);
+        Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.build(request, supplierId);
 
         Page<StockEntry> stockEntryPage = stockEntryRepository.findAll(spec, pageable);
         List<StockEntry> stockEntries = stockEntryPage.getContent();
@@ -75,11 +75,11 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.CREATE')")
-    public void addStockEntry(AdminStockEntryRequest request) {
+    public void addStockEntry(AdminStockEntryRequest request, Long supplierId) {
         Inventory inventory = inventoryRepository.findById(request.getInventoryId()).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
-        Supplier supplier = supplierRepository.findById(request.getSupplierId()).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
+        Supplier supplier = supplierRepository.findById(supplierId).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
 
-        StockEntry stockEntry = stockEntryMapper.mapToStockEntryEntity(request, inventory, supplier);
+        StockEntry stockEntry = stockEntryMapper.mapToCreatedStockEntryEntity(request, inventory, supplier);
         stockEntry.setCreatedAt(LocalDateTime.now());
         stockEntryRepository.save(stockEntry);
 
@@ -95,9 +95,8 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     public void editStockEntry(AdminStockEntryRequest request, Long id) {
         StockEntry stockEntry = stockEntryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
         Inventory inventory = inventoryRepository.findById(request.getInventoryId()).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
-        Supplier supplier = supplierRepository.findById(request.getSupplierId()).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
 
-        StockEntry newStockEntry = stockEntryMapper.mapToStockEntryEntity(request, inventory, supplier);
+        StockEntry newStockEntry = stockEntryMapper.mapToEditedStockEntryEntity(request, inventory);
         newStockEntry.setCreatedAt(stockEntry.getCreatedAt());
         newStockEntry.setId(stockEntry.getId());
         newStockEntry.setCreatedAt(stockEntry.getCreatedAt());

@@ -18,8 +18,8 @@ public class AdminPromotionBannerRequest {
 
     private String targetUrl;
 
-    @NotNull
-    private BannerType bannerType;
+//    @NotNull
+//    private BannerType bannerType;
 
     @NotNull
     private BannerStatus status;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import AdminUserService from "../../../service/AdminUserService";
-// import CreateUserModal from "./components/CreateUserModal";
+import CreateUserModal from "./components/CreateUserModal";
 import UserTable from "./components/UserTable";
 
 const AdminUserPage = () => {
@@ -37,11 +37,11 @@ const AdminUserPage = () => {
 
             <UserTable isReloaded={isReloaded} />
 
-            {/* <CreateUserModal
+            <CreateUserModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={handleCreate}
-            /> */}
+            />
         </div>
     );
 };

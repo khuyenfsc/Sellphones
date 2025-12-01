@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,6 +26,16 @@ public class AdminRoleController {
         PageResponse<AdminRoleResponse> response = adminRoleService.getRoles(request);
         Map<String, Object> map = new HashMap<>();
         map.put("roles", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<CommonResponse> getAllRoles(){
+        List<AdminRoleResponse> response = adminRoleService.getAllRoles();
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 

@@ -28,7 +28,7 @@ public class PromotionBanner extends BaseEntity<Long> {
     private String targetUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "banner_type", nullable = false)
+    @Column(name = "banner_type")
     private BannerType bannerType;
 
     @Enumerated(EnumType.STRING)

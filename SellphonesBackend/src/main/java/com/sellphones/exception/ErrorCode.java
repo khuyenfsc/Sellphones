@@ -89,7 +89,7 @@ public enum ErrorCode {
     USER_NOT_FOUND_FOR_ACTIVE_TOKEN("Không tìm thấy người dùng tương ứng với token kích hoạt", HttpStatus.NOT_FOUND),
     OTP_NOT_FOUND_FOR_EMAIL("Không tìm thấy OTP cho email đã cung cấp", HttpStatus.NOT_FOUND),
     TIME_LIMIT_NOT_REACHED("Yêu cầu OTP quá sớm. Vui lòng đợi ít nhất 60 giây trước khi thử lại", HttpStatus.BAD_REQUEST),
-    USER_ALREADY_EXISTS("Người dùng đã tồn tại", HttpStatus.CONFLICT),
+    USER_ALREADY_EXISTS("Tên email đã tồn tại", HttpStatus.CONFLICT),
     CART_NOT_FOUND("Không tìm thấy giỏ hàng", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_ADMIN_ACCESS("Bạn không có quyền truy cập tài nguyên của quản trị viên", HttpStatus.FORBIDDEN),
     UNAUTHORIZED_CUSTOMER_ACCESS("Bạn không có quyền truy cập tài nguyên của khách hàng", HttpStatus.FORBIDDEN),

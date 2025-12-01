@@ -57,7 +57,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     public PageResponse<AdminPromotionBannerResponse> getBanners(AdminPromotionBannerFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "createdAt");
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<PromotionBanner> spec = AdminPromotionBannerSpecificationBuilder.build(request);

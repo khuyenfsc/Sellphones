@@ -25,13 +25,13 @@ public class AdminPromotionBannerController {
     public ResponseEntity<CommonResponse> getBanners(AdminPromotionBannerFilterRequest request){
         PageResponse<AdminPromotionBannerResponse> response = adminPromotionBannerService.getBanners(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", response);
+        map.put("banners", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PostMapping("/create-promotion-banner")
+    @PostMapping("/create-banner")
     public ResponseEntity<CommonResponse> createPromotionBanner(
             @RequestPart("banner") String bannerJson,
             @RequestPart(name = "file", required = false) MultipartFile imageFile
@@ -45,7 +45,7 @@ public class AdminPromotionBannerController {
 
     }
 
-    @PutMapping("/edit-promotion-banner/{id}")
+    @PutMapping("/update-banner/{id}")
     public ResponseEntity<CommonResponse> editPromotionBanner(
             @RequestPart("banner") String bannerJson,
             @RequestPart(name = "file", required = false) MultipartFile imageFile,
@@ -59,7 +59,7 @@ public class AdminPromotionBannerController {
 
     }
 
-    @DeleteMapping("/delete-promotion-banner/{id}")
+    @DeleteMapping("/delete-banner/{id}")
     public ResponseEntity<CommonResponse> deleteProduct(@PathVariable Long id){
         adminPromotionBannerService.deleteBanner(id);
         Map<String, Object> map = new HashMap<>();

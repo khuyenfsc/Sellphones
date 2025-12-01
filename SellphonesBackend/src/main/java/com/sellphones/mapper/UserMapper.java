@@ -20,7 +20,6 @@ public class UserMapper {
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
                 .status(request.getStatus())
                 .dateOfBirth(request.getDateOfBirth())
                 .phoneNumber(request.getPhoneNumber())
@@ -29,6 +28,10 @@ public class UserMapper {
                 .provider(Provider.LOCAL)
                 .createdAt(LocalDateTime.now())
                 .build();
+        if(request.getPassword() != null){
+            System.out.println("mapToUserEntity " + request.getPassword());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
 
         return user;
 

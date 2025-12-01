@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminUserFilterRequest {
+public class        AdminUserFilterRequest {
 
     private String fullName;
 
@@ -21,7 +21,7 @@ public class AdminUserFilterRequest {
 
     private UserStatus status;
 
-    private RoleName roleName;
+//    private RoleName roleName;
 
     private Gender gender;
 

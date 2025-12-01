@@ -20,9 +20,9 @@ public class AdminUserSpecificationBuilder {
             spec = spec.and(hasStatus(request.getStatus()));
         }
 
-        if(request.getRoleName() != null){
-            spec = spec.and(hasRoleName(request.getRoleName()));
-        }
+//        if(request.getRoleName() != null){
+//            spec = spec.and(hasRoleName(request.getRoleName()));
+//        }
 
         if(request.getGender() != null){
             spec = spec.and(hasGender(request.getGender()));

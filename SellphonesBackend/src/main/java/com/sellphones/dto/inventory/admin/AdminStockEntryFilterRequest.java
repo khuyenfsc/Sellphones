@@ -16,17 +16,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdminStockEntryFilterRequest {
 
-    private Long inventoryId;
-
-    private Long warehouseId;
+    private String warehouseName;
 
     private String productVariantName;
 
-    private String supplierName;
-
-    private String supplierEmail;
-
-    private String supplierPhoneNumber;
+//    private String supplierName;
+//
+//    private String supplierEmail;
+//
+//    private String supplierPhoneNumber;
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)

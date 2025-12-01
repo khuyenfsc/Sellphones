@@ -29,7 +29,7 @@ public class StockEntry extends BaseEntity<Long> {
     @Column(name = "import_date")
     private LocalDate importDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 

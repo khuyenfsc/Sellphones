@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { toast } from "react-toastify";
-import AdminUserService from "../../../../service/AdminUserService";
+import AdminSupplierService from "../../../../service/AdminSupplierService";
 import { useNavigate } from "react-router-dom";
-import UsersFilterModal from "./UsersFilterModal";
-import EditUserModal from "./EditUserModal";
+import SupplierFilterModal from "./SupplierFilterModal";
+// import EditSupplierModal from "./EditSupplierModal";
 
-export default function UserTable({ isReloaded }) {
+export default function SupplierTable({ isReloaded }) {
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedSupplier, setSelectedSupplier] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    // Phân trang + tìm kiếm
+    // Pagination + search
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [inputValue, setInputValue] = useState(currentPage);
@@ -23,28 +23,37 @@ export default function UserTable({ isReloaded }) {
     const [total, setTotal] = useState(0);
 
     const [filterRequest, setFilterRequest] = useState({
-        fullName: null,
+        name: null,
+        contactName: null,
+        phoneNumber: null,
+        email: null,
+        taxCode: null,
+        status: null,
         page: 0,
         size: perPage,
     });
 
-    const fetchUsers = async () => {
+    const fetchSuppliers = async () => {
         setLoading(true);
-        const res = await AdminUserService.getUsers({
-            ...filterRequest,
-            fullName: searchTerm.trim() || null,
-            page: currentPage - 1,
-            size: perPage,
-        });
+        try {
+            const res = await AdminSupplierService.getSuppliers({
+                ...filterRequest,
+                name: searchTerm.trim() || null,
+                page: currentPage - 1,
+                size: perPage,
+            });
 
-        if (res.success) {
-            setUsers(res.data.result || []);
-            setTotalPages(res.data.totalPages || 1);
-            setTotal(res.data.total || 0);
-        } else {
-            toast.error(res.message || "Không thể tải danh sách người dùng");
+            if (res.success) {
+                setSuppliers(res.data.result || []);
+                setTotalPages(res.data.totalPages || 1);
+                setTotal(res.data.total || 0);
+            } else {
+                toast.error(res.message || "Không thể tải danh sách nhà cung cấp");
+            }
+        } catch (err) {
+            toast.error("Đã xảy ra lỗi khi tải dữ liệu");
+            console.error(err);
         }
-
         setLoading(false);
     };
 
@@ -53,88 +62,86 @@ export default function UserTable({ isReloaded }) {
     }, [currentPage]);
 
     useEffect(() => {
-        fetchUsers();
+        fetchSuppliers();
     }, [currentPage, perPage, filterRequest, isReloaded]);
 
     const handleFilter = (filters) => {
         const cleanFilters = {};
         Object.entries(filters).forEach(([key, value]) => {
-            if (value !== "" && value != null) {
-                cleanFilters[key] = value;
-            }
+            if (value !== "" && value != null) cleanFilters[key] = value;
         });
 
-        setFilterRequest({
-            ...cleanFilters,
-            page: 0
-        });
-
+        setFilterRequest({ ...cleanFilters, page: 0 });
         setCurrentPage(1);
     };
 
-    const handleEditClick = (user) => {
-        setSelectedUser(user);
+    const handleEditClick = (supplier) => {
+        setSelectedSupplier(supplier);
         setIsEditModalOpen(true);
     };
 
-    const handleUpdateUser = async (userId, userData) => {
+    const handleUpdateSupplier = async (supplierId, supplierData) => {
         try {
-            const res = await AdminUserService.updateUser(userId, userData);
-
+            const res = await AdminSupplierService.updateSupplier(supplierId, supplierData);
             if (res.success) {
-                toast.success("Cập nhật người dùng thành công");
-                fetchUsers();
+                toast.success("Cập nhật nhà cung cấp thành công");
+                fetchSuppliers();
             } else {
-                toast.error(res.message || "Lỗi khi cập nhật người dùng");
+                toast.error(res.message || "Lỗi khi cập nhật nhà cung cấp");
             }
         } catch (err) {
+            toast.error("Đã xảy ra lỗi khi cập nhật");
             console.error(err);
-            toast.error("Đã xảy ra lỗi khi cập nhật người dùng");
         }
     };
 
-    const handleDeleteUser = async (userId) => {
+    const handleDeleteSupplier = async (supplierId) => {
         try {
-            const res = await AdminUserService.deleteUser(userId);
-
+            const res = await AdminSupplierService.deleteSupplier(supplierId);
             if (res.success) {
-                toast.success("Đã xóa người dùng thành công");
-                fetchUsers();
+                toast.success("Đã xóa nhà cung cấp");
+                fetchSuppliers();
             } else {
-                toast.error(res.message || "Lỗi khi xóa người dùng");
+                toast.error(res.message || "Lỗi khi xóa nhà cung cấp");
             }
         } catch (err) {
+            toast.error("Đã xảy ra lỗi khi xóa");
             console.error(err);
-            toast.error("Đã xảy ra lỗi khi xóa người dùng");
         }
     };
 
     const handleSearchKeyDown = (e) => {
         if (e.key === "Enter") {
-            setFilterRequest({
-                ...filterRequest,
-                fullName: searchTerm,
-            });
+            setFilterRequest({ ...filterRequest, name: searchTerm });
             setCurrentPage(1);
         }
     };
 
-    const handlePrevPage = () =>
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
-    const handleNextPage = () =>
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const formatAddress = (address) => {
+        if (!address) return "";
+        return `${address.street}, ${address.ward}, ${address.district}, ${address.province}`;
+    };
+
+    const formatDate = (dateStr) => {
+        if (!dateStr) return "—";
+        const date = new Date(dateStr);
+        return `${String(date.getDate()).padStart(2, "0")}/${String(
+            date.getMonth() + 1
+        ).padStart(2, "0")}/${date.getFullYear()}`;
+    };
 
     return (
         <>
             {/* Header Controls */}
             <div className="flex justify-between items-center mb-6">
-                {/* Tìm kiếm */}
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Tìm kiếm người dùng"
+                            placeholder="Tìm kiếm nhà cung cấp"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onKeyDown={handleSearchKeyDown}
@@ -142,10 +149,7 @@ export default function UserTable({ isReloaded }) {
                         />
                         <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                     </div>
-
-                    <span className="text-slate-400 text-sm">
-                        Tổng số kết quả: {total}
-                    </span>
+                    <span className="text-slate-400 text-sm">Tổng số kết quả: {total}</span>
                 </div>
 
                 {/* Pagination */}
@@ -154,22 +158,16 @@ export default function UserTable({ isReloaded }) {
                         onClick={() => setIsFilterModalOpen(true)}
                         className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition"
                     >
-                        <Filter size={18} />
-                        Lọc
+                        <Filter size={18} /> Lọc
                     </button>
 
-                    {/* Per page */}
                     <select
                         value={perPage}
                         onChange={(e) => {
                             const newSize = Number(e.target.value);
                             setPerPage(newSize);
                             setCurrentPage(1);
-                            setFilterRequest({
-                                ...filterRequest,
-                                page: 0,
-                                size: newSize,
-                            });
+                            setFilterRequest({ ...filterRequest, page: 0, size: newSize });
                         }}
                         className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
                     >
@@ -177,9 +175,8 @@ export default function UserTable({ isReloaded }) {
                         <option>10</option>
                         <option>25</option>
                     </select>
-                    <span className="text-slate-400">Người dùng / Trang</span>
+                    <span className="text-slate-400">Nhà cung cấp / Trang</span>
 
-                    {/* Page number */}
                     <div className="flex items-center gap-2">
                         <span className="text-slate-400 flex items-center gap-1">
                             <input
@@ -223,11 +220,13 @@ export default function UserTable({ isReloaded }) {
             <div className="bg-slate-900 rounded-lg overflow-hidden">
                 {/* Header */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
-                    <div className="col-span-2">ID / Ngày tạo</div>
-                    <div className="col-span-3">Tên</div>
-                    <div className="col-span-3">Email</div>
-                    <div className="col-span-2">Status</div>
-                    <div className="col-span-1">Provider</div>
+                    <div className="col-span-2">Mã / Ngày tạo</div>
+                    <div className="col-span-3">Tên & Địa chỉ</div>
+                    <div className="col-span-1">Contact</div>
+                    <div className="col-span-1">Phone</div>
+                    <div className="col-span-2">Email</div>
+                    <div className="col-span-1">Tax Code</div>
+                    <div className="col-span-1">Status</div>
                     <div className="col-span-1 text-center"></div>
                 </div>
 
@@ -236,59 +235,57 @@ export default function UserTable({ isReloaded }) {
                     <div className="flex items-center justify-center py-20">
                         <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
                     </div>
-                ) : users.length === 0 ? (
-                    <div className="text-center text-slate-400 py-6">Không có người dùng nào</div>
+                ) : suppliers.length === 0 ? (
+                    <div className="text-center text-slate-400 py-6">Không có nhà cung cấp nào</div>
                 ) : (
-                    users.map((u) => {
-                        const date = u.createdAt ? new Date(u.createdAt) : null;
-                        const formattedDate = date
-                            ? `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`
-                            : "—";
-
-                        return (
-                            <div
-                                key={u.id}
-                                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition items-center"
-                            >
-                                {/* ID + Date */}
-                                <div className="col-span-2">
-                                    <div className="font-medium">#{u.id}</div>
-                                    <div className="text-slate-400 text-sm">{formattedDate}</div>
-                                </div>
-
-                                <div className="col-span-3 truncate">{u.fullName}</div>
-                                <div className="col-span-3 truncate">{u.email}</div>
-                                <div className="col-span-2">{u.status || "—"}</div>
-                                <div className="col-span-1">{u.provider}</div>
-
-                                <div className="col-span-1 flex justify-center">
-                                    <button
-                                        className="text-slate-400 hover:text-white transition"
-                                        onClick={() => handleEditClick(u)}
-                                    >
-                                        <ChevronRight size={20} />
-                                    </button>
-                                </div>
+                    suppliers.map((s) => (
+                        <div
+                            key={s.id}
+                            className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition"
+                        >
+                            <div className="col-span-2">
+                                <div className="font-medium">#{s.id}</div>
+                                <div className="text-slate-400 text-sm">{formatDate(s.createdAt)}</div>
                             </div>
-                        );
-                    })
+                            <div className="col-span-3">
+                                <div className="font-medium">{s.name}</div>
+                                <div className="text-slate-400 text-sm truncate">{formatAddress(s.address)}</div>
+                            </div>
+                            <div className="col-span-1">{s.contactName}</div>
+                            <div className="col-span-1">{s.phoneNumber}</div>
+                            <div className="col-span-2 truncate">{s.email}</div>
+                            <div className="col-span-1">{s.taxCode}</div>
+                            <div className="col-span-1">
+                                <span
+                                    className={`
+            px-3 py-1 rounded-full text-sm font-semibold
+            ${s.supplierStatus === "ACTIVE" ? "bg-green-600" : "bg-red-600"}
+        `}
+                                >
+                                    {s.supplierStatus}
+                                </span>
+                            </div>
+
+                            <div className="col-span-1 text-center">
+                                <button
+                                    className="text-slate-400 hover:text-white transition"
+                                    onClick={() => navigate(`/admin/suppliers/view/${s.id}`)}
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
 
-
-            <UsersFilterModal
+            <SupplierFilterModal
                 isOpen={isFilterModalOpen}
                 onClose={() => setIsFilterModalOpen(false)}
                 onApply={handleFilter}
             />
 
-            <EditUserModal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                user={selectedUser}
-                onUpdate={handleUpdateUser}
-                onDelete={handleDeleteUser}
-            />
         </>
     );
 }

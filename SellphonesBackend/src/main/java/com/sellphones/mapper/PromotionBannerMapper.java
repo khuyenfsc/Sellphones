@@ -12,7 +12,7 @@ public class PromotionBannerMapper {
         PromotionBanner banner = PromotionBanner.builder()
                 .name(request.getName())
                 .targetUrl(request.getTargetUrl())
-                .bannerType(request.getBannerType())
+//                .bannerType(request.getBannerType())
                 .status(request.getStatus())
                 .image(imageName)
                 .createdAt(LocalDateTime.now())
