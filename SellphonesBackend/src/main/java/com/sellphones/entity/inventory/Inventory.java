@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true, exclude = {"productVariant", "warehouse"})
@@ -35,7 +36,7 @@ public class Inventory extends BaseEntity<Long> {
     private Warehouse warehouse;
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StockEntry> stockEntries;
+    private List<StockEntry> stockEntries = new ArrayList<>();
 
     private Long quantity;
 

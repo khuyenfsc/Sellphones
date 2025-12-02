@@ -29,32 +29,32 @@ public class AdminInventoryController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
-
-    @PostMapping("/add-inventory")
-    public ResponseEntity<CommonResponse> addInventory(@RequestBody @Valid AdminInventoryRequest request) {
-        adminInventoryService.addInventory(request);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added inventory successfully");
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-    }
-
-    @PutMapping("/edit-inventory/{id}")
-    public ResponseEntity<CommonResponse> editInventory(@RequestBody @Valid AdminInventoryRequest request, @PathVariable Long id) {
-        adminInventoryService.editInventory(request, id);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited inventory successfully");
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-    }
-
-    @DeleteMapping("/delete-inventory/{id}")
-    public ResponseEntity<CommonResponse> deleteStockEntry(@PathVariable Long id) {
-        adminInventoryService.deleteInventory(id);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", "Deleted inventory successfully");
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-    }
+//
+//    @PostMapping("/add-inventory")
+//    public ResponseEntity<CommonResponse> addInventory(@RequestBody @Valid AdminInventoryRequest request) {
+//        adminInventoryService.addInventory(request);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", "Added inventory successfully");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//    }
+//
+//    @PutMapping("/edit-inventory/{id}")
+//    public ResponseEntity<CommonResponse> editInventory(@RequestBody @Valid AdminInventoryRequest request, @PathVariable Long id) {
+//        adminInventoryService.editInventory(request, id);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", "Edited inventory successfully");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//    }
+//
+//    @DeleteMapping("/delete-inventory/{id}")
+//    public ResponseEntity<CommonResponse> deleteStockEntry(@PathVariable Long id) {
+//        adminInventoryService.deleteInventory(id);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", "Deleted inventory successfully");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//    }
 
 }

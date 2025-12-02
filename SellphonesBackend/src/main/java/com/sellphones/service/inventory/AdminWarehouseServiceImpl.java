@@ -3,10 +3,13 @@ package com.sellphones.service.inventory;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.inventory.admin.*;
 import com.sellphones.entity.address.Address;
+import com.sellphones.entity.address.AddressType;
 import com.sellphones.entity.inventory.Inventory;
+import com.sellphones.entity.inventory.Supplier;
 import com.sellphones.entity.inventory.Warehouse;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.AddressMapper;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.repository.warehouse.WarehouseRepository;
 import com.sellphones.specification.admin.AdminWarehouseSpecificationBuilder;
@@ -34,12 +37,14 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
 
     private final ModelMapper modelMapper;
 
+    private final AddressMapper addressMapper;
+
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.VIEW')")
     public PageResponse<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "name");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Warehouse> spec = AdminWarehouseSpecificationBuilder.build(request);
@@ -58,9 +63,16 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
+    public AdminWarehouseResponse getWarehouseById(Long id) {
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
+        return modelMapper.map(warehouse, AdminWarehouseResponse.class);
+    }
+
+    @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.CREATE')")
     public void addWarehouse(AdminWarehouseRequest request) {
-        Address address = addressRepository.findById(request.getAddressId()).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
+        Address address = addressMapper.mapToAddressEntity(request.getAddress());
         Warehouse warehouse = Warehouse.builder()
                 .name(request.getName())
                 .address(address)
@@ -80,10 +92,16 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.EDIT')")
     public void editWarehouse(AdminWarehouseRequest request, Long id) {
         Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
-        Address address = addressRepository.findById(request.getAddressId()).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
-        warehouse.setAddress(address);
+        Address address = warehouse.getAddress();
+
         warehouse.setName(request.getName());
 
+        Address editedAddress = addressMapper.mapToAddressEntity(request.getAddress());
+        editedAddress.setAddressType(AddressType.WAREHOUSE);
+        editedAddress.setId(address.getId());
+        editedAddress.setCreatedAt(address.getCreatedAt());
+
+        warehouse.setAddress(editedAddress);
         try {
             warehouseRepository.save(warehouse);
         } catch (DataIntegrityViolationException e) {

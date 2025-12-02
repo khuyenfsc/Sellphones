@@ -74,7 +74,7 @@ public class AdminSupplierController {
         @Valid AdminStockEntryFilterRequest request,
         @PathVariable Long supplierId
     ){
-        PageResponse<AdminStockEntryResponse> response = adminStockEntryService.getStockEntries(request, supplierId);
+        PageResponse<AdminStockEntryResponse> response = adminStockEntryService.getStockEntriesBySupplierId(request, supplierId);
         Map<String, Object> map = new HashMap<>();
         map.put("stock_entries", response);
 

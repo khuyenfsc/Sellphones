@@ -44,7 +44,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @PreAuthorize("""
     hasAnyAuthority(
         'CATALOG.ATTRIBUTES.VIEW',
-        'CATALOG.PRODUCTS.CREATE'
+        'CATALOG.PRODUCTS.CREATE',
         'CATALOG.PRODUCTS.EDIT'
     )
     """)

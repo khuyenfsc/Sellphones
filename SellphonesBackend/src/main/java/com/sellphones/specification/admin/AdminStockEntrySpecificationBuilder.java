@@ -4,10 +4,11 @@ import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
 import com.sellphones.entity.inventory.StockEntry;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class AdminStockEntrySpecificationBuilder {
-    public static Specification<StockEntry> build(AdminStockEntryFilterRequest request, Long supplierId){
+    public static Specification<StockEntry> buildWithSupplierId(AdminStockEntryFilterRequest request, Long supplierId){
         Specification<StockEntry> spec = (root, query, cb) -> cb.conjunction();
 
         spec = spec.and(hasSupplierId(supplierId));
@@ -36,6 +37,34 @@ public class AdminStockEntrySpecificationBuilder {
             spec = spec.and(hasImportDateBetween(request.getStartDate(), request.getEndDate()));
         }
 
+        if(request.getMinPrice() != null && request.getMaxPrice() != null){
+            spec = spec.and(hasPriceBetween(request.getMinPrice(), request.getMaxPrice()));
+        }
+
+        return spec;
+    }
+
+    public static Specification<StockEntry> buildWithInventoryId(AdminStockEntryFilterRequest request, Long inventoryId){
+        Specification<StockEntry> spec = (root, query, cb) -> cb.conjunction();
+
+        spec = spec.and(hasInventoryId(inventoryId));
+
+        if(request.getProductVariantName() != null){
+            spec = spec.and(hasVariantNameContains(request.getProductVariantName()));
+        }
+
+        if(request.getWarehouseName() != null){
+            spec = spec.and(hasWarehouseNameContains(request.getWarehouseName()));
+        }
+
+        if(request.getStartDate() != null && request.getEndDate() != null){
+            spec = spec.and(hasImportDateBetween(request.getStartDate(), request.getEndDate()));
+        }
+
+        if(request.getMinPrice() != null && request.getMaxPrice() != null){
+            spec = spec.and(hasPriceBetween(request.getMinPrice(), request.getMaxPrice()));
+        }
+
         return spec;
     }
 
@@ -48,7 +77,7 @@ public class AdminStockEntrySpecificationBuilder {
     }
 
     public static Specification<StockEntry> hasWarehouseNameContains(String warehouseName){
-        return (root, query, cb) -> cb.equal(root.get("warehouse").get("name"), "%" + warehouseName.toLowerCase() + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("inventory").get("warehouse").get("name")), "%" + warehouseName.toLowerCase() + "%");
     }
 
     public static Specification<StockEntry> hasVariantNameContains(String variantName){
@@ -69,5 +98,9 @@ public class AdminStockEntrySpecificationBuilder {
 
     public static Specification<StockEntry> hasImportDateBetween(LocalDate startDate, LocalDate endDate){
         return (root, query, cb) -> cb.between(root.get("importDate"), startDate, endDate);
+    }
+
+    public static Specification<StockEntry> hasPriceBetween(BigDecimal minPrice, BigDecimal maxPrice){
+        return (root, query, cb) -> cb.between(root.get("purchasePrice"), minPrice, maxPrice);
     }
 }

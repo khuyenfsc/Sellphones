@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import AdminSupplierService from "../../../../service/AdminSupplierService";
-import StockEntryFilterModal from "./StockEntryFilterModal.";
+import AdminWarehouseService from "../../../../service/AdminWarehouseService";
+import StockEntryFilterModal from "../../SupplierPage/components/StockEntryFilterModal.";
 
-export default function StockEntryTable({ isReloaded, supplierId }) {
+export default function StockEntryByInventoryTable({ isReloaded, inventoryId }) {
     const navigate = useNavigate();
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -27,12 +27,15 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
     const fetchStockEntries = async () => {
         setLoading(true);
         try {
-            const res = await AdminSupplierService.getStockEntries(supplierId, {
-                ...filterRequest,
-                productVariantName: searchTerm.trim() || null,
-                page: currentPage - 1,
-                size: perPage,
-            });
+            const res = await AdminWarehouseService.getStockEntriesByInventory(
+                inventoryId,
+                {
+                    ...filterRequest,
+                    productVariantName: searchTerm.trim() || null,
+                    page: currentPage - 1,
+                    size: perPage,
+                }
+            );
 
             if (res.success) {
                 setEntries(res.data.result || []);
@@ -58,7 +61,7 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
 
         setFilterRequest({
             ...cleanFilters,
-            page: 0
+            page: 0,
         });
 
         setCurrentPage(1);
@@ -99,8 +102,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
         <>
             {/* Header Controls */}
             <div className="flex justify-between items-center mb-6">
-
-                {/* Left section */}
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <input
@@ -113,16 +114,12 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                         />
                         <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
                     </div>
-
                     <span className="text-slate-400 text-sm whitespace-nowrap">
                         Tổng kết quả: {total}
                     </span>
                 </div>
 
-                {/* Right section */}
                 <div className="flex items-center gap-3">
-
-                    {/* Filter button */}
                     <button
                         onClick={() => setIsFilterModalOpen(true)}
                         className="flex items-center gap-1 px-3 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition"
@@ -131,7 +128,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                         <span className="text-sm">Lọc</span>
                     </button>
 
-                    {/* Per page selector */}
                     <select
                         value={perPage}
                         onChange={(e) => {
@@ -148,10 +144,7 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                     </select>
                     <span className="text-slate-400">Phiếu nhập hàng / Trang</span>
 
-                    {/* Page control */}
                     <div className="flex items-center gap-1">
-
-                        {/* Page input */}
                         <span className="text-slate-400 flex items-center gap-1">
                             <input
                                 type="number"
@@ -172,7 +165,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                             <span className="text-xs">/ {totalPages}</span>
                         </span>
 
-                        {/* Arrows */}
                         <button
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
@@ -194,7 +186,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
 
             {/* Table */}
             <div className="bg-slate-900 rounded-lg overflow-hidden">
-                {/* Header */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
                     <div className="col-span-2">ID / Ngày nhập</div>
                     <div className="col-span-3">Sản phẩm</div>
@@ -204,7 +195,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                     <div className="col-span-1 text-center"></div>
                 </div>
 
-                {/* Body */}
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
                         <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -217,18 +207,15 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                             key={e.id}
                             className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition"
                         >
-                            {/* ID + date */}
                             <div className="col-span-2">
                                 <div className="font-medium">#{e.id}</div>
                                 <div className="text-slate-400 text-sm">{formatDate(e.importDate)}</div>
                             </div>
 
-                            {/* Product Variant */}
                             <div className="col-span-3 font-medium">
                                 {e.inventory?.productVariant?.productVariantName}
                             </div>
 
-                            {/* Warehouse */}
                             <div className="col-span-3">
                                 <div className="font-medium">{e.inventory?.warehouse?.name}</div>
                                 <div className="text-slate-400 text-sm truncate">
@@ -239,7 +226,6 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                             <div className="col-span-1">{e.quantity}</div>
                             <div className="col-span-1">{e.purchasePrice.toLocaleString()} đ</div>
 
-                            {/* View button */}
                             <div className="col-span-1 text-center">
                                 <button
                                     className="text-slate-400 hover:text-white transition"

@@ -52,6 +52,9 @@ import AdminUserPage from "./components/admin/components/pages/UserPage/AdminUse
 import AdminPromotionBannerPage from "./components/admin/components/pages/PromotionBannerPage/AdminPromotionBannerPage";
 import AdminSupplierPage from "./components/admin/components/pages/SupplierPage/AdminSupplierPage";
 import SupplierDetailsPage from "./components/admin/components/pages/SupplierPage/SupplierDetailsPage";
+import AdminWarehousePage from "./components/admin/components/pages/WarehousePage/AdminWarehousePage";
+import WarehouseDetailsPage from "./components/admin/components/pages/WarehousePage/WarehouseDetailsPage";
+import InventoryDetailsPage from "./components/admin/components/pages/WarehousePage/InventoryDetailsPage";
 
 export default function App() {
   return (
@@ -179,6 +182,9 @@ export default function App() {
           <Route path="banners" element={<AdminPromotionBannerPage />} />
           <Route path="suppliers" element={<AdminSupplierPage />} />
           <Route path="suppliers/view/:supplierId" element={<SupplierDetailsPage />} />
+          <Route path="warehouses" element={<AdminWarehousePage />} />
+          <Route path="warehouses/view/:warehouseId" element={<WarehouseDetailsPage />} />
+          <Route path="warehouses/:warehouseId/inventories/view/:inventoryId" element={<InventoryDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

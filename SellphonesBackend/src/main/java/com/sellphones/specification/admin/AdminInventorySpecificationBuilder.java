@@ -5,6 +5,7 @@ import com.sellphones.entity.inventory.Inventory;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminInventorySpecificationBuilder {
+
     public static Specification<Inventory> build(AdminInventoryFilterRequest request){
         Specification<Inventory> spec = (root, query, cb) -> cb.conjunction();
 
@@ -12,9 +13,24 @@ public class AdminInventorySpecificationBuilder {
             spec = spec.and(hasProductVariantContainContain(request.getProductVariantName()));
         }
 
-        if(request.getWarehouseId() != null){
-            spec = spec.and(hasWarehouseId(request.getWarehouseId()));
+        if(request.getMinStock() != null && request.getMaxStock() != null){
+            spec = spec.and(hasQuantityBetween(request.getMinStock(), request.getMaxStock()));
+        }
 
+        return spec;
+    }
+
+    public static Specification<Inventory> buildWithWarehouseId(AdminInventoryFilterRequest request, Long warehouseId){
+        Specification<Inventory> spec = (root, query, cb) -> cb.conjunction();
+
+        spec = spec.and(hasWarehouseId(warehouseId));
+
+        if(request.getProductVariantName() != null){
+            spec = spec.and(hasProductVariantContainContain(request.getProductVariantName()));
+        }
+
+        if(request.getMinStock() != null && request.getMaxStock() != null){
+            spec = spec.and(hasQuantityBetween(request.getMinStock(), request.getMaxStock()));
         }
 
         return spec;
@@ -26,6 +42,12 @@ public class AdminInventorySpecificationBuilder {
 
     public static Specification<Inventory> hasWarehouseId(Long warehouseId){
         return (root, query, cb) -> cb.equal(root.get("warehouse").get("id"), warehouseId);
+    }
+
+    public static Specification<Inventory> hasQuantityBetween(Long minStock, Long maxStock){
+        return (root, query, cb) -> cb.between(
+                root.get("quantity"), minStock, maxStock
+        );
     }
 
 }

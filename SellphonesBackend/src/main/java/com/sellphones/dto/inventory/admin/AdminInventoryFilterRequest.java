@@ -12,9 +12,11 @@ public class AdminInventoryFilterRequest {
 
     private String productVariantName;
 
-    private Long warehouseId;
-
     private String sortType;
+
+    private Long minStock;
+
+    private Long maxStock;
 
     @Min(0)
     private Integer page = 0;

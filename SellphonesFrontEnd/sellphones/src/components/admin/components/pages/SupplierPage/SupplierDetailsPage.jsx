@@ -6,13 +6,15 @@ import Swal from "sweetalert2";
 
 import AdminSupplierService from "../../../service/AdminSupplierService";
 import StockEntryTable from "./components/StockEntryTable";
-// import EditSupplierModal from "./components/EditSupplierModal";
+import EditSupplierModal from "./components/EditSupplierModal";
+import CreateStockEntryModal from "./components/CreateStockEntryModal";
 
 const SupplierDetailsPage = () => {
     const { supplierId } = useParams();
     const navigate = useNavigate();
 
     const [supplier, setSupplier] = useState(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isReloaded, setIsReloaded] = useState(false);
 
@@ -42,10 +44,26 @@ const SupplierDetailsPage = () => {
         return `${street}, ${ward}, ${district}, ${province}`;
     };
 
+    const handleCreateStockEntry = async (stockEntryData) => {
+        try {
+            const res = await AdminSupplierService.createStockEntry(supplierId, stockEntryData);
+
+            if (res.success) {
+                toast.success("Tạo stock entry thành công");
+                setIsReloaded(!isReloaded);
+                setIsCreateModalOpen(false); 
+            } else {
+                toast.error(res.message || "Lỗi khi tạo stock entry");
+            }
+        } catch {
+            toast.error("Lỗi khi tạo stock entry");
+        }
+    };
+
     const handleDelete = async () => {
         const confirm = await Swal.fire({
             title: "Xóa nhà cung cấp?",
-            text: "Bạn có chắc chắn muốn xóa nhà cung cấp này?",
+            text: "Bạn có chắc chắn muốn xóa nhà cung cấp này?Lưu ý nếu xóa nó sẽ xóa luôn các phiếu nhập kho",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
@@ -106,14 +124,6 @@ const SupplierDetailsPage = () => {
                         <span className="text-sm font-medium">Xóa Supplier</span>
                     </button>
 
-                    {/* Edit Supplier */}
-                    <button
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-lg 
-                                   hover:bg-blue-700 transition text-white"
-                        onClick={() => setIsEditModalOpen(true)}
-                    >
-                        Chỉnh sửa
-                    </button>
                 </div>
             </div>
 
@@ -125,16 +135,16 @@ const SupplierDetailsPage = () => {
                 {/* Left: TABLE ZONE */}
                 <div className="flex-1 flex flex-col gap-6">
                     <div className="flex justify-between items-center mt-4 mb-2">
-                        <h2 className="text-lg font-semibold text-white">Danh sách các phiên bản</h2>
+                        <h2 className="text-lg font-semibold text-white">Danh sách các phiếu nhập</h2>
 
                         <button
                             onClick={() => setIsCreateModalOpen(true)}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                         >
-                            Tạo phiên bản mới
+                            Tạo phiếu nhập mới
                         </button>
                     </div>
-                    <StockEntryTable supplierId={supplierId} />
+                    <StockEntryTable supplierId={supplierId} isReloaded={isReloaded}/>
                 </div>
 
                 {/* Right: Supplier Info */}
@@ -213,6 +223,18 @@ const SupplierDetailsPage = () => {
 
                 </div>
             </div>
+            <EditSupplierModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                supplier={supplier}
+                onUpdate={handleUpdate}
+            />
+
+            <CreateStockEntryModal 
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onCreate={handleCreateStockEntry}
+            />
         </div>
     );
 };

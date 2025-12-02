@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface AdminWarehouseService {
     PageResponse<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request);
+    AdminWarehouseResponse getWarehouseById(Long id);
     void addWarehouse(AdminWarehouseRequest request);
     void editWarehouse(AdminWarehouseRequest request, Long id);
     void deleteWarehouse(Long id);

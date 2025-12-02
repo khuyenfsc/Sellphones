@@ -1,5 +1,6 @@
 package com.sellphones.dto.inventory.admin;
 
+import com.sellphones.dto.address.AddressRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,5 @@ public class AdminWarehouseRequest {
     private String name;
 
     @NotNull
-    private Long addressId;
-
+    private AddressRequest address;
 }

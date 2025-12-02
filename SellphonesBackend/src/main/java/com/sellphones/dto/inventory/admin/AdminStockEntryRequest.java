@@ -19,8 +19,6 @@ public class AdminStockEntryRequest {
     @NotNull
     private Long inventoryId;
 
-    private Long warehouseId;
-
     private Long quantity;
 
     @NotNull

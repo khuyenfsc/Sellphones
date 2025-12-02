@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,4 +19,6 @@ public class AdminInventoryResponse {
     private AdminWarehouseResponse warehouse;
 
     private Long quantity;
+
+    private LocalDateTime createdAt;
 }

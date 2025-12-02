@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -25,6 +26,10 @@ public class AdminStockEntryFilterRequest {
 //    private String supplierEmail;
 //
 //    private String supplierPhoneNumber;
+
+    private BigDecimal minPrice;
+
+    private BigDecimal maxPrice;
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)

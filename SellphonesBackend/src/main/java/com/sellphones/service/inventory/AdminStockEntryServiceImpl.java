@@ -19,6 +19,7 @@ import com.sellphones.repository.inventory.SupplierRepository;
 import com.sellphones.repository.warehouse.WarehouseRepository;
 import com.sellphones.specification.admin.AdminStockEntrySpecificationBuilder;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cglib.core.Local;
@@ -51,13 +52,35 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.VIEW')")
-    public PageResponse<AdminStockEntryResponse> getStockEntries(AdminStockEntryFilterRequest request, Long supplierId) {
+    public PageResponse<AdminStockEntryResponse> getStockEntriesBySupplierId(@Valid AdminStockEntryFilterRequest request, Long supplierId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.build(request, supplierId);
+        Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.buildWithSupplierId(request, supplierId);
+
+        Page<StockEntry> stockEntryPage = stockEntryRepository.findAll(spec, pageable);
+        List<StockEntry> stockEntries = stockEntryPage.getContent();
+        List<AdminStockEntryResponse> response = stockEntries.stream()
+                .map(i -> modelMapper.map(i, AdminStockEntryResponse.class))
+                .toList();
+
+        return PageResponse.<AdminStockEntryResponse>builder()
+                .result(response)
+                .total(stockEntryPage.getTotalElements())
+                .totalPages(stockEntryPage.getTotalPages())
+                .build();
+    }
+
+    @Override
+    public PageResponse<AdminStockEntryResponse> getStockEntriesByInventoryId(AdminStockEntryFilterRequest request, Long inventoryId) {
+        Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+        Specification<StockEntry> spec = AdminStockEntrySpecificationBuilder.buildWithInventoryId(request, inventoryId);
 
         Page<StockEntry> stockEntryPage = stockEntryRepository.findAll(spec, pageable);
         List<StockEntry> stockEntries = stockEntryPage.getContent();
