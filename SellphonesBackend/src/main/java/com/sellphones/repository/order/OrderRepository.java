@@ -6,6 +6,7 @@ import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -61,4 +62,14 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
         ORDER BY MONTH(o.orderedAt)
     """)
     List<Object[]> countOrdersByMonthInYear(@Param("year") Integer year);
+
+    @Modifying
+    @Query("""
+        UPDATE Order o
+        SET o.orderStatus = 'SHIPPING'
+        WHERE o.id = :orderId
+          AND o.orderStatus = 'CONFIRMED'
+    """)
+    int tryTransitionToShipping(@Param("orderId") Long orderId);
+
 }

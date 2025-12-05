@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -83,7 +82,7 @@ public class AdminSupplierController {
 
     @PostMapping("/{supplierId}/stock-entries/create-stock-entry")
     public ResponseEntity<CommonResponse> createStockEntry(
-        @RequestBody @Valid AdminStockEntryRequest request,
+        @RequestBody @Valid AdminCreateStockEntryRequest request,
         @PathVariable Long supplierId
     ) {
         adminStockEntryService.addStockEntry(request, supplierId);
@@ -94,7 +93,7 @@ public class AdminSupplierController {
     }
 
     @PutMapping("/stock-entries/update-stock-entry/{id}")
-    public ResponseEntity<CommonResponse> updateStockEntry(@RequestBody @Valid AdminStockEntryRequest request, @PathVariable Long id) {
+    public ResponseEntity<CommonResponse> updateStockEntry(@RequestBody @Valid AdminUpdateStockEntryRequest request, @PathVariable Long id) {
         adminStockEntryService.editStockEntry(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited stock entry successfully");

@@ -1,12 +1,11 @@
 package com.sellphones.service.inventory;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
-import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
+import com.sellphones.dto.inventory.admin.AdminCreateStockEntryRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
+import com.sellphones.dto.inventory.admin.AdminUpdateStockEntryRequest;
 import com.sellphones.entity.inventory.Inventory;
-import com.sellphones.entity.inventory.Warehouse;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.inventory.StockEntry;
 import com.sellphones.entity.inventory.Supplier;
@@ -16,13 +15,12 @@ import com.sellphones.mapper.StockEntryMapper;
 import com.sellphones.repository.inventory.InventoryRepository;
 import com.sellphones.repository.inventory.StockEntryRepository;
 import com.sellphones.repository.inventory.SupplierRepository;
-import com.sellphones.repository.warehouse.WarehouseRepository;
+import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.specification.admin.AdminStockEntrySpecificationBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +42,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     private final SupplierRepository supplierRepository;
 
-    private final WarehouseRepository warehouseRepository;
+    private final ProductVariantRepository productVariantRepository;
 
     private final StockEntryMapper stockEntryMapper;
 
@@ -98,50 +96,84 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.CREATE')")
-    public void addStockEntry(AdminStockEntryRequest request, Long supplierId) {
-        Inventory inventory = inventoryRepository.findById(request.getInventoryId()).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
-        Supplier supplier = supplierRepository.findById(supplierId).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
+    public void addStockEntry(AdminCreateStockEntryRequest request, Long supplierId) {
+        Inventory inventory = inventoryRepository.findById(request.getInventoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
 
-        StockEntry stockEntry = stockEntryMapper.mapToCreatedStockEntryEntity(request, inventory, supplier);
-        stockEntry.setCreatedAt(LocalDateTime.now());
-        stockEntryRepository.save(stockEntry);
+        Supplier supplier = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
 
-        inventory.setQuantity(stockEntryRepository.sumQuantityByInventory(inventory.getId()));
-        ProductVariant productVariant = inventory.getProductVariant();
-        long totalStock = inventoryRepository.sumQuantityByProductVariantId(productVariant.getId());
-        productVariant.setStock(totalStock);
+        long delta = request.getQuantity();
+
+        StockEntry entry = stockEntryMapper.mapToCreatedStockEntryEntity(request, inventory, supplier);
+        entry.setCreatedAt(LocalDateTime.now());
+        stockEntryRepository.save(entry);
+
+        int updated = inventoryRepository.safeIncreaseQuantity(inventory.getId(), delta);
+        if (updated == 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
+
+        ProductVariant variant = inventory.getProductVariant();
+        productVariantRepository.safeIncreaseStock(variant.getId(), delta);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.EDIT')")
-    public void editStockEntry(AdminStockEntryRequest request, Long id) {
-        StockEntry stockEntry = stockEntryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
-        Inventory inventory = inventoryRepository.findById(request.getInventoryId()).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
+    public void editStockEntry(AdminUpdateStockEntryRequest request, Long id) {
+        StockEntry oldEntry = stockEntryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
+        Inventory inventory = oldEntry.getInventory();
 
-        StockEntry newStockEntry = stockEntryMapper.mapToEditedStockEntryEntity(request, inventory);
-        newStockEntry.setCreatedAt(stockEntry.getCreatedAt());
-        newStockEntry.setId(stockEntry.getId());
-        newStockEntry.setCreatedAt(stockEntry.getCreatedAt());
+        long oldQty = oldEntry.getQuantity();
+        long newQty = request.getQuantity();
+        long delta = newQty - oldQty;
 
-        stockEntryRepository.save(newStockEntry);
+        if (inventory.getQuantity() + delta < 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
 
-        inventory.setQuantity(stockEntryRepository.sumQuantityByInventory(inventory.getId()));
-        ProductVariant productVariant = inventory.getProductVariant();
-        productVariant.setStock(inventoryRepository.sumQuantityByProductVariantId(productVariant.getId()));
+        oldEntry.setQuantity(newQty);
+        oldEntry.setPurchasePrice(request.getPurchasePrice());
+        stockEntryRepository.save(oldEntry);
+
+        int updated = inventoryRepository.safeIncreaseQuantity(inventory.getId(), delta);
+        if (updated == 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
+
+        ProductVariant variant = inventory.getProductVariant();
+        productVariantRepository.safeIncreaseStock(variant.getId(), delta);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.DELETE')")
     public void deleteStockEntry(Long id) {
-        StockEntry stockEntry = stockEntryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
-        Inventory inventory = stockEntry.getInventory();
+        StockEntry entry = stockEntryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
 
-        stockEntryRepository.delete(stockEntry);
+        Inventory inventory = entry.getInventory();
+        ProductVariant variant = inventory.getProductVariant();
 
-        inventory.setQuantity(stockEntryRepository.sumQuantityByInventory(inventory.getId()));
-        ProductVariant productVariant = inventory.getProductVariant();
-        productVariant.setStock(inventoryRepository.sumQuantityByProductVariantId(productVariant.getId()));
+        long delta = -entry.getQuantity();
+
+        if (inventory.getQuantity() + delta < 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
+        System.out.println("deleteStockEntry " + id);
+        stockEntryRepository.delete(entry);
+        stockEntryRepository.flush();
+
+        int updated1 = inventoryRepository.safeIncreaseQuantity(inventory.getId(), delta);
+        if (updated1 == 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
+
+        int updated2 = productVariantRepository.safeIncreaseStock(variant.getId(), delta);
+        if (updated2 == 0) {
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
     }
 }

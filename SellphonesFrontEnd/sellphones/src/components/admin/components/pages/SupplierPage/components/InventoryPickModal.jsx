@@ -95,9 +95,18 @@ function InventoryPickModal({ isOpen, onClose, onPick, warehouseId }) {
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <h2 className="text-xl font-semibold mb-4 text-white">
-              Chọn Inventory
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-white">
+                Chọn dữ liệu trong kho
+              </h2>
+
+              <span
+                onClick={() => window.location.href = `/admin/warehouses/view/${warehouseId}`}
+                className="text-blue-400 text-sm hover:underline cursor-pointer"
+              >
+                + Tạo dữ liệu mới
+              </span>
+            </div>
 
             {/* Search */}
             <div className="mb-4 relative">

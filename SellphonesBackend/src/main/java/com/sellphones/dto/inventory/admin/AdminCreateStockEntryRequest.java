@@ -9,12 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminStockEntryRequest {
+public class AdminCreateStockEntryRequest {
 
     @NotNull
     private Long inventoryId;
@@ -22,11 +23,7 @@ public class AdminStockEntryRequest {
     private Long quantity;
 
     @NotNull
-    private Long purchasePrice;
-
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate importDate;
+    private BigDecimal purchasePrice;
 
 
 }

@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-// import SupplierPickModal from "./SupplierPickModal";
-// import InventoryPickModal from "./InventoryPickModal";
+import SupplierPickModal from "./SupplierPickModal";
+import InventoryPickModal from "./InventoryPickModal";
 
 function CreateStockEntryModal({ isOpen, onClose, onCreate }) {
   const [openSupplierModal, setOpenSupplierModal] = useState(false);
@@ -170,19 +170,19 @@ function CreateStockEntryModal({ isOpen, onClose, onCreate }) {
       </AnimatePresence>
 
       {/* Step 1: Pick Supplier */}
-      {/* <SupplierPickModal
+      <SupplierPickModal
         isOpen={openSupplierModal}
         onClose={() => setOpenSupplierModal(false)}
         onPick={(supplier) => {
           setSelectedSupplier(supplier);
           setSelectedInventory(null); // reset inventory
           setOpenSupplierModal(false);
-          setOpenInventoryModal(true); // mở modal inventory
+          setOpenInventoryModal(true); // mở modal invcdentory
         }}
-      /> */}
+      />
 
       {/* Step 2: Pick Inventory */}
-      {/* <InventoryPickModal
+      <InventoryPickModal
         isOpen={openInventoryModal}
         supplierId={selectedSupplier?.id}
         onClose={() => setOpenInventoryModal(false)}
@@ -190,7 +190,7 @@ function CreateStockEntryModal({ isOpen, onClose, onCreate }) {
           setSelectedInventory(inventory);
           setOpenInventoryModal(false);
         }}
-      /> */}
+      />
     </>
   );
 }

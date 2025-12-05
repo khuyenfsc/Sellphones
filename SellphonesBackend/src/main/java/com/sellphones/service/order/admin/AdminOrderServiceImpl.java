@@ -98,10 +98,12 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     @Transactional
     @PreAuthorize("hasAnyAuthority('SALES.ORDERS.EDIT', 'SALES.SHIPMENTS.CREATE')")
     public void shipOrder(AdminShipmentRequest request, Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if(order.getOrderStatus() != OrderStatus.CONFIRMED){
+        int updatedStatus = orderRepository.tryTransitionToShipping(id);
+        if (updatedStatus == 0) {
             throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
+        Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
         if (request.getInventoryItems() == null || request.getInventoryItems().isEmpty()) {
             throw new AppException(ErrorCode.INVALID_SHIPMENT_ITEMS);
         }
@@ -112,11 +114,11 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         List<Inventory> inventories = inventoryRepository.findByIdIn(inventoryQuantityMap.keySet());
         for(Inventory inventory : inventories){
             Long quantity = inventoryQuantityMap.get(inventory.getId());
-            if(quantity > inventory.getQuantity()){
+
+            int updatedQuantity = inventoryRepository.safeIncreaseQuantity(inventory.getId(), -quantity);
+            if (updatedQuantity == 0) {
                 throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
             }
-
-            inventory.setQuantity(inventory.getQuantity() - quantity);
         }
 
         Address address = addressRepository.findByIdAndAddressType(request.getPickupAddressId(), AddressType.PICKUP)
@@ -125,6 +127,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
                 .code(request.getCode())
                 .shippingPrice(new BigDecimal(request.getShippingPrice()))
                 .deliveryPartner(request.getPartner())
+                .inventories(inventories)
                 .pickupAddress(address)
                 .expectedDeliveryDate(request.getExpectedDeliveryDate())
                 .order(order)
@@ -132,7 +135,6 @@ public class AdminOrderServiceImpl implements AdminOrderService{
                 .build();
 
         shipmentRepository.save(shipment);
-        order.setOrderStatus(OrderStatus.SHIPPING);
     }
 
     @Override

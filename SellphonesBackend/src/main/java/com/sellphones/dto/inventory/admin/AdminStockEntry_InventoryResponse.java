@@ -14,4 +14,6 @@ public class AdminStockEntry_InventoryResponse {
     private AdminInventory_ProductVariantResponse productVariant;
 
     private AdminWarehouseResponse warehouse;
+
+    private Long quantity;
 }

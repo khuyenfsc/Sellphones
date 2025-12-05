@@ -9,6 +9,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,6 +30,14 @@ public class Shipment extends BaseEntity<Long> {
     private LocalDate expectedDeliveryDate;
 
     private LocalDate deliveryDate;
+
+    @ManyToMany
+    @JoinTable(
+        name = "shipment_inventory",
+        joinColumns = @JoinColumn(name = "shipment_id"),
+        inverseJoinColumns = @JoinColumn(name = "inventory_id")
+    )
+    private List<Inventory> inventories = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "address_id")

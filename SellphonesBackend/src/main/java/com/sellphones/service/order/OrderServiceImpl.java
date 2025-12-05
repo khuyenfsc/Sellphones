@@ -153,6 +153,13 @@ public class OrderServiceImpl implements OrderService{
         Order order = orderRepository.findByUser_EmailAndId(SecurityUtils.extractNameFromAuthentication(), id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         if (order.getOrderStatus() == OrderStatus.PENDING) {
             order.setOrderStatus(OrderStatus.CANCELED);
+            List<OrderVariant> orderVariants = order.getOrderVariants();
+            if(orderVariants != null){
+                for(OrderVariant ov : orderVariants){
+                    ProductVariant pv = ov.getProductVariant();
+                    productVariantRepository.safeIncreaseStock(pv.getId(), 1);
+                }
+            }
         } else if (order.getOrderStatus() == OrderStatus.CONFIRMED) {
             order.setOrderStatus(OrderStatus.WAIT_FOR_CANCELLING);
         } else {

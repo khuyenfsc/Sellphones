@@ -4,12 +4,16 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import AdminSupplierService from "../../../../service/AdminSupplierService";
 import StockEntryFilterModal from "./StockEntryFilterModal.";
+import Swal from "sweetalert2";
+import EditStockEntryModal from "./EditStockEntryModal";
 
 export default function StockEntryTable({ isReloaded, supplierId }) {
     const navigate = useNavigate();
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [selectedEntry, setSelectedEntry] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,6 +67,45 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
 
         setCurrentPage(1);
     };
+
+    const handleUpdateStockEntry = async (data) => {
+        try {
+            await AdminSupplierService.updateStockEntry(data.id, data);
+            toast.success("Cập nhật thành công!");
+            fetchStockEntries();
+        } catch (error) {
+            toast.error("Cập nhật thất bại!");
+        }
+    };
+
+    const handleDeleteStockEntry = async (id) => {
+        Swal.fire({
+            title: "Bạn chắc chắn muốn xóa?",
+            text: "Hành động này không thể hoàn tác!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy",
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await AdminSupplierService.deleteStockEntry(id);
+
+                    toast.success("Xóa thành công!");
+
+                    fetchStockEntries(); // load lại table
+                } catch (err) {
+                    console.error(err);
+
+                    toast.error("Xóa thất bại!");
+
+                }
+            }
+        });
+    };
+
 
     useEffect(() => {
         setInputValue(currentPage);
@@ -243,7 +286,10 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                             <div className="col-span-1 text-center">
                                 <button
                                     className="text-slate-400 hover:text-white transition"
-                                    onClick={() => navigate(`/admin/stock-entries/view/${e.id}`)}
+                                    onClick={() => {
+                                        setSelectedEntry(e); 
+                                        setOpenEditModal(true);
+                                    }}
                                 >
                                     <ChevronRight size={20} />
                                 </button>
@@ -258,6 +304,15 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                 onClose={() => setIsFilterModalOpen(false)}
                 onApply={handleFilter}
             />
+
+            <EditStockEntryModal
+                isOpen={openEditModal}
+                onClose={() => setOpenEditModal(false)}
+                entry={selectedEntry}
+                onUpdate={handleUpdateStockEntry}
+                onDelete={handleDeleteStockEntry}
+            />
+
         </>
     );
 }

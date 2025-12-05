@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
+    INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE("Số lượng của inventory không thể âm", HttpStatus.BAD_REQUEST),
     ROLE_IN_USE("Vai trò này đang được sử dụng bởi người dùng khác", HttpStatus.BAD_REQUEST),
     VARIANT_INACTIVE("Phiên bản hiện đang ngừng hoạt động", HttpStatus.BAD_REQUEST),
     PRODUCT_INACTIVE("Sản phẩm hiện đang ngừng hoạt động", HttpStatus.BAD_REQUEST),

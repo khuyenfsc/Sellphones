@@ -456,6 +456,46 @@ const AdminSupplierService = {
         }
     },
 
+    async getInventoriesBySupplier(supplierId, filterRequest) {
+    try {
+        let token = localStorage.getItem("adminAccessToken");
+        if (!token) {
+            const refresh = await AdminService.refreshToken();
+            if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
+            token = refresh.accessToken;
+        }
+
+        const res = await AxiosClient.get(`/admin/suppliers/${supplierId}/inventories`, {
+            headers: { Authorization: `Bearer ${token}` },
+            params: filterRequest,
+        });
+
+        const data = res?.data?.inventories || [];
+        return { success: true, data };
+    } catch (err) {
+        if (err.response?.status === 401) {
+            const refresh = await AdminService.refreshToken();
+            if (refresh.success) {
+                const newToken = refresh.accessToken;
+                try {
+                    const retryRes = await AxiosClient.get(`/admin/suppliers/${supplierId}/inventories`, {
+                        headers: { Authorization: `Bearer ${newToken}` },
+                        params: filterRequest,
+                    });
+                    const data = retryRes?.data?.inventories || [];
+                    return { success: true, data };
+                } catch {}
+            }
+        }
+
+        return {
+            success: false,
+            message: err?.response?.data?.message || "Lỗi khi lấy danh sách inventory",
+        };
+    }
+},
+
+
 };
 
 export default AdminSupplierService;

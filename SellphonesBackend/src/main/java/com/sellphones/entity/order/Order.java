@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -33,7 +34,7 @@ public class Order extends BaseEntity<Long> {
 
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id")
-    private List<OrderVariant> orderVariants;
+    private List<OrderVariant> orderVariants = new ArrayList<>();
 
     private LocalDateTime orderedAt;
 

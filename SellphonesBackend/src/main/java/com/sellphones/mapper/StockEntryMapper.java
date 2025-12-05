@@ -1,24 +1,24 @@
 package com.sellphones.mapper;
 
-import com.sellphones.dto.inventory.admin.AdminStockEntryRequest;
+import com.sellphones.dto.inventory.admin.AdminCreateStockEntryRequest;
+import com.sellphones.dto.inventory.admin.AdminUpdateStockEntryRequest;
 import com.sellphones.entity.inventory.Inventory;
-import com.sellphones.entity.inventory.Warehouse;
-import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.inventory.StockEntry;
 import com.sellphones.entity.inventory.Supplier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
 public class StockEntryMapper {
 
-    public StockEntry mapToCreatedStockEntryEntity(AdminStockEntryRequest request, Inventory inventory, Supplier supplier){
+    public StockEntry mapToCreatedStockEntryEntity(AdminCreateStockEntryRequest request, Inventory inventory, Supplier supplier){
         StockEntry stockEntry = StockEntry.builder()
                 .inventory(inventory)
-                .purchasePrice(new BigDecimal(request.getPurchasePrice()))
-                .importDate(request.getImportDate())
+                .purchasePrice(request.getPurchasePrice())
+                .importDate(LocalDate.now())
                 .supplier(supplier)
                 .quantity(request.getQuantity())
                 .createdAt(LocalDateTime.now())
@@ -26,13 +26,10 @@ public class StockEntryMapper {
         return stockEntry;
     }
 
-    public StockEntry mapToEditedStockEntryEntity(AdminStockEntryRequest request, Inventory inventory){
+    public StockEntry mapToEditedStockEntryEntity(AdminUpdateStockEntryRequest request){
         StockEntry stockEntry = StockEntry.builder()
-                .inventory(inventory)
-                .purchasePrice(new BigDecimal(request.getPurchasePrice()))
-                .importDate(request.getImportDate())
+                .purchasePrice(request.getPurchasePrice())
                 .quantity(request.getQuantity())
-                .createdAt(LocalDateTime.now())
                 .build();
         return stockEntry;
     }

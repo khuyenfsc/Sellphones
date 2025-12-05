@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import AdminWarehouseService from "../../../service/AdminWarehouseService";
 import EditWarehouseModal from "./components/EditWarehouseModal";
 import InventoryTable from "./components/InventoryTable";
-import CreateInventoryModal from "./components/CreateInventoryModal";
+// import CreateInventoryModal from "./components/CreateInventoryModal";
 
 const WarehouseDetailsPage = () => {
     const { warehouseId } = useParams();
@@ -181,11 +181,11 @@ const WarehouseDetailsPage = () => {
                 onUpdate={handleUpdate}
             />
 
-            <CreateInventoryModal 
+            {/* <CreateInventoryModal 
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={handleCreateInventory}
-            />
+            /> */}
         </div>
     );
 };

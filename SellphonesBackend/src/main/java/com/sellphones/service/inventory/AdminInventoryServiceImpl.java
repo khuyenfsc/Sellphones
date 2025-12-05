@@ -138,7 +138,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.DELETE')")
     public void deleteInventory(Long id) {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
         inventoryRepository.delete(inventory);

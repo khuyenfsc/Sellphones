@@ -765,7 +765,7 @@ VALUES
 
 -- iPhone 15 (product_id = 2)
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
-VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 2, 50, 'ACTIVE');
+VALUES ('iPhone 15 - 128GB - Black', 24990000, 23990000, 'IP15-128-BLK', 'https://example.com/images/ip15-128-blk.jpg', 2, 60, 'ACTIVE');
 
 INSERT INTO product_variant (product_variant_name, root_price, current_price, sku, variant_image, product_id, stock, status)
 VALUES ('iPhone 15 - 256GB - White', 27990000, 26590000, 'IP15-256-WHT', 'https://example.com/images/ip15-256-wht.jpg', 2, 30, 'ACTIVE');
