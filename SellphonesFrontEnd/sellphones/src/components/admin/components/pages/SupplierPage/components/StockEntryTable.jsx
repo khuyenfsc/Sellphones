@@ -79,31 +79,18 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
     };
 
     const handleDeleteStockEntry = async (id) => {
-        Swal.fire({
-            title: "Bạn chắc chắn muốn xóa?",
-            text: "Hành động này không thể hoàn tác!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Xóa",
-            cancelButtonText: "Hủy",
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await AdminSupplierService.deleteStockEntry(id);
+        try {
+            await AdminSupplierService.deleteStockEntry(id);
 
-                    toast.success("Xóa thành công!");
+            toast.success("Xóa thành công!");
 
-                    fetchStockEntries(); // load lại table
-                } catch (err) {
-                    console.error(err);
+            fetchStockEntries(); // load lại table
+        } catch (err) {
+            console.error(err);
 
-                    toast.error("Xóa thất bại!");
+            toast.error("Xóa thất bại!");
 
-                }
-            }
-        });
+        }
     };
 
 
@@ -287,7 +274,7 @@ export default function StockEntryTable({ isReloaded, supplierId }) {
                                 <button
                                     className="text-slate-400 hover:text-white transition"
                                     onClick={() => {
-                                        setSelectedEntry(e); 
+                                        setSelectedEntry(e);
                                         setOpenEditModal(true);
                                     }}
                                 >

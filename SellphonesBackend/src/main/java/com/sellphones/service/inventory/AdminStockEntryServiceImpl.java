@@ -49,7 +49,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.VIEW')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
     public PageResponse<AdminStockEntryResponse> getStockEntriesBySupplierId(@Valid AdminStockEntryFilterRequest request, Long supplierId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -72,6 +72,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
     public PageResponse<AdminStockEntryResponse> getStockEntriesByInventoryId(AdminStockEntryFilterRequest request, Long inventoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -95,7 +96,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERSI.CREATE')")
     public void addStockEntry(AdminCreateStockEntryRequest request, Long supplierId) {
         Inventory inventory = inventoryRepository.findById(request.getInventoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
@@ -120,7 +121,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.EDIT')")
     public void editStockEntry(AdminUpdateStockEntryRequest request, Long id) {
         StockEntry oldEntry = stockEntryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
@@ -149,7 +150,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.STOCK_ENTRIES.DELETE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.DELETE')")
     public void deleteStockEntry(Long id) {
         StockEntry entry = stockEntryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
@@ -162,7 +163,6 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
         if (inventory.getQuantity() + delta < 0) {
             throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
         }
-        System.out.println("deleteStockEntry " + id);
         stockEntryRepository.delete(entry);
         stockEntryRepository.flush();
 

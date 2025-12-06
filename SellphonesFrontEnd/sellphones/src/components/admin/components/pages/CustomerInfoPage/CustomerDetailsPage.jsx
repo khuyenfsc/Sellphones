@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronRight, Trash2, ShoppingCart, XCircle } from "lucide-react";
 import AdminCustomerInfoService from "../../../service/AdminCustomerInfoService";
 // import AdminPaymentService from "../../../service/AdminPaymentService";
-import OrderList from "../OrderPage/components/OrderList";
+import OrderTable from "../OrderPage/components/OrderTable";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import EditCustomerModal from "./components/EditCustomerModal";
@@ -126,7 +126,7 @@ const CustomerDetailsPage = () => {
                 {/* Left: Orders & Payments */}
                 <div className="flex-1 flex flex-col gap-6">
                     {/* Orders Table */}
-                    <OrderList customerId={customerId} />
+                    <OrderTable customerId={customerId} />
 
 
                     {/* Payments Table */}

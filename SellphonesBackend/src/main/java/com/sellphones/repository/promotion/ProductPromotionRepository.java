@@ -31,5 +31,5 @@ public interface ProductPromotionRepository extends JpaRepository<ProductPromoti
           AND p.startDate <= CURRENT_TIMESTAMP
           AND p.endDate >= CURRENT_TIMESTAMP
     """)
-    List<Object[]> findActivePromotionsByVariantIds(@Param("variantIds") List<Long> variantIds);
+    List<Object[]> findActivePromotionsByVariantIds(@Param("variantIds") Collection<Long> variantIds);
 }

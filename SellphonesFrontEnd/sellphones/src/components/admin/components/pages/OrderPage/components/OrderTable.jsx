@@ -3,7 +3,7 @@ import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import FilterModal from "./FilterModal";
 import AdminOrderService from "../../../../service/AdminOrderService";
 
-export default function OrderList({ customerId }) {
+export default function OrderTable({ customerId }) {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -195,10 +195,10 @@ export default function OrderList({ customerId }) {
             <div className="bg-slate-900 rounded-lg overflow-hidden">
                 {/* Header */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-800 text-slate-400 text-sm">
-                    <div className="col-span-2">Order ID / Date / Status</div>
-                    <div className="col-span-3">Grand Total / Pay Via</div>
-                    <div className="col-span-4">Customer / Email / Phone / Address</div>
-                    <div className="col-span-2">Created By</div>
+                    <div className="col-span-2">Mã đơn / Ngày đặt / Trạng thái</div>
+                    <div className="col-span-3">Tổng tiền / Thanh toán</div>
+                    <div className="col-span-4">Khách hàng / Email / Số điện thoại / Địa chỉ</div>
+                    <div className="col-span-2">Tạo bởi</div>
                     <div className="col-span-1"></div>
                 </div>
 
@@ -247,10 +247,10 @@ export default function OrderList({ customerId }) {
                                 <div className="col-span-3">
                                     <div className="font-semibold">{formattedPrice} ₫</div>
                                     <div className="text-sm text-slate-400 mt-1">
-                                        Pay Via - {order.payment?.paymentMethod?.paymentMethodType || "N/A"}
+                                        Thanh toán - {order.payment?.paymentMethod?.paymentMethodType || "N/A"}
                                     </div>
                                     <div className="text-sm text-slate-400">
-                                        Payment Status - {order.payment?.status || "N/A"}
+                                        Trạng thái - {order.payment?.status || "N/A"}
                                     </div>
                                 </div>
 

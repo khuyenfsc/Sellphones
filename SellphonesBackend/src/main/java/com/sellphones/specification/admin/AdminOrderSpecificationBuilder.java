@@ -20,8 +20,8 @@ public class AdminOrderSpecificationBuilder {
             spec = spec.and(hasCustomerId(request.getCustomerId()));
         }
 
-        if(request.getCode() != null){
-            spec = spec.and(containsCode(request.getCode()));
+        if(request.getOrderCode() != null){
+            spec = spec.and(containsCode(request.getOrderCode()));
         }
 
         if(request.getEmail() != null){
@@ -78,6 +78,7 @@ public class AdminOrderSpecificationBuilder {
     }
 
     public static Specification<Order> hasEmail(String email){
+        System.out.println("hasEmail" + email);
         return (root, query, cb) -> cb.like(root.get("user").get("email"), "%" +  email + "%");
     }
 

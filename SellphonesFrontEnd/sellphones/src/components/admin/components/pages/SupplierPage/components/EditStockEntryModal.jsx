@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 function EditStockEntryModal({ isOpen, onClose, onUpdate, onDelete, entry }) {
@@ -43,12 +44,26 @@ function EditStockEntryModal({ isOpen, onClose, onUpdate, onDelete, entry }) {
     };
 
     const handleDelete = async () => {
+        Swal.fire({
+            title: "Bạn chắc chắn muốn xóa?",
+            text: "Hành động này không thể hoàn tác!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Xóa",
+            cancelButtonText: "Hủy",
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
 
-        setLoading(true);
-        await onDelete(entry.id);
-        setLoading(false);
+                setLoading(true);
+                await onDelete(entry.id);
+                setLoading(false);
 
-        onClose();
+                onClose();
+            }
+        });
+
     };
 
     return (

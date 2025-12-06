@@ -41,8 +41,6 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     private final WarehouseRepository warehouseRepository;
 
-    private final StockEntryRepository stockEntryRepository;
-
     private final ModelMapper modelMapper;
 
     @Override
@@ -68,7 +66,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.VIEW')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.VIEW')")
     public PageResponse<AdminInventoryResponse> getInventories(
         AdminInventoryFilterRequest request,
         Long warehouseId
@@ -101,14 +99,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.CREATE')")
     public void addInventory(AdminInventoryRequest request, Long warehouseId) {
         ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         Warehouse warehouse = warehouseRepository.findById(warehouseId).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
         Inventory inventory = Inventory.builder()
                 .productVariant(productVariant)
                 .warehouse(warehouse)
-                .quantity(request.getQuantity())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -122,25 +119,32 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.EDIT')")
     public void editInventory(AdminInventoryRequest request, Long id) {
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
-        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-        try {
-            inventory.setProductVariant(productVariant);
-            inventory.setQuantity(request.getQuantity());
-            inventoryRepository.save(inventory);
-        } catch (DataIntegrityViolationException e) {
-            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-                throw new AppException(ErrorCode.INVENTORY_ALREADY_EXISTS);
-            }
-        }
+//        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
+//        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
+//        try {
+//            inventory.setProductVariant(productVariant);
+//            inventoryRepository.save(inventory);
+//        } catch (DataIntegrityViolationException e) {
+//            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+//                throw new AppException(ErrorCode.INVENTORY_ALREADY_EXISTS);
+//            }
+//        }
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.INVENTORIES.DELETE')")
+    @Transactional
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.DELETE')")
     public void deleteInventory(Long id) {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
+        ProductVariant pv = inventory.getProductVariant();
+        Long delta = inventory.getQuantity();
         inventoryRepository.delete(inventory);
+
+        int updated = productVariantRepository.safeIncreaseStock(pv.getId(), -delta);
+        if(updated == 0){
+            throw new AppException(ErrorCode.INVENTORY_QUANTITY_CANNOT_BE_NEGATIVE);
+        }
     }
 }

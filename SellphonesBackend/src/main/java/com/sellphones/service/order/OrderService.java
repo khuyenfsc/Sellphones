@@ -5,11 +5,11 @@ import com.sellphones.dto.order.OrderDetailResponse;
 import com.sellphones.dto.order.OrderFilterRequest;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
+import com.sellphones.dto.order.admin.AdminOrderRequest;
 
 import java.util.Map;
 
 public interface OrderService {
-
     Map<String, Object> getTotalOrders();
 
     OrderResponse order(OrderRequest orderRequest);

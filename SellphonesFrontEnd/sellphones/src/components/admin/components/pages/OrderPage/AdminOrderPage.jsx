@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import CreateOrderModal from './components/CreateOrderModal';
-import OrderList from './components/OrderList';
+import OrderTable from './components/OrderTable';
 import AdminOrderService from '../../../service/AdminOrderService';
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
@@ -29,7 +29,7 @@ const AdminOrderPage = () => {
       </div>
 
       {/* Search and Controls */}
-      <OrderList/>
+      <OrderTable/>
 
 
       <CreateOrderModal

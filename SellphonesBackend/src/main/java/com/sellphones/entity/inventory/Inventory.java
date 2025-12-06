@@ -38,6 +38,6 @@ public class Inventory extends BaseEntity<Long> {
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockEntry> stockEntries = new ArrayList<>();
 
-    private Long quantity;
+    private Long quantity = 0L;
 
 }

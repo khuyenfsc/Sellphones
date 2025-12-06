@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import AdminWarehouseService from "../../../../service/AdminWarehouseService";
-import InventoryFilterModal from "./InventoryFilterModal"; 
+import InventoryFilterModal from "./InventoryFilterModal";
+import EditInventoryModal from "./EditInventoryModal";
 
 export default function InventoryTable({ warehouseId, isReloaded }) {
     const navigate = useNavigate();
     const [inventories, setInventories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [isEditModelOpen, setIsEditModalOpen] = useState(false);
+    const [selectedInventory, setSelectedInventory] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -71,6 +75,21 @@ export default function InventoryTable({ warehouseId, isReloaded }) {
         setFilterRequest({ ...cleanFilters, page: 0 });
         setCurrentPage(1);
     };
+
+    const handleDeleteInventory = async (id) => {
+        try {
+            await AdminWarehouseService.deleteInventory(id);
+
+            toast.success("Xóa thành công!");
+
+            fetchInventories();
+        } catch (err) {
+            console.error(err);
+
+            toast.error("Xóa thất bại!");
+        }
+    };
+
 
     const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
     const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -218,7 +237,10 @@ export default function InventoryTable({ warehouseId, isReloaded }) {
                             <div className="col-span-1 text-center">
                                 <button
                                     className="text-slate-400 hover:text-white transition"
-                                    onClick={() => navigate(`/admin/warehouses/${warehouseId}/inventories/view/${inv.id}`)}
+                                    onClick={() => {
+                                        setSelectedInventory(inv);
+                                        setIsEditModalOpen(true);
+                                    }}
                                 >
                                     <ChevronRight size={20} />
                                 </button>
@@ -233,6 +255,14 @@ export default function InventoryTable({ warehouseId, isReloaded }) {
                 onClose={() => setIsFilterModalOpen(false)}
                 onApply={handleFilter}
             />
+
+            <EditInventoryModal
+                isOpen={isEditModelOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                inventory={selectedInventory}
+                onDelete={handleDeleteInventory}
+            />
+
         </>
     );
 }

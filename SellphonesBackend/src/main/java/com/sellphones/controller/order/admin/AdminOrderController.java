@@ -6,6 +6,7 @@ import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
 import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
 import com.sellphones.dto.order.admin.AdminOrderListResponse;
+import com.sellphones.dto.order.admin.AdminOrderRequest;
 import com.sellphones.dto.order.admin.AdminShipmentRequest;
 import com.sellphones.service.order.OrderService;
 import com.sellphones.service.order.admin.AdminOrderService;
@@ -38,7 +39,7 @@ public class AdminOrderController {
     }
 
     @PostMapping("/make-order")
-    public ResponseEntity<CommonResponse> makeOrder(@RequestBody @Valid OrderRequest request){
+    public ResponseEntity<CommonResponse> makeOrder(@RequestBody @Valid AdminOrderRequest request){
         orderService.order(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Make order successfully!");

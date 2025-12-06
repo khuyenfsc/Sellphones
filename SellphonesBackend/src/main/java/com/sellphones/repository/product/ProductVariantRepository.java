@@ -1,5 +1,6 @@
 package com.sellphones.repository.product;
 
+import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.product.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +30,13 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
           AND pv.stock + :delta >= 0
     """)
     int safeIncreaseStock(@Param("variantId") Long variantId, @Param("delta") long delta);
+
+    @Query("""
+        SELECT ci FROM ProductVariant pv
+        WHERE pv.status = :status
+          AND pv.id IN :variantIds
+    """)
+    List<ProductVariant> findVariantsIn(@Param("status") ProductStatus status,@Param("variantIds") Collection<Long> variantIds);
+
 
 }

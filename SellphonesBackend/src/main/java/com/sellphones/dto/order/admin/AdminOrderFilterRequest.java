@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class AdminOrderFilterRequest {
-    private String code;
+    private String orderCode;
     private OrderStatus orderStatus;
     private PaymentMethodType paymentMethodType;
     private String customerName;

@@ -13,7 +13,4 @@ public class AdminInventoryRequest {
     @NotNull
     private Long productVariantId;
 
-    @Min(0)
-    @NotNull
-    private Long quantity;
 }
