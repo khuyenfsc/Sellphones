@@ -32,7 +32,7 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     int safeIncreaseStock(@Param("variantId") Long variantId, @Param("delta") long delta);
 
     @Query("""
-        SELECT ci FROM ProductVariant pv
+        SELECT pv FROM ProductVariant pv
         WHERE pv.status = :status
           AND pv.id IN :variantIds
     """)

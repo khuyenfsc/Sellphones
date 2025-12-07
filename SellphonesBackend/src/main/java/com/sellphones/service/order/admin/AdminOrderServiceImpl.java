@@ -30,8 +30,10 @@ import com.sellphones.repository.order.OrderRepository;
 import com.sellphones.repository.order.ShipmentRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.repository.product.WarrantyRepository;
+import com.sellphones.repository.promotion.GiftProductRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.service.payment.PaymentService;
+import com.sellphones.service.promotion.ProductPromotionService;
 import com.sellphones.specification.admin.AdminOrderSpecificationBuilder;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
@@ -72,9 +74,15 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     private final ProductPromotionRepository productPromotionRepository;
 
+    private final GiftProductRepository giftProductRepository;
+
     private final PaymentService paymentService;
 
+    private final ProductPromotionService productPromotionService;
+
     private final ModelMapper modelMapper;
+
+    private final long paymentId = 1;
 
     @Override
     @PreAuthorize("hasAuthority('SALES.ORDERS.VIEW')")
@@ -110,7 +118,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
                 .customerInfo(customerInfo)
                 .build();
 
-        Payment payment = paymentService.initPayment(request.getPaymentMethodId());
+        Payment payment = paymentService.initPayment(paymentId);
         payment.setOrder(order);
 
         List<OrderVariant> orderVariants = makeOrderVariants(variants, order);
@@ -248,7 +256,8 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
         for(ProductVariant pv : pvs){
             Map<String, Long> variant = variants.get(pv.getId());
-            int updatedRows = productVariantRepository.deductStock(pv.getId(), variant.get("quantity"));
+            Long quantity = variant.get("quantity");
+            int updatedRows = productVariantRepository.deductStock(pv.getId(), quantity);
 
             if (updatedRows == 0) {
                 throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
@@ -256,25 +265,22 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
             List<Warranty> warranties = warrantiesMap.get(pv.getId());
             Warranty warranty = warranties.stream()
-                    .filter(w -> w.getId().equals(variants.get(pv.getId()))
+                    .filter(w -> w.getId().equals(variants.get(pv.getId()).get("warranty")))
                     .findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
 
-            for(GiftProduct gf : productVariant.getGiftProducts()){
-                long newStock = gf.getStock() - cartItem.getQuantity();
-                gf.setStock(Math.max(newStock, 0));
-            }
+            giftProductRepository.deductStock(pv.getId(), quantity);
 
             OrderVariant orderVariant = OrderVariant.builder()
                     .order(order)
-                    .productVariant(productVariant)
-                    .quantity(cartItem.getQuantity())
+                    .productVariant(pv)
+                    .quantity(quantity)
                     .addedAt(LocalDateTime.now())
-                    .totalPrice(productVariant.getCurrentPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                    .totalPrice(pv.getCurrentPrice().multiply(BigDecimal.valueOf(quantity)))
                     .warranty(warranty)
                     .build();
 
             List<ProductPromotion> variantPromotions =
-                    promotionsMap.getOrDefault(productVariant.getId(), List.of());
+                    promotionsMap.getOrDefault(pv.getId(), List.of());
             List<OrderVariantPromotion> orderVariantPromotions = variantPromotions.stream()
                     .map(ovp -> convertToOrderVariantPromotion(ovp, orderVariant))
                     .toList();
@@ -302,6 +308,20 @@ public class AdminOrderServiceImpl implements AdminOrderService{
                 .map(OrderVariant::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
+    }
+
+    private OrderVariantPromotion convertToOrderVariantPromotion(ProductPromotion productPromotion, OrderVariant orderVariant) {
+
+        return OrderVariantPromotion.builder()
+                .orderVariant(orderVariant)
+                .name(productPromotion.getName())
+                .description(productPromotion.getDescription())
+                .config(productPromotion.getConfig())
+                .condition(productPromotion.getCondition())
+                .startDate(productPromotion.getStartDate())
+                .endDate(productPromotion.getEndDate())
+                .type(productPromotion.getType())
+                .build();
     }
 
 }

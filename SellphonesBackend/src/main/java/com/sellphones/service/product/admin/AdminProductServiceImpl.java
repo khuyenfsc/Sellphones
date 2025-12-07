@@ -344,7 +344,6 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
     public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
@@ -368,6 +367,7 @@ public class AdminProductServiceImpl implements AdminProductService{
         List<ProductPromotion> promotions = request.getPromotionIds() != null
                 ? productPromotionRepository.findByIdIn(request.getPromotionIds())
                 : new ArrayList<>();
+        System.out.println("editProductVariant " + promotions.size());
 
         List<GiftProduct> giftProducts = request.getGiftProductIds() != null
                 ? giftProductRepository.findByIdIn(request.getGiftProductIds())

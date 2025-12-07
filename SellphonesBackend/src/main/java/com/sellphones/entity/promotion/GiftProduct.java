@@ -35,10 +35,10 @@ public class GiftProduct extends BaseEntity<Long> {
     @Column(precision = 19, scale = 0)
     private BigDecimal price;
 
-//    @ManyToMany
-//    @JoinTable(name = "product_gift",
-//            joinColumns = @JoinColumn(name = "gift_product_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
-//    )
-//    private List<ProductVariant> productVariants;
+    @ManyToMany
+    @JoinTable(name = "product_variant_gift",
+            joinColumns = @JoinColumn(name = "gift_product_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_variant_id")
+    )
+    private List<ProductVariant> productVariants;
 }

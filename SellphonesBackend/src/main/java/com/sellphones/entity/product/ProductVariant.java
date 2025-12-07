@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -85,7 +86,7 @@ public class ProductVariant extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "product_variant_id"),
             inverseJoinColumns = @JoinColumn(name = "warranty_id")
     )
-    private List<Warranty> warranties;
+    private List<Warranty> warranties = new ArrayList<>();
 
     @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventory> inventories;

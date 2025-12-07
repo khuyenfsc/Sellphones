@@ -27,8 +27,6 @@ public class AdminOrderController {
 
     private final AdminOrderService adminOrderService;
 
-    private final OrderService orderService;
-
     @GetMapping
     public ResponseEntity<CommonResponse> getOrders(AdminOrderFilterRequest request){
         PageResponse<AdminOrderListResponse> response = adminOrderService.getOrders(request);
@@ -40,7 +38,7 @@ public class AdminOrderController {
 
     @PostMapping("/make-order")
     public ResponseEntity<CommonResponse> makeOrder(@RequestBody @Valid AdminOrderRequest request){
-        orderService.order(request);
+        adminOrderService.createOrder(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Make order successfully!");
 

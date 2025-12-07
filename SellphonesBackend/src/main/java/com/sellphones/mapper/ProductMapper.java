@@ -163,6 +163,7 @@ public class ProductMapper {
         variant.setCurrentPrice(request.getCurrentPrice());
         variant.setStatus(request.getStatus());
         variant.setVariantImage(variantImage);
+        System.out.println("mapToEditedProductVariantEntity " + promotions.size());
         variant.setPromotions(promotions);
         variant.setGiftProducts(giftProducts);
         variant.setAttributeValues(attributeValues);
