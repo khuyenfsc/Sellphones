@@ -17,7 +17,7 @@ public class ProductPromotionResponse {
 
 //    private String description;
 //
-//    private String config;
+    private String config;
 //
 //    private PromotionType type;
 //

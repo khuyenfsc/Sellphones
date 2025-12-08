@@ -2,6 +2,7 @@ package com.sellphones.service.order.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.dashboard.DashboardRequest;
+import com.sellphones.dto.order.OrderDetailResponse;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.admin.*;
 import com.sellphones.dto.product.OrderProductRequest;
@@ -23,6 +24,7 @@ import com.sellphones.entity.user.RoleName;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.mapper.AddressMapper;
 import com.sellphones.repository.address.AddressRepository;
 import com.sellphones.repository.customer.CustomerInfoRepository;
 import com.sellphones.repository.inventory.InventoryRepository;
@@ -82,6 +84,8 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     private final ModelMapper modelMapper;
 
+    private final AddressMapper addressMapper;
+
     private final long paymentId = 1;
 
     @Override
@@ -105,6 +109,14 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     }
 
     @Override
+    public OrderDetailResponse getOrderDetailsById(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        return modelMapper.map(order, OrderDetailResponse.class);
+    }
+
+    @Override
+    @Transactional
     public void createOrder(AdminOrderRequest request) {
         Map<Long, Map<String, Long>> variants = request.getVariants();
         CustomerInfo customerInfo = customerInfoRepository.findById(request.getCustomerInfoId())
@@ -156,12 +168,14 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             throw new AppException(ErrorCode.INVALID_SHIPMENT_ITEMS);
         }
 
-
-        Map<Long, Long> inventoryQuantityMap = request.getInventoryItems().stream()
-                .collect(Collectors.toMap(AdminShipmentInventoryItem::getInventoryId, AdminShipmentInventoryItem::getQuantity));
-        List<Inventory> inventories = inventoryRepository.findByIdIn(inventoryQuantityMap.keySet());
+        Set<Long> inventoryIds = request.getInventoryItems().keySet();
+        List<Inventory> inventories = inventoryRepository.findByIdIn(inventoryIds);
         for(Inventory inventory : inventories){
-            Long quantity = inventoryQuantityMap.get(inventory.getId());
+            Map<String, Long> item = request.getInventoryItems().get(inventory.getId());
+            Long quantity = item.get("quantity");
+            if(!Objects.equals  (item.get("variantId"), inventory.getProductVariant().getId())){
+                throw new AppException(ErrorCode.VARIANT_NOT_IN_INVENTORY);
+            }
 
             int updatedQuantity = inventoryRepository.safeIncreaseQuantity(inventory.getId(), -quantity);
             if (updatedQuantity == 0) {
@@ -169,14 +183,13 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             }
         }
 
-        Address address = addressRepository.findByIdAndAddressType(request.getPickupAddressId(), AddressType.PICKUP)
-                .orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
+        Address pickupAddress = addressMapper.mapToAddressEntity(request.getAddress());
         Shipment shipment = Shipment.builder()
                 .code(request.getCode())
-                .shippingPrice(new BigDecimal(request.getShippingPrice()))
+                .shippingPrice(request.getShippingPrice())
                 .deliveryPartner(request.getPartner())
                 .inventories(inventories)
-                .pickupAddress(address)
+                .pickupAddress(pickupAddress)
                 .expectedDeliveryDate(request.getExpectedDeliveryDate())
                 .order(order)
                 .createdAt(LocalDateTime.now())
@@ -250,6 +263,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
                                 Collectors.toList()
                         )
                 ));
+        System.out.println("makeOrderVariants "  + warrantiesMap.keySet());
 
 //        Map<Long, Long> warrantyIdMap = variants.stream()
 //                .collect(Collectors.toMap(AdminOrderVariantRequest::getVariantId, AdminOrderVariantRequest::getWarrantyId));
@@ -264,8 +278,9 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             }
 
             List<Warranty> warranties = warrantiesMap.get(pv.getId());
+            System.out.println("makeOrderVariants " + pv.getId() + " " + variant.get("warranty"));
             Warranty warranty = warranties.stream()
-                    .filter(w -> w.getId().equals(variants.get(pv.getId()).get("warranty")))
+                    .filter(w -> w.getId().equals(variant.get("warranty")))
                     .findFirst().orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND_IN_PRODUCT));
 
             giftProductRepository.deductStock(pv.getId(), quantity);

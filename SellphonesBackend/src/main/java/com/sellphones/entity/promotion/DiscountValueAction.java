@@ -21,7 +21,7 @@ public class DiscountValueAction implements PromotionAction{
     @SneakyThrows(JsonProcessingException.class)
     public void apply(OrderVariant orderVariant, String configJson) {
         JsonNode json = objectMapper.readTree(configJson);
-        BigDecimal amount = json.get("amount").decimalValue();
+        BigDecimal amount = json.get("value").decimalValue();
 
         BigDecimal quantityBD = BigDecimal.valueOf(orderVariant.getQuantity());
         BigDecimal totalDiscount = amount.multiply(quantityBD);

@@ -39,7 +39,7 @@ public class Shipment extends BaseEntity<Long> {
     )
     private List<Inventory> inventories = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address pickupAddress;
 

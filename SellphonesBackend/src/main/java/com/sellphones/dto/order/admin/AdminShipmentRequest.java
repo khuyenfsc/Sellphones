@@ -1,10 +1,13 @@
 package com.sellphones.dto.order.admin;
 
+import com.sellphones.dto.address.AddressRequest;
 import com.sellphones.entity.order.DeliveryPartner;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -17,10 +20,10 @@ public class AdminShipmentRequest {
 
     private LocalDate expectedDeliveryDate;
 
-    private List<AdminShipmentInventoryItem> inventoryItems;
+    private Map<Long, Map<String, Long>> inventoryItems;
 
-    private Long pickupAddressId;
+    private AddressRequest address;
 
-    private Long shippingPrice;
+    private BigDecimal shippingPrice;
 
 }

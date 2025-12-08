@@ -1,5 +1,7 @@
 package com.sellphones.dto.product.admin;
 
+import com.sellphones.dto.promotion.GiftProductResponse;
+import com.sellphones.dto.promotion.ProductPromotionResponse;
 import com.sellphones.entity.product.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +32,9 @@ public class AdminProductVariantResponse {
     private Long stock;
 
     private List<AdminWarrantyResponse> warranties;
+
+    private List<ProductPromotionResponse> promotions;
+
+    private List<GiftProductResponse> giftProducts;
 
 }

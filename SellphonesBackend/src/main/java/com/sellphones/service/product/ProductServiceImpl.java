@@ -124,9 +124,9 @@ public class ProductServiceImpl implements ProductService{
                 .findByIdAndStatus(id, ProductStatus.ACTIVE)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
 
-        ProductVariantResponse response = modelMapper.typeMap(ProductVariant.class, ProductVariantResponse.class)
-                .addMappings(m -> m.skip(ProductVariantResponse::setPromotions))
-                .map(productVariant);
+//        ProductVariantResponse response = modelMapper.typeMap(ProductVariant.class, ProductVariantResponse.class)
+//                .addMappings(m -> m.skip(ProductVariantResponse::setPromotions))
+//                .map(productVariant);
 
         List<ProductPromotion> promotions = productPromotionRepository.findActivePromotions(id);
         List<GiftProduct> giftProducts = productVariant.getGiftProducts();

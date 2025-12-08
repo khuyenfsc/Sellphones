@@ -134,27 +134,45 @@ const CartPage = () => {
         return price?.toLocaleString('vi-VN') + 'đ';
     };
 
-    // ✅ Tính giá sau khuyến mãi, cộng bảo hành, nhân số lượng
     const calculateItemTotal = (item) => {
-        let basePrice = item.price;
+        let basePrice = item.price;  // giá gốc chưa giảm
         let totalDiscount = 0;
 
         item.promotions.forEach(promo => {
-            const config = promo.config ? JSON.parse(promo.config) : {};
-            if (promo.type === "DISCOUNT_AMOUNT" && config.amount) {
-                basePrice -= config.amount;
-                totalDiscount += config.amount;
-            } else if (promo.type === "DISCOUNT_PERCENT" && config.percent) {
+            if (!promo.config) return;
+
+            let config = {};
+            try {
+                config = JSON.parse(promo.config);
+            } catch (err) {
+                console.error("Lỗi parse config:", promo.config);
+                return;
+            }
+
+            // Giảm theo số tiền: { "value": 1000000 }
+            if (config.value) {
+                basePrice -= config.value;
+                totalDiscount += config.value;
+            }
+
+            // Giảm theo phần trăm: { "percent": 10 }
+            if (config.percent) {
                 const discount = basePrice * (config.percent / 100);
                 basePrice -= discount;
                 totalDiscount += discount;
             }
         });
 
+        // Không cho giá âm
+        if (basePrice < 0) basePrice = 0;
+
         const warrantyPrice = item.selectedWarranty?.price || 0;
+
         const total = (basePrice + warrantyPrice) * item.quantity;
-        return { total, totalDiscount, warrantyPrice, basePrice };
+
+        return { total, basePrice, totalDiscount, warrantyPrice };
     };
+
 
     // ✅ Tính tổng tạm tính tất cả sản phẩm được chọn
     const calculateTotal = () => {
@@ -244,8 +262,8 @@ const CartPage = () => {
 
 
                             <p className={`text-xs text-center mt-3 font-semibold ${selectedItems.length === 0 || !selectedItems.every(item => item.selectedWarranty)
-                                    ? 'text-red-600'
-                                    : 'text-gray-500'
+                                ? 'text-red-600'
+                                : 'text-gray-500'
                                 }`}>
                                 {selectedItems.length === 0
                                     ? "Vui lòng chọn sản phẩm để tiếp tục"

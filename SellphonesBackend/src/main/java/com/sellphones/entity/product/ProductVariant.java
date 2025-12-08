@@ -57,7 +57,7 @@ public class ProductVariant extends BaseEntity<Long> {
     @JoinTable(name = "product_variant_promotion",
             joinColumns = @JoinColumn(name = "product_variant_id"),
             inverseJoinColumns = @JoinColumn(name = "product_promotion_id"))
-    private List<ProductPromotion> promotions;
+    private List<ProductPromotion> promotions = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "product_variant_gift",

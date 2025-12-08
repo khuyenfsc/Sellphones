@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import FilterModal from "./FilterModal";
 import AdminOrderService from "../../../../service/AdminOrderService";
+import { useNavigate } from "react-router-dom";
 
-export default function OrderTable({ customerId }) {
+export default function OrderTable({ customerId, isReloaded }) {
+    const navigate = useNavigate();
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -66,7 +68,7 @@ export default function OrderTable({ customerId }) {
             page: currentPage,
             perPage,
         });
-    }, [currentPage, perPage, filterRequest]);
+    }, [currentPage, perPage, filterRequest, isReloaded]);
 
     const handlePrevPage = () => {
         setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -272,7 +274,10 @@ export default function OrderTable({ customerId }) {
 
                                 {/* Action */}
                                 <div className="col-span-1 flex items-center justify-end">
-                                    <button className="text-slate-400 hover:text-white transition">
+                                    <button
+                                        className="text-slate-400 hover:text-white transition"
+                                        onClick={() => navigate(`/admin/orders/view/${order?.id}`)}
+                                    >
                                         <ChevronRight size={20} />
                                     </button>
                                 </div>

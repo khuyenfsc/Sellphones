@@ -5,12 +5,31 @@ import OrderTable from './components/OrderTable';
 import AdminOrderService from '../../../service/AdminOrderService';
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
-import { fi } from 'date-fns/locale';
+import { fi, is } from 'date-fns/locale';
+import { toast } from "react-toastify";
 
 dayjs.locale("vi");
 
 const AdminOrderPage = () => {
   const [isCreateOrderModalOpen, setIsCreateOrderModalOpen] = useState(false);
+  const [isReloaded, setIsReloaded] = useState(false);
+
+    const handleCreateOrder = async (orderData) => {
+    try {
+      const res = await AdminOrderService.createOrder(orderData);
+
+      if (res.success) {
+        toast.success("Tạo đơn hàng thành công!");   
+        setIsCreateOrderModalOpen(false);
+        setIsReloaded(!isReloaded);
+      } else {
+        toast.error("Tạo đơn hàng thất bại: " + res.message);  
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra khi tạo đơn hàng!"); 
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6">
@@ -29,12 +48,13 @@ const AdminOrderPage = () => {
       </div>
 
       {/* Search and Controls */}
-      <OrderTable/>
+      <OrderTable isReloaded={isReloaded}/>
 
 
       <CreateOrderModal
         isOpen={isCreateOrderModalOpen}
         onClose={() => setIsCreateOrderModalOpen(false)}
+        onCreate={handleCreateOrder}
       />
 
     </div>

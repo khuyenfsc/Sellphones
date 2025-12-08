@@ -2,6 +2,7 @@ package com.sellphones.controller.order.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.order.OrderDetailResponse;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
 import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
@@ -36,7 +37,16 @@ public class AdminOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PostMapping("/make-order")
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse> getOrderDetailsById(@PathVariable Long id){
+        OrderDetailResponse response = adminOrderService.getOrderDetailsById(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+    }
+
+    @PostMapping("/create-order")
     public ResponseEntity<CommonResponse> makeOrder(@RequestBody @Valid AdminOrderRequest request){
         adminOrderService.createOrder(request);
         Map<String, Object> map = new HashMap<>();

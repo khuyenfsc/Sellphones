@@ -17,6 +17,10 @@ public class AdminInventorySpecificationBuilder {
             spec = spec.and(hasQuantityBetween(request.getMinStock(), request.getMaxStock()));
         }
 
+        if(request.getProductVariantId() != null){
+            spec = spec.and(hasVariantId(request.getProductVariantId()));
+        }
+
         return spec;
     }
 
@@ -36,12 +40,18 @@ public class AdminInventorySpecificationBuilder {
         return spec;
     }
 
+
+
     public static Specification<Inventory> hasProductVariantContainContain(String productVariantName){
         return (root, query, cb) -> cb.like(cb.lower(root.get("productVariant").get("productVariantName")), "%" + productVariantName.toLowerCase() + "%");
     }
 
     public static Specification<Inventory> hasWarehouseId(Long warehouseId){
         return (root, query, cb) -> cb.equal(root.get("warehouse").get("id"), warehouseId);
+    }
+
+    public static Specification<Inventory> hasVariantId(Long variantId){
+        return (root, query, cb) -> cb.equal(root.get("productVariant").get("id"), variantId);
     }
 
     public static Specification<Inventory> hasQuantityBetween(Long minStock, Long maxStock){

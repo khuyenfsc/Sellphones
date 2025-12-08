@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdminInventoryFilterRequest {
 
+    private Long productVariantId;
+
     private String productVariantName;
 
     private String sortType;
