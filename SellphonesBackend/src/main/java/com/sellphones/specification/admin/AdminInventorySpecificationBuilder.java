@@ -17,9 +17,7 @@ public class AdminInventorySpecificationBuilder {
             spec = spec.and(hasQuantityBetween(request.getMinStock(), request.getMaxStock()));
         }
 
-        if(request.getProductVariantId() != null){
-            spec = spec.and(hasVariantId(request.getProductVariantId()));
-        }
+
 
         return spec;
     }
@@ -28,6 +26,10 @@ public class AdminInventorySpecificationBuilder {
         Specification<Inventory> spec = (root, query, cb) -> cb.conjunction();
 
         spec = spec.and(hasWarehouseId(warehouseId));
+
+        if(request.getProductVariantId() != null){
+            spec = spec.and(hasVariantId(request.getProductVariantId()));
+        }
 
         if(request.getProductVariantName() != null){
             spec = spec.and(hasProductVariantContainContain(request.getProductVariantName()));

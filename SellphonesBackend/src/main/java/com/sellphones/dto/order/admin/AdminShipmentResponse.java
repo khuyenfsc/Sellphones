@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminShipmentListResponse {
+public class AdminShipmentResponse {
 
     private Long id;
 

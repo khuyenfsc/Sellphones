@@ -55,6 +55,8 @@ import SupplierDetailsPage from "./components/admin/components/pages/SupplierPag
 import AdminWarehousePage from "./components/admin/components/pages/WarehousePage/AdminWarehousePage";
 import WarehouseDetailsPage from "./components/admin/components/pages/WarehousePage/WarehouseDetailsPage";
 import AdminOrderDetailsPage from "./components/admin/components/pages/OrderPage/AdminOrderDetailsPage";
+import AdminShipmentPage from "./components/admin/components/pages/ShipmentPage/AdminShipmentPage";
+import ShipmentDetailsPage from "./components/admin/components/pages/ShipmentPage/ShipmentDetailsPage";
 
 export default function App() {
   return (
@@ -185,6 +187,8 @@ export default function App() {
           <Route path="warehouses" element={<AdminWarehousePage />} />
           <Route path="warehouses/view/:warehouseId" element={<WarehouseDetailsPage />} />
           <Route path="orders/view/:orderId" element={<AdminOrderDetailsPage />} />
+          <Route path="shipments" element={<AdminShipmentPage />} />
+          <Route path="shipments/view/:shipmentId" element={<ShipmentDetailsPage />} />
           {/* Các admin sub-routes khác */}
         </Route>
 

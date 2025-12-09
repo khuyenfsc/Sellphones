@@ -23,13 +23,17 @@ public class Shipment extends BaseEntity<Long> {
 
     private String code;
 
-    private DeliveryPartner deliveryPartner;
+    @Enumerated(EnumType.STRING)
+    private DeliveryPartner partner;
 
     private BigDecimal shippingPrice;
 
     private LocalDate expectedDeliveryDate;
 
     private LocalDate deliveryDate;
+
+    @Enumerated(EnumType.STRING)
+    private ShipmentStatus status;
 
     @ManyToMany
     @JoinTable(

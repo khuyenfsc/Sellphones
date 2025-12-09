@@ -34,4 +34,6 @@ public class OrderDetailResponse {
 
     private CustomerInfoResponse customerInfo;
 
+    private ShipmentResponse shipment;
+
 }

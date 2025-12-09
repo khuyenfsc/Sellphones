@@ -127,41 +127,6 @@ const CustomerDetailsPage = () => {
                 <div className="flex-1 flex flex-col gap-6">
                     {/* Orders Table */}
                     <OrderTable customerId={customerId} />
-
-
-                    {/* Payments Table */}
-                    <div className="bg-slate-900 rounded-lg overflow-hidden">
-                        <div className="flex justify-between items-center px-6 py-3 border-b border-slate-800">
-                            <h2 className="text-lg font-semibold">Thanh toán ({payments.length})</h2>
-                        </div>
-                        <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-slate-800 text-slate-400 text-sm font-semibold">
-                            <div className="col-span-1">ID</div>
-                            <div className="col-span-3">Mã thanh toán</div>
-                            <div className="col-span-3">Ngày thanh toán</div>
-                            <div className="col-span-2">Số tiền</div>
-                            <div className="col-span-3">Phương thức</div>
-                        </div>
-                        {loadingPayments ? (
-                            <div className="flex items-center justify-center py-10">
-                                <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                            </div>
-                        ) : payments.length === 0 ? (
-                            <div className="text-center text-slate-400 py-6">Không có thanh toán nào</div>
-                        ) : (
-                            payments.map((payment) => (
-                                <div
-                                    key={payment.id}
-                                    className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-slate-800 hover:bg-slate-800/50 transition"
-                                >
-                                    <div className="col-span-1 text-slate-300">{payment.id}</div>
-                                    <div className="col-span-3 text-slate-300">{payment.code}</div>
-                                    <div className="col-span-3 text-slate-300">{payment.date}</div>
-                                    <div className="col-span-2 text-slate-300">{payment.amount}</div>
-                                    <div className="col-span-3 text-slate-300">{payment.method}</div>
-                                </div>
-                            ))
-                        )}
-                    </div>
                 </div>
 
                 {/* Right: Customer Info */}

@@ -1,9 +1,10 @@
 package com.sellphones.service.order.admin;
 
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.order.ShipmentResponse;
 import com.sellphones.dto.order.admin.AdminShipmentDetailsResponse;
 import com.sellphones.dto.order.admin.AdminShipmentFilterRequest;
-import com.sellphones.dto.order.admin.AdminShipmentListResponse;
+import com.sellphones.dto.order.admin.AdminUpdateShipmentRequest;
 import com.sellphones.entity.order.Shipment;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -31,18 +32,18 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
 
     @Override
     @PreAuthorize("hasAuthority('SALES.SHIPMENTS.VIEW')")
-    public PageResponse<AdminShipmentListResponse> getShipments(AdminShipmentFilterRequest request) {
+    public PageResponse<ShipmentResponse> getShipments(AdminShipmentFilterRequest request) {
         Specification<Shipment> spec = AdminShipmentSpecificationBuilder.build(request);
-        Sort sort = Sort.by(Sort.Direction.DESC, "expectedDeliveryDate");
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Page<Shipment> shipmentPage = shipmentRepository.findAll(spec, pageable);
         List<Shipment> shipments = shipmentPage.getContent();
-        List<AdminShipmentListResponse> response = shipments.stream()
-                .map(o -> modelMapper.map(o, AdminShipmentListResponse.class))
+        List<ShipmentResponse> response = shipments.stream()
+                .map(o -> modelMapper.map(o, ShipmentResponse.class))
                 .toList();
 
-        return PageResponse.<AdminShipmentListResponse>builder()
+        return PageResponse.<ShipmentResponse>builder()
                 .result(response)
                 .total(shipmentPage.getTotalElements())
                 .totalPages(shipmentPage.getTotalPages())
@@ -54,6 +55,15 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
     public AdminShipmentDetailsResponse getShipmentDetails(Long id) {
         Shipment shipment = shipmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHIPMENT_NOT_FOUND));
         return modelMapper.map(shipment, AdminShipmentDetailsResponse.class);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('SALES.SHIPMENTS.EDIT')")
+    public void updateShipment(AdminUpdateShipmentRequest request, Long id) {
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHIPMENT_NOT_FOUND));
+        shipment.setExpectedDeliveryDate(request.getExpectedDeliveryDate());
+        shipmentRepository.save(shipment);
     }
 
 

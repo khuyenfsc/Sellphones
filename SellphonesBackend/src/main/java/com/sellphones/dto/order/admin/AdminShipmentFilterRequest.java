@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.sellphones.entity.order.DeliveryPartner;
+import com.sellphones.entity.order.ShipmentStatus;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,13 +18,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdminShipmentFilterRequest {
 
-    private Long orderId;
-
     private String code;
 
     private DeliveryPartner partner;
 
     private String customerName;
+
+    private ShipmentStatus status;
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)

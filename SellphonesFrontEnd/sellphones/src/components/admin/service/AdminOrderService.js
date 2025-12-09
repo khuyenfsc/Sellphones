@@ -239,7 +239,7 @@ const AdminOrderService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật vận chuyển",
+                message: err?.response?.data?.errors?.message || "Lỗi khi cập nhật vận chuyển",
             };
         }
     },

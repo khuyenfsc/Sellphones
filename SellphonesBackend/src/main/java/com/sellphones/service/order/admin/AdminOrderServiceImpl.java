@@ -173,7 +173,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         for(Inventory inventory : inventories){
             Map<String, Long> item = request.getInventoryItems().get(inventory.getId());
             Long quantity = item.get("quantity");
-            if(!Objects.equals  (item.get("variantId"), inventory.getProductVariant().getId())){
+            if(!Objects.equals(item.get("variantId"), inventory.getProductVariant().getId())){
                 throw new AppException(ErrorCode.VARIANT_NOT_IN_INVENTORY);
             }
 
@@ -183,11 +183,12 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             }
         }
 
-        Address pickupAddress = addressMapper.mapToAddressEntity(request.getAddress());
+        Address pickupAddress = addressMapper.mapToAddressEntity(request.getPickupAddress());
         Shipment shipment = Shipment.builder()
                 .code(request.getCode())
-                .shippingPrice(request.getShippingPrice())
-                .deliveryPartner(request.getPartner())
+                .shippingPrice(request.getShippingFee())
+                .partner(request.getPartner())
+                .status(ShipmentStatus.SHIPPING)
                 .inventories(inventories)
                 .pickupAddress(pickupAddress)
                 .expectedDeliveryDate(request.getExpectedDeliveryDate())
@@ -208,7 +209,9 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         }
 
         order.getShipment().setDeliveryDate(LocalDate.now());
+        order.getShipment().setStatus(ShipmentStatus.DELIVERED);
         order.setOrderStatus(OrderStatus.DELIVERED);
+        order.getPayment().setStatus(PaymentStatus.COMPLETED);
     }
 
     @Override
