@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
     // 👉 Nếu admin đã đăng nhập -> chuyển về dashboard
     useEffect(() => {
         if (!loading && admin) {
-            navigate("/admin/dashboard");
+            navigate("/admin/");
         }
     }, [admin, loading, navigate]);
 

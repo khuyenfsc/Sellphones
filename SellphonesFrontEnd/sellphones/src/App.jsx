@@ -57,6 +57,7 @@ import WarehouseDetailsPage from "./components/admin/components/pages/WarehouseP
 import AdminOrderDetailsPage from "./components/admin/components/pages/OrderPage/AdminOrderDetailsPage";
 import AdminShipmentPage from "./components/admin/components/pages/ShipmentPage/AdminShipmentPage";
 import ShipmentDetailsPage from "./components/admin/components/pages/ShipmentPage/ShipmentDetailsPage";
+import AdminWelcomePage from "./components/admin/components/layouts/AdminWelcomePage";
 
 export default function App() {
   return (
@@ -159,6 +160,8 @@ export default function App() {
             </AdminAuthProvider>
           }
         >
+
+          <Route path="" element={<AdminWelcomePage />} /> 
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="orders" element={<AdminOrderPage />} />
           <Route path="customers" element={<AdminCustomerPage />} />

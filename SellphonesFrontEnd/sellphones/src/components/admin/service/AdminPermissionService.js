@@ -9,7 +9,7 @@ const AdminPermissionService = {
 
             // Nếu chưa có token → thử refresh
             if (!token) {
-                const refresh = await this.refreshToken();
+                const refresh = await AdminService.refreshToken();
                 if (!refresh.success) return { success: false, message: "Chưa đăng nhập" };
                 token = refresh.accessToken;
             }
