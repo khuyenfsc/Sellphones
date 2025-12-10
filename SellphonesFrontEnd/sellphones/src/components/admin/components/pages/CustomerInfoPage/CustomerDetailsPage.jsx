@@ -106,12 +106,7 @@ const CustomerDetailsPage = () => {
                     {customer ? customer.fullName : "Chi tiết khách hàng"}
                 </h1>
                 <div className="flex gap-3">
-                    <button
-                        className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
-                    >
-                        <ShoppingCart size={20} />
-                        <span className="text-sm font-medium">Tạo đơn hàng</span>
-                    </button>
+        
                     <button
                         className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
                         onClick={handleDelete}

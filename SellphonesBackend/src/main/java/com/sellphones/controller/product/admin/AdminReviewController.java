@@ -6,6 +6,7 @@ import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
 import com.sellphones.dto.product.admin.AdminUpdateReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
 import com.sellphones.service.product.admin.AdminReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AdminReviewController {
     private final AdminReviewService adminReviewService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getReviews(AdminReviewFilterRequest request){
+    public ResponseEntity<CommonResponse> getReviews(@Valid AdminReviewFilterRequest request){
         PageResponse<AdminReviewResponse> response = adminReviewService.getReviews(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", response);

@@ -53,7 +53,12 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     private final String giftProductFolderName = "gift_products";
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'PROMOTIONS.GIFT_PRODUCTS',
+        'CATALOG.PRODUCTS'
+    )
+    """)
     public PageResponse<AdminGiftProductResponse> getGiftProducts(AdminGiftProductFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -81,7 +86,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.CREATE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS')")
     public void createGiftProduct(String giftProductJson, MultipartFile thumbnailFile) {
         AdminGiftProductRequest request = jsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class);
         String thumbnailName = "";
@@ -111,7 +116,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.EDIT')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS')")
     public void editGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
         AdminGiftProductRequest request = jsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class);
@@ -137,7 +142,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS.DELETE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS')")
     public void deleteGiftProduct(Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
         String thumbnailName = giftProduct.getThumbnail();

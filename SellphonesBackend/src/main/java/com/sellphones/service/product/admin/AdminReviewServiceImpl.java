@@ -34,7 +34,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     private final String reviewImageFolderName = "reviews";
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.VIEW')")
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS')")
     public PageResponse<AdminReviewResponse> getReviews(AdminReviewFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -67,14 +67,14 @@ public class AdminReviewServiceImpl implements AdminReviewService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.EDIT')")
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS')")
     public void editReview(AdminUpdateReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         review.setStatus(request.getStatus());
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS')")
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
     }

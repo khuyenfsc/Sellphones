@@ -49,7 +49,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public PageResponse<AdminStockEntryResponse> getStockEntriesBySupplierId(@Valid AdminStockEntryFilterRequest request, Long supplierId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -72,7 +72,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public PageResponse<AdminStockEntryResponse> getStockEntriesByInventoryId(AdminStockEntryFilterRequest request, Long inventoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -96,7 +96,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERSI.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void addStockEntry(AdminCreateStockEntryRequest request, Long supplierId) {
         Inventory inventory = inventoryRepository.findById(request.getInventoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
@@ -121,7 +121,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void editStockEntry(AdminUpdateStockEntryRequest request, Long id) {
         StockEntry oldEntry = stockEntryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
@@ -150,7 +150,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.DELETE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void deleteStockEntry(Long id) {
         StockEntry entry = stockEntryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));

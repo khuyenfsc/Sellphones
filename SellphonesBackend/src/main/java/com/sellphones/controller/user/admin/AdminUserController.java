@@ -2,8 +2,9 @@ package com.sellphones.controller.user.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
+import com.sellphones.dto.user.admin.AdminUpdateUserRequest;
 import com.sellphones.dto.user.admin.AdminUserFilterRequest;
-import com.sellphones.dto.user.admin.AdminUserRequest;
+import com.sellphones.dto.user.admin.AdminCreateUserRequest;
 import com.sellphones.dto.user.admin.AdminUserResponse;
 import com.sellphones.service.user.admin.AdminUserService;
 import jakarta.validation.Valid;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class AdminUserController {
 
     @PostMapping("/create-user")
     public ResponseEntity<CommonResponse> createUser(
-        @RequestBody @Valid AdminUserRequest request
+        @RequestBody @Valid AdminCreateUserRequest request
     ){
 
         adminUserService.createUser(request);
@@ -48,7 +48,7 @@ public class AdminUserController {
 
     @PutMapping("/update-user/{id}")
     public ResponseEntity<CommonResponse> editUser(
-            @RequestBody @Valid AdminUserRequest request,
+            @RequestBody @Valid AdminUpdateUserRequest request,
             @PathVariable Long id
     ){
         adminUserService.editUser(request, id);

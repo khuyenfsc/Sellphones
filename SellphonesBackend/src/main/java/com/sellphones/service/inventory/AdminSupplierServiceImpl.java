@@ -52,7 +52,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.VIEW')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -75,7 +75,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void addSupplier(AdminSupplierRequest request) {
         Address address = addressMapper.mapToAddressEntity(request.getAddress());
         Supplier supplier = supplierMapper.mapToSupplierEntity(request, address);
@@ -86,7 +86,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void editSupplier(AdminSupplierRequest request, Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
         Address address = supplier.getAddress();
@@ -105,7 +105,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS.DELETE')")
+    @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
     public void deleteSupplier(Long id) {
         supplierRepository.deleteById(id);
     }

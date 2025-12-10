@@ -35,7 +35,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.VIEW')")
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES')")
     public PageResponse<AddressResponse> getAddresses(AdminAddressFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -59,7 +59,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.CREATE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES')")
     public void addAddress(AdminAddressRequest request) {
         Address address = addressMapper.mapToAddressEntity(request);
         address.setAddressType(request.getAddressType());
@@ -68,7 +68,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.EDIT')")
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES')")
     public void editAddress(AdminAddressRequest request, Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
         address.setStreet(request.getStreet());
@@ -79,7 +79,7 @@ public class AdminAddressServiceImpl implements AdminAddressService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.ADDRESSES')")
     public void deleteAddress(Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ADDRESS_NOT_FOUND));
         if(address.getAddressType() != AddressType.SUPPLIER){

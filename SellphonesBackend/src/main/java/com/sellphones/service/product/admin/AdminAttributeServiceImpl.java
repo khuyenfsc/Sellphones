@@ -43,9 +43,8 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Override
     @PreAuthorize("""
     hasAnyAuthority(
-        'CATALOG.ATTRIBUTES.VIEW',
-        'CATALOG.PRODUCTS.CREATE',
-        'CATALOG.PRODUCTS.EDIT'
+        'CATALOG.ATTRIBUTES',
+        'CATALOG.PRODUCTS'
     )
     """)
     public PageResponse<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
@@ -70,7 +69,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void addAttribute(AdminAttributeRequest request) {
         if (attributeRepository.existsByName(request.getName())) {
             throw new AppException(ErrorCode.ATTRIBUTE_NAME_ALREADY_EXISTS);
@@ -85,20 +84,20 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void editAttribute(AdminAttributeRequest request, Long id) {
         Attribute attribute = attributeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         attribute.setName(request.getName());
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void deleteAttribute(Long id) {
         attributeRepository.deleteById(id);
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public AdminAttributeResponse getAttributeById(Long id) {
         Attribute attribute = attributeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
@@ -106,7 +105,12 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'CATALOG.ATTRIBUTES',
+        'CATALOG.PRODUCTS'
+    )
+    """)
     public PageResponse<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -129,7 +133,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void addAttributeValue(AdminAttributeValueRequest request, Long attributeId) {
         Attribute attribute = attributeRepository.findById(attributeId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         AttributeValue attributeValue = AttributeValue.builder()
@@ -144,7 +148,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void editAttributeValue(AdminAttributeValueRequest request, Long attributeValueId) {
         AttributeValue attributeValue = attributeValueRepository.findById(attributeValueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
         attributeValue.setStrVal(request.getStrVal());
@@ -152,7 +156,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
     public void deleteAttributeValue(Long attributeValueId) {
         attributeValueRepository.deleteById(attributeValueId);
     }

@@ -31,7 +31,7 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.SHIPMENTS.VIEW')")
+    @PreAuthorize("hasAuthority('SALES.SHIPMENTS')")
     public PageResponse<ShipmentResponse> getShipments(AdminShipmentFilterRequest request) {
         Specification<Shipment> spec = AdminShipmentSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
@@ -51,14 +51,14 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.SHIPMENTS.VIEW')")
+    @PreAuthorize("hasAuthority('SALES.SHIPMENTS')")
     public AdminShipmentDetailsResponse getShipmentDetails(Long id) {
         Shipment shipment = shipmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHIPMENT_NOT_FOUND));
         return modelMapper.map(shipment, AdminShipmentDetailsResponse.class);
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.SHIPMENTS.EDIT')")
+    @PreAuthorize("hasAuthority('SALES.SHIPMENTS')")
     public void updateShipment(AdminUpdateShipmentRequest request, Long id) {
         Shipment shipment = shipmentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHIPMENT_NOT_FOUND));

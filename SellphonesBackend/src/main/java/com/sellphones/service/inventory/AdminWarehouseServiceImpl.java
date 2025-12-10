@@ -40,8 +40,13 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     private final AddressMapper addressMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.VIEW')")
-    public PageResponse<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request) {
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'SALES.ORDERS',
+            'INVENTORY.WAREHOUSES',
+            'INVENTORY.SUPPLIERS'
+        )
+    """)    public PageResponse<AdminWarehouseResponse> getWarehouses(AdminWarehouseFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -63,6 +68,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public AdminWarehouseResponse getWarehouseById(Long id) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
@@ -70,7 +76,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void addWarehouse(AdminWarehouseRequest request) {
         Address address = addressMapper.mapToAddressEntity(request.getAddress());
         Warehouse warehouse = Warehouse.builder()
@@ -89,7 +95,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void editWarehouse(AdminWarehouseRequest request, Long id) {
         Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
         Address address = warehouse.getAddress();
@@ -112,7 +118,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.DELETE')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void deleteWarehouse(Long id) {
         warehouseRepository.deleteById(id);
     }

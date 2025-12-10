@@ -37,7 +37,7 @@ public class AdminCommentServiceImpl implements AdminCommentService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.VIEW')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
     public PageResponse<AdminCommentResponse> getComments(AdminCommentFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -60,7 +60,7 @@ public class AdminCommentServiceImpl implements AdminCommentService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.REPLY')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
     public void replyComment(AdminCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
@@ -71,7 +71,7 @@ public class AdminCommentServiceImpl implements AdminCommentService{
                 .user(user)
                 .product(comment.getProduct())
                 .status(CommentStatus.APPROVED)
-                .isReplied(false)
+                .isReplied(true)
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -90,14 +90,14 @@ public class AdminCommentServiceImpl implements AdminCommentService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.EDIT')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
     public void editComment(AdminUpdateCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setStatus(request.getStatus());
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }

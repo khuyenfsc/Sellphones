@@ -26,6 +26,7 @@ export default function CreateUserModal({ isOpen, onClose, onCreate }) {
         email: "",
         password: "",
         roleId: "",
+        gender: "",
         status: "",
     });
 
@@ -68,6 +69,7 @@ export default function CreateUserModal({ isOpen, onClose, onCreate }) {
         if (!email.trim()) newErrors.email = "Email không được để trống";
         if (!password.trim()) newErrors.password = "Mật khẩu không được để trống";
         if (!roleId) newErrors.roleId = "Vui lòng chọn vai trò";
+        if (!gender) newErrors.gender = "Vui lòng chọn giới tính";
         if (!status) newErrors.status = "Vui lòng chọn trạng thái";
 
         setErrors(newErrors);
@@ -172,9 +174,13 @@ export default function CreateUserModal({ isOpen, onClose, onCreate }) {
                                     <option value="">-- Chọn giới tính --</option>
                                     <option value="MALE">Nam</option>
                                     <option value="FEMALE">Nữ</option>
-                                    <option value="OTHER">Khác</option>
                                 </select>
+
+                                {errors.gender && (
+                                    <p className="text-red-500 text-sm">{errors.gender}</p>
+                                )}
                             </div>
+
 
                             {/* Date of Birth */}
                             <div>

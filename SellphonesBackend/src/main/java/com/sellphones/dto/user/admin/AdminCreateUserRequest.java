@@ -1,8 +1,6 @@
 package com.sellphones.dto.user.admin;
 
 import com.sellphones.entity.user.Gender;
-import com.sellphones.entity.user.Provider;
-import com.sellphones.entity.user.Role;
 import com.sellphones.entity.user.UserStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminUserRequest {
+public class AdminCreateUserRequest {
 
     @NotBlank
     private String fullName;
@@ -23,6 +21,7 @@ public class AdminUserRequest {
     @NotBlank
     private String email;
 
+    @NotBlank
     private String password;
 
     @NotNull

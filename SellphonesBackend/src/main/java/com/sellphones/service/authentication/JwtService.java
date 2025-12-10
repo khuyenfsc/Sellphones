@@ -57,6 +57,11 @@ public class JwtService {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+            String jid = UUID.randomUUID().toString();
+            if(tokenType == TokenType.ACCESS){
+                user.setJid(jid);
+            }
+
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .issuer("khuyen")
                     .subject(userDetails.getUsername())
@@ -64,12 +69,13 @@ public class JwtService {
                     .claim("roleId", user.getRole().getId())
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + expiration))
-                    .jwtID(UUID.randomUUID().toString())
+                    .jwtID(jid)
                     .build();
 
             SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims);
             signedJWT.sign(new MACSigner(secretKey.getEncoded()));
 
+            userRepository.save(user);
             return signedJWT.serialize();
         } catch (JOSEException e) {
             throw new AppException(ErrorCode.TOKEN_GENERATION_FAILED);

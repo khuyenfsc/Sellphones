@@ -308,6 +308,8 @@ const AdminVariantDetailsPage = () => {
                         errors={errors}
                         setImageFile={setImageFile}
                         attributes={attributes}
+                        values={values}
+                        setValues={setValues}
                     />
 
                     {/* Attribute Values */}

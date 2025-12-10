@@ -41,6 +41,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     private final ModelMapper modelMapper;
 
     @Override
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public PageResponse<AdminInventoryResponse> getInventories(AdminInventoryFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -63,7 +64,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.VIEW')")
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'SALES.ORDERS',
+            'INVENTORY.WAREHOUSES',
+            'INVENTORY.SUPPLIERS'
+        )
+    """)
     public PageResponse<AdminInventoryResponse> getInventories(
         AdminInventoryFilterRequest request,
         Long warehouseId
@@ -89,6 +96,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public AdminInventoryResponse getInventoryById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
@@ -96,7 +104,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.CREATE')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void addInventory(AdminInventoryRequest request, Long warehouseId) {
         ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         Warehouse warehouse = warehouseRepository.findById(warehouseId).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
@@ -116,7 +124,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.EDIT')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void editInventory(AdminInventoryRequest request, Long id) {
 //        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
 //        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
@@ -132,7 +140,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES.DELETE')")
+    @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
     public void deleteInventory(Long id) {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
         ProductVariant pv = inventory.getProductVariant();

@@ -38,7 +38,12 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS.VIEW')")
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'SALES.ORDERS',
+            'CUSTOMER.CUSTOMERS'
+        )
+    """)
     public PageResponse<AdminCustomerInfoResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -61,7 +66,7 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS.VIEW')")
+    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS')")
     public AdminCustomerInfoResponse getCustomerInfoById(Long id) {
         CustomerInfo customerInfo = customerInfoRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
@@ -69,7 +74,7 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS.CREATE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS')")
     public void createCustomerInfo(CustomerInfoRequest request) {
         CustomerInfo customerInfo = customerInfoMapper.mapToCustomerInfoEntity(request);
 
@@ -81,6 +86,7 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS')")
     public void updateCustomerInfo(CustomerInfoRequest request, Long id) {
         CustomerInfo customerInfo = customerInfoRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
@@ -101,7 +107,7 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS.DELETE')")
+    @PreAuthorize("hasAuthority('CUSTOMER.CUSTOMERS')")
     public void deleteCustomerInfo(Long id) {
         customerInfoRepository.deleteById(id);
     }

@@ -12,7 +12,6 @@ import CreateOptionModal from "./components/CreateOptionModal";
 const CategoryDetailsPage = () => {
     const [isCreateOptionModalOpen, setIsCreateOptionModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isReloaded, setIsReloaded] = useState(true);
 
     const navigate = useNavigate();
     const { categoryId } = useParams();
@@ -120,7 +119,7 @@ const CategoryDetailsPage = () => {
                 {/* Left: Options Table */}
                 <div className="flex-1 flex flex-col gap-6">
                     <FilterTable categoryId={categoryId} />
-                    <OptionTable categoryId={categoryId} isReloaded={isReloaded} />
+                    <OptionTable categoryId={categoryId} />
                 </div>
 
                 {/* Right: Category Info */}

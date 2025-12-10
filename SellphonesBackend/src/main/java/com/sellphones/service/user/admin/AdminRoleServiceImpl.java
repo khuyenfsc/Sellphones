@@ -39,7 +39,12 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'SETTINGS.USERS',
+        'SETTINGS.ROLES'
+    )
+    """)
     public List<AdminRoleResponse> getAllRoles() {
         List<Role> roles = roleRepository.findAll();
         return roles.stream()
@@ -48,7 +53,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.VIEW')")
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     public PageResponse<AdminRoleResponse> getRoles(AdminRoleFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -71,14 +76,14 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.VIEW')")
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     public AdminRoleDetailsResponse getRoleDetails(Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         return modelMapper.map(role, AdminRoleDetailsResponse.class);
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.CREATE')")
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     public AdminRoleResponse createRole(AdminCreateRoleRequest request) {
         Role role = Role.builder()
                 .name(request.getName())
@@ -93,7 +98,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.EDIT')")
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     @CacheEvict(value = "rolePermissionsCache", key = "#id")
     public void editRole(AdminUpdateRoleRequest request, Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
@@ -104,7 +109,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SETTINGS.ROLES.DELETE')")
+    @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     public void deleteRole(Long id) {
         if (userRepository.existsByRole_Id(id)) {
             throw new AppException(ErrorCode.ROLE_IN_USE);

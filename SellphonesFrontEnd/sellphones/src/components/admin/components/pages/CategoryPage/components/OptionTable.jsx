@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 import CreateOptionModal from "./CreateOptionModal";
 // import EditCategoryOptionModal from "./EditCategoryOptionModal";
 
-export default function OptionTable({ categoryId, isReloaded }) {
+export default function OptionTable({ categoryId }) {
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [isCreateOptionModalOpen, setIsCreateOptionModalOpen] = useState(false);
+    const [isReloaded, setIsReloaded] = useState(true);
     const [isEditOptionModalOpen, setIsEditOptionModalOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
 

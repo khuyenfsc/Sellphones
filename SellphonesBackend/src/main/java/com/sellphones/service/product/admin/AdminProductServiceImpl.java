@@ -77,7 +77,13 @@ public class AdminProductServiceImpl implements AdminProductService{
     private final JsonParser jsonParser;
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'SALES.ORDERS',
+            'CATALOG.PRODUCTS',
+            'INVENTORY.WAREHOUSES'
+        )
+    """)
     public PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -107,7 +113,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public AdminProductDetailResponse getProductDetails(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         product.setThumbnail(ImageNameToImageUrlConverter.convert(product.getThumbnail(), productThumbnailFolder));
@@ -128,7 +134,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile) {
         AdminProductRequest request = jsonParser.parseRequest(productJson, AdminProductRequest.class);
 
@@ -178,7 +184,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         AdminUpdateProductRequest request = jsonParser.parseRequest(productJson, AdminUpdateProductRequest.class);
@@ -223,7 +229,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         List<ProductVariant> variants = product.getProductVariants();
@@ -255,7 +261,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
+    @PreAuthorize("""
+        hasAnyAuthority(
+            'SALES.ORDERS',
+            'CATALOG.PRODUCTS',
+            'INVENTORY.WAREHOUSES'
+        )
+    """)
     public PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -286,7 +298,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void setThumbnail(Long productId, Long id) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -298,7 +310,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public ProductVariantResponse getProductVariantDetail(Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         productVariant.setVariantImage(ImageNameToImageUrlConverter.convert(productVariant.getVariantImage(), productVariantImageFolder));
@@ -307,7 +319,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void addProductVariant(String productVariantJson, MultipartFile file, Long productId) {
         AdminProductVariantRequest request = jsonParser.parseRequest(productVariantJson, AdminProductVariantRequest.class);
         String variantImage = "";
@@ -344,7 +356,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         AdminUpdateProductVariantRequest request = jsonParser
@@ -396,7 +408,7 @@ public class AdminProductServiceImpl implements AdminProductService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.PRODUCTS')")
     public void deleteProductVariant(Long productVariantId) {
         ProductVariant productVariant = productVariantRepository.findById(productVariantId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         String imageName = productVariant.getVariantImage();

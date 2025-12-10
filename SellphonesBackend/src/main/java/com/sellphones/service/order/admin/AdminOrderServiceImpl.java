@@ -89,7 +89,12 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     private final long paymentId = 1;
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.ORDERS.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'SALES.ORDERS',
+        'CUSTOMER.CUSTOMERS'
+    )
+    """)
     public PageResponse<AdminOrderListResponse> getOrders(AdminOrderFilterRequest request) {
         Specification<Order> spec = AdminOrderSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.DESC, "orderedAt");
@@ -109,6 +114,12 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     }
 
     @Override
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'SALES.ORDERS',
+        'CUSTOMER.CUSTOMERS'
+    )
+    """)
     public OrderDetailResponse getOrderDetailsById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -117,6 +128,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('SALES.ORDERS')")
     public void createOrder(AdminOrderRequest request) {
         Map<Long, Map<String, Long>> variants = request.getVariants();
         CustomerInfo customerInfo = customerInfoRepository.findById(request.getCustomerInfoId())
@@ -143,7 +155,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.ORDERS.EDIT')")
+    @PreAuthorize("hasAuthority('SALES.ORDERS')")
     @Transactional
     public void confirmOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -156,7 +168,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAnyAuthority('SALES.ORDERS.EDIT', 'SALES.SHIPMENTS.CREATE')")
+    @PreAuthorize("hasAnyAuthority('SALES.ORDERS', 'SALES.SHIPMENTS')")
     public void shipOrder(AdminShipmentRequest request, Long id) {
         int updatedStatus = orderRepository.tryTransitionToShipping(id);
         if (updatedStatus == 0) {
@@ -200,7 +212,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('SALES.ORDERS.EDIT')")
+    @PreAuthorize("hasAuthority('SALES.ORDERS')")
     @Transactional
     public void deliverOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -212,29 +224,6 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         order.getShipment().setStatus(ShipmentStatus.DELIVERED);
         order.setOrderStatus(OrderStatus.DELIVERED);
         order.getPayment().setStatus(PaymentStatus.COMPLETED);
-    }
-
-    @Override
-    @PreAuthorize("hasAuthority('SALES.ORDERS.EDIT')")
-    @Transactional
-    public void cancelOrder(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if (order.getOrderStatus() != OrderStatus.WAIT_FOR_CANCELLING
-                && order.getOrderStatus() != OrderStatus.PENDING
-                && order.getOrderStatus() != OrderStatus.CONFIRMED) {
-            throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
-        }
-
-        order.setOrderStatus(OrderStatus.CANCELED);
-        for (OrderVariant ov : order.getOrderVariants()) {
-            ProductVariant variant = ov.getProductVariant();
-            variant.setStock(variant.getStock() + ov.getQuantity());
-        }
-        ;
-        if(order.getPayment().getStatus() == PaymentStatus.COMPLETED){
-//            paymentService.refund(order);
-            order.getPayment().setStatus(PaymentStatus.REFUNDED);
-        }
     }
 
     private List<OrderVariant> makeOrderVariants(Map<Long, Map<String, Long>> variants, Order order) {
@@ -306,6 +295,29 @@ public class AdminOrderServiceImpl implements AdminOrderService{
             orderVariants.add(orderVariant);
         }
         return orderVariants;
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('SALES.ORDERS')")
+    @Transactional
+    public void cancelOrder(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        if (order.getOrderStatus() != OrderStatus.WAIT_FOR_CANCELLING
+                && order.getOrderStatus() != OrderStatus.PENDING
+                && order.getOrderStatus() != OrderStatus.CONFIRMED) {
+            throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
+        }
+
+        order.setOrderStatus(OrderStatus.CANCELED);
+        for (OrderVariant ov : order.getOrderVariants()) {
+            ProductVariant variant = ov.getProductVariant();
+            variant.setStock(variant.getStock() + ov.getQuantity());
+        }
+        ;
+        if(order.getPayment().getStatus() == PaymentStatus.COMPLETED){
+//            paymentService.refund(order);
+            order.getPayment().setStatus(PaymentStatus.REFUNDED);
+        }
     }
 
     private void calculateTotalPriceForOrder(Order order){

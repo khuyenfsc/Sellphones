@@ -42,7 +42,7 @@ const AdminBrandService = {
         }
     },
 
-    async createCategory(categoryData, file) {
+    async createBrand(brandData, file) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -52,10 +52,10 @@ const AdminBrandService = {
             }
 
             const formData = new FormData();
-            formData.append("category", JSON.stringify(categoryData));
+            formData.append("brand", JSON.stringify(brandData));
             if (file) formData.append("file", file);
 
-            const res = await AxiosClient.post("/admin/categories/create-category", formData, {
+            const res = await AxiosClient.post("/admin/brands/create-brand", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -70,10 +70,10 @@ const AdminBrandService = {
                     const newToken = refresh.accessToken;
                     try {
                         const formData = new FormData();
-                        formData.append("category", JSON.stringify(categoryData));
+                        formData.append("brand", JSON.stringify(brandData));
                         if (file) formData.append("file", file);
 
-                        const retryRes = await AxiosClient.post("/admin/categories/create-category", formData, {
+                        const retryRes = await AxiosClient.post("/admin/brands/create-brand", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -86,7 +86,7 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.errors?.message || "Lỗi khi tạo category",
+                message: err?.response?.data?.errors?.message || "Lỗi khi tạo brand",
             };
         }
     },
@@ -129,7 +129,7 @@ const AdminBrandService = {
         }
     },
 
-    async updateCategory(categoryId, categoryData, file) {
+    async updateBrand(brandId, brandData, file) {
         try {
             let token = localStorage.getItem("adminAccessToken");
             if (!token) {
@@ -139,10 +139,10 @@ const AdminBrandService = {
             }
 
             const formData = new FormData();
-            formData.append("category", JSON.stringify(categoryData));
+            formData.append("brand", JSON.stringify(brandData));
             if (file) formData.append("file", file);
 
-            const res = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+            const res = await AxiosClient.put(`/admin/brands/update-brand/${brandId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -157,15 +157,16 @@ const AdminBrandService = {
                     const newToken = refresh.accessToken;
                     try {
                         const formData = new FormData();
-                        formData.append("category", JSON.stringify(categoryData));
+                        formData.append("brand", JSON.stringify(brandData));
                         if (file) formData.append("file", file);
 
-                        const retryRes = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+                        const retryRes = await AxiosClient.put(`/admin/brands/update-brand/${brandId}`, formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
                             },
                         });
+
                         return { success: true, data: retryRes?.data };
                     } catch { }
                 }
@@ -173,7 +174,7 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật category",
+                message: err?.response?.data?.message || "Lỗi khi cập nhật brand",
             };
         }
     },

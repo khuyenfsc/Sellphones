@@ -56,9 +56,9 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     @Override
     @PreAuthorize("""
             hasAnyAuthority(
-                'CATALOG.BRANDS.VIEW',
-                'CATALOG.PRODUCTS.CREATE',
-                'CATALOG.PRODUCTS.EDIT'
+                'CATALOG.BRANDS',
+                'CATALOG.PRODUCTS',
+                'CATALOG.PRODUCTS'
             )
     """)
     public PageResponse<AdminBrandResponse> getBrands(AdminBrandFilterRequest request) {
@@ -92,7 +92,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.BRANDS.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.BRANDS')")
     public void addBrand(String brandJson, MultipartFile file) {
         AdminBrandRequest request = jsonParser.parseRequest(brandJson, AdminBrandRequest.class);
         String fileName = "";
@@ -126,7 +126,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.BRANDS.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.BRANDS')")
     public void editBrand(String brandJson, MultipartFile file, Long id) {
         AdminBrandRequest request = jsonParser.parseRequest(brandJson, AdminBrandRequest.class);
 
@@ -155,7 +155,7 @@ public class AdminBrandServiceImpl implements AdminBrandService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.BRANDS.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.BRANDS')")
     public void deleteBrand(Long id) {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));

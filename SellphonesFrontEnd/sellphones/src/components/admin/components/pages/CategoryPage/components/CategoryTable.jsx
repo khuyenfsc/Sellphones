@@ -64,7 +64,7 @@ export default function CategoryTable({ isReloaded }) {
 
         setFilterRequest({
             ...cleanFilters,
-            keyword, 
+            keyword : searchTerm, 
             page: 0
         });
 

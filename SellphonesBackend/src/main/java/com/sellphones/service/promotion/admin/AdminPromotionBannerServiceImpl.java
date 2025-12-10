@@ -53,7 +53,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     private final FileStorageService fileStorageService;
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.VIEW')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS')")
     public PageResponse<AdminPromotionBannerResponse> getBanners(AdminPromotionBannerFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -81,7 +81,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.CREATE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS')")
     public void createBanner(String bannerJson, MultipartFile imageFile) {
         AdminPromotionBannerRequest request = jsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class);
 
@@ -112,7 +112,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.EDIT')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS')")
     public void editBanner(String bannerJson, MultipartFile imageFile, Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
         AdminPromotionBannerRequest request = jsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class);
@@ -138,7 +138,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS.DELETE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS')")
     public void deleteBanner(Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
         String imageName = banner.getImage();

@@ -2,14 +2,14 @@ import { XCircle } from "lucide-react";
 import React, {useState } from "react";
 
 export default function VariantBasicInfoSection({
-    variant, setVariant, errors, setImageFile, attributes
+    variant, setVariant, errors, setImageFile, attributes, values, setValues
 }) {
     const [previewImage, setPreviewImage] = useState("");
-    const [values, setValues] = useState([]);
     const handleValueChange = (index, value) => {
         const updated = [...values];
         updated[index] = value;
         setValues(updated);
+        console.log(values);
     };
 
     const handleInputChange = (field, value) => {

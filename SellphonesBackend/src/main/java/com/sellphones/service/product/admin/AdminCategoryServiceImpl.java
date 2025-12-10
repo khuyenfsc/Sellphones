@@ -67,9 +67,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @PreAuthorize("""
         hasAnyAuthority(
-            'CATALOG.CATEGORIES.VIEW',
-            'CATALOG.PRODUCTS.CREATE',
-            'CATALOG.PRODUCTS.EDIT'
+            'CATALOG.CATEGORIES',
+            'CATALOG.PRODUCTS'
         )
     """)
     public PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
@@ -97,7 +96,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public AdminCategoryResponse getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -107,7 +106,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void addCategory(String categoryJson, MultipartFile iconFile) {
         AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
 
@@ -159,7 +158,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void editCategory(String categoryJson, MultipartFile iconFile, Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
@@ -186,7 +185,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         String iconName = category.getIcon();
@@ -199,7 +198,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public PageResponse<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
@@ -230,7 +229,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void addCategoryOption(AdminCategoryOptionRequest request, Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         CategoryOption option = CategoryOption
@@ -244,7 +243,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void editCategoryOption(AdminCategoryOptionRequest request, Long categoryOptionId) {
         CategoryOption categoryOption = categoryOptionRepository.findById(categoryOptionId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
         categoryOption.setName(request.getName());
@@ -252,17 +251,17 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void deleteCategoryOption(Long categoryOptionId) {
         categoryOptionRepository.deleteById(categoryOptionId);
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.VIEW')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public PageResponse<AdminCategoryOptionValueResponse> getCategoryOptionValues(AdminCategoryOptionValueFilterRequest request, Long categoryOptionId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
-                .orElse(Sort.Direction.DESC);
-        Sort sort = Sort.by(direction, "createdAt");
+                .orElse(Sort.Direction.ASC);
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<CategoryOptionValue> spec = AdminCategoryOptionValueSpecificationBuilder.build(request, categoryOptionId);
@@ -282,7 +281,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void addCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionId) {
         CategoryOption option = categoryOptionRepository.findById(categoryOptionId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
         CategoryOptionValue optionValue = CategoryOptionValue
@@ -296,14 +295,14 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void editCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionValueId) {
         CategoryOptionValue optionValue = categoryOptionValueRepository.findById(categoryOptionValueId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_VALUE_NOT_FOUND));
         optionValue.setName(request.getName());
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
     public void deleteCategoryOptionValue(Long categoryOptionValueId) {
         categoryOptionValueRepository.deleteById(categoryOptionValueId);
     }

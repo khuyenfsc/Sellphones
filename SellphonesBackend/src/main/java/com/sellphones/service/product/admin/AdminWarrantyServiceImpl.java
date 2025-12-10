@@ -35,7 +35,12 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'CATALOG.WARRANTIES',
+        'CATALOG.PRODUCTS'
+    )
+    """)
     public PageResponse<AdminWarrantyResponse> getWarranties(AdminWarrantyFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -58,7 +63,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.CREATE')")
+    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES')")
     public void addWarranty(AdminWarrantyRequest request) {
         Warranty warranty = Warranty.builder()
                 .name(request.getName())
@@ -73,7 +78,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.EDIT')")
+    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES')")
     public void editWarranty(AdminWarrantyRequest request, Long id) {
         Warranty warranty = warrantyRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND));
         warranty.setName(request.getName());
@@ -83,7 +88,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES.DELETE')")
+    @PreAuthorize("hasAuthority('CATALOG.WARRANTIES')")
     public void deleteWarranty(Long id) {
         warrantyRepository.deleteById(id);
     }

@@ -33,7 +33,12 @@ public class AdminProductPromotionServiceImpl implements AdminProductPromotionSe
     private final ModelMapper modelMapper;
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS.VIEW')")
+    @PreAuthorize("""
+    hasAnyAuthority(
+        'PROMOTIONS.PRODUCT_PROMOTIONS',
+        'CATALOG.PRODUCTS'
+    )
+    """)
     public PageResponse<AdminProductPromotionResponse> getProductPromotions(AdminProductPromotionFilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
@@ -56,14 +61,14 @@ public class AdminProductPromotionServiceImpl implements AdminProductPromotionSe
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS.CREATE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS')")
     public void createProductPromotion(AdminProductPromotionRequest request) {
         ProductPromotion promotion = productPromotionMapper.mapToProductPromotionEntity(request);
         productPromotionRepository.save(promotion);
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS.EDIT')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS')")
     public void editProductPromotion(AdminProductPromotionRequest request, Long id) {
         ProductPromotion promotion = productPromotionRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_PROMOTION_NOT_FOUND));
 
@@ -75,7 +80,7 @@ public class AdminProductPromotionServiceImpl implements AdminProductPromotionSe
     }
 
     @Override
-    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS.DELETE')")
+    @PreAuthorize("hasAuthority('PROMOTIONS.PRODUCT_PROMOTIONS')")
     public void deleteProductPromotion(Long id) {
         productPromotionRepository.deleteById(id);
     }
