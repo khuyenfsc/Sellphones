@@ -31,10 +31,10 @@ public class AdminGiftProductController {
 
     }
 
-    @PostMapping("/create-gift-product")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createGIftProduct(
             @RequestPart("gift_product") String giftProductJson,
-            @RequestPart(name = "file", required = false) MultipartFile thumbnailFile
+            @RequestPart(name = "thumbnail_file", required = false) MultipartFile thumbnailFile
     ){
 
         adminGiftProductService.createGiftProduct(giftProductJson, thumbnailFile);
@@ -46,12 +46,12 @@ public class AdminGiftProductController {
     }
 
     @PutMapping("/update-gift-product/{id}")
-    public ResponseEntity<CommonResponse> editProduct(
+    public ResponseEntity<CommonResponse> updateGiftProduct(
             @RequestPart("gift_product") String giftProductJson,
-            @RequestPart(name = "file", required = false) MultipartFile thumbnailFile,
+            @RequestPart(name = "thumbnail_file", required = false) MultipartFile thumbnailFile,
             @PathVariable Long id
     ){
-        adminGiftProductService.editGiftProduct(giftProductJson, thumbnailFile, id);
+        adminGiftProductService.updateGiftProduct(giftProductJson, thumbnailFile, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited product successfully");
 
@@ -59,7 +59,7 @@ public class AdminGiftProductController {
 
     }
 
-    @DeleteMapping("/delete-gift-product/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteProduct(@PathVariable Long id){
         adminGiftProductService.deleteGiftProduct(id);
         Map<String, Object> map = new HashMap<>();

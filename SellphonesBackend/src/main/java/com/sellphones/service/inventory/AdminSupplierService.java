@@ -1,16 +1,14 @@
 package com.sellphones.service.inventory;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminSupplierFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminSupplier_FilterRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierResponse;
 
-import java.util.List;
-
 public interface AdminSupplierService {
     AdminSupplierResponse getSupplierById(Long id);
-    PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request);
-    void addSupplier(AdminSupplierRequest request);
-    void editSupplier(AdminSupplierRequest request, Long id);
+    PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplier_FilterRequest request);
+    void createSupplier(AdminSupplierRequest request);
+    void updateSupplier(AdminSupplierRequest request, Long id);
     void deleteSupplier(Long id);
 }

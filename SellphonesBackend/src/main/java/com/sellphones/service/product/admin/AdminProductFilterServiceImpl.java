@@ -79,7 +79,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void addProductFilter(AdminProductFilterRequest request, Long categoryId) {
+    public void createFilter(AdminProductFilterRequest request, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Attribute attribute = attributeRepository.findById(request.getAttributeId())
@@ -96,7 +96,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void editProductFilter(AdminProductFilterRequest request, Long id) {
+    public void updateFilter(AdminProductFilterRequest request, Long id) {
         ProductFilter filter = productFilterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_FILTER_NOT_FOUND));
         Attribute attribute = attributeRepository.findById(request.getAttributeId())
                 .orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
@@ -108,13 +108,13 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void deleteProductFilter(Long id) {
+    public void deleteFilter(Long id) {
         productFilterRepository.deleteById(id);
     }
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public PageResponse<AdminFilterOptionResponse> getFilterOptions(AdminFilterOptionFilterRequest request, Long filterId) {
+    public PageResponse<AdminFilterOptionDetailsResponse> getFilterOptions(AdminFilterOption_FilterRequest request, Long filterId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "id");
@@ -124,11 +124,11 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
         Page<FilterOption> optionPage = filterOptionRepository.findAll(spec, pageable);
         List<FilterOption> options  = optionPage.getContent();
-        List<AdminFilterOptionResponse> response = options.stream()
-                .map(o -> modelMapper.map(o, AdminFilterOptionResponse.class))
+        List<AdminFilterOptionDetailsResponse> response = options.stream()
+                .map(o -> modelMapper.map(o, AdminFilterOptionDetailsResponse.class))
                 .toList();
 
-        return PageResponse.<AdminFilterOptionResponse>builder()
+        return PageResponse.<AdminFilterOptionDetailsResponse>builder()
                 .result(response)
                 .total(optionPage.getTotalElements())
                 .totalPages(optionPage.getTotalPages())
@@ -144,7 +144,7 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void addFilterOption(AdminFilterOptionRequest request, Long filterId) {
+    public void createOption(AdminFilterOptionRequest request, Long filterId) {
         ProductFilter filter = productFilterRepository.findById(filterId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_FILTER_NOT_FOUND));
         String condition = convertToCondition(request.getCond(), request.getVal1(), request.getVal2());
         FilterOption option = FilterOption.builder()
@@ -160,8 +160,8 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void editFilterOption(AdminFilterOptionRequest request, Long optionId) {
-        FilterOption option = filterOptionRepository.findById(optionId).orElseThrow(() -> new AppException(ErrorCode.FILTER_OPTION_NOT_FOUND));
+    public void updateOption(AdminFilterOptionRequest request, Long id) {
+        FilterOption option = filterOptionRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.FILTER_OPTION_NOT_FOUND));
         String condition = convertToCondition(request.getCond(), request.getVal1(), request.getVal2());
         option.setName(request.getName());
         option.setCondition(condition);
@@ -169,8 +169,8 @@ public class AdminProductFilterServiceImpl implements AdminProductFilterService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void deleteFilterOption(Long optionId) {
-        filterOptionRepository.deleteById(optionId);
+    public void deleteOption(Long id) {
+        filterOptionRepository.deleteById(id);
     }
 
     private String convertToCondition(ConditionKey cond, String val1, @Nullable String val2) {

@@ -96,7 +96,7 @@ const AdminReviewService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/reviews/update-review/${reviewId}`,
+                `/admin/reviews/update/${reviewId}`,
                 reviewData,
                 {
                     headers: {
@@ -116,7 +116,7 @@ const AdminReviewService = {
 
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/reviews/update-review/${reviewId}`,
+                            `/admin/reviews/update/${reviewId}`,
                             reviewData,
                             {
                                 headers: {
@@ -149,7 +149,7 @@ const AdminReviewService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/reviews/delete-review/${reviewId}`,
+                `/admin/reviews/delete/${reviewId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -163,7 +163,7 @@ const AdminReviewService = {
 
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/reviews/delete-review/${reviewId}`,
+                            `/admin/reviews/delete/${reviewId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
 

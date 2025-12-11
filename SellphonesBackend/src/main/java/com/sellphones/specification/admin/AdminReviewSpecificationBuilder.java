@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
+import com.sellphones.dto.product.admin.AdminReview_FilterRequest;
 import com.sellphones.entity.product.Review;
 import com.sellphones.entity.product.ReviewStatus;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,11 +9,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AdminReviewSpecificationBuilder {
-    public static Specification<Review> build(AdminReviewFilterRequest request){
+    public static Specification<Review> build(AdminReview_FilterRequest request){
         Specification<Review> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getKeyword() != null){
-            spec = spec.and(containsKeyword(request.getKeyword()));
+            spec = spec.and(hasContentContains(request.getKeyword()));
         }
 
         if(request.getStartDate() != null && request.getEndDate() != null){
@@ -41,7 +41,7 @@ public class AdminReviewSpecificationBuilder {
 
 
 
-    public static Specification<Review> containsKeyword(String keyword){
+    public static Specification<Review> hasContentContains(String keyword){
         return (root, query, cb) -> cb.like(cb.lower(root.get("content")), "%" + keyword.toLowerCase() + "%");
     }
 

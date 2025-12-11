@@ -22,7 +22,7 @@ public class AdminRoleController {
     private final AdminRoleService adminRoleService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getRoles(@Valid AdminRoleFilterRequest request){
+    public ResponseEntity<CommonResponse> getRoles(@Valid AdminRole_FilterRequest request){
         PageResponse<AdminRoleResponse> response = adminRoleService.getRoles(request);
         Map<String, Object> map = new HashMap<>();
         map.put("roles", response);
@@ -51,7 +51,7 @@ public class AdminRoleController {
 
     }
 
-    @PostMapping("/create-role")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createRole(@RequestBody @Valid AdminCreateRoleRequest request){
         AdminRoleResponse response = adminRoleService.createRole(request);
         Map<String, Object> map = new HashMap<>();
@@ -61,12 +61,12 @@ public class AdminRoleController {
 
     }
 
-    @PutMapping("/update-role/{id}")
-    public ResponseEntity<CommonResponse> editRole(
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateRole(
             @RequestBody @Valid AdminUpdateRoleRequest request,
             @PathVariable Long id
     ){
-        adminRoleService.editRole(request, id);
+        adminRoleService.updateRole(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited role successfully");
 
@@ -74,7 +74,7 @@ public class AdminRoleController {
 
     }
 
-    @DeleteMapping("/delete-role/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteRole(@PathVariable Long id){
         adminRoleService.deleteRole(id);
         Map<String, Object> map = new HashMap<>();

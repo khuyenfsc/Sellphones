@@ -2,24 +2,24 @@ package com.sellphones.service.product.admin;
 
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.ProductListResponse;
-import com.sellphones.dto.product.admin.AdminProductDetailResponse;
-import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
+import com.sellphones.dto.product.ProductResponse;
+import com.sellphones.dto.product.admin.AdminProductDetailsResponse;
+import com.sellphones.dto.product.admin.AdminProductVariant_FilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.dto.product.admin.AdminProduct_FilterRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AdminProductService {
-    PageResponse<ProductListResponse> getProducts(AdminProduct_FilterRequest request);
-    AdminProductDetailResponse getProductDetails(Long productId);
-    void addProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
-    void editProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long productId);
+    PageResponse<ProductResponse> getProducts(AdminProduct_FilterRequest request);
+    AdminProductDetailsResponse getProductById(Long productId);
+    void createProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile);
+    void updateProduct(String productJson, MultipartFile[] imageFiles, MultipartFile thumbnailFile, Long id);
     void deleteProduct(Long productId);
-    PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariantFilterRequest request, Long productId);
+    PageResponse<AdminProductVariantResponse> getProductVariants(AdminProductVariant_FilterRequest request, Long productId);
     void setThumbnail(Long productId, Long id);
-    ProductVariantResponse getProductVariantDetail(Long productVariantId);
-    void addProductVariant(String productVariantJson, MultipartFile file, Long productId);
-    void editProductVariant(String productVariantJson, MultipartFile file, Long productVariantId);
-    void deleteProductVariant(Long productVariantId);
+    ProductVariantResponse getVariantById(Long id);
+    void createVariant(String productVariantJson, MultipartFile imageFile, Long productId);
+    void updateVariant(String productVariantJson, MultipartFile file, Long productVariantId);
+    void deleteVariant(Long productVariantId);
 }

@@ -14,6 +14,7 @@ import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.user.UserRepository;
+import com.sellphones.utils.JwtUtils;
 import com.sellphones.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -35,7 +36,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "spring.jwt")
 public class AuthenticationServiceImpl implements AuthenticationService{
 
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
 
     private final UserRepository userRepository;
 
@@ -48,8 +49,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     public AuthenticationToken refreshToken(String refreshToken){
-        JWTClaimsSet jwtClaimsSet = jwtService.validateToken(refreshToken);
-        jwtService.invalidateToken(refreshToken);
+        JWTClaimsSet jwtClaimsSet = jwtUtils.validateToken(refreshToken);
+        jwtUtils.invalidateToken(refreshToken);
 
         String username = jwtClaimsSet.getSubject();
         String role = jwtClaimsSet.getClaim("role").toString();
@@ -58,17 +59,15 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 ? AuthorityUtils.commaSeparatedStringToAuthorityList(authClaim.toString())
                 : Collections.emptyList();
 
-//        UserDetails userDetails = new CustomUserDetails(role, username, null , authorities);
         UserDetails userDetails = CustomUserDetails.builder()
                 .username(username)
                 .role(role)
                 .authorities(authorities)
                 .build();
 
-//        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, authorities);
         Authentication authentication = new JwtAuthenticationToken(userDetails, authorities);
-        String newAccessToken = jwtService.generateToken(authentication, TokenType.ACCESS, jwtClaimsSet.getClaim("role").toString());
-        String newRefreshToken = jwtService.generateToken(authentication, TokenType.REFRESH, jwtClaimsSet.getClaim("role").toString());
+        String newAccessToken = jwtUtils.generateToken(authentication, TokenType.ACCESS, jwtClaimsSet.getClaim("role").toString());
+        String newRefreshToken = jwtUtils.generateToken(authentication, TokenType.REFRESH, jwtClaimsSet.getClaim("role").toString());
         return new AuthenticationToken(newAccessToken, newRefreshToken);
     }
 
@@ -82,8 +81,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Override
     public void logout(LogoutRequest logoutRequest, String refreshToken) {
         String accessToken = logoutRequest.getAccessToken();
-        jwtService.invalidateToken(accessToken);
-        jwtService.invalidateToken(refreshToken);
+        jwtUtils.invalidateToken(accessToken);
+        jwtUtils.invalidateToken(refreshToken);
     }
 
 

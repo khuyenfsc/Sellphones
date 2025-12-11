@@ -3,7 +3,7 @@ package com.sellphones.controller.customer.admin;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.customer.CustomerInfoRequest;
-import com.sellphones.dto.customer.admin.AdminCustomerInfoFilterRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfo_FilterRequest;
 import com.sellphones.dto.customer.admin.AdminCustomerInfoResponse;
 import com.sellphones.service.customer.admin.AdminCustomerService;
 import jakarta.validation.Valid;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,7 +23,7 @@ public class AdminCustomerController {
     private final AdminCustomerService adminCustomerService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request){
+    public ResponseEntity<CommonResponse> getCustomerInfos(@Valid AdminCustomerInfo_FilterRequest request){
         PageResponse<AdminCustomerInfoResponse> response = adminCustomerService.getCustomerInfos(request);
         Map<String, Object> map = new HashMap<>();
         map.put("customers", response);
@@ -41,7 +40,7 @@ public class AdminCustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PostMapping("/create-customer-info")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createCustomerInfo(@RequestBody @Valid CustomerInfoRequest request){
         adminCustomerService.createCustomerInfo(request);
         Map<String, Object> map = new HashMap<>();
@@ -50,7 +49,7 @@ public class AdminCustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PutMapping("/update-customer-info/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateCustomerInfo(@RequestBody @Valid CustomerInfoRequest request, @PathVariable Long id){
         adminCustomerService.updateCustomerInfo(request, id);
         Map<String, Object> map = new HashMap<>();
@@ -60,8 +59,8 @@ public class AdminCustomerController {
     }
 
 
-    @DeleteMapping("/delete-customer-info/{id}")
-    public ResponseEntity<CommonResponse> deleteCustomerInfos(@PathVariable Long id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CommonResponse> deleteCustomerInfo(@PathVariable Long id){
         adminCustomerService.deleteCustomerInfo(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted customer info successfully");

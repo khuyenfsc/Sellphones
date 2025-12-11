@@ -52,14 +52,6 @@ public class Order extends BaseEntity<Long> {
     @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Payment payment;
 
-//    @ManyToOne
-//    @JoinColumn(name = "payment_method_id")
-//    private PaymentMethod paymentMethod;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private PaymentStatus paymentStatus;
-
     private String note;
 
     @ManyToOne(cascade = CascadeType.ALL)

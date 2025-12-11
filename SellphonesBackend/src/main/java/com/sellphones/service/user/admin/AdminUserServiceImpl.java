@@ -2,7 +2,7 @@ package com.sellphones.service.user.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.user.admin.AdminUpdateUserRequest;
-import com.sellphones.dto.user.admin.AdminUserFilterRequest;
+import com.sellphones.dto.user.admin.AdminUser_FilterRequest;
 import com.sellphones.dto.user.admin.AdminUserResponse;
 import com.sellphones.dto.user.admin.AdminCreateUserRequest;
 import com.sellphones.entity.cart.Cart;
@@ -52,7 +52,7 @@ public class AdminUserServiceImpl implements AdminUserService{
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS')")
-    public PageResponse<AdminUserResponse> getUsers(AdminUserFilterRequest request) {
+    public PageResponse<AdminUserResponse> getUsers(AdminUser_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "fullName");
@@ -95,7 +95,7 @@ public class AdminUserServiceImpl implements AdminUserService{
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.USERS')")
-    public void editUser(AdminUpdateUserRequest request, Long id) {
+    public void updateUser(AdminUpdateUserRequest request, Long id) {
 //        User existingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 //        if(existingUser != null){
 //            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);

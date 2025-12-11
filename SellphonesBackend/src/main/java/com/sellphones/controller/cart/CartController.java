@@ -5,6 +5,7 @@ import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartResponse;
 import com.sellphones.dto.cart.ItemQuantityRequest;
 import com.sellphones.service.cart.CartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CartController {
     }
 
     @PutMapping("/update-quantity")
-    public ResponseEntity<CommonResponse> updateItemQuantity(@RequestBody ItemQuantityRequest itemQuantityRequest){
+    public ResponseEntity<CommonResponse> updateItemQuantity(@RequestBody @Valid ItemQuantityRequest itemQuantityRequest){
         cartService.updateItemQuantity(itemQuantityRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Updated quantity successfully");

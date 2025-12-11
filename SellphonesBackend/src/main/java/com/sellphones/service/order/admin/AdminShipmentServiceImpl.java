@@ -3,7 +3,7 @@ package com.sellphones.service.order.admin;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.ShipmentResponse;
 import com.sellphones.dto.order.admin.AdminShipmentDetailsResponse;
-import com.sellphones.dto.order.admin.AdminShipmentFilterRequest;
+import com.sellphones.dto.order.admin.AdminShipment_FilterRequest;
 import com.sellphones.dto.order.admin.AdminUpdateShipmentRequest;
 import com.sellphones.entity.order.Shipment;
 import com.sellphones.exception.AppException;
@@ -32,7 +32,7 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
 
     @Override
     @PreAuthorize("hasAuthority('SALES.SHIPMENTS')")
-    public PageResponse<ShipmentResponse> getShipments(AdminShipmentFilterRequest request) {
+    public PageResponse<ShipmentResponse> getShipments(AdminShipment_FilterRequest request) {
         Specification<Shipment> spec = AdminShipmentSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
@@ -52,7 +52,7 @@ public class AdminShipmentServiceImpl implements AdminShipmentService{
 
     @Override
     @PreAuthorize("hasAuthority('SALES.SHIPMENTS')")
-    public AdminShipmentDetailsResponse getShipmentDetails(Long id) {
+    public AdminShipmentDetailsResponse getShipmentById(Long id) {
         Shipment shipment = shipmentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHIPMENT_NOT_FOUND));
         return modelMapper.map(shipment, AdminShipmentDetailsResponse.class);
     }

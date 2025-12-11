@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,7 +21,7 @@ public class AdminAttributeController {
     private final AdminAttributeService adminAttributeService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getAttributes(@Valid AdminAttributeFilterRequest request){
+    public ResponseEntity<CommonResponse> getAttributes(@Valid AdminAttribute_FilterRequest request){
         PageResponse<AdminAttributeResponse> response = adminAttributeService.getAttributes(request);
         Map<String, Object> map = new HashMap<>();
         map.put("attributes", response);
@@ -31,27 +30,27 @@ public class AdminAttributeController {
 
     }
 
-    @PostMapping("/create-attribute")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createAttribute(@RequestBody @Valid AdminAttributeRequest request) {
-        adminAttributeService.addAttribute(request);
+        adminAttributeService.createAttribute(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added attribute successfully");
+        map.put("result", "Created attribute successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PutMapping("/edit-attribute/{id}")
-    public ResponseEntity<CommonResponse> editAttribute(@RequestBody @Valid AdminAttributeRequest request, @PathVariable Long id) {
-        adminAttributeService.editAttribute(request, id);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateAttribute(@RequestBody @Valid AdminAttributeRequest request, @PathVariable Long id) {
+        adminAttributeService.updateAttribute(request, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited attribute successfully");
+        map.put("result", "Updated attribute successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-attribute/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteAttribute(@PathVariable Long id) {
         adminAttributeService.deleteAttribute(id);
         Map<String, Object> map = new HashMap<>();
@@ -72,8 +71,8 @@ public class AdminAttributeController {
     }
 
     @GetMapping("/{attributeId}/values")
-    public ResponseEntity<CommonResponse> getAttributeValues(@Valid AdminAttributeValueFilterRequest request,@PathVariable Long attributeId){
-        PageResponse<AdminAttributeValueResponse> response = adminAttributeService.getAttributeValues(request, attributeId);
+    public ResponseEntity<CommonResponse> getValues(@Valid AdminAttributeValue_FilterRequest request, @PathVariable Long attributeId){
+        PageResponse<AdminAttributeValueResponse> response = adminAttributeService.getValues(request, attributeId);
         Map<String, Object> map = new HashMap<>();
         map.put("values", response);
 
@@ -81,29 +80,29 @@ public class AdminAttributeController {
 
     }
 
-    @PostMapping("/{attributeId}/create-value")
-    public ResponseEntity<CommonResponse> addAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeId) {
-        adminAttributeService.addAttributeValue(request, attributeId);
+    @PostMapping("/{attributeId}/values/create")
+    public ResponseEntity<CommonResponse> createValue(@RequestBody @Valid AdminAttributeValueRequest request, @PathVariable Long attributeId) {
+        adminAttributeService.createValue(request, attributeId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added attribute value successfully");
+        map.put("result", "Created attribute value successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PutMapping("/edit-value/{attributeValueId}")
-    public ResponseEntity<CommonResponse> editAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long attributeValueId) {
-        adminAttributeService.editAttributeValue(request, attributeValueId);
+    @PutMapping("/values/update/{valueId}")
+    public ResponseEntity<CommonResponse> editAttributeValue(@RequestBody AdminAttributeValueRequest request, @PathVariable Long valueId) {
+        adminAttributeService.updateValue(request, valueId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited attribute value successfully");
+        map.put("result", "Updated attribute value successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-value/{attributeValueId}")
-    public ResponseEntity<CommonResponse> editAttributeValue(@PathVariable Long attributeValueId) {
-        adminAttributeService.deleteAttributeValue(attributeValueId);
+    @DeleteMapping("/values/delete/{valueId}")
+    public ResponseEntity<CommonResponse> editAttributeValue(@PathVariable Long valueId) {
+        adminAttributeService.deleteAttributeValue(valueId);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted attribute value successfully");
 

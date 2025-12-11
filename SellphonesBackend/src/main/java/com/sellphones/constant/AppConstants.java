@@ -34,9 +34,9 @@ public class AppConstants {
             "/api/v1/payment/vnpay-callback"
     };
 
-    public final static String[] CUSTOMER_ENDPOINTS = {
-            "/api/v1/test/users/**",
-    };
+//    public final static String[] CUSTOMER_ENDPOINTS = {
+//            "/api/v1/test/users/**",
+//    };
 
     public final static String[] ADMIN_ENDPOINTS = {
             "/api/v1/admin/**",
@@ -53,4 +53,17 @@ public class AppConstants {
     public final static String PRODUCT_VARIANT_IMAGE_FOLDER = "product_variant_images";
 
     public final static String GIFT_PRODUCT_IMAGE_FOLDER = "gift_products";
+
+    public final static String BRAND_IMAGE_FOLDER = "brand_icons";
+
+    public final static String CATEGORY_IMAGE_FOLDER = "category_icons";
+
+    public final static String PRODUCT_THUMBNAIL_FOLDER = "product_thumbnails";
+
+    public final static String PRODUCT_IMAGE_FOLDER = "product_images";
+
+    public final static String REVIEW_IMAGE_FOLDER = "reviews";
+
+    public final static String PROMOTION_BANNER_FOLDER = "promotion_banners";
+
 }

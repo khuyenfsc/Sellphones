@@ -1,8 +1,7 @@
 package com.sellphones.dto.order.admin;
 
 import com.sellphones.dto.customer.admin.AdminCustomerInfoResponse;
-import com.sellphones.dto.order.OrderVariantListResponse;
-import com.sellphones.entity.customer.CustomerInfo;
+import com.sellphones.dto.order.OrderVariantResponse;
 import com.sellphones.entity.order.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class AdminShipment_OrderResponse {
 
     private String code;
 
-    private List<OrderVariantListResponse> orderVariants;
+    private List<OrderVariantResponse> orderVariants;
 
     private LocalDateTime orderedAt;
 

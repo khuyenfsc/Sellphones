@@ -1,9 +1,7 @@
 package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
-import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Attribute;
 import com.sellphones.entity.product.AttributeValue;
 import com.sellphones.exception.AppException;
@@ -34,8 +32,6 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     private final AttributeRepository attributeRepository;
 
-    private final ProductFilterRepository productFilterRepository;
-
     private final AttributeValueRepository attributeValueRepository;
 
     private final ModelMapper modelMapper;
@@ -47,7 +43,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
         'CATALOG.PRODUCTS'
     )
     """)
-    public PageResponse<AdminAttributeResponse> getAttributes(AdminAttributeFilterRequest request){
+    public PageResponse<AdminAttributeResponse> getAttributes(AdminAttribute_FilterRequest request){
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "name");
@@ -70,7 +66,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
-    public void addAttribute(AdminAttributeRequest request) {
+    public void createAttribute(AdminAttributeRequest request) {
         if (attributeRepository.existsByName(request.getName())) {
             throw new AppException(ErrorCode.ATTRIBUTE_NAME_ALREADY_EXISTS);
         }
@@ -85,7 +81,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
-    public void editAttribute(AdminAttributeRequest request, Long id) {
+    public void updateAttribute(AdminAttributeRequest request, Long id) {
         Attribute attribute = attributeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         attribute.setName(request.getName());
     }
@@ -111,7 +107,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
         'CATALOG.PRODUCTS'
     )
     """)
-    public PageResponse<AdminAttributeValueResponse> getAttributeValues(AdminAttributeValueFilterRequest request, Long attributeId) {
+    public PageResponse<AdminAttributeValueResponse> getValues(AdminAttributeValue_FilterRequest request, Long attributeId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -134,7 +130,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
-    public void addAttributeValue(AdminAttributeValueRequest request, Long attributeId) {
+    public void createValue(AdminAttributeValueRequest request, Long attributeId) {
         Attribute attribute = attributeRepository.findById(attributeId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         AttributeValue attributeValue = AttributeValue.builder()
                 .strVal(request.getStrVal())
@@ -149,8 +145,8 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.ATTRIBUTES')")
-    public void editAttributeValue(AdminAttributeValueRequest request, Long attributeValueId) {
-        AttributeValue attributeValue = attributeValueRepository.findById(attributeValueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
+    public void updateValue(AdminAttributeValueRequest request, Long valueId) {
+        AttributeValue attributeValue = attributeValueRepository.findById(valueId).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_VALUE_NOT_FOUND));
         attributeValue.setStrVal(request.getStrVal());
         attributeValue.setNumericVal((request.getNumericVal()!=null)?BigDecimal.valueOf(request.getNumericVal()):null);
     }

@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
+import com.sellphones.dto.product.admin.AdminComment_FilterRequest;
 import com.sellphones.entity.product.Comment;
 import com.sellphones.entity.product.CommentStatus;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AdminCommentSpecificationBuilder {
-    public static Specification<Comment> build(AdminCommentFilterRequest request){
+    public static Specification<Comment> build(AdminComment_FilterRequest request){
         Specification<Comment> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getParentId() != null){

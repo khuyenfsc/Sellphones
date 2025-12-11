@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,7 +21,7 @@ public class AdminWarrantyController {
     private final AdminWarrantyService adminWarrantyService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getWarranties(AdminWarrantyFilterRequest request){
+    public ResponseEntity<CommonResponse> getWarranties(AdminWarranty_FilterRequest request){
         PageResponse<AdminWarrantyResponse> response = adminWarrantyService.getWarranties(request);
         Map<String, Object> map = new HashMap<>();
         map.put("warranties", response);
@@ -31,9 +30,9 @@ public class AdminWarrantyController {
 
     }
 
-    @PostMapping("/create-warranty")
-    public ResponseEntity<CommonResponse> addWarranty(@RequestBody @Valid AdminWarrantyRequest request) {
-        adminWarrantyService.addWarranty(request);
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createWarranty(@RequestBody @Valid AdminWarrantyRequest request) {
+        adminWarrantyService.createWarranty(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added warranty successfully");
 
@@ -41,9 +40,9 @@ public class AdminWarrantyController {
 
     }
 
-    @PutMapping("/update-warranty/{id}")
-    public ResponseEntity<CommonResponse> editWarranty(@RequestBody @Valid AdminWarrantyRequest request, @PathVariable Long id) {
-        adminWarrantyService.editWarranty(request, id);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateWarranty(@RequestBody @Valid AdminWarrantyRequest request, @PathVariable Long id) {
+        adminWarrantyService.updateWarranty(request, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited warranty successfully");
 
@@ -51,7 +50,7 @@ public class AdminWarrantyController {
 
     }
 
-    @DeleteMapping("/delete-warranty/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteWarranty(@PathVariable Long id) {
         adminWarrantyService.deleteWarranty(id);
         Map<String, Object> map = new HashMap<>();

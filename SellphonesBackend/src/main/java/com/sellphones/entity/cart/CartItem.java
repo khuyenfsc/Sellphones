@@ -32,14 +32,6 @@ public class CartItem extends BaseEntity<Long> {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-//    @ManyToOne
-//    @JoinColumn(name = "warranty_id")
-//    private Warranty warranty;
-//
-//    @ManyToMany
-//
-//    private List<ProductPromotion> promotions = new ArrayList<>();
-
     @Column(nullable = false)
     private Long quantity;
 

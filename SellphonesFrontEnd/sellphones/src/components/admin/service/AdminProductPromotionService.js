@@ -91,7 +91,7 @@ const AdminProductPromotionService = {
             }
 
             const res = await AxiosClient.post(
-                "/admin/product-promotions/create-promotion",
+                "/admin/product-promotions/create",
                 promoData,
                 {
                     headers: {
@@ -109,7 +109,7 @@ const AdminProductPromotionService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            "/admin/product-promotions/create-promotion",
+                            "/admin/product-promotions/create",
                             promoData,
                             {
                                 headers: {
@@ -141,7 +141,7 @@ const AdminProductPromotionService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/product-promotions/update-promotion/${promoId}`,
+                `/admin/product-promotions/update/${promoId}`,
                 promoData,
                 {
                     headers: {
@@ -159,7 +159,7 @@ const AdminProductPromotionService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/product-promotions/update-promotion/${promoId}`,
+                            `/admin/product-promotions/update/${promoId}`,
                             promoData,
                             {
                                 headers: {
@@ -191,7 +191,7 @@ const AdminProductPromotionService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/product-promotions/delete-promotion/${promoId}`,
+                `/admin/product-promotions/delete/${promoId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -208,7 +208,7 @@ const AdminProductPromotionService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/product-promotions/delete-promotion/${promoId}`,
+                            `/admin/product-promotions/delete/${promoId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,

@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.order.admin.AdminShipmentFilterRequest;
+import com.sellphones.dto.order.admin.AdminShipment_FilterRequest;
 import com.sellphones.entity.order.DeliveryPartner;
 import com.sellphones.entity.order.Shipment;
 import com.sellphones.entity.order.ShipmentStatus;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 
 public class AdminShipmentSpecificationBuilder {
-    public static Specification<Shipment> build(AdminShipmentFilterRequest request){
+    public static Specification<Shipment> build(AdminShipment_FilterRequest request){
         Specification<Shipment> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getCode() != null){

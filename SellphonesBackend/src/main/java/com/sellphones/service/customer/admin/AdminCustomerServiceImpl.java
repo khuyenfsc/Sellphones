@@ -2,7 +2,7 @@ package com.sellphones.service.customer.admin;
 
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.customer.CustomerInfoRequest;
-import com.sellphones.dto.customer.admin.AdminCustomerInfoFilterRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfo_FilterRequest;
 import com.sellphones.dto.customer.admin.AdminCustomerInfoResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
@@ -44,7 +44,7 @@ public class AdminCustomerServiceImpl implements AdminCustomerService{
             'CUSTOMER.CUSTOMERS'
         )
     """)
-    public PageResponse<AdminCustomerInfoResponse> getCustomerInfos(AdminCustomerInfoFilterRequest request) {
+    public PageResponse<AdminCustomerInfoResponse> getCustomerInfos(AdminCustomerInfo_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");

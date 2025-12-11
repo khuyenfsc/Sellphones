@@ -27,6 +27,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long>, Jpa
     """)
     int safeIncreaseQuantity(@Param("inventoryId") Long inventoryId, @Param("delta") long delta);
 
-
     List<Inventory> findByIdIn(Collection<Long> ids);
 }

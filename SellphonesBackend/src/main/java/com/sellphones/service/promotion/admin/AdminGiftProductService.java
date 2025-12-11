@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminGiftProductService {
     PageResponse<AdminGiftProductResponse> getGiftProducts(AdminGiftProductFilterRequest request);
     void createGiftProduct(String giftProductJson, MultipartFile thumbnailFile);
-    void editGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id);
+    void updateGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id);
     void deleteGiftProduct(Long id);
 }

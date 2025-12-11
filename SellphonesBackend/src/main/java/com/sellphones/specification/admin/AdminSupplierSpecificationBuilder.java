@@ -1,12 +1,12 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.inventory.admin.AdminSupplierFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminSupplier_FilterRequest;
 import com.sellphones.entity.inventory.Supplier;
 import com.sellphones.entity.inventory.SupplierStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminSupplierSpecificationBuilder {
-    public static Specification<Supplier> build(AdminSupplierFilterRequest request){
+    public static Specification<Supplier> build(AdminSupplier_FilterRequest request){
         Specification<Supplier> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getSupplierStatus() != null){

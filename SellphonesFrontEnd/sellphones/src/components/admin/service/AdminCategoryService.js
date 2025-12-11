@@ -89,9 +89,9 @@ const AdminCategoryService = {
 
             const formData = new FormData();
             formData.append("category", JSON.stringify(categoryData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("icon_file", file);
 
-            const res = await AxiosClient.post("/admin/categories/create-category", formData, {
+            const res = await AxiosClient.post("/admin/categories/create", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -107,9 +107,9 @@ const AdminCategoryService = {
                     try {
                         const formData = new FormData();
                         formData.append("category", JSON.stringify(categoryData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("icon_file", file);
 
-                        const retryRes = await AxiosClient.post("/admin/categories/create-category", formData, {
+                        const retryRes = await AxiosClient.post("/admin/categories/create", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -137,9 +137,9 @@ const AdminCategoryService = {
 
             const formData = new FormData();
             formData.append("category", JSON.stringify(categoryData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("icon_file", file);
 
-            const res = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+            const res = await AxiosClient.put(`/admin/categories/update/${categoryId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -155,9 +155,9 @@ const AdminCategoryService = {
                     try {
                         const formData = new FormData();
                         formData.append("category", JSON.stringify(categoryData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("icon_file", file);
 
-                        const retryRes = await AxiosClient.put(`/admin/categories/update-category/${categoryId}`, formData, {
+                        const retryRes = await AxiosClient.put(`/admin/categories/update/${categoryId}`, formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -185,7 +185,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            await AxiosClient.delete(`/admin/categories/delete-category/${categoryId}`, {
+            await AxiosClient.delete(`/admin/categories/delete/${categoryId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -196,7 +196,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        await AxiosClient.delete(`/admin/categories/delete-category/${categoryId}`, {
+                        await AxiosClient.delete(`/admin/categories/delete/${categoryId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true };
@@ -294,7 +294,7 @@ const AdminCategoryService = {
             }
 
             const res = await AxiosClient.post(
-                `/admin/categories/${categoryId}/filters/create-filter`,
+                `/admin/categories/${categoryId}/filters/create`,
                 body,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -306,7 +306,7 @@ const AdminCategoryService = {
                 if (fresh.success) {
                     try {
                         const retry = await AxiosClient.post(
-                            `/admin/categories/${categoryId}/filters/create-filter`,
+                            `/admin/categories/${categoryId}/filters/create`,
                             body,
                             { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
                         );
@@ -335,7 +335,7 @@ const AdminCategoryService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/categories/filters/update-filter/${filterId}`,
+                `/admin/categories/filters/update/${filterId}`,
                 body,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -347,7 +347,7 @@ const AdminCategoryService = {
                 if (fresh.success) {
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/categories/filters/update-filter/${filterId}`,
+                            `/admin/categories/filters/update/${filterId}`,
                             body,
                             { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
                         );
@@ -454,7 +454,7 @@ const AdminCategoryService = {
             }
 
             const res = await AxiosClient.post(
-                `/admin/categories/filters/${filterId}/create-option`,
+                `/admin/categories/filters/${filterId}/create`,
                 body,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -466,7 +466,7 @@ const AdminCategoryService = {
                 if (fresh.success) {
                     try {
                         const retry = await AxiosClient.post(
-                            `/admin/categories/filters/${filterId}/create-option`,
+                            `/admin/categories/filters/${filterId}/create`,
                             body,
                             { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
                         );
@@ -493,9 +493,9 @@ const AdminCategoryService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/categories/filters/options/update-option/${optionId}`,
+                `/admin/categories/filters/options/update/${optionId}`,
                 body,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}` } }   
             );
 
             return { success: true, data: res?.data?.result || {} };
@@ -505,7 +505,7 @@ const AdminCategoryService = {
                 if (fresh.success) {
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/categories/filters/options/update-option/${optionId}`,
+                            `/admin/categories/filters/options/update/${optionId}`,
                             body,
                             { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
                         );
@@ -532,7 +532,7 @@ const AdminCategoryService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/categories/filters/options/delete-option/${optionId}`,
+                `/admin/categories/filters/options/delete/${optionId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -543,7 +543,7 @@ const AdminCategoryService = {
                 if (fresh.success) {
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/categories/filters/options/delete-option/${optionId}`,
+                            `/admin/categories/filters/options/delete/${optionId}`,
                             { headers: { Authorization: `Bearer ${fresh.accessToken}` } }
                         );
                         return { success: true, data: retry?.data?.result || {} };
@@ -640,7 +640,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post(`/admin/categories/${categoryId}/create-option`, optionData, {
+            const res = await AxiosClient.post(`/admin/categories/${categoryId}/options/create`, optionData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -651,7 +651,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post(`/admin/categories/${categoryId}/create-option`, optionData, {
+                        const retryRes = await AxiosClient.post(`/admin/categories/${categoryId}/options/create`, optionData, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -671,7 +671,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.put(`/admin/categories/update-option/${categoryOptionId}`, optionData, {
+            const res = await AxiosClient.put(`/admin/categories/options/update/${categoryOptionId}`, optionData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -682,7 +682,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.put(`/admin/categories/update-option/${categoryOptionId}`, optionData, {
+                        const retryRes = await AxiosClient.put(`/admin/categories/options/update/${categoryOptionId}`, optionData, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -702,7 +702,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            await AxiosClient.delete(`/admin/categories/delete-option/${categoryOptionId}`, {
+            await AxiosClient.delete(`/admin/categories/options/delete/${categoryOptionId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -713,7 +713,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        await AxiosClient.delete(`/admin/categories/delete-option/${categoryOptionId}`, {
+                        await AxiosClient.delete(`/admin/categories/options/delete/${categoryOptionId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true };
@@ -768,7 +768,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post(`/admin/categories/options/${categoryOptionId}/create-value`, valueData, {
+            const res = await AxiosClient.post(`/admin/categories/options/${categoryOptionId}/values/create`, valueData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -779,7 +779,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post(`/admin/categories/options/${categoryOptionId}/create-value`, valueData, {
+                        const retryRes = await AxiosClient.post(`/admin/categories/options/${categoryOptionId}/values/create`, valueData, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -799,7 +799,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.put(`/admin/categories/options/update-value/${categoryOptionId}`, valueData, {
+            const res = await AxiosClient.put(`/admin/categories/options/values/update/${categoryOptionId}`, valueData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -810,7 +810,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.put(`/admin/categories/options/update-value/${categoryOptionId}`, valueData, {
+                        const retryRes = await AxiosClient.put(`/admin/categories/options/values/update/${categoryOptionId}`, valueData, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -830,7 +830,7 @@ const AdminCategoryService = {
                 token = refresh.accessToken;
             }
 
-            await AxiosClient.delete(`/admin/categories/options/delete-value/${categoryOptionValueId}`, {
+            await AxiosClient.delete(`/admin/categories/options/values/delete/${categoryOptionValueId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -841,7 +841,7 @@ const AdminCategoryService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        await AxiosClient.delete(`/admin/categories/options/delete-value/${categoryOptionValueId}`, {
+                        await AxiosClient.delete(`/admin/categories/options/values/delete/${categoryOptionValueId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true };

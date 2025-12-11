@@ -1,11 +1,11 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.user.admin.AdminUserFilterRequest;
+import com.sellphones.dto.user.admin.AdminUser_FilterRequest;
 import com.sellphones.entity.user.*;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminUserSpecificationBuilder {
-    public static Specification<User> build(AdminUserFilterRequest request){
+    public static Specification<User> build(AdminUser_FilterRequest request){
         Specification<User> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getFullName() != null){

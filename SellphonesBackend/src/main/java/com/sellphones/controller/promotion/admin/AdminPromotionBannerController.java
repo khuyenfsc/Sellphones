@@ -31,10 +31,10 @@ public class AdminPromotionBannerController {
 
     }
 
-    @PostMapping("/create-banner")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createPromotionBanner(
             @RequestPart("banner") String bannerJson,
-            @RequestPart(name = "file", required = false) MultipartFile imageFile
+            @RequestPart(name = "image_file", required = false) MultipartFile imageFile
     ){
 
         adminPromotionBannerService.createBanner(bannerJson, imageFile);
@@ -45,13 +45,13 @@ public class AdminPromotionBannerController {
 
     }
 
-    @PutMapping("/update-banner/{id}")
-    public ResponseEntity<CommonResponse> editPromotionBanner(
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateBanner(
             @RequestPart("banner") String bannerJson,
             @RequestPart(name = "file", required = false) MultipartFile imageFile,
             @PathVariable Long id
     ){
-        adminPromotionBannerService.editBanner(bannerJson, imageFile, id);
+        adminPromotionBannerService.updateBanner(bannerJson, imageFile, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Edited promotion banner successfully");
 
@@ -59,7 +59,7 @@ public class AdminPromotionBannerController {
 
     }
 
-    @DeleteMapping("/delete-banner/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteProduct(@PathVariable Long id){
         adminPromotionBannerService.deleteBanner(id);
         Map<String, Object> map = new HashMap<>();

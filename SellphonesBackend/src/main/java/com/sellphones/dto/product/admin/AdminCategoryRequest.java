@@ -14,7 +14,7 @@ public class AdminCategoryRequest {
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "\\S+", message = "Code must not contain spaces")
+    @Pattern(regexp = "\\S+", message = "Code không đươc chứa khoảng trắng")
     private String code;
 
     private Boolean featuredOnHomepage;

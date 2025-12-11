@@ -8,7 +8,7 @@ public interface UserService {
 
     UserProfileResponse getUserProfile();
 
-    UserProfileResponse updateProfile(UpdatedInfoRequest updatedInfoRequest);
+    UserProfileResponse updateProfile(UpdateInfoRequest updateInfoRequest);
 
     void changePassword(ChangePasswordRequest changePasswordRequest);
 

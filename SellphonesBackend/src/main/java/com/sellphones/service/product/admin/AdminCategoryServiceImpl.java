@@ -1,21 +1,17 @@
 package com.sellphones.service.product.admin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.dto.product.admin.*;
-import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Category;
 import com.sellphones.entity.product.CategoryOption;
 import com.sellphones.entity.product.CategoryOptionValue;
-import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
 import com.sellphones.mapper.CategoryMapper;
 import com.sellphones.repository.product.CategoryOptionRepository;
 import com.sellphones.repository.product.CategoryOptionValueRepository;
 import com.sellphones.repository.product.CategoryRepository;
-import com.sellphones.repository.product.ProductRepository;
 import com.sellphones.service.file.FileStorageService;
 import com.sellphones.specification.admin.AdminCategoryOptionSpecificationBuilder;
 import com.sellphones.specification.admin.AdminCategoryOptionValueSpecificationBuilder;
@@ -23,7 +19,6 @@ import com.sellphones.specification.admin.AdminCategorySpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.JsonParser;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -62,8 +57,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
 
     private final JsonParser jsonParser;
 
-    private final String categoryIconFolderName = "category_icons";
-
     @Override
     @PreAuthorize("""
         hasAnyAuthority(
@@ -71,7 +64,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
             'CATALOG.PRODUCTS'
         )
     """)
-    public PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request) {
+    public PageResponse<AdminCategoryResponse> getCategories(AdminCategory_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC); // default
         Sort sort = Sort.by(direction, "name");
@@ -83,7 +76,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         List<Category> categories = categoryPage.getContent();
         List<AdminCategoryResponse> response = categories.stream()
                 .map(c -> {
-                    c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), categoryIconFolderName));
+                    c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), AppConstants.CATEGORY_IMAGE_FOLDER));
                     return modelMapper.map(c, AdminCategoryResponse.class);
                 })
                 .toList();
@@ -100,20 +93,20 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     public AdminCategoryResponse getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-        category.setIcon(ImageNameToImageUrlConverter.convert(category.getIcon(), categoryIconFolderName));
+        category.setIcon(ImageNameToImageUrlConverter.convert(category.getIcon(), AppConstants.CATEGORY_IMAGE_FOLDER));
         return modelMapper.map(category, AdminCategoryResponse.class);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void addCategory(String categoryJson, MultipartFile iconFile) {
+    public void createCategory(String categoryJson, MultipartFile iconFile) {
         AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
 
         String iconName = "";
         if (iconFile != null) {
             try {
-                iconName = fileStorageService.store(iconFile, categoryIconFolderName);
+                iconName = fileStorageService.store(iconFile, AppConstants.CATEGORY_IMAGE_FOLDER);
             } catch (Exception e) {
                 log.error("Failed to upload thumbnail file {}", iconFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -128,20 +121,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
             String message = ex.getMostSpecificCause().getMessage();
             System.out.println("Lỗi: " + message);
 
-            // Bắt lỗi trùng tên
             if (message.contains("CATEGORY(NAME") ) {
                 throw new AppException(ErrorCode.CATEGORY_NAME_ALREADY_EXISTS);
             }
-            // Bắt lỗi trùng code
             else if (message.contains("CATEGORY(CODE")) {
                 throw new AppException(ErrorCode.CATEGORY_CODE_ALREADY_EXISTS);
             }
-            // Mặc định
             else {
                 throw new AppException(ErrorCode.DATABASE_ERROR);
             }
         }
-
 
         String finalIconName = iconName;
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -149,7 +138,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
             public void afterCompletion(int status) {
                 if(status == STATUS_ROLLED_BACK){
                     if (StringUtils.hasText(finalIconName)) {
-                        fileStorageService.delete(finalIconName, categoryIconFolderName);
+                        fileStorageService.delete(finalIconName, AppConstants.CATEGORY_IMAGE_FOLDER);
                     }
                 }
             }
@@ -159,7 +148,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void editCategory(String categoryJson, MultipartFile iconFile, Long id) {
+    public void updateCategory(String categoryJson, MultipartFile iconFile, Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND));
         AdminCategoryRequest request = jsonParser.parseRequest(categoryJson, AdminCategoryRequest.class);
 
@@ -167,9 +156,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         if (iconFile != null) {
             try {
                 if (iconName != null && !iconName.isEmpty()) {
-                    fileStorageService.store(iconFile, iconName, categoryIconFolderName);
+                    fileStorageService.store(iconFile, iconName, AppConstants.CATEGORY_IMAGE_FOLDER);
                 } else {
-                    iconName = fileStorageService.store(iconFile, categoryIconFolderName);
+                    iconName = fileStorageService.store(iconFile, AppConstants.CATEGORY_IMAGE_FOLDER);
                 }
             } catch (Exception e) {
                 log.error("Failed to upload icon file {}", iconFile.getOriginalFilename(), e);
@@ -193,13 +182,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
         categoryRepository.deleteById(categoryId);
 
         if(iconName != null && !iconName.isEmpty()){
-            fileStorageService.delete(iconName, categoryIconFolderName);
+            fileStorageService.delete(iconName, AppConstants.CATEGORY_IMAGE_FOLDER);
         }
     }
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public PageResponse<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId) {
+    public PageResponse<AdminCategoryOptionResponse> getOptionsByCategoryId(AdminCategoryOption_FilterRequest request, Long categoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -221,7 +210,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     }
 
     @Override
-    public AdminCategoryOptionResponse getCategoryOptionById(Long id) {
+    @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
+    public AdminCategoryOptionResponse getOptionById(Long id) {
         CategoryOption option = categoryOptionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
         return modelMapper.map(option, AdminCategoryOptionResponse.class);
@@ -230,7 +220,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void addCategoryOption(AdminCategoryOptionRequest request, Long categoryId) {
+    public void createOption(AdminCategoryOptionRequest request, Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         CategoryOption option = CategoryOption
                 .builder()
@@ -244,7 +234,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void editCategoryOption(AdminCategoryOptionRequest request, Long categoryOptionId) {
+    public void updateOption(AdminCategoryOptionRequest request, Long categoryOptionId) {
         CategoryOption categoryOption = categoryOptionRepository.findById(categoryOptionId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
         categoryOption.setName(request.getName());
     }
@@ -252,19 +242,19 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void deleteCategoryOption(Long categoryOptionId) {
-        categoryOptionRepository.deleteById(categoryOptionId);
+    public void deleteOption(Long id) {
+        categoryOptionRepository.deleteById(id);
     }
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public PageResponse<AdminCategoryOptionValueResponse> getCategoryOptionValues(AdminCategoryOptionValueFilterRequest request, Long categoryOptionId) {
+    public PageResponse<AdminCategoryOptionValueResponse> getValuesByOptionId(AdminCategoryOptionValue_FilterRequest request, Long optionId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
-        Specification<CategoryOptionValue> spec = AdminCategoryOptionValueSpecificationBuilder.build(request, categoryOptionId);
+        Specification<CategoryOptionValue> spec = AdminCategoryOptionValueSpecificationBuilder.build(request, optionId);
 
         Page<CategoryOptionValue> optionValuePage = categoryOptionValueRepository.findAll(spec, pageable);
         List<CategoryOptionValue> optionValues = optionValuePage.getContent();
@@ -282,8 +272,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void addCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionId) {
-        CategoryOption option = categoryOptionRepository.findById(categoryOptionId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
+    public void createValue(AdminCategoryOptionValueRequest request, Long optionId) {
+        CategoryOption option = categoryOptionRepository.findById(optionId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_NOT_FOUND));
         CategoryOptionValue optionValue = CategoryOptionValue
                 .builder()
                 .categoryOption(option)
@@ -296,14 +286,14 @@ public class AdminCategoryServiceImpl implements AdminCategoryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void editCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionValueId) {
-        CategoryOptionValue optionValue = categoryOptionValueRepository.findById(categoryOptionValueId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_VALUE_NOT_FOUND));
+    public void updateValue(AdminCategoryOptionValueRequest request, Long id) {
+        CategoryOptionValue optionValue = categoryOptionValueRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_OPTION_VALUE_NOT_FOUND));
         optionValue.setName(request.getName());
     }
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.CATEGORIES')")
-    public void deleteCategoryOptionValue(Long categoryOptionValueId) {
-        categoryOptionValueRepository.deleteById(categoryOptionValueId);
+    public void deleteValue(Long id) {
+        categoryOptionValueRepository.deleteById(id);
     }
 }

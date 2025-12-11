@@ -25,7 +25,7 @@ public class AdminReviewResponse {
 
     private ReviewStatus status;
 
-    private AdminReviewVariantResponse productVariant;
+    private AdminReview_VariantResponse productVariant;
 
     private List<String> imageNames = new ArrayList<>();
 

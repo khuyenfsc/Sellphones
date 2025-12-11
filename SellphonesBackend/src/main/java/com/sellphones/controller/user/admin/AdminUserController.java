@@ -3,7 +3,7 @@ package com.sellphones.controller.user.admin;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.user.admin.AdminUpdateUserRequest;
-import com.sellphones.dto.user.admin.AdminUserFilterRequest;
+import com.sellphones.dto.user.admin.AdminUser_FilterRequest;
 import com.sellphones.dto.user.admin.AdminCreateUserRequest;
 import com.sellphones.dto.user.admin.AdminUserResponse;
 import com.sellphones.service.user.admin.AdminUserService;
@@ -24,7 +24,7 @@ public class AdminUserController {
     private final AdminUserService adminUserService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getUsers(AdminUserFilterRequest request){
+    public ResponseEntity<CommonResponse> getUsers(AdminUser_FilterRequest request){
         PageResponse<AdminUserResponse> response = adminUserService.getUsers(request);
         Map<String, Object> map = new HashMap<>();
         map.put("users", response);
@@ -33,7 +33,7 @@ public class AdminUserController {
 
     }
 
-    @PostMapping("/create-user")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createUser(
         @RequestBody @Valid AdminCreateUserRequest request
     ){
@@ -46,20 +46,20 @@ public class AdminUserController {
 
     }
 
-    @PutMapping("/update-user/{id}")
-    public ResponseEntity<CommonResponse> editUser(
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateUser(
             @RequestBody @Valid AdminUpdateUserRequest request,
             @PathVariable Long id
     ){
-        adminUserService.editUser(request, id);
+        adminUserService.updateUser(request, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited user successfully");
+        map.put("result", "Updated user successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-user/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteUser(@PathVariable Long id){
         adminUserService.deleteUser(id);
         Map<String, Object> map = new HashMap<>();

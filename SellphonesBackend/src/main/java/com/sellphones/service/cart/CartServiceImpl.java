@@ -4,11 +4,10 @@ import com.sellphones.dto.cart.CartItemRequest;
 import com.sellphones.dto.cart.CartItemResponse;
 import com.sellphones.dto.cart.CartResponse;
 import com.sellphones.dto.cart.ItemQuantityRequest;
-import com.sellphones.dto.product.CartItemVariantResponse;
+import com.sellphones.dto.product.CartItem_VariantResponse;
 import com.sellphones.entity.cart.Cart;
 import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.product.ProductVariant;
-import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -17,7 +16,6 @@ import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.cart.CartRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
-import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
@@ -26,10 +24,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +59,6 @@ public class CartServiceImpl implements CartService{
                 .map(ci -> ci.getProductVariant().getId())
                 .toList();
         List<Object[]> promotionRows = productPromotionRepository.findActivePromotionsByVariantIds(variantIds);
-        System.out.println("getCart");
         Map<Long, List<ProductPromotion>> promotionsMap = promotionRows.stream()
                 .collect(Collectors.groupingBy(
                         r -> (Long)r[0],
@@ -72,14 +67,6 @@ public class CartServiceImpl implements CartService{
                                 Collectors.toList()
                         )
                 ));
-//        for(Map.Entry<Long, List<ProductPromotion>> m : promotionsMap.entrySet()){
-//            System.out.println(m.getKey());
-//            for(ProductPromotion promotion : m.getValue()){
-//                System.out.println(promotion.getId());
-//                System.out.println(promotion.getName());
-////                System.out.println(promotion.get());
-//            }
-//        }
 
 
         response.setCartItems(
@@ -88,7 +75,7 @@ public class CartServiceImpl implements CartService{
                         ProductVariant variant = item.getProductVariant();
                         CartItemResponse resp = modelMapper.map(item, CartItemResponse.class);
 
-                        CartItemVariantResponse itemVariantResponse = productMapper.mapToCartItemVariantResponse(
+                        CartItem_VariantResponse itemVariantResponse = productMapper.mapToCartItemVariantResponse(
                                 variant, promotionsMap.get(variant.getId()), variant.getGiftProducts()
                         );
                         resp.setProductVariant(itemVariantResponse);
@@ -101,7 +88,6 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    @Transactional
     public void addItemsToCart(CartItemRequest cartItemRequest) {
 
         if(!productUtils.isActiveVariant(cartItemRequest.getProductVariantId())){
@@ -114,12 +100,6 @@ public class CartServiceImpl implements CartService{
             throw new AppException(ErrorCode.PRODUCT_VARIANT_OUT_OF_STOCK);
         }
 
-//        CartItem existingItem = cartItemRepository.findByProductVariantAndCart_User_Email(productVariant, SecurityUtils.extractNameFromAuthentication())
-//                .orElse(null);
-//        if(existingItem != null){
-//            throw new AppException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
-//        }
-
         Cart cart = getCurrentUserCart();
         CartItem newItem = CartItem.builder()
                         .cart(cart)
@@ -128,7 +108,8 @@ public class CartServiceImpl implements CartService{
                         .addedAt(LocalDateTime.now())
                         .createdAt(LocalDateTime.now())
                         .build();
-        cart.getCartItems().add(newItem);
+
+        cartItemRepository.save(newItem);
     }
 
     @Override

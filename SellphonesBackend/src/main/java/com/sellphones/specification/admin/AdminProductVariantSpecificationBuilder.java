@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
+import com.sellphones.dto.product.admin.AdminProductVariant_FilterRequest;
 import com.sellphones.entity.product.*;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 public class AdminProductVariantSpecificationBuilder {
 
-    public static Specification<ProductVariant> build(AdminProductVariantFilterRequest request, Long productId){
+    public static Specification<ProductVariant> build(AdminProductVariant_FilterRequest request, Long productId){
         Specification<ProductVariant> spec = (root, query, cb) -> cb.conjunction();
         spec = spec.and(hasProductId(productId));
 

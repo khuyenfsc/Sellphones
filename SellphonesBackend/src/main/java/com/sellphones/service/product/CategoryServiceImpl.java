@@ -1,10 +1,9 @@
 package com.sellphones.service.product;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.product.CategoryResponse;
 import com.sellphones.dto.product.FeaturedCategoryResponse;
-import com.sellphones.dto.product.ProductFilterResponse;
 import com.sellphones.entity.product.Category;
-import com.sellphones.entity.product.ProductFilter;
 import com.sellphones.repository.product.CategoryRepository;
 import com.sellphones.repository.product.ProductFilterRepository;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
@@ -21,10 +20,6 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final CategoryRepository categoryRepository;
 
-    private final ProductFilterRepository productFilterRepository;
-
-    private final String categoryIconFolderName = "category_icons";
-
     private final ModelMapper modelMapper;
 
     @Override
@@ -33,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService{
         return categories.stream()
                 .map(c ->
                     {
-                        c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), categoryIconFolderName));
+                        c.setIcon(ImageNameToImageUrlConverter.convert(c.getIcon(), AppConstants.CATEGORY_IMAGE_FOLDER));
                         return modelMapper.map(c, CategoryResponse.class);
                     }
                 )

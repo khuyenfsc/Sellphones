@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminCategoryOptionFilterRequest;
+import com.sellphones.dto.product.admin.AdminCategoryOption_FilterRequest;
 import com.sellphones.entity.product.CategoryOption;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -8,16 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AdminCategoryOptionSpecificationBuilder {
-    public static Specification<CategoryOption> build(AdminCategoryOptionFilterRequest request, Long categoryid){
+    public static Specification<CategoryOption> build(AdminCategoryOption_FilterRequest request, Long categoryid){
         Specification<CategoryOption> spec = (root, query, cb) -> cb.conjunction();
 
-        if(request.getKeyword() != null){
-            spec = spec.and(containsKeyword(request.getKeyword()));
+        if(request.getName() != null){
+            spec = spec.and(containsKeyword(request.getName()));
         }
-
-//        if(request.getStartDate() != null && request.getEndDate() != null){
-//            spec = spec.and(hasDateBetween(request.getStartDate(), request.getEndDate()));
-//        }
 
         spec = spec.and(hasCategoryId(categoryid));
 

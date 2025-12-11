@@ -19,8 +19,5 @@ public class CommentResponse {
 
     private String content;
 
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    private List<CommentResponse> childComments;
-
     private LocalDateTime createdAt;
 }

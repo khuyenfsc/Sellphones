@@ -38,7 +38,7 @@ public class AdminCommentServiceImpl implements AdminCommentService{
 
     @Override
     @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
-    public PageResponse<AdminCommentResponse> getComments(AdminCommentFilterRequest request) {
+    public PageResponse<AdminCommentResponse> getComments(AdminComment_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt", "id");
@@ -91,7 +91,7 @@ public class AdminCommentServiceImpl implements AdminCommentService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.COMMENTS')")
-    public void editComment(AdminUpdateCommentRequest request, Long commentId) {
+    public void updateComment(AdminUpdateCommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setStatus(request.getStatus());
     }

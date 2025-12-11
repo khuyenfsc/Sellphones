@@ -28,9 +28,6 @@ public class User extends BaseEntity<Long> {
     @Column(name = "full_name")
     private String fullName;
 
-//    @Column(name = "avatar")
-//    private String avatar;
-
     @Column(name = "email", unique = true)
     private String email;
 
@@ -49,17 +46,6 @@ public class User extends BaseEntity<Long> {
 
     @Column(name = "phone_number")
     private String phoneNumber;
-
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "default_address_id")
-//    private Address defaultAddress;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-//    private List<Address> shippingAddresses;
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role")
-//    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

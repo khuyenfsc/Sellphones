@@ -25,12 +25,10 @@ import java.util.List;
 )
 public class Inventory extends BaseEntity<Long> {
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;

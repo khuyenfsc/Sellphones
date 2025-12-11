@@ -5,12 +5,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.sellphones.configuration.CustomUserDetails;
 import com.sellphones.configuration.JwtAuthenticationToken;
 import com.sellphones.constant.AppConstants;
-import com.sellphones.entity.user.Permission;
-import com.sellphones.entity.user.Role;
-import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
-import com.sellphones.service.authentication.JwtService;
+import com.sellphones.utils.JwtUtils;
 import com.sellphones.service.user.RoleService;
 import com.sellphones.utils.SecurityUtils;
 import io.jsonwebtoken.lang.Arrays;
@@ -21,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +38,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtValidatorFilter extends OncePerRequestFilter { ;
 
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
 
     private final RoleService roleService;
 
@@ -54,7 +50,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter { ;
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = SecurityUtils.extractTokenFromRequest(request);
-            JWTClaimsSet jwtClaimsSet = jwtService.validateToken(jwt);
+            JWTClaimsSet jwtClaimsSet = jwtUtils.validateToken(jwt);
             String roleName = Optional.ofNullable(jwtClaimsSet.getClaimAsString("role"))
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
             String username = jwtClaimsSet.getSubject();

@@ -107,7 +107,7 @@ const AdminOrderService = {
             }
 
             const res = await AxiosClient.post(
-                "/admin/orders/create-order",
+                "/admin/orders/create",
                 orderData,
                 {
                     headers: {
@@ -125,7 +125,7 @@ const AdminOrderService = {
                     const retryToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            "/admin/orders/create-order",
+                            "/admin/orders/create",
                             orderData,
                             {
                                 headers: {
@@ -257,7 +257,7 @@ const AdminOrderService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/orders/deliver-order/${orderId}`,
+                `/admin/orders/deliver/${orderId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -271,7 +271,7 @@ const AdminOrderService = {
 
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/orders/deliver-order/${orderId}`,
+                            `/admin/orders/deliver/${orderId}`,
                             {},
                             { headers: { Authorization: `Bearer ${retryToken}` } }
                         );
@@ -302,7 +302,7 @@ const AdminOrderService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/orders/cancel-order/${orderId}`,
+                `/admin/orders/cancel/${orderId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -316,7 +316,7 @@ const AdminOrderService = {
 
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/orders/cancel-order/${orderId}`,
+                            `/admin/orders/cancel/${orderId}`,
                             {},
                             { headers: { Authorization: `Bearer ${retryToken}` } }
                         );

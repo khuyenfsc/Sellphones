@@ -35,5 +35,4 @@ public class Category extends BaseEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", orphanRemoval = true)
     private List<CategoryOption> categoryOptions = new ArrayList<>();
 
-
 }

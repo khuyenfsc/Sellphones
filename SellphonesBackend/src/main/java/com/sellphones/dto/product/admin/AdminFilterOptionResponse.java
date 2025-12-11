@@ -1,7 +1,5 @@
 package com.sellphones.dto.product.admin;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,17 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminFilterOptionResponse {
-
     private Long id;
 
     private String name;
 
-    private String key;
-
-    private String val1;
-
-    private String val2;
-
     private LocalDateTime createdAt;
-
 }

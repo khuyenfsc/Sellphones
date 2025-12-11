@@ -1,5 +1,6 @@
 package com.sellphones.service.product;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.product.BrandResponse;
 import com.sellphones.entity.product.Brand;
 import com.sellphones.repository.product.BrandRepository;
@@ -19,14 +20,12 @@ public class BrandServiceImpl implements BrandService{
 
     private final ModelMapper modelMapper;
 
-    private final String brandIconFolderName = "brand_icons";
-
     @Override
     public List<BrandResponse> getBrandByCategoryId(Long categoryId) {
         Set<Brand> brands = brandRepository.findByCategories_Id(categoryId);
         return brands.stream()
                 .map(b ->{
-                        b.setBrandIcon(ImageNameToImageUrlConverter.convert(b.getBrandIcon(), brandIconFolderName));
+                        b.setBrandIcon(ImageNameToImageUrlConverter.convert(b.getBrandIcon(), AppConstants.BRAND_IMAGE_FOLDER));
                         return modelMapper.map(b, BrandResponse.class);
                     }
                 )
@@ -38,7 +37,7 @@ public class BrandServiceImpl implements BrandService{
         Set<Brand> brands = brandRepository.findByCategories_Name(categoryName);
         return brands.stream()
                 .map(b ->{
-                            b.setBrandIcon(ImageNameToImageUrlConverter.convert(b.getBrandIcon(), brandIconFolderName));
+                            b.setBrandIcon(ImageNameToImageUrlConverter.convert(b.getBrandIcon(), AppConstants.BRAND_IMAGE_FOLDER));
                             return modelMapper.map(b, BrandResponse.class);
                         }
                 )

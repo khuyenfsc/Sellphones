@@ -26,9 +26,5 @@ public class Address extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     private AddressType addressType;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
-
 }
 

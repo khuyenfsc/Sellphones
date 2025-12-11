@@ -93,7 +93,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType("application/json;charset=UTF-8");
             response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-            //Đổi thành url front end ví dụ:  response.sendRedirect("http://localhost:3000/oauth2/success");
             response.sendRedirect("http://localhost:3000");
         }else{
             String familyName = (String) attributes.get("family_name");

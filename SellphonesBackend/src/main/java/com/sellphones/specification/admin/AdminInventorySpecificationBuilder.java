@@ -1,12 +1,12 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.inventory.admin.AdminInventoryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminInventory_FilterRequest;
 import com.sellphones.entity.inventory.Inventory;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminInventorySpecificationBuilder {
 
-    public static Specification<Inventory> build(AdminInventoryFilterRequest request){
+    public static Specification<Inventory> build(AdminInventory_FilterRequest request){
         Specification<Inventory> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getProductVariantName() != null){
@@ -22,7 +22,7 @@ public class AdminInventorySpecificationBuilder {
         return spec;
     }
 
-    public static Specification<Inventory> buildWithWarehouseId(AdminInventoryFilterRequest request, Long warehouseId){
+    public static Specification<Inventory> buildWithWarehouseId(AdminInventory_FilterRequest request, Long warehouseId){
         Specification<Inventory> spec = (root, query, cb) -> cb.conjunction();
 
         spec = spec.and(hasWarehouseId(warehouseId));

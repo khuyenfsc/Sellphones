@@ -1,11 +1,11 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminWarrantyFilterRequest;
+import com.sellphones.dto.product.admin.AdminWarranty_FilterRequest;
 import com.sellphones.entity.product.Warranty;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminWarrantySpecificationBuilder {
-    public static Specification<Warranty> build(AdminWarrantyFilterRequest request){
+    public static Specification<Warranty> build(AdminWarranty_FilterRequest request){
         Specification<Warranty> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getName() != null){

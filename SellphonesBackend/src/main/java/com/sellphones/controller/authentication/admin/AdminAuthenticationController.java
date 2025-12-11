@@ -12,6 +12,7 @@ import com.sellphones.service.authentication.AuthenticationService;
 import com.sellphones.service.authentication.LocalAuthenticationAction;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class AdminAuthenticationController {
     private final LocalAuthenticationAction localAuthenticationAction;
 
     @PostMapping("/login")
-    public ResponseEntity<CommonResponse> adminLogin(@RequestBody UserRequest userRequest, HttpServletResponse response){
+    public ResponseEntity<CommonResponse> adminLogin(@RequestBody @Valid UserRequest userRequest, HttpServletResponse response){
         AuthenticationToken authenticationToken = authenticationService.authenticate(localAuthenticationAction, userRequest, RoleName.ADMIN);
         SecurityUtils.setRefreshTokenToCookie(response, authenticationToken.getRefreshToken(), AppConstants.ADMIN_REFRESH_TOKEN_NAME);
 

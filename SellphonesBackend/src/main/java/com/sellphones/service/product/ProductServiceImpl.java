@@ -1,10 +1,10 @@
 package com.sellphones.service.product;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.*;
 //import com.sellphones.elasticsearch.CustomProductDocumentRepository;
 //import com.sellphones.elasticsearch.ProductDocument;
-import com.sellphones.dto.promotion.GiftProductResponse;
 import com.sellphones.entity.product.Product;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.ProductStatus;
@@ -20,7 +20,6 @@ import com.sellphones.specification.ProductSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.DestinationSetter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +37,6 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
 
-//    private final CustomProductDocumentRepository customProductDocumentRepository;
-
     private final ProductVariantRepository productVariantRepository;
 
     private final ProductPromotionRepository productPromotionRepository;
@@ -48,21 +45,16 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductMapper productMapper;
 
-    private final String thumbnailFolderName = "product_thumbnails";
-
-    private final String productImagesFolder = "product_images";
-
-
     @Override
-    public List<ProductListResponse> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(product -> modelMapper.map(product, ProductListResponse.class))
+                .map(product -> modelMapper.map(product, ProductResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductListResponse> getFeaturedProductsByCategory(String categoryName) {
+    public List<ProductResponse> getFeaturedProductsByCategory(String categoryName) {
         Boolean isFeatured = true;
         List<Product> featuredProducts = productRepository.findFirst10ByCategory_NameAndIsFeaturedAndStatus(
                 categoryName, isFeatured, ProductStatus.ACTIVE
@@ -70,13 +62,13 @@ public class ProductServiceImpl implements ProductService{
 
         return featuredProducts.stream()
                 .map(p -> {
-                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
-                    return modelMapper.map(p, ProductListResponse.class);
+                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), AppConstants.PRODUCT_THUMBNAIL_FOLDER));
+                    return modelMapper.map(p, ProductResponse.class);
                 }).toList();
     }
 
     @Override
-    public PageResponse<ProductListResponse> getProductByFilter(FilterRequest filter) {
+    public PageResponse<ProductResponse> getProductByFilter(FilterRequest filter) {
         Specification<Product> productSpec = ProductSpecificationBuilder.build(filter.getQuery());
         Sort.Direction direction = Sort.Direction.fromOptionalString(filter.getSort())
                 .orElse(Sort.Direction.DESC);
@@ -86,13 +78,13 @@ public class ProductServiceImpl implements ProductService{
 
         Page<Product> productPage = productRepository.findAll(productSpec, pageable);
         List<Product> products = productPage.getContent();
-        List<ProductListResponse> response = products.stream()
+        List<ProductResponse> response = products.stream()
                 .map(p -> {
-                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), thumbnailFolderName));
-                    return modelMapper.map(p, ProductListResponse.class);
+                    p.setThumbnail(ImageNameToImageUrlConverter.convert(p.getThumbnail(), AppConstants.PRODUCT_THUMBNAIL_FOLDER));
+                    return modelMapper.map(p, ProductResponse.class);
                 }).toList();
 
-        return PageResponse.<ProductListResponse>builder()
+        return PageResponse.<ProductResponse>builder()
                 .result(response)
                 .total(productPage.getTotalElements())
                 .totalPages(productPage.getTotalPages())
@@ -111,7 +103,7 @@ public class ProductServiceImpl implements ProductService{
 
         List<String> images = new ArrayList<>();
         for(String image : product.getImages()){
-            images.add(ImageNameToImageUrlConverter.convert(image, productImagesFolder));
+            images.add(ImageNameToImageUrlConverter.convert(image, AppConstants.PRODUCT_IMAGE_FOLDER));
         }
         product.setImages(images);
 

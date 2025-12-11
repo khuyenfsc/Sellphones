@@ -1,7 +1,7 @@
 package com.sellphones.service.inventory;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntry_FilterRequest;
 import com.sellphones.dto.inventory.admin.AdminCreateStockEntryRequest;
 import com.sellphones.dto.inventory.admin.AdminStockEntryResponse;
 import com.sellphones.dto.inventory.admin.AdminUpdateStockEntryRequest;
@@ -50,7 +50,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public PageResponse<AdminStockEntryResponse> getStockEntriesBySupplierId(@Valid AdminStockEntryFilterRequest request, Long supplierId) {
+    public PageResponse<AdminStockEntryResponse> getStockEntriesBySupplierId(@Valid AdminStockEntry_FilterRequest request, Long supplierId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -73,7 +73,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public PageResponse<AdminStockEntryResponse> getStockEntriesByInventoryId(AdminStockEntryFilterRequest request, Long inventoryId) {
+    public PageResponse<AdminStockEntryResponse> getStockEntriesByInventoryId(AdminStockEntry_FilterRequest request, Long inventoryId) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -97,7 +97,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public void addStockEntry(AdminCreateStockEntryRequest request, Long supplierId) {
+    public void createStockEntry(AdminCreateStockEntryRequest request, Long supplierId) {
         Inventory inventory = inventoryRepository.findById(request.getInventoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
 
@@ -122,7 +122,7 @@ public class AdminStockEntryServiceImpl implements AdminStockEntryService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public void editStockEntry(AdminUpdateStockEntryRequest request, Long id) {
+    public void updateStockEntry(AdminUpdateStockEntryRequest request, Long id) {
         StockEntry oldEntry = stockEntryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STOCK_ENTRY_NOT_FOUND));
         Inventory inventory = oldEntry.getInventory();

@@ -1,5 +1,6 @@
 package com.sellphones.service.promotion;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.promotion.PromotionBannerResponse;
 import com.sellphones.entity.promotion.BannerStatus;
 import com.sellphones.entity.promotion.PromotionBanner;
@@ -20,14 +21,12 @@ public class PromotionBannerServiceImpl implements PromotionBannerService{
 
     private final ModelMapper modelMapper;
 
-    private final String promotionBannerFolderName = "promotion_banners";
-
     @Override
     public List<PromotionBannerResponse> getAllPromotionBanners() {
         List<PromotionBanner> promotionBanners = promotionBannerRepository.findByStatusOrderByIdAsc(BannerStatus.ACTIVE);
         return promotionBanners.stream()
                 .map(promotionBanner -> {
-                    promotionBanner.setImage(ImageNameToImageUrlConverter.convert(promotionBanner.getImage(), promotionBannerFolderName));
+                    promotionBanner.setImage(ImageNameToImageUrlConverter.convert(promotionBanner.getImage(), AppConstants.PROMOTION_BANNER_FOLDER));
                     return modelMapper.map(promotionBanner, PromotionBannerResponse.class);
                 })
                 .collect(Collectors.toList());

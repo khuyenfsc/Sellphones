@@ -2,10 +2,8 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.RatingStatsResponse;
-import com.sellphones.dto.product.ReviewFilterRequest;
+import com.sellphones.dto.product.Review_FilterRequest;
 import com.sellphones.dto.product.ReviewResponse;
-import com.sellphones.entity.product.RatingStats;
 import com.sellphones.service.product.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,7 +22,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getReviewsByConditions(ReviewFilterRequest request){
+    public ResponseEntity<CommonResponse> getReviewsByConditions(Review_FilterRequest request){
         PageResponse<ReviewResponse> reviews = reviewService.getReviewsByConditions(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", reviews);

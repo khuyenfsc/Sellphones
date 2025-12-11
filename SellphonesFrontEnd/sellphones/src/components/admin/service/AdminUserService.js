@@ -90,7 +90,7 @@ const AdminUserService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post("/admin/users/create-user", userData, {
+            const res = await AxiosClient.post("/admin/users/create", userData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const AdminUserService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post("/admin/users/create-user", userData, {
+                        const retryRes = await AxiosClient.post("/admin/users/create", userData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const AdminUserService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.put(`/admin/users/update-user/${userId}`, userData, {
+            const res = await AxiosClient.put(`/admin/users/update/${userId}`, userData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -146,7 +146,7 @@ const AdminUserService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.put(`/admin/users/update-user/${userId}`, userData, {
+                        const retryRes = await AxiosClient.put(`/admin/users/update/${userId}`, userData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",
@@ -174,7 +174,7 @@ const AdminUserService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.delete(`/admin/users/delete-user/${userId}`, {
+            const res = await AxiosClient.delete(`/admin/users/delete/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -188,7 +188,7 @@ const AdminUserService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.delete(`/admin/users/delete-user/${userId}`, {
+                        const retryRes = await AxiosClient.delete(`/admin/users/delete/${userId}`, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",

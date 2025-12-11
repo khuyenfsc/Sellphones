@@ -30,7 +30,7 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PostMapping("/create-customer-info")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createCustomerInfo(@RequestBody @Valid CustomerInfoRequest request){
         CustomerInfoResponse response = customerService.createCustomerInfo(request);
         Map<String, Object> map = new HashMap<>();
@@ -39,7 +39,7 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PutMapping("/update-customer-info/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateCustomerInfo(@RequestBody @Valid CustomerInfoRequest request,@PathVariable Long id){
         CustomerInfoResponse response = customerService.updateCustomerInfo(request, id);
         Map<String, Object> map = new HashMap<>();

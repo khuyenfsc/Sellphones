@@ -27,8 +27,5 @@ public class Permission extends BaseEntity<Long> {
 
     private String code;
 
-//    @OneToMany
-//    @JoinColumn(name = "parent_permission_id")
-//    private Set<Permission> childPermissions = new HashSet<>();
 
 }

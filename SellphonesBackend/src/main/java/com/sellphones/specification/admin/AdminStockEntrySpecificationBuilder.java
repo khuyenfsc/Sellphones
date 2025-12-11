@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.inventory.admin.AdminStockEntryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminStockEntry_FilterRequest;
 import com.sellphones.entity.inventory.StockEntry;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class AdminStockEntrySpecificationBuilder {
-    public static Specification<StockEntry> buildWithSupplierId(AdminStockEntryFilterRequest request, Long supplierId){
+    public static Specification<StockEntry> buildWithSupplierId(AdminStockEntry_FilterRequest request, Long supplierId){
         Specification<StockEntry> spec = (root, query, cb) -> cb.conjunction();
 
         spec = spec.and(hasSupplierId(supplierId));
@@ -44,7 +44,7 @@ public class AdminStockEntrySpecificationBuilder {
         return spec;
     }
 
-    public static Specification<StockEntry> buildWithInventoryId(AdminStockEntryFilterRequest request, Long inventoryId){
+    public static Specification<StockEntry> buildWithInventoryId(AdminStockEntry_FilterRequest request, Long inventoryId){
         Specification<StockEntry> spec = (root, query, cb) -> cb.conjunction();
 
         spec = spec.and(hasInventoryId(inventoryId));

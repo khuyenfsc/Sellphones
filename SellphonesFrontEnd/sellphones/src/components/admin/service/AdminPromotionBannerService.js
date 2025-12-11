@@ -56,10 +56,10 @@ const AdminPromotionBannerService = {
 
             const formData = new FormData();
             formData.append("banner", JSON.stringify(bannerData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("image_file", file);
 
             const res = await AxiosClient.post(
-                "/admin/promotion-banners/create-banner",
+                "/admin/promotion-banners/create",
                 formData,
                 {
                     headers: {
@@ -79,10 +79,10 @@ const AdminPromotionBannerService = {
                     try {
                         const formData = new FormData();
                         formData.append("banner", JSON.stringify(bannerData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("image_file", file);
 
                         const retryRes = await AxiosClient.post(
-                            "/admin/promotion-banners/create-banner",
+                            "/admin/promotion-banners/create",
                             formData,
                             {
                                 headers: {
@@ -163,10 +163,10 @@ const AdminPromotionBannerService = {
 
             const formData = new FormData();
             formData.append("banner", JSON.stringify(bannerData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("image_file", file);
 
             const res = await AxiosClient.put(
-                `/admin/promotion-banners/update-banner/${bannerId}`,
+                `/admin/promotion-banners/update/${bannerId}`,
                 formData,
                 {
                     headers: {
@@ -186,10 +186,10 @@ const AdminPromotionBannerService = {
                     try {
                         const formData = new FormData();
                         formData.append("banner", JSON.stringify(bannerData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("image_file", file);
 
                         const retryRes = await AxiosClient.put(
-                            `/admin/promotion-banners/update-banner/${bannerId}`,
+                            `/admin/promotion-banners/update/${bannerId}`,
                             formData,
                             {
                                 headers: {
@@ -224,7 +224,7 @@ const AdminPromotionBannerService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/promotion-banners/delete-banner/${bannerId}`,
+                `/admin/promotion-banners/delete/${bannerId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -239,7 +239,7 @@ const AdminPromotionBannerService = {
 
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/promotion-banners/delete-banner/${bannerId}`,
+                            `/admin/promotion-banners/delete/${bannerId}`,
                             {
                                 headers: { Authorization: `Bearer ${newToken}` },
                             }

@@ -90,7 +90,7 @@ const AdminWarrantyService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post("/admin/warranties/create-warranty", warrantyData, {
+            const res = await AxiosClient.post("/admin/warranties/create", warrantyData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -104,7 +104,7 @@ const AdminWarrantyService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post("/admin/warranties/create-warranty", warrantyData, {
+                        const retryRes = await AxiosClient.post("/admin/warranties/create", warrantyData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json"
@@ -133,7 +133,7 @@ const AdminWarrantyService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/warranties/update-warranty/${warrantyId}`,
+                `/admin/warranties/update/${warrantyId}`,
                 warrantyData,
                 {
                     headers: {
@@ -151,7 +151,7 @@ const AdminWarrantyService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/warranties/update-warranty/${warrantyId}`,
+                            `/admin/warranties/update/${warrantyId}`,
                             warrantyData,
                             {
                                 headers: {
@@ -183,7 +183,7 @@ const AdminWarrantyService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/warranties/delete-warranty/${warrantyId}`,
+                `/admin/warranties/delete/${warrantyId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -200,7 +200,7 @@ const AdminWarrantyService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/warranties/delete-warranty/${warrantyId}`,
+                            `/admin/warranties/delete/${warrantyId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,

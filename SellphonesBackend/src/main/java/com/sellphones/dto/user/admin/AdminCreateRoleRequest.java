@@ -19,6 +19,4 @@ public class AdminCreateRoleRequest {
     @NotBlank
     private String description;
 
-//    @NotNull
-//    private RoleName roleName;
 }

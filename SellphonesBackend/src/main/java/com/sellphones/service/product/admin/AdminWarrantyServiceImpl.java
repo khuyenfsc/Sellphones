@@ -1,11 +1,9 @@
 package com.sellphones.service.product.admin;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
-import com.sellphones.dto.product.admin.AdminWarrantyFilterRequest;
+import com.sellphones.dto.product.admin.AdminWarranty_FilterRequest;
 import com.sellphones.dto.product.admin.AdminWarrantyRequest;
 import com.sellphones.dto.product.admin.AdminWarrantyResponse;
-import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.product.Warranty;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -41,7 +39,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
         'CATALOG.PRODUCTS'
     )
     """)
-    public PageResponse<AdminWarrantyResponse> getWarranties(AdminWarrantyFilterRequest request) {
+    public PageResponse<AdminWarrantyResponse> getWarranties(AdminWarranty_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "price", "id");
@@ -64,7 +62,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
 
     @Override
     @PreAuthorize("hasAuthority('CATALOG.WARRANTIES')")
-    public void addWarranty(AdminWarrantyRequest request) {
+    public void createWarranty(AdminWarrantyRequest request) {
         Warranty warranty = Warranty.builder()
                 .name(request.getName())
                 .months(request.getMonths())
@@ -79,7 +77,7 @@ public class AdminWarrantyServiceImpl implements AdminWarrantyService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CATALOG.WARRANTIES')")
-    public void editWarranty(AdminWarrantyRequest request, Long id) {
+    public void updateWarranty(AdminWarrantyRequest request, Long id) {
         Warranty warranty = warrantyRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.WARRANTY_NOT_FOUND));
         warranty.setName(request.getName());
         warranty.setMonths(request.getMonths());

@@ -1,6 +1,6 @@
 package com.sellphones.specification;
 
-import com.sellphones.dto.order.OrderFilterRequest;
+import com.sellphones.dto.order.Order_FilterRequest;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.utils.SecurityUtils;
@@ -11,7 +11,7 @@ import java.time.LocalTime;
 
 public class OrderSpecificationBuilder {
 
-    public static Specification<Order> build(OrderFilterRequest request){
+    public static Specification<Order> build(Order_FilterRequest request){
         Specification<Order> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getStartDate() != null && request.getEndDate() != null){

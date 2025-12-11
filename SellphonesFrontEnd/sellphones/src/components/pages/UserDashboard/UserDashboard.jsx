@@ -13,7 +13,6 @@ export default function UserDashboard() {
         <div className="max-w-6xl mx-auto px-4 py-4 grid grid-cols-3 gap-4">
           <AccountSidebar />
 
-          {/* ✅ Dữ liệu user từ context dùng được ở mọi route con */}
           <div className="col-span-2 space-y-4">
             <Outlet />
           </div>

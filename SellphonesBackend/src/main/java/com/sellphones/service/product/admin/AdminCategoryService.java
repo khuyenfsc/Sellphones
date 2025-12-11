@@ -4,21 +4,19 @@ import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.product.admin.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 public interface AdminCategoryService {
-    PageResponse<AdminCategoryResponse> getCategories(AdminCategoryFilterRequest request);
+    PageResponse<AdminCategoryResponse> getCategories(AdminCategory_FilterRequest request);
     AdminCategoryResponse getCategoryById(Long categoryId);
-    void addCategory(String categoryJson, MultipartFile iconFile);
-    void editCategory(String categoryJson, MultipartFile iconName, Long id);
+    void createCategory(String categoryJson, MultipartFile iconFile);
+    void updateCategory(String categoryJson, MultipartFile iconName, Long id);
     void deleteCategory(Long categoryId);
-    PageResponse<AdminCategoryOptionResponse> getCategoryOptions(AdminCategoryOptionFilterRequest request, Long categoryId);
-    AdminCategoryOptionResponse getCategoryOptionById(Long id);
-    void addCategoryOption(AdminCategoryOptionRequest request, Long categoryId);
-    void editCategoryOption(AdminCategoryOptionRequest request, Long categoryId);
-    void deleteCategoryOption(Long categoryOptionId);
-    PageResponse<AdminCategoryOptionValueResponse> getCategoryOptionValues(AdminCategoryOptionValueFilterRequest request, Long categoryOptionId);
-    void addCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionId);
-    void editCategoryOptionValue(AdminCategoryOptionValueRequest request, Long categoryOptionId);
-    void deleteCategoryOptionValue(Long categoryOptionValueId);
+    PageResponse<AdminCategoryOptionResponse> getOptionsByCategoryId(AdminCategoryOption_FilterRequest request, Long categoryId);
+    AdminCategoryOptionResponse getOptionById(Long id);
+    void createOption(AdminCategoryOptionRequest request, Long categoryId);
+    void updateOption(AdminCategoryOptionRequest request, Long id);
+    void deleteOption(Long id);
+    PageResponse<AdminCategoryOptionValueResponse> getValuesByOptionId(AdminCategoryOptionValue_FilterRequest request, Long optionId);
+    void createValue(AdminCategoryOptionValueRequest request, Long optionId);
+    void updateValue(AdminCategoryOptionValueRequest request, Long id);
+    void deleteValue(Long id);
 }

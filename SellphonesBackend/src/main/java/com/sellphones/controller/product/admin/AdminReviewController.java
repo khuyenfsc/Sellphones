@@ -2,7 +2,7 @@ package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
+import com.sellphones.dto.product.admin.AdminReview_FilterRequest;
 import com.sellphones.dto.product.admin.AdminUpdateReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
 import com.sellphones.service.product.admin.AdminReviewService;
@@ -23,7 +23,7 @@ public class AdminReviewController {
     private final AdminReviewService adminReviewService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getReviews(@Valid AdminReviewFilterRequest request){
+    public ResponseEntity<CommonResponse> getReviews(@Valid AdminReview_FilterRequest request){
         PageResponse<AdminReviewResponse> response = adminReviewService.getReviews(request);
         Map<String, Object> map = new HashMap<>();
         map.put("reviews", response);
@@ -32,17 +32,17 @@ public class AdminReviewController {
 
     }
 
-    @PutMapping("/update-review/{reviewId}")
-    public ResponseEntity<CommonResponse> editReviews(@RequestBody AdminUpdateReviewRequest request, @PathVariable Long reviewId){
-        adminReviewService.editReview(request, reviewId);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateReview(@RequestBody AdminUpdateReviewRequest request, @PathVariable Long id){
+        adminReviewService.updateReview(request, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited review successfully");
+        map.put("result", "Updated review successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-review/{reviewId}")
+    @DeleteMapping("/delete/{reviewId}")
     public ResponseEntity<CommonResponse> deleteReview(@PathVariable Long reviewId){
         adminReviewService.deleteReview(reviewId);
         Map<String, Object> map = new HashMap<>();

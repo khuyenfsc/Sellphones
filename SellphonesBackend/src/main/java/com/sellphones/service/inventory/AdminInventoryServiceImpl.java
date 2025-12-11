@@ -1,7 +1,7 @@
 package com.sellphones.service.inventory;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminInventory_FilterRequest;
 import com.sellphones.dto.inventory.admin.AdminInventoryRequest;
 import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
 import com.sellphones.entity.inventory.Inventory;
@@ -42,7 +42,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
-    public PageResponse<AdminInventoryResponse> getInventories(AdminInventoryFilterRequest request) {
+    public PageResponse<AdminInventoryResponse> getInventories(AdminInventory_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -72,7 +72,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
         )
     """)
     public PageResponse<AdminInventoryResponse> getInventories(
-        AdminInventoryFilterRequest request,
+        AdminInventory_FilterRequest request,
         Long warehouseId
     ) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
@@ -105,7 +105,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
-    public void addInventory(AdminInventoryRequest request, Long warehouseId) {
+    public void createInventory(AdminInventoryRequest request, Long warehouseId) {
         ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
         Warehouse warehouse = warehouseRepository.findById(warehouseId).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOT_FOUND));
         Inventory inventory = Inventory.builder()
@@ -125,7 +125,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.WAREHOUSES')")
-    public void editInventory(AdminInventoryRequest request, Long id) {
+    public void updateInventory(AdminInventoryRequest request, Long id) {
 //        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
 //        ProductVariant productVariant = productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
 //        try {

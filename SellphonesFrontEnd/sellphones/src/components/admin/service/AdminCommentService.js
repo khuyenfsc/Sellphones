@@ -96,7 +96,7 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.post(
-                `/admin/comments/${commentId}/reply-comment`,
+                `/admin/comments/${commentId}/reply`,
                 replyData,
                 {
                     headers: {
@@ -116,7 +116,7 @@ const AdminCommentService = {
 
                     try {
                         const retry = await AxiosClient.post(
-                            `/admin/comments/${commentId}/reply-comment`,
+                            `/admin/comments/${commentId}/reply`,
                             replyData,
                             {
                                 headers: {
@@ -149,7 +149,7 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/comments/update-comment/${commentId}`,
+                `/admin/comments/update/${commentId}`,
                 commentData,
                 {
                     headers: {
@@ -169,7 +169,7 @@ const AdminCommentService = {
 
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/comments/update-comment/${commentId}`,
+                            `/admin/comments/update/${commentId}`,
                             commentData,
                             {
                                 headers: {
@@ -202,7 +202,7 @@ const AdminCommentService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/comments/delete-comment/${commentId}`,
+                `/admin/comments/delete/${commentId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -218,7 +218,7 @@ const AdminCommentService = {
 
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/comments/delete-comment/${commentId}`,
+                            `/admin/comments/delete/${commentId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
 

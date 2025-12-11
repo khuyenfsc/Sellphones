@@ -20,8 +20,6 @@ public class AdminPermissionServiceImpl implements AdminPermissionService{
 
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper;
-
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<AdminPermissionResponse> getAllAdminPermissions() {

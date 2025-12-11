@@ -89,12 +89,12 @@ const AdminProductService = {
 
             const formData = new FormData();
             formData.append("product", JSON.stringify(productData));
-            if (thumbnailFile) formData.append("file", thumbnailFile);
+            if (thumbnailFile) formData.append("thumbnail_file", thumbnailFile);
             if (imageFiles && imageFiles.length > 0) {
-                imageFiles.forEach((file) => formData.append("files", file));
+                imageFiles.forEach((file) => formData.append("image_files", file));
             }
 
-            const res = await AxiosClient.post("/admin/products/create-product", formData, {
+            const res = await AxiosClient.post("/admin/products/create", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -110,12 +110,12 @@ const AdminProductService = {
                     try {
                         const formData = new FormData();
                         formData.append("product", JSON.stringify(productData));
-                        if (thumbnailFile) formData.append("file", thumbnailFile);
+                        if (thumbnailFile) formData.append("thumbnail_file", thumbnailFile);
                         if (imageFiles && imageFiles.length > 0) {
-                            imageFiles.forEach((file) => formData.append("files", file));
+                            imageFiles.forEach((file) => formData.append("image_files", file));
                         }
 
-                        const retryRes = await AxiosClient.post("/admin/products/create-product", formData, {
+                        const retryRes = await AxiosClient.post("/admin/products/create", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -145,14 +145,14 @@ const AdminProductService = {
 
             const formData = new FormData();
             formData.append("product", JSON.stringify(productData));
-            if (thumbnailFile) formData.append("file", thumbnailFile);
+            if (thumbnailFile) formData.append("thumbnail_file", thumbnailFile);
             if (imageFiles && imageFiles.length > 0) {
-                imageFiles.forEach((file) => formData.append("files", file));
+                imageFiles.forEach((file) => formData.append("image_files", file));
             }
 
             console.log(imageFiles);
 
-            const res = await AxiosClient.put(`/admin/products/update-product/${productId}`, formData, {
+            const res = await AxiosClient.put(`/admin/products/update/${productId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -168,12 +168,12 @@ const AdminProductService = {
                     try {
                         const formData = new FormData();
                         formData.append("product", JSON.stringify(productData));
-                        if (thumbnailFile) formData.append("file", thumbnailFile);
+                        if (thumbnailFile) formData.append("thumbnail_file", thumbnailFile);
                         if (imageFiles && imageFiles.length > 0) {
-                            imageFiles.forEach((file) => formData.append("files", file));
+                            imageFiles.forEach((file) => formData.append("image_files", file));
                         }
 
-                        const retryRes = await AxiosClient.put(`/admin/products/update-product/${productId}`, formData, {
+                        const retryRes = await AxiosClient.put(`/admin/products/update/${productId}`, formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -200,7 +200,7 @@ const AdminProductService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.delete(`/admin/products/delete-product/${productId}`, {
+            const res = await AxiosClient.delete(`/admin/products/delete/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -211,7 +211,7 @@ const AdminProductService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.delete(`/admin/products/delete-product/${productId}`, {
+                        const retryRes = await AxiosClient.delete(`/admin/products/delete/${productId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };
@@ -311,11 +311,11 @@ const AdminProductService = {
             }
 
             const formData = new FormData();
-            formData.append("product_variant", JSON.stringify(productVariant)); // JSON string
-            if (file) formData.append("file", file)
+            formData.append("variant", JSON.stringify(productVariant)); // JSON string
+            if (file) formData.append("image_file", file)
 
             const res = await AxiosClient.post(
-                `/admin/products/${productId}/create-variant`,
+                `/admin/products/${productId}/variants/create`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
             );
@@ -330,7 +330,7 @@ const AdminProductService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retry = await AxiosClient.post(
-                            `/admin/products/${productId}/create-variant`,
+                            `/admin/products/${productId}/variants/create`,
                             formData,
                             { headers: { Authorization: `Bearer ${newToken}`, "Content-Type": "multipart/form-data" } }
                         );
@@ -356,11 +356,11 @@ const AdminProductService = {
             }
 
             const formData = new FormData();
-            formData.append("product_variant", JSON.stringify(productVariant)); // JSON string
-            if (file) formData.append("file", file); // thêm file nếu có
+            formData.append("variant", JSON.stringify(productVariant)); 
+            if (file) formData.append("image_file", file); 
 
             const res = await AxiosClient.put(
-                `/admin/products/update-variant/${variantId}`,
+                `/admin/products/variants/update/${variantId}`,
                 formData,
                 {
                     headers: {
@@ -378,11 +378,11 @@ const AdminProductService = {
                     const newToken = refresh.accessToken;
                     try {
                         const formData = new FormData();
-                        formData.append("product_variant", JSON.stringify(productVariant));
-                        if (file) formData.append("file", file);
+                        formData.append("variant", JSON.stringify(productVariant));
+                        if (file) formData.append("image_file", file);
 
                         const retry = await AxiosClient.put(
-                            `/admin/products/update-variant/${variantId}`,
+                            `/admin/products/variants/update/${variantId}`,
                             formData,
                             {
                                 headers: {
@@ -464,7 +464,7 @@ const AdminProductService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/products/delete-variant/${variantId}`,
+                `/admin/products/delete/${variantId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -478,7 +478,7 @@ const AdminProductService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/products/delete-variant/${variantId}`,
+                            `/admin/products/delete/${variantId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
                         return { success: true, data: retry?.data || {} };

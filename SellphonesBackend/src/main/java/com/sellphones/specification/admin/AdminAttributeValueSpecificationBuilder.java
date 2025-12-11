@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminAttributeValueFilterRequest;
+import com.sellphones.dto.product.admin.AdminAttributeValue_FilterRequest;
 import com.sellphones.entity.product.AttributeValue;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AdminAttributeValueSpecificationBuilder {
-    public static Specification<AttributeValue> build(AdminAttributeValueFilterRequest request, Long attributeVId){
+    public static Specification<AttributeValue> build(AdminAttributeValue_FilterRequest request, Long attributeVId){
         Specification<AttributeValue> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getKeyword() != null){

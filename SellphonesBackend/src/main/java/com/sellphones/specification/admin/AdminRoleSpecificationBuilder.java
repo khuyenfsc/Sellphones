@@ -1,11 +1,11 @@
 package com.sellphones.specification.admin;
-import com.sellphones.dto.user.admin.AdminRoleFilterRequest;
+import com.sellphones.dto.user.admin.AdminRole_FilterRequest;
 import com.sellphones.entity.user.Role;
 import com.sellphones.entity.user.RoleName;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminRoleSpecificationBuilder {
-    public static Specification<Role> build(AdminRoleFilterRequest request){
+    public static Specification<Role> build(AdminRole_FilterRequest request){
         Specification<Role> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getName() != null){

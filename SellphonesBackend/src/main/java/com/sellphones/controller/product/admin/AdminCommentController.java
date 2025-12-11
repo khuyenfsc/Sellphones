@@ -2,7 +2,7 @@ package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.admin.AdminCommentFilterRequest;
+import com.sellphones.dto.product.admin.AdminComment_FilterRequest;
 import com.sellphones.dto.product.admin.AdminCommentRequest;
 import com.sellphones.dto.product.admin.AdminCommentResponse;
 import com.sellphones.dto.product.admin.AdminUpdateCommentRequest;
@@ -24,7 +24,7 @@ public class AdminCommentController {
     private final AdminCommentService adminCommentService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getComments(AdminCommentFilterRequest request){
+    public ResponseEntity<CommonResponse> getComments(@Valid AdminComment_FilterRequest request){
         PageResponse<AdminCommentResponse> response = adminCommentService.getComments(request);
         Map<String, Object> map = new HashMap<>();
         map.put("comments", response);
@@ -33,7 +33,7 @@ public class AdminCommentController {
 
     }
 
-    @PostMapping("/{commentId}/reply-comment")
+    @PostMapping("/{commentId}/reply")
     public ResponseEntity<CommonResponse> replyComment(@RequestBody @Valid AdminCommentRequest request, @PathVariable Long commentId){
         adminCommentService.replyComment(request, commentId);
         Map<String, Object> map = new HashMap<>();
@@ -43,19 +43,19 @@ public class AdminCommentController {
 
     }
 
-    @PutMapping("/update-comment/{commentId}")
-    public ResponseEntity<CommonResponse> editComment(@RequestBody @Valid AdminUpdateCommentRequest request, @PathVariable Long commentId){
-        adminCommentService.editComment(request, commentId);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> editComment(@RequestBody @Valid AdminUpdateCommentRequest request, @PathVariable Long id){
+        adminCommentService.updateComment(request, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited comment successfully");
+        map.put("result", "Updated comment successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-comment/{commentId}")
-    public ResponseEntity<CommonResponse> deleteComment(@PathVariable Long commentId){
-        adminCommentService.deleteComment(commentId);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CommonResponse> deleteComment(@PathVariable Long id){
+        adminCommentService.deleteComment(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted comment successfully");
 

@@ -8,9 +8,9 @@ import com.sellphones.entity.authentication.TokenType;
 import com.sellphones.entity.user.RoleName;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +18,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GoogleAuthenticationAction implements AuthenticationAction{
 
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
 
     private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthenticationToken authenticate(UserRequest userRequest, RoleName roleName) {
-//        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(userRequest.getEmail(), userRequest.getPassword(), List.of(new SimpleGrantedAuthority("CUSTOMER")));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        Authentication unauthentication = UsernamePasswordAuthenticationToken.unauthenticated(userRequest.getEmail(), userRequest.getPassword());
-        Authentication unauthentication = GoogleAuthenticationToken.unauthenticated(userRequest.getEmail());
+     Authentication unauthentication = GoogleAuthenticationToken.unauthenticated(userRequest.getEmail());
         Authentication authentication = authenticationManager.authenticate(unauthentication);
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -36,8 +33,8 @@ public class GoogleAuthenticationAction implements AuthenticationAction{
         }
 
 
-        String accessToken = jwtService.generateToken(authentication, TokenType.ACCESS, roleName.toString());
-        String refreshToken = jwtService.generateToken(authentication, TokenType.REFRESH, roleName.toString());
+        String accessToken = jwtUtils.generateToken(authentication, TokenType.ACCESS, roleName.toString());
+        String refreshToken = jwtUtils.generateToken(authentication, TokenType.REFRESH, roleName.toString());
         return new AuthenticationToken(accessToken, refreshToken);
     }
 }

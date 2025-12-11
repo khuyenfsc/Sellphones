@@ -29,7 +29,7 @@ export default function OptionTable({ categoryId }) {
         setLoading(true);
         try {
             const res = await AdminCategoryService.getCategoryOptions(categoryId, {
-                keyword: searchTerm?.trim() || null,
+                name: searchTerm?.trim() || null,
                 page: currentPage - 1,
                 size: perPage,
                 sortType,

@@ -1,7 +1,7 @@
 package com.sellphones.mapper;
 
 import com.sellphones.constant.AppConstants;
-import com.sellphones.dto.product.CartItemVariantResponse;
+import com.sellphones.dto.product.CartItem_VariantResponse;
 //import com.sellphones.dto.product.ProductPromotionResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 import com.sellphones.dto.product.admin.AdminProductRequest;
@@ -14,7 +14,6 @@ import com.sellphones.entity.product.*;
 import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.ProductPromotion;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
@@ -78,12 +77,12 @@ public class ProductMapper {
         return  response;
     }
 
-    public CartItemVariantResponse mapToCartItemVariantResponse(
+    public CartItem_VariantResponse mapToCartItemVariantResponse(
             ProductVariant productVariant,
             List<ProductPromotion> promotions,
             List<GiftProduct> giftProducts
     ){
-        CartItemVariantResponse response = modelMapper.map(productVariant, CartItemVariantResponse.class);
+        CartItem_VariantResponse response = modelMapper.map(productVariant, CartItem_VariantResponse.class);
         response.setPromotions(
                 promotions == null
                         ? List.of()

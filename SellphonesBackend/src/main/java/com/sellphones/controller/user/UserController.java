@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @PutMapping("/update-profile")
-    public ResponseEntity<CommonResponse> updateProfile(@RequestBody @Valid UpdatedInfoRequest updatedInfoRequest){
-        UserProfileResponse response = userService.updateProfile(updatedInfoRequest);
+    public ResponseEntity<CommonResponse> updateProfile(@RequestBody @Valid UpdateInfoRequest updateInfoRequest){
+        UserProfileResponse response = userService.updateProfile(updateInfoRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

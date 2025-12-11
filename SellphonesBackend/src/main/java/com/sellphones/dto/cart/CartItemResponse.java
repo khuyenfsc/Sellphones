@@ -1,6 +1,6 @@
 package com.sellphones.dto.cart;
 
-import com.sellphones.dto.product.CartItemVariantResponse;
+import com.sellphones.dto.product.CartItem_VariantResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ public class CartItemResponse {
 
     private Long id;
 
-    private CartItemVariantResponse productVariant;
+    private CartItem_VariantResponse productVariant;
 
     private Long quantity;
 

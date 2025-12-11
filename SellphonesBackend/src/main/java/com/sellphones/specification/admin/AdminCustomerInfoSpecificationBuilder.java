@@ -1,12 +1,12 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.customer.admin.AdminCustomerInfoFilterRequest;
+import com.sellphones.dto.customer.admin.AdminCustomerInfo_FilterRequest;
 import com.sellphones.entity.customer.CustomerInfo;
 import org.springframework.data.jpa.domain.Specification;
 
 
 public class AdminCustomerInfoSpecificationBuilder {
-    public static Specification<CustomerInfo> build(AdminCustomerInfoFilterRequest request){
+    public static Specification<CustomerInfo> build(AdminCustomerInfo_FilterRequest request){
         Specification<CustomerInfo> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getEmail() != null){

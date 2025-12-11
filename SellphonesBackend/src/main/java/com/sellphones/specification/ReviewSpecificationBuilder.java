@@ -1,13 +1,13 @@
 package com.sellphones.specification;
 
-import com.sellphones.dto.product.ReviewFilterRequest;
+import com.sellphones.dto.product.Review_FilterRequest;
 import com.sellphones.entity.product.Review;
 import com.sellphones.entity.product.ReviewStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ReviewSpecificationBuilder {
 
-    public static Specification<Review> build(ReviewFilterRequest request){
+    public static Specification<Review> build(Review_FilterRequest request){
 
         Specification<Review> spec = (root, query, cb) -> cb.conjunction();
 

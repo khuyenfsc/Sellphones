@@ -28,7 +28,7 @@ export default function FilterOptionTable({ filterId, isReloaded }) {
         setLoading(true);
         try {
             const res = await AdminCategoryService.getFilterOptions(filterId, {
-                keyword: searchTerm?.trim() || null,
+                name: searchTerm?.trim() || null,
                 page: currentPage - 1,
                 size: perPage,
                 sortType,

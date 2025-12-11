@@ -22,7 +22,7 @@ export default function CategoryTable({ isReloaded }) {
     const [total, setTotal] = useState(0);
 
     const [filterRequest, setFilterRequest] = useState({
-        keyword: null,
+        name: null,
         featuredOnHomepage: null,
         page: 0,
         size: perPage,
@@ -32,7 +32,7 @@ export default function CategoryTable({ isReloaded }) {
         setLoading(true);
         const res = await AdminCategoryService.getCategories({
             ...filterRequest,
-            keyword: searchTerm.trim() || null,
+            name: searchTerm.trim() || null,
             page: currentPage - 1,
             size: perPage,
         });
@@ -64,7 +64,7 @@ export default function CategoryTable({ isReloaded }) {
 
         setFilterRequest({
             ...cleanFilters,
-            keyword : searchTerm, 
+            name : searchTerm, 
             page: 0
         });
 
@@ -76,7 +76,7 @@ export default function CategoryTable({ isReloaded }) {
         if (e.key === "Enter") {
             setFilterRequest({
                 ...filterRequest,
-                keyword: searchTerm,
+                name: searchTerm,
             });
             setCurrentPage(1);
         }

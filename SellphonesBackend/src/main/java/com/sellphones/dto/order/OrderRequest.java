@@ -21,11 +21,7 @@ public class OrderRequest {
     @NotNull
     private Long paymentMethodId;
 
-//    private PaymentStatus paymentStatus;
-
     @NotNull
     private Long customerInfoId;
 
-//    @NotNull
-//    private PaymentMethodType paymentMethodType;
 }

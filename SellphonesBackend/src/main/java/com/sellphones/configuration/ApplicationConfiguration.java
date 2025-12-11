@@ -1,8 +1,5 @@
 package com.sellphones.configuration;
 
-import com.sellphones.mapper.FilterOptionToAdminFilterOptionResponseConverter;
-import com.sellphones.mapper.PromotionToAdminPromotionResponsePropertyMap;
-import com.sellphones.mapper.ReviewToReviewResponsePropertyMap;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

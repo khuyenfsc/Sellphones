@@ -1,8 +1,8 @@
 package com.sellphones.service.order;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.*;
-import com.sellphones.dto.order.admin.AdminOrderRequest;
 import com.sellphones.dto.product.OrderProductRequest;
 import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.cart.CartItem;
@@ -11,7 +11,6 @@ import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.entity.order.OrderVariant;
 import com.sellphones.entity.order.Payment;
-import com.sellphones.entity.payment.*;
 import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
@@ -23,7 +22,6 @@ import com.sellphones.exception.ErrorCode;
 import com.sellphones.repository.cart.CartItemRepository;
 import com.sellphones.repository.customer.CustomerInfoRepository;
 import com.sellphones.repository.order.OrderRepository;
-import com.sellphones.repository.payment.PaymentMethodRepository;
 import com.sellphones.repository.product.ProductVariantRepository;
 import com.sellphones.repository.product.WarrantyRepository;
 import com.sellphones.repository.promotion.ProductPromotionRepository;
@@ -34,6 +32,7 @@ import com.sellphones.specification.OrderSpecificationBuilder;
 import com.sellphones.utils.ImageNameToImageUrlConverter;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -72,11 +71,6 @@ public class OrderServiceImpl implements OrderService{
 
     private final ModelMapper modelMapper;
 
-    private final String productVariantFolderName = "product_variant_images";
-
-    private final String giftProductThumbnailFolderName = "gift_products";
-
-
     @Override
     public Map<String, Object> getTotalOrders() {
         Long total = orderRepository.countByUser_Email(SecurityUtils.extractNameFromAuthentication());
@@ -88,7 +82,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public OrderResponse order(OrderRequest request) {
+    public OrderResponse createOrder(@Valid OrderRequest request) {
         List<OrderProductRequest> orderProducts = request.getOrderProducts();
 
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -125,7 +119,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public PageResponse<OrderResponse> getOrders(OrderFilterRequest request) {
+    public PageResponse<OrderResponse> getOrders(Order_FilterRequest request) {
         Specification<Order> spec = OrderSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.DESC, "orderedAt");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
@@ -144,7 +138,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderDetailResponse getOrderDetailsById(Long id) {
+    public OrderDetailResponse getOrderById(Long id) {
         Order order = orderRepository.findByUser_EmailAndId(SecurityUtils.extractNameFromAuthentication(), id).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return convertOrderToResponse(order, OrderDetailResponse.class);
     }
@@ -175,12 +169,12 @@ public class OrderServiceImpl implements OrderService{
             ProductVariant variant = ov.getProductVariant();
 
             for(GiftProduct gp:variant.getGiftProducts()){
-                gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), giftProductThumbnailFolderName));
+                gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), AppConstants.GIFT_PRODUCT_IMAGE_FOLDER));
             }
 
             variant.setVariantImage(
                     ImageNameToImageUrlConverter.convert(variant.getVariantImage(),
-                            productVariantFolderName)
+                            AppConstants.PRODUCT_VARIANT_IMAGE_FOLDER)
             );
         }
 

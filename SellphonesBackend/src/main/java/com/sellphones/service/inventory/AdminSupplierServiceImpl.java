@@ -1,14 +1,11 @@
 package com.sellphones.service.inventory;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.inventory.admin.AdminInventoryResponse;
-import com.sellphones.dto.inventory.admin.AdminSupplierFilterRequest;
+import com.sellphones.dto.inventory.admin.AdminSupplier_FilterRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierRequest;
 import com.sellphones.dto.inventory.admin.AdminSupplierResponse;
 import com.sellphones.entity.address.Address;
 import com.sellphones.entity.address.AddressType;
-import com.sellphones.entity.customer.CustomerInfo;
-import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.inventory.Supplier;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -53,7 +50,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplierFilterRequest request) {
+    public PageResponse<AdminSupplierResponse> getSuppliers(AdminSupplier_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt");
@@ -76,7 +73,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public void addSupplier(AdminSupplierRequest request) {
+    public void createSupplier(AdminSupplierRequest request) {
         Address address = addressMapper.mapToAddressEntity(request.getAddress());
         Supplier supplier = supplierMapper.mapToSupplierEntity(request, address);
         supplier.setCreatedAt(LocalDateTime.now());
@@ -87,7 +84,7 @@ public class AdminSupplierServiceImpl implements AdminSupplierService{
 
     @Override
     @PreAuthorize("hasAuthority('INVENTORY.SUPPLIERS')")
-    public void editSupplier(AdminSupplierRequest request, Long id) {
+    public void updateSupplier(AdminSupplierRequest request, Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND));
         Address address = supplier.getAddress();
 

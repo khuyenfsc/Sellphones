@@ -8,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminPromotionBannerService {
     PageResponse<AdminPromotionBannerResponse> getBanners(AdminPromotionBannerFilterRequest request);
     void createBanner(String bannerJson, MultipartFile imageFile);
-    void editBanner(String bannerJson, MultipartFile imageFile, Long id);
+    void updateBanner(String bannerJson, MultipartFile imageFile, Long id);
     void deleteBanner(Long id);
 }

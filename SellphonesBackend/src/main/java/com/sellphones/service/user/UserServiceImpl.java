@@ -77,13 +77,13 @@ public class UserServiceImpl implements UserService{
             value = "me",
             key = "'getCurrentUser_' + T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()"
     )
-    public UserProfileResponse updateProfile(UpdatedInfoRequest updatedInfoRequest) {
+    public UserProfileResponse updateProfile(UpdateInfoRequest updateInfoRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setFullName(updatedInfoRequest.getFullName());
-        user.setDateOfBirth(updatedInfoRequest.getDateOfBirth());
-        user.setGender(updatedInfoRequest.getGender());
+        user.setFullName(updateInfoRequest.getFullName());
+        user.setDateOfBirth(updateInfoRequest.getDateOfBirth());
+        user.setGender(updateInfoRequest.getGender());
 
         user = userRepository.save(user);
 

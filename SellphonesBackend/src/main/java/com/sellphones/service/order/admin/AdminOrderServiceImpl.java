@@ -1,15 +1,9 @@
 package com.sellphones.service.order.admin;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.dashboard.DashboardRequest;
 import com.sellphones.dto.order.OrderDetailResponse;
-import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.admin.*;
-import com.sellphones.dto.product.OrderProductRequest;
-import com.sellphones.entity.BaseEntity;
 import com.sellphones.entity.address.Address;
-import com.sellphones.entity.address.AddressType;
-import com.sellphones.entity.cart.CartItem;
 import com.sellphones.entity.customer.CustomerInfo;
 import com.sellphones.entity.inventory.Inventory;
 import com.sellphones.entity.order.*;
@@ -17,10 +11,8 @@ import com.sellphones.entity.payment.PaymentStatus;
 import com.sellphones.entity.product.ProductStatus;
 import com.sellphones.entity.product.ProductVariant;
 import com.sellphones.entity.product.Warranty;
-import com.sellphones.entity.promotion.GiftProduct;
 import com.sellphones.entity.promotion.OrderVariantPromotion;
 import com.sellphones.entity.promotion.ProductPromotion;
-import com.sellphones.entity.user.RoleName;
 import com.sellphones.entity.user.User;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
@@ -37,7 +29,6 @@ import com.sellphones.repository.promotion.ProductPromotionRepository;
 import com.sellphones.service.payment.PaymentService;
 import com.sellphones.service.promotion.ProductPromotionService;
 import com.sellphones.specification.admin.AdminOrderSpecificationBuilder;
-import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -52,7 +43,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,8 +55,6 @@ public class AdminOrderServiceImpl implements AdminOrderService{
     private final ShipmentRepository shipmentRepository;
 
     private final InventoryRepository inventoryRepository;
-
-    private final AddressRepository addressRepository;
 
     private final CustomerInfoRepository customerInfoRepository;
 
@@ -95,18 +83,18 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         'CUSTOMER.CUSTOMERS'
     )
     """)
-    public PageResponse<AdminOrderListResponse> getOrders(AdminOrderFilterRequest request) {
+    public PageResponse<AdminOrderResponse> getOrders(AdminOrder_FilterRequest request) {
         Specification<Order> spec = AdminOrderSpecificationBuilder.build(request);
         Sort sort = Sort.by(Sort.Direction.DESC, "orderedAt");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
         List<Order> orders = orderPage.getContent();
-        List<AdminOrderListResponse> response = orders.stream()
-                .map(o -> modelMapper.map(o, AdminOrderListResponse.class))
+        List<AdminOrderResponse> response = orders.stream()
+                .map(o -> modelMapper.map(o, AdminOrderResponse.class))
                 .toList();
 
-        return PageResponse.<AdminOrderListResponse>builder()
+        return PageResponse.<AdminOrderResponse>builder()
                 .result(response)
                 .total(orderPage.getTotalElements())
                 .totalPages(orderPage.getTotalPages())
@@ -120,7 +108,7 @@ public class AdminOrderServiceImpl implements AdminOrderService{
         'CUSTOMER.CUSTOMERS'
     )
     """)
-    public OrderDetailResponse getOrderDetailsById(Long id) {
+    public OrderDetailResponse getOrderById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return modelMapper.map(order, OrderDetailResponse.class);

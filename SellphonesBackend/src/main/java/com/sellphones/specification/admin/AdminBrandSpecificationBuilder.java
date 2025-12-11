@@ -1,6 +1,6 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.product.admin.AdminBrandFilterRequest;
+import com.sellphones.dto.product.admin.AdminBrand_FilterRequest;
 import com.sellphones.entity.product.Brand;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -8,11 +8,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AdminBrandSpecificationBuilder {
-    public static Specification<Brand> build(AdminBrandFilterRequest request){
+    public static Specification<Brand> build(AdminBrand_FilterRequest request){
         Specification<Brand> spec = (root, query, cb) -> cb.conjunction();
 
-        if(request.getKeyword() != null){
-            spec = spec.and(containsKeyword(request.getKeyword()));
+        if(request.getName() != null){
+            spec = spec.and(hasNameContains(request.getName()));
         }
 
         if(request.getStartDate() != null && request.getEndDate() != null){
@@ -24,7 +24,7 @@ public class AdminBrandSpecificationBuilder {
 
 
 
-    public static Specification<Brand> containsKeyword(String keyword){
+    public static Specification<Brand> hasNameContains(String keyword){
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
     }
 

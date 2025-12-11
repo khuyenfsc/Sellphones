@@ -13,14 +13,6 @@ public class AdminProductFilter_FilterRequest {
 
     private String keyword;
 
-//    @JsonSerialize(using = LocalDateSerializer.class)
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    private LocalDate startDate;
-//
-//    @JsonSerialize(using = LocalDateSerializer.class)
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    private LocalDate endDate;
-
     private String sortType;
 
     @Min(0)

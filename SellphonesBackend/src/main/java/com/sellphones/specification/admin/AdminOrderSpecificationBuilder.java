@@ -1,11 +1,10 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
+import com.sellphones.dto.order.admin.AdminOrder_FilterRequest;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderStatus;
 import com.sellphones.entity.payment.PaymentMethodType;
 import com.sellphones.entity.payment.PaymentStatus;
-import com.sellphones.utils.SecurityUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -13,7 +12,7 @@ import java.time.LocalTime;
 
 public class AdminOrderSpecificationBuilder {
 
-    public static Specification<Order> build(AdminOrderFilterRequest request){
+    public static Specification<Order> build(AdminOrder_FilterRequest request){
         Specification<Order> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getCustomerId() != null){

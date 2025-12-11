@@ -1,7 +1,8 @@
 package com.sellphones.service.product.admin;
 
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.admin.AdminReviewFilterRequest;
+import com.sellphones.dto.product.admin.AdminReview_FilterRequest;
 import com.sellphones.dto.product.admin.AdminUpdateReviewRequest;
 import com.sellphones.dto.product.admin.AdminReviewResponse;
 import com.sellphones.entity.product.Review;
@@ -31,11 +32,9 @@ public class AdminReviewServiceImpl implements AdminReviewService{
 
     private final ModelMapper modelMapper;
 
-    private final String reviewImageFolderName = "reviews";
-
     @Override
     @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS')")
-    public PageResponse<AdminReviewResponse> getReviews(AdminReviewFilterRequest request) {
+    public PageResponse<AdminReviewResponse> getReviews(AdminReview_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.DESC);
         Sort sort = Sort.by(direction, "createdAt", "id");
@@ -50,7 +49,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
                     {
                         r.setImageNames(
                                 r.getImageNames().stream()
-                                        .map(i -> ImageNameToImageUrlConverter.convert(i, reviewImageFolderName))
+                                        .map(i -> ImageNameToImageUrlConverter.convert(i, AppConstants.REVIEW_IMAGE_FOLDER))
                                         .toList()
                         );
                         return modelMapper.map(r, AdminReviewResponse.class);
@@ -68,7 +67,7 @@ public class AdminReviewServiceImpl implements AdminReviewService{
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER.REVIEWS')")
-    public void editReview(AdminUpdateReviewRequest request, Long reviewId) {
+    public void updateReview(AdminUpdateReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         review.setStatus(request.getStatus());
     }

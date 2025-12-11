@@ -129,7 +129,7 @@ const AdminRoleService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.post("/admin/roles/create-role", roleData, {
+            const res = await AxiosClient.post("/admin/roles/create", roleData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -143,7 +143,7 @@ const AdminRoleService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post("/admin/roles/create-role", roleData, {
+                        const retryRes = await AxiosClient.post("/admin/roles/create", roleData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",
@@ -171,7 +171,7 @@ const AdminRoleService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.put(`/admin/roles/update-role/${roleId}`, roleData, {
+            const res = await AxiosClient.put(`/admin/roles/update/${roleId}`, roleData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -185,7 +185,7 @@ const AdminRoleService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.put(`/admin/roles/update-role/${roleId}`, roleData, {
+                        const retryRes = await AxiosClient.put(`/admin/roles/update/${roleId}`, roleData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",
@@ -213,7 +213,7 @@ const AdminRoleService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.delete(`/admin/roles/delete-role/${roleId}`, {
+            const res = await AxiosClient.delete(`/admin/roles/delete/${roleId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -227,7 +227,7 @@ const AdminRoleService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.delete(`/admin/roles/delete-role/${roleId}`, {
+                        const retryRes = await AxiosClient.delete(`/admin/roles/delete/${roleId}`, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json",

@@ -1,0 +1,43 @@
+package com.sellphones.utils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.entity.order.OrderVariant;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+
+@RequiredArgsConstructor
+@Component
+public class DiscountValueAction implements PromotionAction{
+
+    private final ObjectMapper objectMapper;
+
+    @Override
+    @SneakyThrows(JsonProcessingException.class)
+    public void apply(OrderVariant orderVariant, String configJson) {
+        JsonNode json = objectMapper.readTree(configJson);
+        BigDecimal amount = json.get("value").decimalValue();
+
+        BigDecimal quantityBD = BigDecimal.valueOf(orderVariant.getQuantity());
+        BigDecimal totalDiscount = amount.multiply(quantityBD);
+
+        BigDecimal currentTotal = orderVariant.getTotalPrice() != null
+                ? orderVariant.getTotalPrice()
+                : BigDecimal.ZERO;
+        BigDecimal newTotal = currentTotal.subtract(totalDiscount);
+
+        if (newTotal.compareTo(BigDecimal.ZERO) < 0) {
+            newTotal = BigDecimal.ZERO;
+        }
+
+        BigDecimal discountAmount = orderVariant.getDiscountAmount() != null ? orderVariant.getDiscountAmount() : BigDecimal.valueOf(0);
+        orderVariant.setDiscountAmount(
+                discountAmount.add(totalDiscount)
+        );
+        orderVariant.setTotalPrice(newTotal);
+    }
+}

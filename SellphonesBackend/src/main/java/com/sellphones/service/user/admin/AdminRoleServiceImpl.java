@@ -54,7 +54,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
 
     @Override
     @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
-    public PageResponse<AdminRoleResponse> getRoles(AdminRoleFilterRequest request) {
+    public PageResponse<AdminRoleResponse> getRoles(AdminRole_FilterRequest request) {
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
         Sort sort = Sort.by(direction, "id");
@@ -100,7 +100,7 @@ public class AdminRoleServiceImpl implements AdminRoleService{
     @Transactional
     @PreAuthorize("hasAuthority('SETTINGS.ROLES')")
     @CacheEvict(value = "rolePermissionsCache", key = "#id")
-    public void editRole(AdminUpdateRoleRequest request, Long id) {
+    public void updateRole(AdminUpdateRoleRequest request, Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         List<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
         role.setName(request.getName());

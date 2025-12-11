@@ -93,7 +93,7 @@ const AdminAttributeService = {
             }
 
             // Gọi API tạo attribute
-            const res = await AxiosClient.post("/admin/attributes/create-attribute", attributeData, {
+            const res = await AxiosClient.post("/admin/attributes/create", attributeData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -107,7 +107,7 @@ const AdminAttributeService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post("/admin/attributes/create-attribute", attributeData, {
+                        const retryRes = await AxiosClient.post("/admin/attributes/create", attributeData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json"
@@ -139,7 +139,7 @@ const AdminAttributeService = {
 
             // Gọi API cập nhật attribute
             const res = await AxiosClient.put(
-                `/admin/attributes/edit-attribute/${attributeId}`,
+                `/admin/attributes/update/${attributeId}`,
                 attributeData,
                 {
                     headers: {
@@ -158,7 +158,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/attributes/edit-attribute/${attributeId}`,
+                            `/admin/attributes/update/${attributeId}`,
                             attributeData,
                             {
                                 headers: {
@@ -193,7 +193,7 @@ const AdminAttributeService = {
 
             // Gọi API xóa attribute
             const res = await AxiosClient.delete(
-                `/admin/attributes/delete-attribute/${attributeId}`,
+                `/admin/attributes/delete/${attributeId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -211,7 +211,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/attributes/delete-attribute/${attributeId}`,
+                            `/admin/attributes/delete/${attributeId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,
@@ -291,7 +291,7 @@ const AdminAttributeService = {
 
             // Gọi API tạo value
             const res = await AxiosClient.post(
-                `/admin/attributes/${attributeId}/create-value`,
+                `/admin/attributes/${attributeId}/values/create`,
                 valueData,
                 {
                     headers: {
@@ -310,7 +310,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            `/admin/attributes/${attributeId}/create-value`,
+                            `/admin/attributes/${attributeId}/values/create`,
                             valueData,
                             {
                                 headers: {
@@ -345,7 +345,7 @@ const AdminAttributeService = {
 
             // Gọi API cập nhật value
             const res = await AxiosClient.put(
-                `/admin/attributes/edit-value/${valueId}`,
+                `/admin/attributes/values/update/${valueId}`,
                 valueData,
                 {
                     headers: {
@@ -364,7 +364,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/attributes/edit-value/${valueId}`,
+                            `/admin/attributes/values/update/${valueId}`,
                             valueData,
                             {
                                 headers: {
@@ -399,7 +399,7 @@ const AdminAttributeService = {
 
             // Gọi API xóa value
             const res = await AxiosClient.delete(
-                `/admin/attributes/delete-value/${valueId}`,
+                `/admin/attributes/values/delete/${valueId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -417,7 +417,7 @@ const AdminAttributeService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/attributes/delete-value/${valueId}`,
+                            `/admin/attributes/values/delete/${valueId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,

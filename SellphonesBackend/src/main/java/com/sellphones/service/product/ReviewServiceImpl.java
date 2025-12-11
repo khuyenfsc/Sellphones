@@ -1,10 +1,9 @@
 package com.sellphones.service.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.RatingStatsResponse;
-import com.sellphones.dto.product.ReviewFilterRequest;
+import com.sellphones.dto.product.Review_FilterRequest;
 import com.sellphones.dto.product.ReviewRequest;
 import com.sellphones.dto.product.ReviewResponse;
 import com.sellphones.entity.product.ProductVariant;
@@ -24,7 +23,6 @@ import com.sellphones.utils.JsonParser;
 import com.sellphones.utils.ProductUtils;
 import com.sellphones.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -57,18 +55,14 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final ModelMapper modelMapper;
 
-    private final ObjectMapper objectMapper;
-
     private final JsonParser jsonParser;
 
     private final FileStorageService fileStorageService;
 
     private final ProductUtils productUtils;
 
-    private final String reviewFolderName = "reviews";
-
     @Override
-    public PageResponse<ReviewResponse> getReviewsByConditions(ReviewFilterRequest request) {
+    public PageResponse<ReviewResponse> getReviewsByConditions(Review_FilterRequest request) {
         if(!productUtils.isActiveVariant(request.getProductVariantId())){
             throw new AppException(ErrorCode.VARIANT_INACTIVE);
         }
@@ -126,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService{
 
         if(files != null){
             Arrays.asList(files).forEach(f -> {
-                String fileName = fileStorageService.store(f, reviewFolderName);
+                String fileName = fileStorageService.store(f, AppConstants.REVIEW_IMAGE_FOLDER);
                 imageNames.add(fileName);
             });
         }
@@ -142,14 +136,13 @@ public class ReviewServiceImpl implements ReviewService{
                 .build();
         review = reviewRepository.save(review);
 
-        List<String> storedFiles = new ArrayList<>();
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCompletion(int status) {
                 if(status == STATUS_ROLLED_BACK){
                     imageNames.forEach(fileName -> {
                         try {
-                            fileStorageService.delete(fileName, reviewFolderName);
+                            fileStorageService.delete(fileName, AppConstants.REVIEW_IMAGE_FOLDER);
                         } catch (Exception ex) {
                             log.error("Failed to cleanup file {} after rollback", fileName, ex);
                         }

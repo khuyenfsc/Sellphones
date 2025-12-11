@@ -1,7 +1,7 @@
 package com.sellphones.service.product;
 
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.NewCommentRequest;
+import com.sellphones.dto.product.CommentRequest;
 import com.sellphones.dto.product.ReplyCommentRequest;
 import com.sellphones.dto.product.CommentResponse;
 import com.sellphones.entity.product.Comment;
@@ -86,7 +86,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentResponse addNewComment(NewCommentRequest newCommentRequest) {
+    public CommentResponse addNewComment(CommentRequest newCommentRequest) {
         User user = userRepository.findByEmail(SecurityUtils.extractNameFromAuthentication()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Product product = productRepository.findById(newCommentRequest.getProductId()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 

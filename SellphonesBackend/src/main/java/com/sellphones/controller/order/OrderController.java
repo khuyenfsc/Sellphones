@@ -3,7 +3,7 @@ package com.sellphones.controller.order;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.OrderDetailResponse;
-import com.sellphones.dto.order.OrderFilterRequest;
+import com.sellphones.dto.order.Order_FilterRequest;
 import com.sellphones.dto.order.OrderResponse;
 import com.sellphones.dto.order.OrderRequest;
 import com.sellphones.service.order.OrderService;
@@ -33,15 +33,15 @@ public class OrderController {
     }
 
     @PostMapping()
-    public ResponseEntity<CommonResponse> order(@RequestBody OrderRequest orderRequest){
-        OrderResponse response = orderService.order(orderRequest);
+    public ResponseEntity<CommonResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest){
+        OrderResponse response = orderService.createOrder(orderRequest);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getOrders(@Valid OrderFilterRequest request){
+    public ResponseEntity<CommonResponse> getOrders(@Valid Order_FilterRequest request){
         PageResponse<OrderResponse> response = orderService.getOrders(request);
         Map<String, Object> map = new HashMap<>();
         map.put("orders", response);
@@ -50,8 +50,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getOrderDetailById(@PathVariable Long id){
-        OrderDetailResponse orderDetailResponse = orderService.getOrderDetailsById(id);
+    public ResponseEntity<CommonResponse> getOrderById(@PathVariable Long id){
+        OrderDetailResponse orderDetailResponse = orderService.getOrderById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", orderDetailResponse);
 

@@ -113,7 +113,7 @@ public class AdminPromotionBannerServiceImpl implements AdminPromotionBannerServ
 
     @Override
     @PreAuthorize("hasAuthority('PROMOTIONS.BANNERS')")
-    public void editBanner(String bannerJson, MultipartFile imageFile, Long id) {
+    public void updateBanner(String bannerJson, MultipartFile imageFile, Long id) {
         PromotionBanner banner = promotionBannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PROMOTION_BANNER_NOT_FOUND));
         AdminPromotionBannerRequest request = jsonParser.parseRequest(bannerJson, AdminPromotionBannerRequest.class);
 

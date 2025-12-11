@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,7 +22,7 @@ public class AdminBrandController {
     private final AdminBrandService adminBrandService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getBrands(@Valid AdminBrandFilterRequest request){
+    public ResponseEntity<CommonResponse> getBrands(@Valid AdminBrand_FilterRequest request){
         PageResponse<AdminBrandResponse> response = adminBrandService.getBrands(request);
         Map<String, Object> map = new HashMap<>();
         map.put("brands", response);
@@ -35,31 +34,31 @@ public class AdminBrandController {
     @PostMapping("/create-brand")
     public ResponseEntity<CommonResponse> addBrand(
             @RequestPart("brand")String brandJson,
-            @RequestPart(name = "file", required = false) MultipartFile file
+            @RequestPart(name = "icon_file", required = false) MultipartFile iconFile
     ){
-        adminBrandService.addBrand(brandJson, file);
+        adminBrandService.createBrand(brandJson, iconFile);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added brand successfully");
+        map.put("result", "Created brand successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PutMapping("/update-brand/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> editBrand(
             @RequestPart("brand")String brandJson,
             @PathVariable Long id,
-            @RequestPart(name = "file", required = false) MultipartFile file
+            @RequestPart(name = "icon_file", required = false) MultipartFile iconFile
     ){
-        adminBrandService.editBrand(brandJson, file, id);
+        adminBrandService.updateBrand(brandJson, iconFile, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited brand successfully");
+        map.put("result", "Updated brand successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-brand/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteBrand(
             @PathVariable Long id
     ){

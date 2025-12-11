@@ -1,12 +1,11 @@
 package com.sellphones.specification.admin;
 
-import com.sellphones.dto.inventory.admin.AdminWarehouseFilterRequest;
-import com.sellphones.entity.address.Address;
+import com.sellphones.dto.inventory.admin.AdminWarehouse_FilterRequest;
 import com.sellphones.entity.inventory.Warehouse;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AdminWarehouseSpecificationBuilder {
-    public static Specification<Warehouse> build(AdminWarehouseFilterRequest request){
+    public static Specification<Warehouse> build(AdminWarehouse_FilterRequest request){
         Specification<Warehouse> spec = (root, query, cb) -> cb.conjunction();
 
         if(request.getName() != null){

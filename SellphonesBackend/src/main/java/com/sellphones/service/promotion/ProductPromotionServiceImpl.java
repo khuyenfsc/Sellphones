@@ -2,11 +2,14 @@ package com.sellphones.service.promotion;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.dto.promotion.PromotionConditionDto;
 import com.sellphones.entity.order.Order;
 import com.sellphones.entity.order.OrderVariant;
 import com.sellphones.entity.promotion.*;
 import com.sellphones.exception.AppException;
 import com.sellphones.exception.ErrorCode;
+import com.sellphones.utils.PromotionAction;
+import com.sellphones.utils.PromotionActionFactory;
 import com.sellphones.utils.PromotionConditionChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

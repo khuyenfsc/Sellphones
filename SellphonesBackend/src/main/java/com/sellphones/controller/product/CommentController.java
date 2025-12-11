@@ -2,7 +2,7 @@ package com.sellphones.controller.product;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.NewCommentRequest;
+import com.sellphones.dto.product.CommentRequest;
 import com.sellphones.dto.product.ReplyCommentRequest;
 import com.sellphones.dto.product.CommentResponse;
 import com.sellphones.service.product.CommentService;
@@ -50,8 +50,8 @@ public class CommentController {
     }
 
     @PostMapping("/add-comment")
-    public ResponseEntity<CommonResponse> addComment(@RequestBody NewCommentRequest newCommentRequest){
-        CommentResponse response = commentService.addNewComment(newCommentRequest);
+    public ResponseEntity<CommonResponse> addComment(@RequestBody CommentRequest request){
+        CommentResponse response = commentService.addNewComment(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Added new comment successfully");
 
@@ -60,8 +60,8 @@ public class CommentController {
     }
 
     @PostMapping("/reply-comment")
-    public ResponseEntity<CommonResponse> replyComment(@RequestBody ReplyCommentRequest replyCommentRequest){
-        CommentResponse response = commentService.replyComment(replyCommentRequest);
+    public ResponseEntity<CommonResponse> replyComment(@RequestBody ReplyCommentRequest request){
+        CommentResponse response = commentService.replyComment(request);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 

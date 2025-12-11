@@ -94,7 +94,7 @@ const AdminShipmentService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/shipments/update-shipment/${shipmentId}`,
+                `/admin/shipments/update/${shipmentId}`,
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -108,7 +108,7 @@ const AdminShipmentService = {
                 if (refresh.success) {
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/shipments/update-shipment/${shipmentId}`,
+                            `/admin/shipments/update/${shipmentId}`,
                             payload,
                             { headers: { Authorization: `Bearer ${refresh.accessToken}` } }
                         );

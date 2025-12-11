@@ -91,7 +91,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.post(
-                "/admin/warehouses/create-warehouse",
+                "/admin/warehouses/create",
                 warehouseData,
                 {
                     headers: {
@@ -109,7 +109,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            "/admin/warehouses/create-warehouse",
+                            "/admin/warehouses/create",
                             warehouseData,
                             {
                                 headers: {
@@ -141,7 +141,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/warehouses/update-warehouse/${warehouseId}`,
+                `/admin/warehouses/update/${warehouseId}`,
                 warehouseData,
                 {
                     headers: {
@@ -159,7 +159,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/warehouses/update-warehouse/${warehouseId}`,
+                            `/admin/warehouses/update/${warehouseId}`,
                             warehouseData,
                             {
                                 headers: {
@@ -191,7 +191,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/warehouses/delete-warehouse/${warehouseId}`,
+                `/admin/warehouses/delete/${warehouseId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -208,7 +208,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/warehouses/delete-warehouse/${warehouseId}`,
+                            `/admin/warehouses/delete/${warehouseId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,
@@ -314,7 +314,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.post(
-                `/admin/warehouses/${warehouseId}/inventories/create-inventory`,
+                `/admin/warehouses/${warehouseId}/inventories/create`,
                 inventoryData,
                 { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
             );
@@ -327,7 +327,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            `/admin/warehouses/${warehouseId}/inventories/create-inventory`,
+                            `/admin/warehouses/${warehouseId}/inventories/create`,
                             inventoryData,
                             { headers: { Authorization: `Bearer ${newToken}`, "Content-Type": "application/json" } }
                         );
@@ -353,7 +353,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/warehouses/inventories/edit-inventory/${inventoryId}`,
+                `/admin/warehouses/inventories/update/${inventoryId}`,
                 inventoryData,
                 { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
             );
@@ -366,7 +366,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/warehouses/inventories/edit-inventory/${inventoryId}`,
+                            `/admin/warehouses/inventories/update/${inventoryId}`,
                             inventoryData,
                             { headers: { Authorization: `Bearer ${newToken}`, "Content-Type": "application/json" } }
                         );
@@ -392,7 +392,7 @@ const AdminWarehouseService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/warehouses/inventories/delete-inventory/${inventoryId}`,
+                `/admin/warehouses/inventories/delete/${inventoryId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -404,7 +404,7 @@ const AdminWarehouseService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/warehouses/inventories/delete-inventory/${inventoryId}`,
+                            `/admin/warehouses/inventories/delete/${inventoryId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
                         return { success: true, data: retryRes?.data };

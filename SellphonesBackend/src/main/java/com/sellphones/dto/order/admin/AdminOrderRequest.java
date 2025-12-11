@@ -16,9 +16,6 @@ public class AdminOrderRequest {
     @NotNull
     private Map<Long, Map<String, Long>> variants;
 
-//    @NotNull
-//    private Long paymentMethodId;
-
     @NotNull
     private Long customerInfoId;
 }

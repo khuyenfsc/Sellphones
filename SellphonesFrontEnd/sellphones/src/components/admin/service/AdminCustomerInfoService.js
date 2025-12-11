@@ -55,7 +55,7 @@ const AdminCustomerInfoService = {
             }
 
             // Gọi API tạo khách hàng
-            const res = await AxiosClient.post("/admin/customers/create-customer-info", customerData, {
+            const res = await AxiosClient.post("/admin/customers/create", customerData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -69,7 +69,7 @@ const AdminCustomerInfoService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.post("/admin/customers/create-customer-info", customerData, {
+                        const retryRes = await AxiosClient.post("/admin/customers/create", customerData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "application/json"
@@ -138,7 +138,7 @@ const AdminCustomerInfoService = {
 
             // Gọi API cập nhật khách hàng
             const res = await AxiosClient.put(
-                `/admin/customers/update-customer-info/${customerId}`,
+                `/admin/customers/update/${customerId}`,
                 customerData,
                 {
                     headers: {
@@ -156,7 +156,7 @@ const AdminCustomerInfoService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/customers/update-customer-info/${customerId}`,
+                            `/admin/customers/update/${customerId}`,
                             customerData,
                             {
                                 headers: {
@@ -188,7 +188,7 @@ const AdminCustomerInfoService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/customers/delete-customer-info/${customerId}`,
+                `/admin/customers/delete/${customerId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -204,7 +204,7 @@ const AdminCustomerInfoService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/customers/delete-customer-info/${customerId}`,
+                            `/admin/customers/delete/${customerId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${newToken}`,

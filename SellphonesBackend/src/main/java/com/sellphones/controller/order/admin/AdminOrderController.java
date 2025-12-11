@@ -3,13 +3,10 @@ package com.sellphones.controller.order.admin;
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.order.OrderDetailResponse;
-import com.sellphones.dto.order.OrderResponse;
-import com.sellphones.dto.order.OrderRequest;
-import com.sellphones.dto.order.admin.AdminOrderFilterRequest;
-import com.sellphones.dto.order.admin.AdminOrderListResponse;
+import com.sellphones.dto.order.admin.AdminOrder_FilterRequest;
+import com.sellphones.dto.order.admin.AdminOrderResponse;
 import com.sellphones.dto.order.admin.AdminOrderRequest;
 import com.sellphones.dto.order.admin.AdminShipmentRequest;
-import com.sellphones.service.order.OrderService;
 import com.sellphones.service.order.admin.AdminOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +26,8 @@ public class AdminOrderController {
     private final AdminOrderService adminOrderService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getOrders(AdminOrderFilterRequest request){
-        PageResponse<AdminOrderListResponse> response = adminOrderService.getOrders(request);
+    public ResponseEntity<CommonResponse> getOrders(@Valid AdminOrder_FilterRequest request){
+        PageResponse<AdminOrderResponse> response = adminOrderService.getOrders(request);
         Map<String, Object> map = new HashMap<>();
         map.put("orders", response);
 
@@ -38,19 +35,19 @@ public class AdminOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getOrderDetailsById(@PathVariable Long id){
-        OrderDetailResponse response = adminOrderService.getOrderDetailsById(id);
+    public ResponseEntity<CommonResponse> getOrderById(@PathVariable Long id){
+        OrderDetailResponse response = adminOrderService.getOrderById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PostMapping("/create-order")
-    public ResponseEntity<CommonResponse> makeOrder(@RequestBody @Valid AdminOrderRequest request){
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createOrder(@RequestBody @Valid AdminOrderRequest request){
         adminOrderService.createOrder(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Make order successfully!");
+        map.put("result", "Created order successfully!");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
@@ -73,7 +70,7 @@ public class AdminOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PutMapping("/deliver-order/{id}")
+    @PutMapping("/deliver/{id}")
     public ResponseEntity<CommonResponse> deliverOrder(@PathVariable Long id){
         adminOrderService.deliverOrder(id);
         Map<String, Object> map = new HashMap<>();
@@ -82,7 +79,7 @@ public class AdminOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
     }
 
-    @PutMapping("/cancel-order/{id}")
+    @PutMapping("/cancel/{id}")
     public ResponseEntity<CommonResponse> cancelOrder(@PathVariable Long id){
         adminOrderService.cancelOrder(id);
         Map<String, Object> map = new HashMap<>();

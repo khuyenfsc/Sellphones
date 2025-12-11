@@ -20,7 +20,7 @@ export default function AttributeTable({ isReloaded }) {
     const [sortType, setSortType] = useState("ASC");
 
     const [filterRequest, setFilterRequest] = useState({
-        keyword: null,
+        name: null,
         sortType: sortType,
         page: 0,
         size: perPage,
@@ -30,7 +30,7 @@ export default function AttributeTable({ isReloaded }) {
         setLoading(true);
         const res = await AdminAttributeService.getAttributes({
             ...filterRequest,
-            keyword: searchTerm.trim() || null,
+            name: searchTerm.trim() || null,
             page: currentPage - 1,
             size: perPage,
             sortType: sortType
@@ -58,7 +58,7 @@ export default function AttributeTable({ isReloaded }) {
         if (e.key === "Enter") {
             setFilterRequest({
                 ...filterRequest,
-                keyword: searchTerm,
+                name: searchTerm,
             });
             setCurrentPage(1);
         }

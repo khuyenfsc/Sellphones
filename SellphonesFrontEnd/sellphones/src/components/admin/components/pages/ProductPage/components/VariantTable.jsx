@@ -1,4 +1,3 @@
-// VariantTable.jsx
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";

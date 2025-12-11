@@ -35,7 +35,7 @@ public class ProductController {
     public ResponseEntity<CommonResponse> getFeaturedProductsByCategoryName(
             @PathVariable String categoryName
     ){
-        List<ProductListResponse> products = productService.getFeaturedProductsByCategory(categoryName);
+        List<ProductResponse> products = productService.getFeaturedProductsByCategory(categoryName);
         Map<String, Object> map = new HashMap<>();
         map.put("result", products);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
@@ -44,7 +44,7 @@ public class ProductController {
 
     @PostMapping("/query")
     public ResponseEntity<CommonResponse> queryProducts(@RequestBody @Valid FilterRequest filter){
-        PageResponse<ProductListResponse> products = productService.getProductByFilter(filter);
+        PageResponse<ProductResponse> products = productService.getProductByFilter(filter);
         Map<String, Object> map = new HashMap<>();
         map.put("products", products);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));

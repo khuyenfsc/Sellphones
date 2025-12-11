@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +35,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AppConstants.PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(AppConstants.ADMIN_ENDPOINTS).hasAuthority("ADMIN")
-                        .requestMatchers(AppConstants.CUSTOMER_ENDPOINTS).hasAuthority("CUSTOMER")
+//                        .requestMatchers(AppConstants.CUSTOMER_ENDPOINTS).hasAuthority("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionConfig -> sessionConfig
@@ -54,7 +55,7 @@ public class SecurityConfiguration {
                                 return config;
                             }
                         }))
-                .csrf(csrfConfig -> csrfConfig.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(u -> u.userService(oAuth2UserService))

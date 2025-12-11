@@ -69,7 +69,7 @@ const CustomerInfoService = {
             if (!token) return { success: false, message: "Chưa đăng nhập", data: null };
 
             // Gửi dữ liệu khách hàng lên server
-            const res = await AxiosClient.post("/customers/create-customer-info", customerData, {
+            const res = await AxiosClient.post("/customers/create", customerData, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
@@ -88,7 +88,7 @@ const CustomerInfoService = {
                     const refreshResult = await UserService.refreshToken(); // 👈 gọi sang AuthService
                     if (refreshResult.success) {
                         // Retry lại với token mới
-                        const retryRes = await AxiosClient.post("/customers/create-customer-info", customerData, {
+                        const retryRes = await AxiosClient.post("/customers/create", customerData, {
                             headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
                             withCredentials: true,
                         });
@@ -132,7 +132,7 @@ const CustomerInfoService = {
             if (!token) return { success: false, message: "Chưa đăng nhập", data: null };
 
             // Gửi dữ liệu cập nhật khách hàng lên server
-            const res = await AxiosClient.put(`/customers/update-customer-info/${id}`, customerData, {
+            const res = await AxiosClient.put(`/customers/update/${id}`, customerData, {
                 headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true,
             });
@@ -151,7 +151,7 @@ const CustomerInfoService = {
                     const refreshResult = await UserService.refreshToken(); // 👈 gọi sang AuthService
                     if (refreshResult.success) {
                         // Retry lại với token mới
-                        const retryRes = await AxiosClient.put(`/customers/update-customer-info/${id}`, customerData, {
+                        const retryRes = await AxiosClient.put(`/customers/update/${id}`, customerData, {
                             headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
                             withCredentials: true,
                         });
@@ -195,7 +195,7 @@ const CustomerInfoService = {
             if (!token) return { success: false, message: "Chưa đăng nhập" };
 
             const res = await AxiosClient.delete(
-                `http://localhost:8080/api/v1/customers/delete-customer-info/${customerInfoId}`,
+                `http://localhost:8080/api/v1/customers/delete/${customerInfoId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -210,7 +210,7 @@ const CustomerInfoService = {
                 const refreshResult = await UserService.refreshToken();
                 if (refreshResult.success) {
                     const retryRes = await AxiosClient.delete(
-                        `http://localhost:8080/api/v1/customers/delete-customer-info/${customerInfoId}`,
+                        `http://localhost:8080/api/v1/customers/delete/${customerInfoId}`,
                         {
                             headers: { Authorization: `Bearer ${refreshResult.accessToken}` },
                         }

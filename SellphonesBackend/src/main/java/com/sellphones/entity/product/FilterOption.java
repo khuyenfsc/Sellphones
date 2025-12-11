@@ -22,12 +22,8 @@ public class FilterOption extends BaseEntity<Long> {
     @Column(name = "filter_condition")
     private String condition;
 
-//    private int sortOrder;
-
     @ManyToOne
     @JoinColumn(name = "product_filter_id")
     private ProductFilter productFilter;
 
-//    @ManyToOne
-//    private Category category;
 }

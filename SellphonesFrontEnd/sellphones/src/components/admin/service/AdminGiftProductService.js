@@ -57,9 +57,9 @@ const AdminGiftProductService = {
 
             const formData = new FormData();
             formData.append("gift_product", JSON.stringify(giftData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("thumbnail_file", file);
 
-            const res = await AxiosClient.post("/admin/gift-products/create-gift-product", formData, {
+            const res = await AxiosClient.post("/admin/gift-products/create", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -76,9 +76,9 @@ const AdminGiftProductService = {
                     try {
                         const formData = new FormData();
                         formData.append("gift_product", JSON.stringify(giftData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("thumbnail_file", file);
 
-                        const retryRes = await AxiosClient.post("/admin/gift-products/create-gift-product", formData, {
+                        const retryRes = await AxiosClient.post("/admin/gift-products/create", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -155,10 +155,10 @@ const AdminGiftProductService = {
 
             const formData = new FormData();
             formData.append("gift_product", JSON.stringify(giftData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("thumbnail_file", file);
 
             const res = await AxiosClient.put(
-                `/admin/gift-products/update-gift-product/${giftId}`,
+                `/admin/gift-products/update/${giftId}`,
                 formData,
                 {
                     headers: {
@@ -178,10 +178,10 @@ const AdminGiftProductService = {
                     try {
                         const formData = new FormData();
                         formData.append("gift_product", JSON.stringify(giftData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("thumbnail_file", file);
 
                         const retryRes = await AxiosClient.put(
-                            `/admin/gift-products/update-gift-product/${giftId}`,
+                            `/admin/gift-products/update/${giftId}`,
                             formData,
                             {
                                 headers: {
@@ -217,7 +217,7 @@ const AdminGiftProductService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/gift-products/delete-gift-product/${giftId}`,
+                `/admin/gift-products/delete/${giftId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -232,7 +232,7 @@ const AdminGiftProductService = {
 
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/gift-products/delete-gift-product/${giftId}`,
+                            `/admin/gift-products/delete/${giftId}`,
                             {
                                 headers: { Authorization: `Bearer ${newToken}` },
                             }

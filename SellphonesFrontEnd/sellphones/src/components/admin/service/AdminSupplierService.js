@@ -103,7 +103,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.post(
-                "/admin/suppliers/create-supplier",
+                "/admin/suppliers/create",
                 supplierData,
                 {
                     headers: {
@@ -121,7 +121,7 @@ const AdminSupplierService = {
                     const retryToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.post(
-                            "/admin/suppliers/create-supplier",
+                            "/admin/suppliers/create",
                             supplierData,
                             {
                                 headers: {
@@ -156,7 +156,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/suppliers/update-supplier/${supplierId}`,
+                `/admin/suppliers/update/${supplierId}`,
                 supplierData,
                 {
                     headers: {
@@ -174,7 +174,7 @@ const AdminSupplierService = {
                     const retryToken = refresh.accessToken;
                     try {
                         const retryRes = await AxiosClient.put(
-                            `/admin/suppliers/update-supplier/${supplierId}`,
+                            `/admin/suppliers/update/${supplierId}`,
                             supplierData,
                             {
                                 headers: {
@@ -209,7 +209,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/suppliers/delete-supplier/${supplierId}`,
+                `/admin/suppliers/delete/${supplierId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -227,7 +227,7 @@ const AdminSupplierService = {
 
                     try {
                         const retryRes = await AxiosClient.delete(
-                            `/admin/suppliers/delete-supplier/${supplierId}`,
+                            `/admin/suppliers/delete/${supplierId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${retryToken}`,
@@ -309,7 +309,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.post(
-                `/admin/suppliers/${supplierId}/stock-entries/create-stock-entry`,
+                `/admin/suppliers/${supplierId}/stock-entries/create`,
                 requestBody,
                 {
                     headers: {
@@ -327,7 +327,7 @@ const AdminSupplierService = {
                     const retryToken = refresh.accessToken;
                     try {
                         const retry = await AxiosClient.post(
-                            `/admin/suppliers/${supplierId}/stock-entries/create-stock-entry`,
+                            `/admin/suppliers/${supplierId}/stock-entries/create`,
                             requestBody,
                             {
                                 headers: {
@@ -362,7 +362,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.put(
-                `/admin/suppliers/stock-entries/update-stock-entry/${stockEntryId}`,
+                `/admin/suppliers/stock-entries/update/${stockEntryId}`,
                 requestBody,
                 {
                     headers: {
@@ -381,7 +381,7 @@ const AdminSupplierService = {
 
                     try {
                         const retry = await AxiosClient.put(
-                            `/admin/suppliers/stock-entries/update-stock-entry/${stockEntryId}`,
+                            `/admin/suppliers/stock-entries/update/${stockEntryId}`,
                             requestBody,
                             {
                                 headers: {
@@ -416,7 +416,7 @@ const AdminSupplierService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/suppliers/stock-entries/delete-stock-entry/${stockEntryId}`,
+                `/admin/suppliers/stock-entries/delete/${stockEntryId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -434,7 +434,7 @@ const AdminSupplierService = {
 
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/suppliers/stock-entries/delete-stock-entry/${stockEntryId}`,
+                            `/admin/suppliers/stock-entries/delete/${stockEntryId}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${retryToken}`,

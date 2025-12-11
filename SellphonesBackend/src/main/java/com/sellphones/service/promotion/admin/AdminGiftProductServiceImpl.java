@@ -1,6 +1,7 @@
 package com.sellphones.service.promotion.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellphones.constant.AppConstants;
 import com.sellphones.dto.PageResponse;
 import com.sellphones.dto.promotion.admin.AdminGiftProductFilterRequest;
 import com.sellphones.dto.promotion.admin.AdminGiftProductRequest;
@@ -50,8 +51,6 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
 
     private final JsonParser jsonParser;
 
-    private final String giftProductFolderName = "gift_products";
-
     @Override
     @PreAuthorize("""
     hasAnyAuthority(
@@ -71,7 +70,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
         List<GiftProduct> giftProducts = giftProductPage.getContent();
         List<AdminGiftProductResponse> response = giftProducts.stream()
                 .map(gp -> {
-                        gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), giftProductFolderName));
+                        gp.setThumbnail(ImageNameToImageUrlConverter.convert(gp.getThumbnail(), AppConstants.GIFT_PRODUCT_IMAGE_FOLDER));
                         return modelMapper.map(gp, AdminGiftProductResponse.class);
                     }
                 )
@@ -92,7 +91,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
         String thumbnailName = "";
         if (thumbnailFile != null) {
             try {
-                thumbnailName = fileStorageService.store(thumbnailFile, giftProductFolderName);
+                thumbnailName = fileStorageService.store(thumbnailFile, AppConstants.GIFT_PRODUCT_IMAGE_FOLDER);
             } catch (Exception e) {
                 log.error("Failed to upload thumbnail file {}", thumbnailFile.getOriginalFilename(), e);
                 throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -108,7 +107,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
             public void afterCompletion(int status) {
                 if(status == STATUS_ROLLED_BACK){
                     if (StringUtils.hasText(finalThumbnailName)) {
-                        fileStorageService.delete(finalThumbnailName, giftProductFolderName);
+                        fileStorageService.delete(finalThumbnailName, AppConstants.GIFT_PRODUCT_IMAGE_FOLDER);
                     }
                 }
             }
@@ -117,7 +116,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
 
     @Override
     @PreAuthorize("hasAuthority('PROMOTIONS.GIFT_PRODUCTS')")
-    public void editGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id) {
+    public void updateGiftProduct(String giftProductJson, MultipartFile thumbnailFile, Long id) {
         GiftProduct giftProduct = giftProductRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.GIFT_PRODUCT_NOT_FOUND));
         AdminGiftProductRequest request = jsonParser.parseRequest(giftProductJson, AdminGiftProductRequest.class);
 
@@ -125,9 +124,9 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
         if (thumbnailFile != null) {
             try {
                 if (thumbnailName != null && !thumbnailName.isEmpty()) {
-                    fileStorageService.store(thumbnailFile, thumbnailName, giftProductFolderName);
+                    fileStorageService.store(thumbnailFile, thumbnailName, AppConstants.GIFT_PRODUCT_IMAGE_FOLDER);
                 } else {
-                    thumbnailName = fileStorageService.store(thumbnailFile, giftProductFolderName);
+                    thumbnailName = fileStorageService.store(thumbnailFile, AppConstants.GIFT_PRODUCT_IMAGE_FOLDER);
                 }
             } catch (Exception e) {
                 log.error("Failed to upload icon file {}", thumbnailFile.getOriginalFilename(), e);
@@ -150,7 +149,7 @@ public class AdminGiftProductServiceImpl implements AdminGiftProductService{
         giftProductRepository.delete(giftProduct);
 
         if(thumbnailName != null && !thumbnailName.isEmpty()){
-            fileStorageService.delete(thumbnailName, giftProductFolderName);
+            fileStorageService.delete(thumbnailName, AppConstants.GIFT_PRODUCT_IMAGE_FOLDER);
         }
     }
 }

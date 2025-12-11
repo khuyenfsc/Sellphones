@@ -2,14 +2,15 @@ package com.sellphones.controller.product.admin;
 
 import com.sellphones.dto.CommonResponse;
 import com.sellphones.dto.PageResponse;
-import com.sellphones.dto.product.admin.AdminProductDetailResponse;
+import com.sellphones.dto.product.admin.AdminProductDetailsResponse;
 import com.sellphones.dto.product.admin.AdminProduct_FilterRequest;
-import com.sellphones.dto.product.admin.AdminProductVariantFilterRequest;
+import com.sellphones.dto.product.admin.AdminProductVariant_FilterRequest;
 import com.sellphones.dto.product.admin.AdminProductVariantResponse;
-import com.sellphones.dto.product.ProductListResponse;
+import com.sellphones.dto.product.ProductResponse;
 import com.sellphones.dto.product.ProductVariantResponse;
 //import com.sellphones.elasticsearch.AdminProductDocumentService;
 import com.sellphones.service.product.admin.AdminProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminProductController {
 
-//    private final AdminProductDocumentService adminProductDocumentService;
-
     private final AdminProductService adminProductService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getProducts(AdminProduct_FilterRequest request){
-        PageResponse<ProductListResponse> products = adminProductService.getProducts(request);
+    public ResponseEntity<CommonResponse> getProducts(@Valid AdminProduct_FilterRequest request){
+        PageResponse<ProductResponse> products = adminProductService.getProducts(request);
         Map<String, Object> map = new HashMap<>();
         map.put("products", products);
 
@@ -38,41 +37,41 @@ public class AdminProductController {
 
     }
 
-    @PostMapping("/create-product")
-    public ResponseEntity<CommonResponse> addProduct(
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createProduct(
             @RequestPart("product") String productJson,
-            @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
-            @RequestPart(name = "file") MultipartFile thumbnailFile
+            @RequestPart(name = "image_files", required = false) MultipartFile[] imageFiles,
+            @RequestPart(name = "thumbnail_file") MultipartFile thumbnailFile
     ){
 
-        adminProductService.addProduct(productJson, imageFiles, thumbnailFile);
+        adminProductService.createProduct(productJson, imageFiles, thumbnailFile);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added product successfully");
+        map.put("result", "Created product successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PutMapping("/update-product/{productId}")
-    public ResponseEntity<CommonResponse> editProduct(
+    @PutMapping("/update-product/{id}")
+    public ResponseEntity<CommonResponse> updateProduct(
             @RequestPart("product") String productJson,
-            @RequestPart(name = "files", required = false) MultipartFile[] imageFiles,
-            @RequestPart(name = "file", required = false) MultipartFile thumbnailFile,
+            @RequestPart(name = "image_files", required = false) MultipartFile[] imageFiles,
+            @RequestPart(name = "thumbnail_file", required = false) MultipartFile thumbnailFile,
             @PathVariable Long productId
     ){
-        adminProductService.editProduct(productJson, imageFiles, thumbnailFile, productId);
+        adminProductService.updateProduct(productJson, imageFiles, thumbnailFile, productId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited product successfully");
+        map.put("result", "Updated product successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-product/{productId}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteProduct(
-            @PathVariable Long productId
+            @PathVariable Long id
     ){
-        adminProductService.deleteProduct(productId);
+        adminProductService.deleteProduct(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product successfully");
 
@@ -80,9 +79,9 @@ public class AdminProductController {
 
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<CommonResponse> getProductDetails(@PathVariable Long productId){
-        AdminProductDetailResponse response = adminProductService.getProductDetails(productId);
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse> getProductById(@PathVariable Long id){
+        AdminProductDetailsResponse response = adminProductService.getProductById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
@@ -91,7 +90,7 @@ public class AdminProductController {
     }
 
     @GetMapping("/{productId}/variants")
-    public ResponseEntity<CommonResponse> getProductVariants(AdminProductVariantFilterRequest request, @PathVariable Long productId){
+    public ResponseEntity<CommonResponse> getProductVariants(@Valid AdminProductVariant_FilterRequest request, @PathVariable Long productId){
         PageResponse<AdminProductVariantResponse> products = adminProductService.getProductVariants(request, productId);
         Map<String, Object> map = new HashMap<>();
         map.put("variants", products);
@@ -100,19 +99,19 @@ public class AdminProductController {
 
     }
 
-    @PostMapping("/{productId}/variants/{id}/set-thumbnail")
-    public ResponseEntity<CommonResponse> setThumbnail(@PathVariable Long productId, @PathVariable Long id){
-        adminProductService.setThumbnail(productId, id);
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", "Set thumbnail product successfully");
-
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-
-    }
+//    @PostMapping("/{productId}/variants/{id}/set-thumbnail")
+//    public ResponseEntity<CommonResponse> setThumbnail(@PathVariable Long productId, @PathVariable Long id){
+//        adminProductService.setThumbnail(productId, id);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("result", "Set thumbnail product successfully");
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+//
+//    }
 
     @GetMapping("/variants/{id}")
-    public ResponseEntity<CommonResponse> getProductVariantDetails(@PathVariable Long id){
-        ProductVariantResponse response = adminProductService.getProductVariantDetail(id);
+    public ResponseEntity<CommonResponse> getVariantById(@PathVariable Long id){
+        ProductVariantResponse response = adminProductService.getVariantById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", response);
 
@@ -120,39 +119,39 @@ public class AdminProductController {
 
     }
 
-    @PostMapping("/{productId}/create-variant")
-    public ResponseEntity<CommonResponse> addProductVariant(
-            @RequestPart("product_variant") String productVariantJson,
-            @RequestPart(name = "file", required = false) MultipartFile file,
+    @PostMapping("/{productId}/variants/create")
+    public ResponseEntity<CommonResponse> createVariant(
+            @RequestPart("variant") String productVariantJson,
+            @RequestPart(name = "image_file", required = false) MultipartFile imageFile,
             @PathVariable Long productId
     ){
-        adminProductService.addProductVariant(productVariantJson, file, productId);
+        adminProductService.createVariant(productVariantJson, imageFile, productId);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Added product variant successfully");
+        map.put("result", "Created product variant successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @PutMapping("/update-variant/{id}")
-    public ResponseEntity<CommonResponse> editProductVariant(
-            @RequestPart("product_variant") String productVariantJson,
-            @RequestPart(name = "file", required = false) MultipartFile file,
+    @PutMapping("/variants/update/{id}")
+    public ResponseEntity<CommonResponse> updateVariant(
+            @RequestPart("variant") String productVariantJson,
+            @RequestPart(name = "image_file", required = false) MultipartFile imageFile,
             @PathVariable Long id
     ){
-        adminProductService.editProductVariant(productVariantJson, file, id);
+        adminProductService.updateVariant(productVariantJson, imageFile, id);
         Map<String, Object> map = new HashMap<>();
-        map.put("result", "Edited product variant successfully");
+        map.put("result", "Updated product variant successfully");
 
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
 
     }
 
-    @DeleteMapping("/delete-variant/{id}")
+    @DeleteMapping("/variants/delete/{id}")
     public ResponseEntity<CommonResponse> deleteProductVariant(
             @PathVariable Long id
     ){
-        adminProductService.deleteProductVariant(id);
+        adminProductService.deleteVariant(id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Deleted product variant successfully");
 

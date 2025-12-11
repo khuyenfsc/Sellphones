@@ -14,7 +14,7 @@ const AdminBrandService = {
 
             const res = await AxiosClient.get("/admin/brands", {
                 headers: { Authorization: `Bearer ${token}` },
-                params: filterRequest, // gồm name, sortType, page, size
+                params: filterRequest, 
             });
 
             const data = res?.data?.brands || {};
@@ -53,9 +53,9 @@ const AdminBrandService = {
 
             const formData = new FormData();
             formData.append("brand", JSON.stringify(brandData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("icon_file", file);
 
-            const res = await AxiosClient.post("/admin/brands/create-brand", formData, {
+            const res = await AxiosClient.post("/admin/brands/create", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -71,9 +71,9 @@ const AdminBrandService = {
                     try {
                         const formData = new FormData();
                         formData.append("brand", JSON.stringify(brandData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("icon_file", file);
 
-                        const retryRes = await AxiosClient.post("/admin/brands/create-brand", formData, {
+                        const retryRes = await AxiosClient.post("/admin/brands/create", formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -140,9 +140,9 @@ const AdminBrandService = {
 
             const formData = new FormData();
             formData.append("brand", JSON.stringify(brandData));
-            if (file) formData.append("file", file);
+            if (file) formData.append("icon_file", file);
 
-            const res = await AxiosClient.put(`/admin/brands/update-brand/${brandId}`, formData, {
+            const res = await AxiosClient.put(`/admin/brands/update/${brandId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -158,9 +158,9 @@ const AdminBrandService = {
                     try {
                         const formData = new FormData();
                         formData.append("brand", JSON.stringify(brandData));
-                        if (file) formData.append("file", file);
+                        if (file) formData.append("icon_file", file);
 
-                        const retryRes = await AxiosClient.put(`/admin/brands/update-brand/${brandId}`, formData, {
+                        const retryRes = await AxiosClient.put(`/admin/brands/update/${brandId}`, formData, {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                                 "Content-Type": "multipart/form-data",
@@ -189,7 +189,7 @@ const AdminBrandService = {
                 token = refresh.accessToken;
             }
 
-            const res = await AxiosClient.delete(`/admin/brands/delete-brand/${brandId}`, {
+            const res = await AxiosClient.delete(`/admin/brands/delete/${brandId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -200,7 +200,7 @@ const AdminBrandService = {
                 if (refresh.success) {
                     const newToken = refresh.accessToken;
                     try {
-                        const retryRes = await AxiosClient.delete(`/admin/brands/delete-brand/${brandId}`, {
+                        const retryRes = await AxiosClient.delete(`/admin/brands/delete/${brandId}`, {
                             headers: { Authorization: `Bearer ${newToken}` },
                         });
                         return { success: true, data: retryRes?.data };

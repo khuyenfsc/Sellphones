@@ -1,10 +1,7 @@
 package com.sellphones.utils;
 
 import com.sellphones.entity.order.Order;
-import com.sellphones.entity.promotion.PaymentMethodCondition;
-import com.sellphones.entity.promotion.Promotion;
-import com.sellphones.entity.promotion.PromotionCondition;
-import com.sellphones.entity.promotion.PromotionConditionDto;
+import com.sellphones.dto.promotion.PromotionConditionDto;
 
 import java.util.List;
 

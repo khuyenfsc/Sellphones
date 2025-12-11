@@ -31,7 +31,7 @@ public class AdminProductPromotionController {
 
     }
 
-    @PostMapping("/create-promotion")
+    @PostMapping("/create")
     public ResponseEntity<CommonResponse> createProductPromotion(@RequestBody @Valid AdminProductPromotionRequest request){
         adminProductPromotionService.createProductPromotion(request);
         Map<String, Object> map = new HashMap<>();
@@ -41,7 +41,7 @@ public class AdminProductPromotionController {
 
     }
 
-    @PutMapping("/update-promotion/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> editProduct(
             @RequestBody @Valid AdminProductPromotionRequest request,
             @PathVariable Long id
@@ -54,7 +54,7 @@ public class AdminProductPromotionController {
 
     }
 
-    @DeleteMapping("/delete-promotion/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteProductPromotion(@PathVariable Long id){
         adminProductPromotionService.deleteProductPromotion(id);
         Map<String, Object> map = new HashMap<>();
