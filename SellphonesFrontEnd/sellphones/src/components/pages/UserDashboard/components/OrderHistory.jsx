@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import OrderService from "../../../../service/OrderService";
 import OrderDetails from "./OrderDetails";
 import { toast } from "react-toastify";
+import { formatDateForFilter } from "../../../../utils/Format";
 
 export default function OrderHistory() {
   const tabs = [
@@ -49,20 +50,12 @@ export default function OrderHistory() {
     null: "Tất cả",
   };
 
-  const formatDateForBackend = (date) => {
-    if (!date) return null;
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   const fetchOrders = async (page = 0) => {
     setLoading(true);
     try {
       const res = await OrderService.getOrders({
-        startDate: startDate ? formatDateForBackend(startDate) : null,
-        endDate: endDate ? formatDateForBackend(endDate) : null,
+        startDate: startDate ? formatDateForFilter(startDate) : null,
+        endDate: endDate ? formatDateForFilter(endDate) : null,
         page,
         size: 5,
         status: statusMap[activeTab],

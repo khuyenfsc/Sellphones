@@ -4,6 +4,7 @@ import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import vi from "date-fns/locale/vi";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 registerLocale("vi", vi);
 
@@ -24,23 +25,14 @@ export default function FilterShipmentModal({ isOpen, onClose, onApply }) {
         DELIVERED: "Đã giao",
     };
 
-    const formatDate = (date) => {
-        if (!date) return null;
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-    };
-
     const handleApply = () => {
         const filters = {};
 
         if (customerName) filters.customerName = customerName;
         if (partner) filters.partner = partner;
         if (status) filters.status = status;
-        if (expectedStart) filters.expectedStart = formatDate(expectedStart);
-        if (expectedEnd) filters.expectedEnd = formatDate(expectedEnd);
+        if (expectedStart) filters.expectedStart = formatDateForFilter(expectedStart);
+        if (expectedEnd) filters.expectedEnd = formatDateForFilter(expectedEnd);
 
         onClose();
         onApply(filters);
@@ -185,7 +177,7 @@ export default function FilterShipmentModal({ isOpen, onClose, onApply }) {
                                     />
                                     {expectedStart && (
                                         <SelectedPill
-                                            label={`Từ: ${formatDate(expectedStart)}`}
+                                            label={`Từ: ${formatDateForFilter(expectedStart)}`}
                                             onRemove={() => removeFilter("expectedStart")}
                                         />
                                     )}
@@ -205,7 +197,7 @@ export default function FilterShipmentModal({ isOpen, onClose, onApply }) {
                                     />
                                     {expectedEnd && (
                                         <SelectedPill
-                                            label={`Đến: ${formatDate(expectedEnd)}`}
+                                            label={`Đến: ${formatDateForFilter(expectedEnd)}`}
                                             onRemove={() => removeFilter("expectedEnd")}
                                         />
                                     )}

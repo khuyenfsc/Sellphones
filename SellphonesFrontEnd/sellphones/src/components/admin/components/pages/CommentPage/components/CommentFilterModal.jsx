@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { vi } from "date-fns/locale";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 export default function CommentFilterModal({ isOpen, onClose, onApply }) {
 
@@ -34,12 +35,12 @@ export default function CommentFilterModal({ isOpen, onClose, onApply }) {
         DESC: "Ngày tạo giảm dần",
     };
 
-    const formatDate = (d) =>
-        d
-            ? `${d.getFullYear()}-${(d.getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`
-            : "";
+    // const formatDate = (d) =>
+    //     d
+    //         ? `${d.getFullYear()}-${(d.getMonth() + 1)
+    //             .toString()
+    //             .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`
+    //         : "";
 
     const SelectedPill = ({ label, onRemove }) => (
         <span className="inline-flex items-center bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full mt-1 mr-1">
@@ -77,8 +78,8 @@ export default function CommentFilterModal({ isOpen, onClose, onApply }) {
         if (isReplied !== "") filters.isReplied = isReplied;
         if (status !== "") filters.status = status;
 
-        if (startDate) filters.startDate = formatDate(startDate);
-        if (endDate) filters.endDate = formatDate(endDate);
+        if (startDate) filters.startDate = formatDateForFilter(startDate);
+        if (endDate) filters.endDate = formatDateForFilter(endDate);
 
         if (sortType !== "") filters.sortType = sortType;
 
@@ -226,7 +227,7 @@ export default function CommentFilterModal({ isOpen, onClose, onApply }) {
                                         />
                                         {startDate && (
                                             <SelectedPill
-                                                label={`Từ: ${formatDate(startDate)}`}
+                                                label={`Từ: ${formatDateForFilter(startDate)}`}
                                                 onRemove={() => removeFilter("startDate")}
                                             />
                                         )}
@@ -246,7 +247,7 @@ export default function CommentFilterModal({ isOpen, onClose, onApply }) {
                                         />
                                         {endDate && (
                                             <SelectedPill
-                                                label={`Đến: ${formatDate(endDate)}`}
+                                                label={`Đến: ${formatDateForFilter(endDate)}`}
                                                 onRemove={() => removeFilter("endDate")}
                                             />
                                         )}

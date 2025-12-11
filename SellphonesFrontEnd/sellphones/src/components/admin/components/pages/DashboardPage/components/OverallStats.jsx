@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { DollarSign, FileText, Users, BarChart3 } from "lucide-react";
 import StatCard from "./StatCard";
 import DashboardService from "../../../../service/DashboardService";
+import { formatCurrency } from '../../../../../../utils/Format';
 
-export default function OverallStats({ dateRange, formatCurrency }) {
+export default function OverallStats({ dateRange }) {
     const [overall, setOverall] = useState(null);
     const [loadingOverall, setLoadingOverall] = useState(true);
     const fetchOverall = async () => {

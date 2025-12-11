@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Filter, Search } from "lucide-react";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import AdminAttributeService from "../../../../service/AdminAttributeService";
 import { useNavigate } from "react-router-dom";

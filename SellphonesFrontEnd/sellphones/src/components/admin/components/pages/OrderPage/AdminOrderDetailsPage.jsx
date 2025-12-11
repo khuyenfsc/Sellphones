@@ -9,9 +9,7 @@ import CustomerInfoSection from "./components/CustomerInfoSection";
 import OrderProductList from "./components/OrderProductList";
 import OrderStatusSection from "./components/OrderStatusSection";
 import PaymentInfoSection from "./components/PaymentInfoSection";
-
-const formatCurrency = (value) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+import { formatCurrency } from "../../../../../utils/Format";
 
 
 const AdminOrderDetailsPage = () => {
@@ -202,7 +200,7 @@ const AdminOrderDetailsPage = () => {
                     <CustomerInfoSection customer={customer}/>
 
                     {/* Order Items */}
-                    <OrderProductList order={order} formatCurrency={formatCurrency} />
+                    <OrderProductList order={order} />
                 </div>
 
                 {/* Right Panel */}
@@ -210,7 +208,7 @@ const AdminOrderDetailsPage = () => {
                     {/* Order Status */}
                     <OrderStatusSection order={order} />
                     {/* Payment Info */}
-                    <PaymentInfoSection order={order} formatCurrency={formatCurrency} />
+                    <PaymentInfoSection order={order} />
                 </div>
             </div>
 

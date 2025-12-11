@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 export default function PromotionFilterModal({ isOpen, onClose, onApply }) {
     const [type, setType] = useState("");
@@ -14,15 +15,12 @@ export default function PromotionFilterModal({ isOpen, onClose, onApply }) {
         DISCOUNT_PERCENT: "Giảm phần trăm",
     };
 
-    const formatDate = (date) =>
-        date ? date.toISOString().split("T")[0] : "";
-
     const handleApply = () => {
         const filters = {};
 
         if (type) filters.type = type;
-        if (startDate) filters.startDate = formatDate(startDate);
-        if (endDate) filters.endDate = formatDate(endDate);
+        if (startDate) filters.startDate = formatDateForFilter(startDate);
+        if (endDate) filters.endDate = formatDateForFilter(endDate);
         if (sortType) filters.sortType = sortType;
 
         onClose();
@@ -128,7 +126,7 @@ export default function PromotionFilterModal({ isOpen, onClose, onApply }) {
                                     />
                                     {startDate && (
                                         <SelectedPill
-                                            label={`Từ: ${formatDate(startDate)}`}
+                                            label={`Từ: ${formatDateForFilter(startDate)}`}
                                             onRemove={() => removeFilter("startDate")}
                                         />
                                     )}
@@ -147,7 +145,7 @@ export default function PromotionFilterModal({ isOpen, onClose, onApply }) {
                                     />
                                     {endDate && (
                                         <SelectedPill
-                                            label={`Đến: ${formatDate(endDate)}`}
+                                            label={`Đến: ${formatDateForFilter(endDate)}`}
                                             onRemove={() => removeFilter("endDate")}
                                         />
                                     )}

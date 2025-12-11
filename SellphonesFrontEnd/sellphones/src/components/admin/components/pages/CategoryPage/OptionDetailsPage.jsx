@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AdminCategoryService from "../../../service/AdminCategoryService";
 import EditOptionModal from "./components/EditOptionModal";
+import { formatDate } from "../../../../../utils/Format";
 // import ValueTable from "./components/ValueTable";
 // import CreateValueModal from "./components/CreateValueModal";
 
@@ -94,17 +95,6 @@ const OptionDetailsPage = () => {
   useEffect(() => {
     fetchOption();
   }, [categoryId, optionId]);
-
-  const formatDate = (isoString) => {
-    if (!isoString) return "-";
-    const date = new Date(isoString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6 flex flex-col gap-6">

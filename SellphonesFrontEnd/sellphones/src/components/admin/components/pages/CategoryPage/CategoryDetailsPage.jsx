@@ -8,6 +8,7 @@ import OptionTable from "./components/OptionTable";
 import FilterTable from "./components/FilterTable";
 import EditCategoryModal from "./components/EditCategoryModal";
 import CreateOptionModal from "./components/CreateOptionModal";
+import { formatDate } from "../../../../../utils/Format";
 
 const CategoryDetailsPage = () => {
     const [isCreateOptionModalOpen, setIsCreateOptionModalOpen] = useState(false);
@@ -26,17 +27,6 @@ const CategoryDetailsPage = () => {
             console.error(err);
             toast.error("Lỗi khi tải thông tin category");
         }
-    };
-
-    const formatDate = (isoString) => {
-        if (!isoString) return "-";
-        const date = new Date(isoString);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
     };
 
     const handleUpdate = async (updatedData, file) => {

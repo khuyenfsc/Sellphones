@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 export default function EditPromotionModal({ isOpen, onClose, onUpdate, onDelete, promotion }) {
     const [name, setName] = useState("");
@@ -18,14 +19,6 @@ export default function EditPromotionModal({ isOpen, onClose, onUpdate, onDelete
 
     // Convert yyyy-mm-dd → Date object
     const parseDate = (str) => (str ? new Date(str + "T00:00:00") : null);
-
-    const formatDate = (date) => {
-        if (!date) return "";
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, "0");
-        const d = String(date.getDate()).padStart(2, "0");
-        return `${y}-${m}-${d}`;
-    };
 
     // Load dữ liệu cũ vào modal mỗi khi mở
     useEffect(() => {
@@ -87,8 +80,8 @@ export default function EditPromotionModal({ isOpen, onClose, onUpdate, onDelete
                     ? { percent: Number(percent) }
                     : { value: Number(amount) },
             condition: { paymentMethods },
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate),
+            startDate: formatDateForFilter(startDate),
+            endDate: formatDateForFilter(endDate),
         };
 
         await onUpdate(promotion.id, payload);

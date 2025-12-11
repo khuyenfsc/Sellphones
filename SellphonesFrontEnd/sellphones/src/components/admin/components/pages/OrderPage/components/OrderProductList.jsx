@@ -1,6 +1,7 @@
 import { Package, Shield, Gift } from "lucide-react";
+import { formatCurrency } from "../../../../../../utils/Format";
 
-export default function OrderProductList({ order, formatCurrency }) {
+export default function OrderProductList({ order }) {
     if (!order?.orderVariants) return null;
 
     return (

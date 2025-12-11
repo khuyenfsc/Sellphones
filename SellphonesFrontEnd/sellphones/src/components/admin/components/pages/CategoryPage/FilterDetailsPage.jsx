@@ -7,6 +7,7 @@ import AdminCategoryService from "../../../service/AdminCategoryService";
 import FilterOptionTable from "./components/FilterOptionTable";
 import EditFilterModal from "./components/EditFilterModal";
 import CreateFilterOptionModal from "./components/CreateFilterOptionModal";
+import { formatDate } from "../../../../../utils/Format";
 
 const FilterDetailsPage = () => {
     const { filterId } = useParams();
@@ -110,17 +111,6 @@ const FilterDetailsPage = () => {
             console.error(err);
             toast.error("Đã xảy ra lỗi khi tạo filter option");
         }
-    };
-
-    const formatDate = (iso) => {
-        if (!iso) return "-";
-        const d = new Date(iso);
-        return `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")}/${d.getFullYear()} ${d
-                .getHours()
-                .toString()
-                .padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
     };
 
     return (

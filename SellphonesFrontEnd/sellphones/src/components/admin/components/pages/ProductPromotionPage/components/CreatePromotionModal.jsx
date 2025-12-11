@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 export default function CreatePromotionModal({ isOpen, onClose, onCreate }) {
     const [name, setName] = useState("");
@@ -19,14 +20,6 @@ export default function CreatePromotionModal({ isOpen, onClose, onCreate }) {
 
     // ERROR STATE THEO TỪNG FIELD
     const [errors, setErrors] = useState({});
-
-    const formatDate = (date) => {
-        if (!date) return "";
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, "0");
-        const d = String(date.getDate()).padStart(2, "0");
-        return `${y}-${m}-${d}`;
-    };
 
     const togglePayment = (method) => {
         setPaymentMethods((prev) =>
@@ -81,8 +74,8 @@ export default function CreatePromotionModal({ isOpen, onClose, onCreate }) {
                 paymentMethods: paymentMethods,
             },
 
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate),
+            startDate: formatDateForFilter(startDate),
+            endDate: formatDateForFilter(endDate),
         };
 
         await onCreate(payload);

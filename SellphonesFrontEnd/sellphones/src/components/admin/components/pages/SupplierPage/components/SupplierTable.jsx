@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import AdminSupplierService from "../../../../service/AdminSupplierService";
 import { useNavigate } from "react-router-dom";
 import SupplierFilterModal from "./SupplierFilterModal";
+import { formatDate } from "../../../../../../utils/Format";
 // import EditSupplierModal from "./EditSupplierModal";
 
 export default function SupplierTable({ isReloaded }) {
@@ -125,13 +126,6 @@ export default function SupplierTable({ isReloaded }) {
         return `${address.street}, ${address.ward}, ${address.district}, ${address.province}`;
     };
 
-    const formatDate = (dateStr) => {
-        if (!dateStr) return "—";
-        const date = new Date(dateStr);
-        return `${String(date.getDate()).padStart(2, "0")}/${String(
-            date.getMonth() + 1
-        ).padStart(2, "0")}/${date.getFullYear()}`;
-    };
 
     return (
         <>

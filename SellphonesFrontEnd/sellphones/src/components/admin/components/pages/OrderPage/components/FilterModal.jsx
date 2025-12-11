@@ -4,6 +4,7 @@ import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import vi from "date-fns/locale/vi";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 registerLocale("vi", vi);
 
@@ -36,15 +37,6 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
         REFUNDED: "Hoàn tiền",
     };
 
-    const formatDate = (date) => {
-        if (!date) return null;
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-    };
-
     const handleApply = () => {
         const filters = {};
 
@@ -53,8 +45,8 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
         if (paymentMethodType) filters.paymentMethodType = paymentMethodType;
         if (paymentStatus) filters.paymentStatus = paymentStatus;
         if (email) filters.email = email;
-        if (startDate) filters.startDate = formatDate(startDate);
-        if (endDate) filters.endDate = formatDate(endDate);
+        if (startDate) filters.startDate = formatDateForFilter(startDate);
+        if (endDate) filters.endDate = formatDateForFilter(endDate);
 
         onClose();
         onApply(filters);
@@ -210,7 +202,7 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
                                         dropdownMode="select"
                                         className="w-full px-4 py-2.5 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    {startDate && <SelectedPill label={`Từ: ${formatDate(startDate)}`} onRemove={() => removeFilter("startDate")} />}
+                                    {startDate && <SelectedPill label={`Từ: ${formatDateForFilter(startDate)}`} onRemove={() => removeFilter("startDate")} />}
                                 </div>
                                 <div className="flex-1">
                                     <DatePicker
@@ -223,7 +215,7 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
                                         dropdownMode="select"
                                         className="w-full px-4 py-2.5 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    {endDate && <SelectedPill label={`Đến: ${formatDate(endDate)}`} onRemove={() => removeFilter("endDate")} />}
+                                    {endDate && <SelectedPill label={`Đến: ${formatDateForFilter(endDate)}`} onRemove={() => removeFilter("endDate")} />}
                                 </div>
                             </div>
                         </div>

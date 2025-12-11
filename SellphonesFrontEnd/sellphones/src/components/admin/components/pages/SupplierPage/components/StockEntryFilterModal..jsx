@@ -3,6 +3,7 @@ import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import vi from "date-fns/locale/vi";
+import { formatDateForFilter } from "../../../../../../utils/Format";
 
 registerLocale("vi", vi);
 
@@ -14,21 +15,12 @@ export default function StockEntryFilterModal({ isOpen, onClose, onApply }) {
     const [maxPrice, setMaxPrice] = useState("");
     const [sortType, setSortType] = useState("");
 
-    const formatDate = (date) => {
-        if (!date) return null;
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-    };
-
     const handleApply = () => {
         const filters = {};
 
         if (warehouseName) filters.warehouseName = warehouseName;
-        if (startDate) filters.startDate = formatDate(startDate);
-        if (endDate) filters.endDate = formatDate(endDate);
+        if (startDate) filters.startDate = formatDateForFilter(startDate);
+        if (endDate) filters.endDate = formatDateForFilter(endDate);
         if (minPrice) filters.minPrice = minPrice;
         if (maxPrice) filters.maxPrice = maxPrice;
         if (sortType) filters.sortType = sortType;
@@ -130,7 +122,7 @@ export default function StockEntryFilterModal({ isOpen, onClose, onApply }) {
                                     />
                                     {startDate && (
                                         <SelectedPill
-                                            label={`Từ: ${formatDate(startDate)}`}
+                                            label={`Từ: ${formatDateForFilter(startDate)}`}
                                             onRemove={() => removeFilter("startDate")}
                                         />
                                     )}
@@ -149,7 +141,7 @@ export default function StockEntryFilterModal({ isOpen, onClose, onApply }) {
                                     />
                                     {endDate && (
                                         <SelectedPill
-                                            label={`Đến: ${formatDate(endDate)}`}
+                                            label={`Đến: ${formatDateForFilter(endDate)}`}
                                             onRemove={() => removeFilter("endDate")}
                                         />
                                     )}

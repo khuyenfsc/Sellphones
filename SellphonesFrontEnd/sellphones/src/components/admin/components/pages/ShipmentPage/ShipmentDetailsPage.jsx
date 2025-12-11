@@ -8,11 +8,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import vi from "date-fns/locale/vi";
+import { formatCurrency } from "../../../../../utils/Format";
 
 registerLocale("vi", vi);
-
-const formatCurrency = (value) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);;
 
 const ShipmentDetailsPage = () => {
     const [shipment, setShipment] = useState(null);

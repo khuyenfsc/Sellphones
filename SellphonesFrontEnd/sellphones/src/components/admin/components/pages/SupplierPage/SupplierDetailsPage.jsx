@@ -3,6 +3,7 @@ import { XCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { formatDate } from "../../../../../utils/Format";
 
 import AdminSupplierService from "../../../service/AdminSupplierService";
 import StockEntryTable from "./components/StockEntryTable";
@@ -25,17 +26,6 @@ const SupplierDetailsPage = () => {
         } catch (err) {
             toast.error("Lỗi khi tải thông tin nhà cung cấp");
         }
-    };
-
-    const formatDate = (isoString) => {
-        if (!isoString) return "-";
-        const date = new Date(isoString);
-        const d = String(date.getDate()).padStart(2, "0");
-        const m = String(date.getMonth() + 1).padStart(2, "0");
-        const y = date.getFullYear();
-        const h = String(date.getHours()).padStart(2, "0");
-        const mi = String(date.getMinutes()).padStart(2, "0");
-        return `${d}/${m}/${y} ${h}:${mi}`;
     };
 
     const formatAddress = (addr) => {

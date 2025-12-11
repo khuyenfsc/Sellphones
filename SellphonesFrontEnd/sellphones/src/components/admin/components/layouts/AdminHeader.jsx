@@ -1,12 +1,10 @@
 import { LogOut, User } from "lucide-react";
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AdminAuthContext } from "../../context/AdminAuthContext";
 import AdminService from "../../service/AdminService";
 const AdminHeader = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { admin, loading: loadingAdmin } = useContext(AdminAuthContext);
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {

@@ -3,9 +3,7 @@ import Swal from "sweetalert2";
 import VnPayService from "../../../../service/VnPayService";
 import OrderService from "../../../../service/OrderService";
 import { toast } from "react-toastify";
-
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+import { formatCurrency } from "../../../../utils/Format";
 
 const statusLabel = {
   PENDING: "Chờ xác nhận",

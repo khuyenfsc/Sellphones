@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import AdminCategoryService from "../../../../service/AdminCategoryService";
 import { useNavigate, useParams } from "react-router-dom";
 import EditFilterOptionModal from "./EditFilterOptionModal";
+import { formatDate } from "../../../../../../utils/Format";
 
 export default function FilterOptionTable({ filterId, isReloaded }) {
     const [options, setOptions] = useState([]);
@@ -97,12 +98,6 @@ export default function FilterOptionTable({ filterId, isReloaded }) {
 
     const handlePrevPage = () => setCurrentPage((p) => Math.max(p - 1, 1));
     const handleNextPage = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
-
-    const formatDate = (isoString) => {
-        if (!isoString) return "-";
-        const date = new Date(isoString);
-        return date.toLocaleString("vi-VN", { hour12: false });
-    };
 
     return (
         <>

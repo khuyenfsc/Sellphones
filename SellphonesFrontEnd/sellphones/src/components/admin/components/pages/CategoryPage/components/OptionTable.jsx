@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import AdminCategoryService from "../../../../service/AdminCategoryService";
 import { useNavigate } from "react-router-dom";
 import CreateOptionModal from "./CreateOptionModal";
+import { formatDate } from "../../../../../../utils/Format";
 // import EditCategoryOptionModal from "./EditCategoryOptionModal";
 
 export default function OptionTable({ categoryId }) {
@@ -116,16 +117,6 @@ export default function OptionTable({ categoryId }) {
     const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
     const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
-    const formatDate = (isoString) => {
-        if (!isoString) return "-";
-        const date = new Date(isoString);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
-    };
 
     return (
         <>

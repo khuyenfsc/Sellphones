@@ -19,7 +19,6 @@ public class AdminProductVariant_FilterRequest {
 
     private ProductStatus status;
 
-    @NotBlank
     private String sortType;
 
     @Min(0)

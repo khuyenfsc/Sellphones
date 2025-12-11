@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";;
 import AdminWarehouseService from "../../../../service/AdminWarehouseService";
 import InventoryFilterModal from "./InventoryFilterModal";
 import EditInventoryModal from "./EditInventoryModal";
+import { formatDate } from "../../../../../../utils/Format";
 
 export default function InventoryTable({ warehouseId, isReloaded }) {
-    const navigate = useNavigate();
     const [inventories, setInventories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);

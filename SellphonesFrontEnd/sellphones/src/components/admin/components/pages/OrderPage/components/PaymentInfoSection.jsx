@@ -1,7 +1,8 @@
 // PaymentInfoCard.jsx
 import { CreditCard } from "lucide-react";
+import { formatCurrency } from "../../../../../../utils/Format";
 
-export default function PaymentInfoSection({  order, formatCurrency }) {
+export default function PaymentInfoSection({  order }) {
     const payment = order.payment;
     const totalDiscount = order.orderVariants?.reduce((sum, v) => sum + (v.discountAmount || 0), 0);
     if (!payment || !order) return null;
