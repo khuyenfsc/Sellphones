@@ -39,7 +39,7 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách comment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách comment",
             };
         }
     },
@@ -80,7 +80,7 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy comment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy comment",
             };
         }
     },
@@ -133,7 +133,7 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi reply comment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi reply comment",
             };
         }
     },
@@ -186,7 +186,7 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật comment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật comment",
             };
         }
     },
@@ -229,7 +229,7 @@ const AdminCommentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa comment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa comment",
             };
         }
     },

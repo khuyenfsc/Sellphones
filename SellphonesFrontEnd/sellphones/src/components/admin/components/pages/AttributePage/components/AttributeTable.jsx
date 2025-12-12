@@ -136,8 +136,8 @@ export default function AttributeTable({ isReloaded }) {
                         }}
                         className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
                     >
-                        <option value="ASC">Sắp xếp: A → Z</option>
-                        <option value="DESC">Sắp xếp: Z → A</option>
+                        <option value="ASC">Sắp xếp: Id tằng dần</option>
+                        <option value="DESC">Sắp xếp: Id giảm dần</option>
                     </select>
 
                     {/* Phân trang */}

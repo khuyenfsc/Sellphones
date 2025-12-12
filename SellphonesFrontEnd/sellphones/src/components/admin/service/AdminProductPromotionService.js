@@ -37,7 +37,7 @@ const AdminProductPromotionService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách khuyến mãi",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách khuyến mãi",
             };
         }
     },
@@ -75,7 +75,7 @@ const AdminProductPromotionService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin khuyến mãi",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin khuyến mãi",
             };
         }
     },

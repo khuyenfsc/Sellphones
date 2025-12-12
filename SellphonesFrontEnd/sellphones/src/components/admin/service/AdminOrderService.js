@@ -41,7 +41,7 @@ const AdminOrderService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy danh sách đơn hàng",
             };
         }
@@ -88,7 +88,7 @@ const AdminOrderService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy thông tin đơn hàng",
             };
         }
@@ -186,7 +186,7 @@ const AdminOrderService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xác nhận đơn hàng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xác nhận đơn hàng",
             };
         }
     },
@@ -283,7 +283,7 @@ const AdminOrderService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi cập nhật trạng thái đã giao hàng",
             };
         }
@@ -327,7 +327,7 @@ const AdminOrderService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi hủy đơn hàng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi hủy đơn hàng",
             };
         }
     },

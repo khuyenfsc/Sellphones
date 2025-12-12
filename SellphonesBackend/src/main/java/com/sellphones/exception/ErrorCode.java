@@ -64,7 +64,7 @@ public enum ErrorCode {
     CANNOT_DELETE_CUSTOMER_ADDRESS("Không thể xóa địa chỉ thuộc loại 'CUSTOMER'", HttpStatus.BAD_REQUEST),
     PRODUCT_PROMOTION_NOT_FOUND_IN_PRODUCT("Không tìm thấy khuyến mãi trong sản phẩm", HttpStatus.NOT_FOUND),
     WARRANTY_NOT_FOUND_IN_PRODUCT("Không tìm thấy bảo hành trong sản phẩm", HttpStatus.NOT_FOUND),
-    PRODUCT_VARIANT_OUT_OF_STOCK("Biến thể sản phẩm đã hết hàng", HttpStatus.BAD_REQUEST),
+    PRODUCT_VARIANT_OUT_OF_STOCK("Phiên bản này đã hết hàng", HttpStatus.BAD_REQUEST),
     INVALID_PROMOTION_CONFIG("Cấu hình khuyến mãi không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_SHIPMENT_ITEMS("Danh sách sản phẩm giao hàng không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_REQUEST_FORMAT("Định dạng yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),

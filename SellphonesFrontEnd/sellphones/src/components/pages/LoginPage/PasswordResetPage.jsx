@@ -40,7 +40,7 @@ export default function PasswordResetPage() {
       }
     } catch (err) {
       console.error("❌ Lỗi gửi OTP:", err);
-      setError(err?.response?.data?.message || err.message || "Có lỗi xảy ra. Vui lòng thử lại sau.");
+      setError(err?.response?.data?.errors?.message  || err.message || "Có lỗi xảy ra. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }

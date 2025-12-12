@@ -36,7 +36,7 @@ const AdminRoleService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách vai trò",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách vai trò",
             };
         }
     },
@@ -76,7 +76,7 @@ const AdminRoleService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách vai trò",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách vai trò",
             };
         }
     },
@@ -114,7 +114,7 @@ const AdminRoleService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin vai trò",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin vai trò",
             };
         }
     },

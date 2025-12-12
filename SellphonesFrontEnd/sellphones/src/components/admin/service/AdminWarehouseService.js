@@ -37,7 +37,7 @@ const AdminWarehouseService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách kho",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách kho",
             };
         }
     },
@@ -75,7 +75,7 @@ const AdminWarehouseService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin kho",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin kho",
             };
         }
     },
@@ -262,7 +262,7 @@ const AdminWarehouseService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách inventory",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách inventory",
             };
         }
     },
@@ -299,7 +299,7 @@ const AdminWarehouseService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin inventory",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin inventory",
             };
         }
     },
@@ -461,7 +461,7 @@ const AdminWarehouseService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy danh sách phiếu nhập kho theo inventory",
             };
         }

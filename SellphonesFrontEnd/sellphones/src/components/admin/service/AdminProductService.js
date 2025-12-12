@@ -73,7 +73,7 @@ const AdminProductService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết sản phẩm",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy chi tiết sản phẩm",
             };
         }
     },
@@ -186,7 +186,7 @@ const AdminProductService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật sản phẩm",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật sản phẩm",
             };
         }
     },
@@ -221,7 +221,7 @@ const AdminProductService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa sản phẩm",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa sản phẩm",
             };
         }
     },
@@ -296,7 +296,7 @@ const AdminProductService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết product variant",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy chi tiết product variant",
             };
         }
     },
@@ -464,7 +464,7 @@ const AdminProductService = {
             }
 
             const res = await AxiosClient.delete(
-                `/admin/products/delete/${variantId}`,
+                `/admin/products/variants/delete/${variantId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -478,7 +478,7 @@ const AdminProductService = {
                     const newToken = refresh.accessToken;
                     try {
                         const retry = await AxiosClient.delete(
-                            `/admin/products/delete/${variantId}`,
+                            `/admin/products/variants/delete/${variantId}`,
                             { headers: { Authorization: `Bearer ${newToken}` } }
                         );
                         return { success: true, data: retry?.data || {} };

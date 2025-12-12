@@ -3,7 +3,6 @@
 -- Bổ sung thêm các danh mục mới cho Điện thoại, Tablet, Laptop
 
 INSERT INTO category (code, name, icon, featured_on_homepage, created_at) VALUES
--- DT và LT được set là TRUE/1
 ('DT', 'Điện thoại', 'DT.png', TRUE, CURRENT_TIMESTAMP),
 ('TB', 'Tablet', 'TB.png', TRUE, CURRENT_TIMESTAMP),
 ('LT', 'Laptop', 'LT.png', TRUE, CURRENT_TIMESTAMP);
@@ -537,13 +536,14 @@ WHERE address_type = 'WAREHOUSE';
 
 INSERT INTO supplier (name, contact_name, phone_number, email, address_id, tax_code, supplier_status, created_at, updated_at)
 VALUES
--- Nhà cung cấp ở Huế
-('Hue Trading Co., Ltd', 'Nguyen Van A', '0912345678', 'contact@huetrading.vn', 4, '3301234567', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+-- Kho điện thoại tại Hồ Chí Minh
+('Sai Gon Mobile Warehouse', 'Nguyen Huu Khang', '0909123456', 'contact@sgmobile.vn', 1, '0312345678', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
--- Nhà cung cấp ở Đà Nẵng
-('Da Nang Electronics', 'Tran Thi B', '0932123456', 'support@danangelec.vn', 6, '0407654321', 'INACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- Nhà cung cấp ở Hà Nội
-('Ha Noi Food Supply', 'Le Van C', '0987654321', 'info@hanoifood.vn', 7, '0109876543', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- Kho linh kiện điện thoại tại Hà Nội
+('Ha Noi Phone Parts Center', 'Tran Thi Huong', '0918234567', 'support@hnparts.vn', 2, '0109876543', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+-- Kho phụ kiện tại Đà Nẵng
+('Da Nang Accessories Hub', 'Le Hoang Minh', '0935123456', 'info@dnaccessories.vn', 3, '0407654321', 'INACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 

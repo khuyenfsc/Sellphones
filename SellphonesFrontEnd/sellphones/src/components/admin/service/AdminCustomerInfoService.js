@@ -39,7 +39,7 @@ const AdminCustomerInfoService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message || "Lỗi khi lấy danh sách khách hàng",
+                    err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách khách hàng",
             };
         }
     },
@@ -82,7 +82,7 @@ const AdminCustomerInfoService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi tạo khách hàng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi tạo khách hàng",
             };
         }
     },
@@ -121,7 +121,7 @@ const AdminCustomerInfoService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message || "Lỗi khi lấy danh sách khách hàng",
+                    err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách khách hàng",
             };
         }
     },
@@ -172,7 +172,7 @@ const AdminCustomerInfoService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật khách hàng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật khách hàng",
             };
         }
     },
@@ -218,7 +218,7 @@ const AdminCustomerInfoService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa khách hàng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa khách hàng",
             };
         }
     }

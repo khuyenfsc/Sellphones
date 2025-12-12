@@ -136,7 +136,7 @@ const AdminGiftProductService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy chi tiết quà tặng",
             };
         }
@@ -199,7 +199,7 @@ const AdminGiftProductService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi cập nhật quà tặng",
             };
         }
@@ -246,7 +246,7 @@ const AdminGiftProductService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi xóa quà tặng",
             };
         }

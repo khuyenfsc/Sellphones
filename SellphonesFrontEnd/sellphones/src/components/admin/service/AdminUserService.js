@@ -37,7 +37,7 @@ const AdminUserService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách người dùng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách người dùng",
             };
         }
     },
@@ -75,7 +75,7 @@ const AdminUserService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin người dùng",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin người dùng",
             };
         }
     },

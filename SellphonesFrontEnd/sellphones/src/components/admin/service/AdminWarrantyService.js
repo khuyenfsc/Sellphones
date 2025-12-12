@@ -37,7 +37,7 @@ const AdminWarrantyService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách bảo hành",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách bảo hành",
             };
         }
     },
@@ -75,7 +75,7 @@ const AdminWarrantyService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin bảo hành",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin bảo hành",
             };
         }
     },

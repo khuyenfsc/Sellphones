@@ -39,7 +39,7 @@ const AdminShipmentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách shipment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách shipment",
             };
         }
     },
@@ -78,7 +78,7 @@ const AdminShipmentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin shipment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin shipment",
             };
         }
     },
@@ -120,7 +120,7 @@ const AdminShipmentService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật shipment",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật shipment",
             };
         }
     },

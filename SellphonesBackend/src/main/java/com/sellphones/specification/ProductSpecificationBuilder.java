@@ -93,7 +93,7 @@ public class ProductSpecificationBuilder {
 
     public static Specification<Product> hasAttributeEqual(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
-            query.distinct(true);
+//            query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
@@ -107,7 +107,7 @@ public class ProductSpecificationBuilder {
 
     public static Specification<Product> hasAttributeGreater(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
-            query.distinct(true);
+//            query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
@@ -121,7 +121,7 @@ public class ProductSpecificationBuilder {
 
     public static Specification<Product> hasAttributeLess(Long id, BigDecimal attributeVal){
         return (root, query, cb) -> {
-            query.distinct(true);
+//            query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 
@@ -135,7 +135,7 @@ public class ProductSpecificationBuilder {
 
     public static Specification<Product> hasAttributeContains(Long id, String attributeVal){
         return (root, query, cb) -> {
-            query.distinct(true);
+//            query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
             System.out.println("hasAttributeContains " + id + " " + attributeVal);
@@ -150,7 +150,7 @@ public class ProductSpecificationBuilder {
 
     public static Specification<Product> hasAttributeBetween(Long id, BigDecimal minAttributeVal, BigDecimal maxAttributeVal){
         return (root, query, cb) -> {
-            query.distinct(true);
+//            query.distinct(true);
             Join<Product, ProductVariant> pv = root.join("productVariants");
             Join<ProductVariant, AttributeValue> pv_av = pv.join("attributeValues");
 

@@ -46,7 +46,7 @@ public class AdminAttributeServiceImpl implements AdminAttributeService{
     public PageResponse<AdminAttributeResponse> getAttributes(AdminAttribute_FilterRequest request){
         Sort.Direction direction = Sort.Direction.fromOptionalString(request.getSortType())
                 .orElse(Sort.Direction.ASC);
-        Sort sort = Sort.by(direction, "name");
+        Sort sort = Sort.by(direction, "id");
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
         Specification<Attribute> spec = AdminAttributeSpecificationBuilder.build(request);

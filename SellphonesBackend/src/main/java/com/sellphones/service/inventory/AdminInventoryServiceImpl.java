@@ -112,6 +112,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService{
                 .productVariant(productVariant)
                 .warehouse(warehouse)
                 .createdAt(LocalDateTime.now())
+                .quantity(0L)
                 .build();
 
         try {

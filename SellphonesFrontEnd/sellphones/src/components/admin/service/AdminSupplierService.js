@@ -41,7 +41,7 @@ const AdminSupplierService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy danh sách nhà cung cấp",
             };
         }
@@ -85,7 +85,7 @@ const AdminSupplierService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy thông tin nhà cung cấp",
             };
         }
@@ -291,7 +291,7 @@ const AdminSupplierService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.message  ||
                     "Lỗi khi lấy danh sách phiếu nhập kho",
             };
         }
@@ -490,7 +490,7 @@ const AdminSupplierService = {
 
         return {
             success: false,
-            message: err?.response?.data?.message || "Lỗi khi lấy danh sách inventory",
+            message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách inventory",
         };
     }
 },

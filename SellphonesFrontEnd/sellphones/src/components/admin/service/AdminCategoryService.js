@@ -36,7 +36,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getAllCategories:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách thể loại",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách thể loại",
             };
         }
     },
@@ -73,7 +73,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getCategoryById:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách danh mục",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách danh mục",
             };
         }
     },
@@ -170,7 +170,7 @@ const AdminCategoryService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật category",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật category",
             };
         }
     },
@@ -206,7 +206,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi deleteCategory:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa danh mục",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa danh mục",
             };
         }
     },
@@ -243,7 +243,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getFilters:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách bộ lọc"
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách bộ lọc"
             };
         }
     },
@@ -279,7 +279,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getFilterById:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin filter",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin filter",
             };
         }
     },
@@ -318,7 +318,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi createFilter:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi tạo filter"
+                message: err?.response?.data?.errors?.message  || "Lỗi tạo filter"
             };
         }
     },
@@ -359,7 +359,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi updateFilter:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi cập nhật filter"
+                message: err?.response?.data?.errors?.message  || "Lỗi cập nhật filter"
             };
         }
     },
@@ -396,7 +396,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi deleteFilter:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi xóa filter"
+                message: err?.response?.data?.errors?.message  || "Lỗi xóa filter"
             };
         }
     },
@@ -439,7 +439,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getFilterOptions:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi lấy list options"
+                message: err?.response?.data?.errors?.message  || "Lỗi lấy list options"
             };
         }
     },
@@ -478,7 +478,7 @@ const AdminCategoryService = {
             console.error("Lỗi createFilterOption:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi tạo option"
+                message: err?.response?.data?.errors?.message  || "Lỗi tạo option"
             };
         }
     },
@@ -517,7 +517,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi updateFilterOption:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi update option"
+                message: err?.response?.data?.errors?.message  || "Lỗi update option"
             };
         }
     },
@@ -554,7 +554,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi deleteFilterOption:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi xóa option"
+                message: err?.response?.data?.errors?.message  || "Lỗi xóa option"
             };
         }
     },
@@ -591,7 +591,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getCategoryOptions:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách lựa chọn",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách lựa chọn",
             };
         }
     },
@@ -626,7 +626,7 @@ const AdminCategoryService = {
             console.error("❌ Lỗi getOptionById:", err.message);
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin option",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin option",
             };
         }
     },
@@ -658,7 +658,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi tạo option" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi tạo option" };
         }
     },
 
@@ -689,7 +689,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi cập nhật option" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật option" };
         }
     },
 
@@ -720,7 +720,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi xóa option" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi xóa option" };
         }
     },
 
@@ -786,7 +786,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi tạo value" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi tạo value" };
         }
     },
 
@@ -817,7 +817,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi cập nhật value" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật value" };
         }
     },
 
@@ -848,7 +848,7 @@ const AdminCategoryService = {
                     } catch { }
                 }
             }
-            return { success: false, message: err?.response?.data?.message || "Lỗi khi xóa value" };
+            return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi xóa value" };
         }
     },
 };

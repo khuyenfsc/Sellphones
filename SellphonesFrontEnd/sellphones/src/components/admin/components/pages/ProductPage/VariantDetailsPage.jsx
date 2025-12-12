@@ -123,7 +123,7 @@ const AdminVariantDetailsPage = () => {
             newErrors.stock = "Tồn kho không được âm.";
         }
 
-        if (!previewImage && !variant.variantImage) {
+        if (!previewImage && !imageFile) {
             newErrors.image = "Ảnh biến thể không được để trống.";
         }
 

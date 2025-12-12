@@ -52,14 +52,14 @@ public class AdminProductController {
 
     }
 
-    @PutMapping("/update-product/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateProduct(
             @RequestPart("product") String productJson,
             @RequestPart(name = "image_files", required = false) MultipartFile[] imageFiles,
             @RequestPart(name = "thumbnail_file", required = false) MultipartFile thumbnailFile,
-            @PathVariable Long productId
+            @PathVariable Long id
     ){
-        adminProductService.updateProduct(productJson, imageFiles, thumbnailFile, productId);
+        adminProductService.updateProduct(productJson, imageFiles, thumbnailFile, id);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "Updated product successfully");
 
@@ -99,15 +99,15 @@ public class AdminProductController {
 
     }
 
-//    @PostMapping("/{productId}/variants/{id}/set-thumbnail")
-//    public ResponseEntity<CommonResponse> setThumbnail(@PathVariable Long productId, @PathVariable Long id){
-//        adminProductService.setThumbnail(productId, id);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("result", "Set thumbnail product successfully");
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
-//
-//    }
+    @PostMapping("/{productId}/variants/{id}/set-thumbnail")
+    public ResponseEntity<CommonResponse> setThumbnail(@PathVariable Long productId, @PathVariable Long id){
+        adminProductService.setThumbnail(productId, id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "Set thumbnail product successfully");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(HttpStatus.OK.value(), map));
+
+    }
 
     @GetMapping("/variants/{id}")
     public ResponseEntity<CommonResponse> getVariantById(@PathVariable Long id){

@@ -39,7 +39,7 @@ const AdminReviewService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách review",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách review",
             };
         }
     },
@@ -80,7 +80,7 @@ const AdminReviewService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy review",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy review",
             };
         }
     },
@@ -133,7 +133,7 @@ const AdminReviewService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật review",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật review",
             };
         }
     },
@@ -174,7 +174,7 @@ const AdminReviewService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa review",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa review",
             };
         }
     },

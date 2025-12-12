@@ -124,7 +124,7 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy chi tiết thương hiệu",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy chi tiết thương hiệu",
             };
         }
     },
@@ -174,7 +174,7 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi cập nhật brand",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật brand",
             };
         }
     },
@@ -210,7 +210,7 @@ const AdminBrandService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi xóa thương hiệu",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi xóa thương hiệu",
             };
         }
     },

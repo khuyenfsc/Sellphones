@@ -143,6 +143,7 @@ public class ProductMapper {
                 .sku(generateSku(product.getCategory().getCode()))
                 .createdAt(LocalDateTime.now())
                 .variantImage(variantImage)
+                .stock(0)
                 .build();
         return productVariant;
     }

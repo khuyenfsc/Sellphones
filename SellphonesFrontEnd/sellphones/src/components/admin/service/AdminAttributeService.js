@@ -38,7 +38,7 @@ const AdminAttributeService = {
             return {
                 success: false,
                 message:
-                    err?.response?.data?.message || "Lỗi khi lấy danh sách thuộc tính",
+                    err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách thuộc tính",
             };
         }
     },
@@ -76,7 +76,7 @@ const AdminAttributeService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy thông tin thuộc tính",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy thông tin thuộc tính",
             };
         }
     },
@@ -274,7 +274,7 @@ const AdminAttributeService = {
 
             return {
                 success: false,
-                message: err?.response?.data?.message || "Lỗi khi lấy danh sách giá trị thuộc tính",
+                message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách giá trị thuộc tính",
             };
         }
     },
@@ -466,7 +466,7 @@ const AdminAttributeService = {
     //                 } catch { }
     //             }
     //         }
-    //         return { success: false, message: err?.response?.data?.message || "Lỗi khi lấy danh sách biến thể" };
+    //         return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi lấy danh sách biến thể" };
     //     }
     // },
 
@@ -495,7 +495,7 @@ const AdminAttributeService = {
     //                 } catch { }
     //             }
     //         }
-    //         return { success: false, message: err?.response?.data?.message || "Lỗi khi lấy chi tiết biến thể" };
+    //         return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi lấy chi tiết biến thể" };
     //     }
     // },
 
@@ -569,7 +569,7 @@ const AdminAttributeService = {
     //                 } catch { }
     //             }
     //         }
-    //         return { success: false, message: err?.response?.data?.message || "Lỗi khi cập nhật biến thể sản phẩm" };
+    //         return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi cập nhật biến thể sản phẩm" };
     //     }
     // },
 
@@ -598,7 +598,7 @@ const AdminAttributeService = {
     //                 } catch { }
     //             }
     //         }
-    //         return { success: false, message: err?.response?.data?.message || "Lỗi khi xóa biến thể sản phẩm" };
+    //         return { success: false, message: err?.response?.data?.errors?.message  || "Lỗi khi xóa biến thể sản phẩm" };
     //     }
     // },
 
