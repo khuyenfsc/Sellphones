@@ -1,46 +1,62 @@
 spring:
   jwt:
-    secret: "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4"
-    access-expiration: 900000                        # 15p
-    refresh-expiration: 1209600000             # 14 ngày
+    secret: ${JWT_SECRET}
+    access-expiration: ${JWT_ACCESS_EXPIRATION:900000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:1209600000}
+
   redis:
-    host: "localhost"
-    port: 6379
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    username : ${REDIS_USERNAME}
+    password: ${REDIS_PASSWORD}
+    ssl: true
+  elastic:
+    scheme: ${ELASTIC_SCHEME:https}
+    host: ${ELASTIC_HOST}
+    port: ${ELASTIC_PORT:443}
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASSWORD}
   mail:
-    host: "smtp.gmail.com"
+    host: smtp.gmail.com
     port: 587
-    username: ""
-    password: ""
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+        debug: true
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:3000}
+  backend:
+    url: ${APP_BASE_URL:http://localhost:8080}
   payment:
     vnpay:
-      hashSecret: ""
+      hashSecret: ${VNPAY_HASH_SECRET}
       url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-      command : "pay"
-      currCode : "VND"
-      locale : "vn"
-      orderInfo : "Thanh toan don hang"
-      orderType : 110000
-      returnUrl : "http://localhost:8080/api/v1/payment/vnpay-callback"
-      tmnCode : ""
-      version : "2.1.0"
-      successRedirectUrl : "http://localhost:3000/payment/vnpay/success"
-      failRedirectUrl : "http://localhost:3000/payment/vnpay/fail"
+      command: "pay"
+      currCode: "VND"
+      locale: "vn"
+      orderInfo: "Thanh toan don hang"
+      orderType: 110000
+      returnUrl: ${VNPAY_RETURN_URL}
+      tmnCode: ${VNPAY_TMN_CODE}
+      version: "2.1.0"
+      successRedirectUrl: ${VNPAY_SUCCESS_REDIRECT_URL}
+      failRedirectUrl: ${VNPAY_FAIL_REDIRECT_URL}
+
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: ""
-            clientSecret: ""
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
               - profile
-#              - https://www.googleapis.com/auth/user.gender.read
-#              - https://www.googleapis.com/auth/user.birthday.read
-#              - https://www.googleapis.com/auth/user.phonenumbers.read

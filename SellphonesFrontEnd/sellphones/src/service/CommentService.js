@@ -42,7 +42,7 @@ const CommentService = {
       const token = localStorage.getItem('accessToken');
       if (!token) return { success: false, message: 'Chưa đăng nhập' };
 
-      const res = await AxiosClient.post('/comments', commentData, {
+      const res = await AxiosClient.post('/comments/add-comment', commentData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
